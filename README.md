@@ -12,6 +12,7 @@ Proyecto para memoria de tiulación UTFSM 2020
 
 Aqui se enumeran las caracteristicas de la solucion:
 
+- Dos aplicacion 
 - Login (Gmail, Icloud, email).
 - Agendar un viaje por parte del conductor.
 - Realizacion de un viaje.
@@ -32,8 +33,6 @@ En conjunto con profesores se han definido caracteristicas minimas para realizar
 - Agendar un viaje por parte del conductor
 - Feedback al finalizar el viaje por parte de los usuarios
 - Realizacion de un viaje
--
--
 
 #### Perfiles de usuarios
 
@@ -56,3 +55,10 @@ Se propone un modelo de comparticion completa de gastos, donde el costo total ve
 - Rendimiento mixto por kilometro del vehiculo
 
 El costo final, se dividira por la cantidad maxima de asientos del vehiculo, y se sugirira dicha tarifa al conductor.
+
+#### Observaciones generales por parte de profesores guias:
+
+- Diagramas de navegacion separarlos por tipo de usuario, o casos de usos.
+- La informacion de los viajes debe resguardarse por cierta cantidad de tiempo.
+- Diagrama con los servicios asociados, cuantas Apis, cuantas base de datos.
+- Argumentos de por que utilizar ciertas tecnologias.
