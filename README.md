@@ -62,3 +62,4 @@ El costo final, se dividira por la cantidad maxima de asientos del vehiculo, y s
 - La informacion de los viajes debe resguardarse por cierta cantidad de tiempo.
 - Diagrama con los servicios asociados, cuantas Apis, cuantas base de datos.
 - Argumentos de por que utilizar ciertas tecnologias.
+- Token para que asegurar que los datos sean accesados por usuarios que correspondan
