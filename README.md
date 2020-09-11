@@ -12,7 +12,7 @@ Proyecto para memoria de tiulación UTFSM 2020
 
 Aqui se enumeran las caracteristicas de la solucion:
 
-- Dos aplicacion 
+- Dos aplicacion, tanto para conductor como usuario.
 - Login (Gmail, Icloud, email).
 - Agendar un viaje por parte del conductor.
 - Realizacion de un viaje.
