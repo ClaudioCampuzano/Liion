@@ -12,17 +12,26 @@ Proyecto para memoria de tiulación UTFSM 2020
 
 Aqui se enumeran las caracteristicas de la solucion:
 
-- Agendar un viaje por parte del conductor
-- Feedback al finalizar el viaje por parte de los usuarios
-- Servicio de logs
+- Login (Gmail, Icloud, email).
+- Agendar un viaje por parte del conductor.
+- Realizacion de un viaje.
+- Feedback al finalizar el viaje por parte de los usuarios.
+- Servicio de logs.
+- La aplicacion se preocupa de que se llegue a destino.
+- Metodos de pago (se paga al terminar el viaje, cargos se dejan pendientes en las tarjetas): Match (para debito), Suscripcion tarjeta de credito.
+- Chat vinculados al viaje.
+- Pasajero puede publicar solicitud de viaje (se agrega manito de aventon en un mapa).
+- Implementacion de seguridad para la verificacion de usuarios QR.
+- Posibilidad de poder agendar viajes para otra persona, mandando reserva por email con QR para verificacion del conductor.
+- Boton de emergencia para usuarios en un viaje (envio de email y sms a contactos de confianza con el link a informacion del viaje en una pagina web)
 
 ### Producto viable mínimo (MVP)
 
-En conjunto con profesores se han definido requisitos minimos para realizar, los cuales son:
+En conjunto con profesores se han definido caracteristicas minimas para realizar, los cuales son:
 
-- hyperpose
--
--
+- Agendar un viaje por parte del conductor
+- Feedback al finalizar el viaje por parte de los usuarios
+- Realizacion de un viaje
 -
 -
 
