@@ -6,7 +6,7 @@ Proyecto para memoria de tiulación UTFSM 2020
 
 - **Front-End**: React Native, expo SDK
 - **Back-End**: Node.js, mongoDb, expressjs, MariaDB, php
-- **Servicios**: Docker, Kubernetes
+- **Servicios**: Docker, Kubernetes, Firebase, GoogleMaps
 
 ### Caracteristicas generales de la aplicacion
 
