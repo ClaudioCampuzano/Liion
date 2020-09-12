@@ -8,6 +8,8 @@ Proyecto para memoria de tiulación UTFSM 2020
 - **Back-End**: Node.js, mongoDb, expressjs, MariaDB, php
 - **Servicios**: Docker, Kubernetes, Firebase, GoogleMaps
 
+Guia de instalacion: [Instalacion](https://duckduckgo.com).
+
 ### Caracteristicas generales de la aplicacion
 
 Aqui se enumeran las caracteristicas de la solucion:
