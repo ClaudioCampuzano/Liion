@@ -1,6 +1,7 @@
 # Guia de instalacion 
 
 ## Front-end
+https://reactnative.dev/docs/environment-setup
 
 ## Back-end
 
