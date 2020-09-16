@@ -27,6 +27,7 @@ Aqui se enumeran las caracteristicas de la solucion:
 - Implementacion de seguridad para la verificacion de usuarios QR.
 - Posibilidad de poder agendar viajes para otra persona, mandando reserva por email con QR para verificacion del conductor.
 - Boton de emergencia para usuarios en un viaje (envio de email y sms a contactos de confianza con el link a informacion del viaje en una pagina web)
+- Debe mantenerse logueado una vez que se ingresen y validen las credenciales
 
 ### Producto viable mínimo (MVP)
 
