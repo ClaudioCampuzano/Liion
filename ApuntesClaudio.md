@@ -8,6 +8,8 @@
  ### Expo en windows 
  -  choco install -y nodejs.lts python2 openjdk8
  - install https://expo.io/learn
+ 
+ ## Expo anotaciones
  - expo : No se puede cargar el archivo C:\Users\claud\AppData\Roaming\npm\expo.ps1 porque la ejecución de scripts está deshabilitada en este sistema. Para obtener más información, consulta el tema about_Execution_Policies en https:/go.microsoft.com/fwlink/?LinkID=135170 
  https://www.blai.blog/2019/05/habilitar-ejecucion-de-archivos-ps1-en.html
  
@@ -17,3 +19,14 @@
    - 🧠 Si tiene más experiencia , tampoco está de más comenzar cada nuevo proyecto con el flujo de trabajo administrado y solo "expulsarlo" si es necesario.
 En resumen, use el flujo de trabajo simple cuando lo necesite debido a limitaciones; de lo contrario, use el flujo de trabajo administrado y lo más probable es que desee comenzar con el flujo de trabajo administrado.
  
+## Cursos encontrado
+- https://www.udemy.com/course/aplicaciones-moviles-con-react-native-desde-cero/
+- https://www.udemy.com/course/react-native-en-espanol-curso-desde-cero/
+- https://www.udemy.com/course/react-native-expo-creando-mini-tripadvisor-de-restaurantes/
+- https://www.udemy.com/course/react-native-expo-y-redux/
+- https://www.udemy.com/course/react-native-crea-aplicaciones-moviles-reales-ios-y-android/
+- https://www.udemy.com/course/mern-mongodb-express-react-native-nodejs/ (2) no tiene expo
+- https://www.udemy.com/course/react-native-en-espanol-curso-completo/ (1) tiene expo
+
+- https://es.coursera.org/learn/react-native    este primero
+- https://es.coursera.org/specializations/full-stack-react
