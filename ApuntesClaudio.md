@@ -30,3 +30,8 @@ En resumen, use el flujo de trabajo simple cuando lo necesite debido a limitacio
 
 - https://es.coursera.org/learn/react-native    este primero
 - https://es.coursera.org/specializations/full-stack-react
+
+## Requisitos para ser conductor en diferentes app
+- https://www.uber.com/cl/es/drive/requirements/
+- https://cabify.com/cl/conductores
+- https://didimexicoglobal.com/requisitos-didi/
