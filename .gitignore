@@ -57,3 +57,24 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+/login/node_modules/**/*
+/login/.expo/*
+/login/npm-debug.*
+/login/*.jks
+/login/*.p8
+/login/*.p12
+/login/*.key
+/login/*.mobileprovision
+/login/*.orig.*
+/login/web-build/
+/login/assets/*
+# macOS
+/login/.DS_Store
+
+#jiros
+/login/yarn.lock
+/login/package.json
+/login/google-services.json
+/login/babel.config.js
+
