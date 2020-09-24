@@ -35,3 +35,7 @@ En resumen, use el flujo de trabajo simple cuando lo necesite debido a limitacio
 - https://www.uber.com/cl/es/drive/requirements/
 - https://cabify.com/cl/conductores
 - https://didimexicoglobal.com/requisitos-didi/
+
+
+## Tutoriales usados:
+- https://medium.com/nycdev/create-a-react-native-app-with-google-map-using-expo-io-68041252023d -> implementacion de google maps
