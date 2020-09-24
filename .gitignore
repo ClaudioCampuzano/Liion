@@ -68,7 +68,7 @@ buck-out/
 /login/*.mobileprovision
 /login/*.orig.*
 /login/web-build/
-/login/assets/*
+
 # macOS
 /login/.DS_Store
 
