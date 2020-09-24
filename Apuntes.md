@@ -36,6 +36,6 @@ En resumen, use el flujo de trabajo simple cuando lo necesite debido a limitacio
 - https://cabify.com/cl/conductores
 - https://didimexicoglobal.com/requisitos-didi/
 
-
 ## Tutoriales usados:
 - https://medium.com/nycdev/create-a-react-native-app-with-google-map-using-expo-io-68041252023d -> implementacion de google maps
+- https://medium.com/@arjayosma/set-up-firebase-phone-authentication-in-expo-sdk-37-without-ejecting-8a472460b1cf -< authotentification phone
