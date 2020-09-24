@@ -4,9 +4,9 @@ Proyecto para memoria de tiulación UTFSM 2020
 ## Tecnologias a utilizar
 
 
-- **Front-End**: React Native, expo SDK (?)
-- **Back-End**: Node.js, mongoDb, expressjs, MariaDB, php
-- **Servicios**: Docker, Kubernetes, Firebase, GoogleMaps
+- **Front-End**: React Native, expo SDK, sequelize, 
+- **Back-End**: Node.js, mongoDb, expressjs, mysql, php
+- **Servicios**: Docker, Kubernetes, Firebase, GoogleMaps, 
 
 Guia de instalacion: [Instalacion](https://github.com/ClaudioCampuzano/Liion/blob/master/Instalacion.md).
 
@@ -33,9 +33,13 @@ Aqui se enumeran las caracteristicas de la solucion:
 
 En conjunto con profesores se han definido caracteristicas minimas para realizar, los cuales son:
 
-- Agendar un viaje por parte del conductor
+- Viaje por parte del conductor:
+    - Crear el viaje.
+    - Iniciar el viaje. -> mandar notificacion a usuarios que reservaron.
 - Feedback al finalizar el viaje por parte de los usuarios
-- Realizacion de un viaje
+- Realizacion de un viaje:
+    - Ver lista de viajes
+    - Registrarse en un viaje
 
 #### Perfiles de usuarios
 
