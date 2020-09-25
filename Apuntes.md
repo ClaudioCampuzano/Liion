@@ -49,20 +49,6 @@ https://www.youtube.com/watch?v=wCl3uKmDzvI
  console.log("Hola mundo") Escribiendo en el la consola
  documnent.rite("Hola mundo") Escribiendo en el documento
  
- ### tipos de datos
-'Hello world' o "Hello world" //String
-10000 // Number
-true, false //boolean
-['jiro','poto','loto', 8, 9, true] //array
-
-// object
-{
-    "username":'ryan',
-    "score": 70.4,
-    "horas": 14, 
-    "proffesional": true,
-    "friends" : ['jiro', 'jiroto', 'roto']
-}
 #### variables
 var jiro = 5 // Variable local (funcion) o global (programa)
 let jiro2 = 4 // Variable que tiene alcance en el bloque que se a definido, no fuera de el
@@ -85,38 +71,27 @@ console.log(b); // 1
 //forma de escribir variables camelcase
 let userName
 
-### Comentarios
-// jiro
-o 
-/* jiro */
-
-; no es necesario siempre que no se quiera escribir todo en una pura linea
-
-ley typeCard = 'Debid Card'
-
-switch(typeCard){
-    case 'Debid Card':
-        console.log('Dale')
-        break
-    case 'credit':
-        console.log('nodale')
-        break
-    default:
-        console.log('nara')
-}
-
-while(true){
-    console.log('jiro')
-}
-
-let name = [1,2,3];
-for(let i = name.length -1; i>= 0; i--){
-    console.log(name[i])
-}
-### Funciones en js
-
-function greetings(name){
-    console.log(name)
-}
-
-greetings('dale jiro')
+### Caracteristicas Js
+- Isomorfismo
+   - Puede estar en el frontend(js), backend (nodejs), persistencia de datos (firebase, mongodb)
+- ; no es necesario siempre que no se quiera escribir todo en una pura linea
+- Sensibilidad a mayusculas
+- Comentarios
+  - //
+  - /* */
+- Nombres (identificador) de variables:
+  - Deben comenzar con alguna "letra", "_" o "$".
+- El identificador no se puede repetir entre variables, funciones
+- Tipo de dato:
+  - Primitivos 
+    - string
+    - number
+    - boolean
+    - null
+    - undefined
+    - NaN
+  - Compuestos
+    - object ={}
+    - array =[]
+    - function() {}
+    - class {}
