@@ -38,4 +38,85 @@ En resumen, use el flujo de trabajo simple cuando lo necesite debido a limitacio
 
 ## Tutoriales usados:
 - https://medium.com/nycdev/create-a-react-native-app-with-google-map-using-expo-io-68041252023d -> implementacion de google maps
+
+
 - https://medium.com/@arjayosma/set-up-firebase-phone-authentication-in-expo-sdk-37-without-ejecting-8a472460b1cf -< authotentification phone
+clonar -> yarn install -> En firebase crear app web, y copiar esos parametros en el programa -> yarn start
+https://www.youtube.com/watch?v=wCl3uKmDzvI
+
+## Datos Js
+ 
+ console.log("Hola mundo") Escribiendo en el la consola
+ documnent.rite("Hola mundo") Escribiendo en el documento
+ 
+ ### tipos de datos
+'Hello world' o "Hello world" //String
+10000 // Number
+true, false //boolean
+['jiro','poto','loto', 8, 9, true] //array
+
+// object
+{
+    "username":'ryan',
+    "score": 70.4,
+    "horas": 14, 
+    "proffesional": true,
+    "friends" : ['jiro', 'jiroto', 'roto']
+}
+#### variables
+var jiro = 5 // Variable local (funcion) o global (programa)
+let jiro2 = 4 // Variable que tiene alcance en el bloque que se a definido, no fuera de el
+const jiro3 = 5; // constantes
+
+var a = 5;
+var b = 10;
+
+if (a === 5) {
+    let a = 4; // El alcance es dentro del bloque if
+    var b = 1; // El alcance es global
+
+    console.log(a);  // 4
+    console.log(b);  // 1
+}
+
+console.log(a); // 5
+console.log(b); // 1
+
+//forma de escribir variables camelcase
+let userName
+
+### Comentarios
+// jiro
+o 
+/* jiro */
+
+; no es necesario siempre que no se quiera escribir todo en una pura linea
+
+ley typeCard = 'Debid Card'
+
+switch(typeCard){
+    case 'Debid Card':
+        console.log('Dale')
+        break
+    case 'credit':
+        console.log('nodale')
+        break
+    default:
+        console.log('nara')
+}
+
+while(true){
+    console.log('jiro')
+}
+
+let name = [1,2,3];
+for(let i = name.length -1; i>= 0; i--){
+    console.log(name[i])
+}
+### Funciones en js
+
+function greetings(name){
+    console.log(name)
+}
+
+greetings('dale jiro')
