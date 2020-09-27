@@ -66,3 +66,62 @@ El costo final, se dividira por la cantidad maxima de asientos del vehiculo, y s
 - Diagrama con los servicios asociados, cuantas Apis, cuantas base de datos.
 - Argumentos de por que utilizar ciertas tecnologias.
 - Token para que asegurar que los datos sean accesados por usuarios que correspondan
+
+
+
+
+
+#### /*drawe: (foto nombre)
+    -conductor homeacreen mapa 
+      -mapa
+      -menu deslizable crear viaje inicio final
+        -inicio final rellenar weas
+        -acepta jiros ?
+        -cant asientos 
+        -etcetx
+      -boton/tab viaje activo
+          -boton emergencia
+          -mapa
+    -conductor mis viajes (prox viajes y pasados)
+      -lista de viajes (filtrar por prox o realizados)
+        -detalles de viaje
+    -conductor perfil sin tab, con 
+      -boton editar perfil
+      -foto
+      -nombre
+      -calificacion
+      -autos
+      -documentos:
+        -licencia
+        -documento de vehiculos
+    -conductor notificaciones
+      -lista de notificaciones (pasajero aplica a viaje)
+    -conductor configuracion de pagos
+      -como desea recibir su dinero
+    -conductor logout
+
+
+
+
+    -pasajero homescren 
+      conductor homeacreen mapa 
+      -mapa
+      -menu deslizable buscar viaje inicio final
+        -inicio final rellenar weas
+        -lista con filtros
+      -boton/tab viaje activo
+          -boton emergencia
+          -mapa
+    -pasajero mis viajes (prox viajes y pasados)
+      -lista de viajes (filtrar por prox o realizados)
+      -detalles de viaje
+    -pasajero perfil sin tab, con 
+      -boton editar perfil
+      -foto
+      -nombre
+      -calificacion
+    -pasajero notificaciones
+      -lista de notificaciones (se acepto o no ene l viaje)
+    -pasajero configuracion de pagos
+      -como desea pagar
+    -pasajero logout
