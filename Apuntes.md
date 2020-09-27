@@ -264,7 +264,7 @@ import {nombre_funcion, sumar} from "./constantes.js";
 console.log(sumar(3,4))
 ```
 - Temporizadores
-``
+```
 setTime(() = > { // al pasar 3 seguntos (3000 ms) se ejecutara este bloque 1 sola vez
   console.log("jiro");
 }, 3000);
@@ -273,4 +273,65 @@ setInterval((){ // se ejecuta cada 1 seg
 
 }, 1000);
 ```
--
+- Asincronia; dos tipos de codigos, Sincrono bloqueante, asincrono no bloqueante
+```
+Sincrono bloqueante // el clasico, como todo lo q hemos visto hasta aqui
+```
+- callbacks, funcion q se ejecuto luego de q otra lo haga, sirve para manejar el codigo asincrono
+```
+function cuadradoCallback(value,callback){
+  setTimeout() = > {
+     callback(value,value*value);
+  }, 0 | Math.random()*100);
+}
+cuaradoCallback(0,(value,result) =< {
+   console.log(`${value} ${result}`)
+   cuadradoCallback(1,(value,result) =>{
+      console.log(`${value} ${result}`)
+   });
+});
+
+```
+- Promesas, para no utilizar sus callbacks https://youtu.be/ppzrpTjwEC8
+
+```
+function cuadradoPromise(value){
+   if (error) return Promise.reject("Error"jiro)
+   return new Promise((resolve,reject)=>{
+     setTimeout(() =>{
+        resolve({ //retorna un objeto con el resultado
+         value,
+         result:value*value
+        });
+     }, 0 | Math.random() * 1000);
+   });
+}
+
+cuadradoPromise(0) //Hara que se vayan esperando uno a otros
+  .then(obj => { //recibe una promesa y hay q manejarlo
+   console.log(obj)
+   return cuadradoPromise(1)
+  })
+  .then(obj => {
+    console.log(obj)
+    return cuadradoPromise(2)
+  })
+  .catch(err => console.log(err));
+```
+- Async Await, en funciones asincronas, el await espera que termine la ejecucion de la promesa, para pasar a la siguiente linea, y asi el console.log tendra valores q imprimir
+```
+//const asincronajiro = async () = > {}
+asyn function funcionAsincronaDeclarada(){
+  try{
+     console.log("Oie") 
+     let obj = await cudradoPromise(0);
+     console.log(`${obj.value}`)
+     
+     obj = cudradoPromise(1);
+     console.log(`${obj.value}`)
+  }
+  catch(erro)
+  }
+
+
+```
