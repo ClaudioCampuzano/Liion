@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { LoginScreen, HomeScreen, RegistrationScreen } from './src/screens'
+import { LoginScreen, HomeScreen, HomeScreen2, RegistrationScreen } from './src/screens'
 import {decode, encode} from 'base-64'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
@@ -121,7 +121,7 @@ Tab = createBottomTabNavigator();
 function HomesTab() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home11" component={HomeScreen} />
+      <Tab.Screen name="Home11" component={HomeScreen2} />
       <Tab.Screen name="jiro2" component={ () => {
         return (
           <View>
@@ -158,6 +158,7 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Profile">
     <Drawer.Screen name="Homes" component={Homes} />
+    <Drawer.Screen name="Homesslider" component={HomeScreen} />
     <Drawer.Screen name="jiro1" component={ () => {
       return(
       <View>
