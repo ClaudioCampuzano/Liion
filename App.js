@@ -1,0 +1,169 @@
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import {signIn, HomeScreen, HomeScreen2, signUp} from './screens/index'
+import {decode, encode} from 'base-64'
+if (!global.btoa) {  global.btoa = encode }
+if (!global.atob) { global.atob = decode }
+import  firebase  from './api/firebase'
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+
+
+
+export default function App() {
+
+    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(null)
+
+
+
+
+
+
+
+    useEffect(() => {
+        const usersRef = firebase.firestore().collection('users');
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                usersRef
+                    .doc(user.uid)
+                    .get()
+                    .then((document) => {
+                        const userData = document.data()
+                        setLoading(false)
+                        setUser(userData)
+                    })
+                    .catch((error) => {
+                        setLoading(false)
+                    });
+            } else {
+                setLoading(false)
+            }
+        });
+    }, []);
+
+
+
+
+    if (loading) {
+        return (
+            <></>
+        )
+    }
+
+
+
+
+    return (
+
+
+        <NavigationContainer>
+            <RootStackScreen user={user} />
+        </NavigationContainer>
+
+
+
+        /*
+        <NavigationContainer>
+          <Stack.Navigator>
+            { user ? (
+
+                <Stack.Screen name="Homes" component={Homes} />
+
+            ) : (
+              <>
+                <Stack.Screen name="Login" component={signIn} />
+                <Stack.Screen name="Registration" component={signUp} />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+        */
+    );
+}
+
+const RootStack = createStackNavigator();
+const Stack = createStackNavigator();
+const RootStackScreen = ({ user }) => (
+    <RootStack.Navigator headerMode="none">
+        {user ? (
+            <RootStack.Screen
+                name="App"
+                component={DrawerScreen}
+                options={{
+                    animationEnabled: false
+                }}
+            />
+        ) : (
+            <RootStack.Screen
+                name="Auth"
+                component={AuthStackScreen}
+                options={{
+                    animationEnabled: false
+                }}
+            />
+        )}
+    </RootStack.Navigator>
+);
+
+
+function Homes() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Home1" component={HomesTab} />
+        </Stack.Navigator>
+    );
+}
+const Tab = createBottomTabNavigator();
+function HomesTab() {
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Home11" component={HomeScreen2} />
+            <Tab.Screen name="jiro2" component={ () => {
+                return (
+                    <View>
+                        <Text>Jiro2</Text>
+                    </View>
+                )
+            }}></Tab.Screen>
+        </Tab.Navigator>
+    );
+}
+
+
+
+
+
+const AuthStack = createStackNavigator();
+const AuthStackScreen = () => (
+    <AuthStack.Navigator>
+        <AuthStack.Screen
+            name="SignIn"
+            component={signIn}
+            options={{ title: "Sign In" }}
+        />
+        <AuthStack.Screen
+            name="CreateAccount"
+            component={signUp}
+            options={{ title: "Create Account" }}
+        />
+    </AuthStack.Navigator>
+);
+
+import { Text, View } from 'react-native'
+const Drawer = createDrawerNavigator();
+const DrawerScreen = () => (
+    <Drawer.Navigator initialRouteName="Profile">
+        <Drawer.Screen name="Homes" component={Homes} />
+        <Drawer.Screen name="Homesslider" component={HomeScreen} />
+        <Drawer.Screen name="jiro1" component={ () => {
+            return(
+                <View>
+                    <Text>Jiro1</Text>
+                </View>)
+        }} />
+    </Drawer.Navigator>
+);
