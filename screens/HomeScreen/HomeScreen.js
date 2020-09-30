@@ -41,7 +41,6 @@ export default class HomeScreen extends Component {
                 };
                 this.setState({ region: region });
             },
-            error => console.log(error)
         );
         return this.location;
     };
