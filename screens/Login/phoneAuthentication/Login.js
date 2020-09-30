@@ -86,4 +86,3 @@ export default function Login_phone({navigation}){
         </KeyboardAwareScrollView>
     );
 };
-//() => navigation.navigate('Home')

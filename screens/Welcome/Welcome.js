@@ -5,7 +5,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 export default function Welcome({navigation}) {
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')} ><Text>Empezemos</Text></TouchableOpacity>
+            <Text>Empezemos po jiropa</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('PhoneAuthentication')} ><Text>Login Celular</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('SignIn')} ><Text>Login correo</Text></TouchableOpacity>
             <StatusBar style="auto" />
         </View>
     );

@@ -4,12 +4,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import styles from './styles';
 import firebase from '../../../../api/firebase'
 
-export default function LoginScreen({navigation}) {
+export default function SignIn({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const onFooterLinkPress = () => {
-        navigation.navigate('Registration')
+        navigation.navigate('SignUp')
     }
 
     const onLoginPress = () => {
@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('Home', {user: user})
+                        navigation.navigate('DrawerScreen', {user: user})
                     })
                     .catch(error => {
                         alert(error)
@@ -46,7 +46,7 @@ export default function LoginScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
-                    source={require('../../../../assets/icon.png')}
+                    source={require('../../../../assets/icon1.png')}
                 />
                 <TextInput
                     style={styles.input}
@@ -61,7 +61,7 @@ export default function LoginScreen({navigation}) {
                     style={styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Password'
+                    placeholder='Contraseña'
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
@@ -70,10 +70,10 @@ export default function LoginScreen({navigation}) {
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => onLoginPress()}>
-                    <Text style={styles.buttonTitle}>Log in</Text>
+                    <Text style={styles.buttonTitle}>Identifiquese</Text>
                 </TouchableOpacity>
                 <View style={styles.footerView}>
-                    <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
+                    <Text style={styles.footerText}>¿No tienes cuenta aun? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Crear cuenta</Text></Text>
                 </View>
             </KeyboardAwareScrollView>
         </View>
