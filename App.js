@@ -22,6 +22,7 @@ const RootStackScreen = ({ user }) => (
     <RootStack.Navigator headerMode="none">
         {user ? (
             <RootStack.Screen
+                user = {user}
                 name="DrawerScreen"
                 component={DrawerScreen}
                 options={{
@@ -86,5 +87,6 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
     <Drawer.Navigator initialRouteName="Profile" hede>
         <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="Home2" component={Home2} />
     </Drawer.Navigator>
 );

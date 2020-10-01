@@ -31,3 +31,4 @@ Dirígete a Firebase.com y crea una nueva cuenta. Una vez que haya iniciado sesi
 - yarn add @expo/vector-icons
 - expo install expo-location
 - expo install expo-task-manager
+- expo install expo-permissions

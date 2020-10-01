@@ -1,16 +1,21 @@
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react'
-
-
-
-
-
-export default function HomeScreen2(props) {
+export default function Home2() {
     return (
-        <View>
-            <Text>Home Screen</Text>
+        <View style={styles.container}>
+            <Text>Open up App.js to start working on your app!</Text>
+            <StatusBar style="auto" />
         </View>
-    )
+    );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});

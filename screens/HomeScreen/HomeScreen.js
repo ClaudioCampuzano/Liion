@@ -1,77 +1,32 @@
-import React, { Component } from "react";
-import { View } from "react-native";
+import React, {  } from 'react';
+import { View, Text } from 'react-native';
 import MapView from "react-native-maps";
-import * as Location from "expo-location";
-import * as Permissions from "expo-permissions";
+import styles from './styles'
+import useLocation from "../../hooks/useLocation";
 
-import styles from './styles';
+export default function Home() {
+    const dateLocation = useLocation();
 
-const LOCATION_TASK_NAME = "background-location-task";
-
-export default class HomeScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            region: null,
-            error: '',
-        };
-    }
-
-    _getLocationAsync = async () => {
-        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-            enableHighAccuracy: true,
-            distanceInterval: 1,
-            timeInterval: 60000
-        });
-        // watchPositionAsync Return Lat & Long on Position Change
-        this.location = await Location.watchPositionAsync(
-            {
-                enableHighAccuracy: true,
-                distanceInterval: 1,
-                timeInterval: 60000
-            },
-            newLocation => {
-                let { coords } = newLocation;
-                // console.log(coords);
-                let region = {
-                    latitude: coords.latitude,
-                    longitude: coords.longitude,
-                    latitudeDelta: 0.045,
-                    longitudeDelta: 0.045
-                };
-                this.setState({ region: region });
-            },
-        );
-        return this.location;
-    };
-    async UNSAFE_componentWillMount() {
-        // Asking for device location permission
-        const { status } = await Permissions.askAsync(Permissions.LOCATION);
-
-        if (status === "granted") {
-            this._getLocationAsync();
-        } else {
-            this.setState({ error: "Locations services needed" });
-        }
-    }
-
-    render() {
-        return (
-            <View style={styles.container}>
-                <MapView
-                    region={this.state.region}
-                    showsCompass={true}
-                    showsTraffic={true}
-                    showsUserLocation={true}
-                    rotateEnabled={true}
-                    ref={map => {
-                        this.map = map;
-                    }}
-                    style={{ flex: 1 }}
-                />
-                <View style={styles.mapDrawerOverlay} />
-            </View>
-        );
-    }
+    return dateLocation.errorMsg || !dateLocation.location ? (
+        <View style={styles.container}>
+            <Text>¡¡Cargando Jiro!!</Text>
+        </View>
+    ) : (
+        <View style={styles.container}>
+            <MapView style={styles.map}
+                     initialRegion={{
+                         latitude: dateLocation.location.coords.latitude,
+                         longitude: dateLocation.location.coords.longitude,
+                         latitudeDelta: 0.045,
+                         longitudeDelta: 0.045
+                     }}
+                     showsUserLocation={true}
+                     showsCompass={true}
+                     rotateEnabled={true}
+                     minZoomLevel={6}
+                     maxZoomLevel={18}
+            />
+            <View style={styles.mapDrawerOverlay} />
+        </View>
+    );
 }
-
