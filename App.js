@@ -21,14 +21,9 @@ const Stack = createStackNavigator();
 const RootStackScreen = ({ user }) => (
     <RootStack.Navigator headerMode="none">
         {user ? (
-            <RootStack.Screen
-                user = {user}
-                name="DrawerScreen"
-                component={DrawerScreen}
-                options={{
-                    animationEnabled: false
-                }}
-            />
+            <RootStack.Screen name="DrawerScreen" >
+            {(props) => < DrawerScreen  {...props} user={user} />}
+            </RootStack.Screen>
         ) : (
             <RootStack.Screen
                 name="Auth"
@@ -84,9 +79,13 @@ const AuthStackScreen = () => (
 );
 
 const Drawer = createDrawerNavigator();
-const DrawerScreen = () => (
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} initialRouteName="Profile" hede>
-        <Drawer.Screen name="Home" component={Home} />
+const DrawerScreen = (props) => (
+    console.log('jiro'),
+    //console.log(JSON.stringify(props.user)),
+    console.log(props),
+    <Drawer.Navigator drawerContent={props => <DrawerContent {...props}  />}>
+        <Drawer.Screen name="Home"  component={Home} />
+
         <Drawer.Screen name="Home2" component={Home2} />
     </Drawer.Navigator>
 );

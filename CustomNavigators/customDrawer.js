@@ -20,6 +20,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export function DrawerContent(props){
   return(
     console.log(10),
+    //console.log(props),
     
     <View>
       <Text>

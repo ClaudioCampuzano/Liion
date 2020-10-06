@@ -7,7 +7,7 @@ export default function Home(...props) {
    
     return (
         console.log(3),
-        console.log(JSON.stringify(props.user)),
+        //console.log(props),
 
         <View style={styles.container}>
            
