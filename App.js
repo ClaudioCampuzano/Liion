@@ -13,7 +13,7 @@ import Home from "./screens/HomeScreen/HomeScreen"
 import Home2 from "./screens/HomeScreen/Home2"
 import SignIn from "./screens/Login/EmailAuthentication/LoginScreen/SignIn"
 import SignUp from "./screens/Login/EmailAuthentication/RegistrationScreen/signUp"
-
+import { DrawerContent } from './CustomNavigators/customDrawer'
 const RootStack = createStackNavigator();
 const Stack = createStackNavigator();
 
@@ -22,6 +22,7 @@ const RootStackScreen = ({ user }) => (
     <RootStack.Navigator headerMode="none">
         {user ? (
             <RootStack.Screen
+                user = {user}
                 name="DrawerScreen"
                 component={DrawerScreen}
                 options={{
@@ -84,7 +85,8 @@ const AuthStackScreen = () => (
 
 const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
-    <Drawer.Navigator initialRouteName="Profile" hede>
+    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} initialRouteName="Profile" hede>
         <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="Home2" component={Home2} />
     </Drawer.Navigator>
 );
