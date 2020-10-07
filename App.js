@@ -5,11 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
-import PhoneAuthentication from "./screens/Login/phoneAuthentication/Login";
-import Welcome from "./screens/Bienvenida/Welcome"
+//Screens
+import Bienvenida from "./screens/Bienvenida/Bienvenida"
 import Home from "./screens/Home/HomeScreen"
+//Autentificacion
+import PhoneAuthentication from "./screens/Login/phoneAuthentication/Login";
 import SignIn from "./screens/Login/EmailAuthentication/LoginScreen/SignIn"
 import SignUp from "./screens/Login/EmailAuthentication/RegistrationScreen/signUp"
+//Api
 import useAuthFirebase from "./hooks/useAuthFirebase";
 
 const Drawer = createDrawerNavigator();
@@ -41,7 +44,7 @@ const StackScreen = ({ user }) => (
 
 const AuthStackScreen = () => (
     <AuthStack.Navigator>
-        <AuthStack.Screen name="Welcome" component={Welcome} />
+        <AuthStack.Screen name="Welcome" component={Bienvenida} />
         <AuthStack.Screen name="PhoneAuthentication" component={PhoneAuthentication} />
         <AuthStack.Screen name="SignIn" component={SignIn} />
         <AuthStack.Screen name="SignUp" component={SignUp} />

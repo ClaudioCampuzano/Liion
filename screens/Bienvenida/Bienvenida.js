@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-export default function Welcome({navigation}) {
+export default function Bienvenida({navigation}) {
     return (
         <View style={styles.container}>
             <Text>Empezemos po jiropa</Text>
