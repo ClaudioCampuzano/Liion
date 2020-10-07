@@ -14,6 +14,6 @@ export default function useCoordenadas(){
             let location = await Location.getCurrentPositionAsync({});
             setLocation(location);
         })();
-    });
+    },[]);
     return ({location,errorMsg});
 }

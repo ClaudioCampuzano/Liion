@@ -3,26 +3,24 @@ import { View, Text} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-
-import firebase from 'firebase'
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
 import PhoneAuthentication from "./screens/Login/phoneAuthentication/Login";
-import Welcome from "./screens/Welcome/Welcome"
-import Home from "./screens/HomeScreen/HomeScreen"
-import Home2 from "./screens/HomeScreen/Home2"
+import Welcome from "./screens/Bienvenida/Welcome"
+import Home from "./screens/Home/HomeScreen"
 import SignIn from "./screens/Login/EmailAuthentication/LoginScreen/SignIn"
 import SignUp from "./screens/Login/EmailAuthentication/RegistrationScreen/signUp"
+import useAuthFirebase from "./hooks/useAuthFirebase";
 
-const RootStack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
-//
-const RootStackScreen = ({ user }) => (
-    <RootStack.Navigator headerMode="none">
+const StackScreen = ({ user }) => (
+    <Stack.Navigator headerMode="none">
         {user ? (
-            <RootStack.Screen
-                user = {user}
+            <Stack.Screen
+                //user = {user}
                 name="DrawerScreen"
                 component={DrawerScreen}
                 options={{
@@ -30,7 +28,7 @@ const RootStackScreen = ({ user }) => (
                 }}
             />
         ) : (
-            <RootStack.Screen
+            <Stack.Screen
                 name="Auth"
                 component={AuthStackScreen}
                 options={{
@@ -38,42 +36,9 @@ const RootStackScreen = ({ user }) => (
                 }}
             />
         )}
-    </RootStack.Navigator>
+    </Stack.Navigator>
 );
 
-export default function App() {
-    const [loading, setLoading] = useState(true)
-    const [user, setUser] = useState(null)
-
-    useEffect(() => {
-        const usersRef = firebase.firestore().collection('users');
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                usersRef
-                    .doc(user.uid)
-                    .get()
-                    .then((document) => {
-                        const userData = document.data()
-                        setLoading(false)
-                        setUser(userData)
-                    })
-                    .catch((error) => {
-                        setLoading(false)
-                    });
-            } else {
-                setLoading(false)
-            }
-        });
-    }, []);
-
-    return (
-        <NavigationContainer>
-            <RootStackScreen user={user} />
-        </NavigationContainer>
-    );
-}
-
-const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
     <AuthStack.Navigator>
         <AuthStack.Screen name="Welcome" component={Welcome} />
@@ -83,10 +48,17 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 );
 
-const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
-    <Drawer.Navigator initialRouteName="Profile" hede>
+    <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Home2" component={Home2} />
     </Drawer.Navigator>
 );
+
+export default function App() {
+    const authFirebase = useAuthFirebase();
+    return (
+        <NavigationContainer>
+            <StackScreen user={authFirebase.user} />
+        </NavigationContainer>
+    );
+}
