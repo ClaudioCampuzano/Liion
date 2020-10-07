@@ -36,7 +36,8 @@ export default function SignUp({navigation}) {
                     .doc(uid)
                     .set(data)
                     .then(() => {
-                        navigation.navigate('Home', {user: data})
+                        navigation.goBack()
+                        //navigation.navigate('Home', {user: data})
                     })
                     .catch((error) => {
                         alert(error)

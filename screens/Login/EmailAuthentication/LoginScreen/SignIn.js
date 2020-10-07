@@ -28,7 +28,8 @@ export default function SignIn({navigation}) {
                             return;
                         }
                         const user = firestoreDocument.data()
-                        navigation.navigate('DrawerScreen', {user: user})
+                        navigation.goBack()
+                        //navigation.navigate('Home', {user: user})
                     })
                     .catch(error => {
                         alert(error)
