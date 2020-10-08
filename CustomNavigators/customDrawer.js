@@ -20,7 +20,7 @@ import Home from '../screens/HomeScreen/HomeScreen';
 import Home2 from '../screens/HomeScreen/Home2';
 
 
-export function DrawerContent({user}){
+export function DrawerContent({navigation, user}){
   console.log('ayuua22')
   //console.log(props)
   return(
@@ -59,18 +59,18 @@ export function DrawerContent({user}){
                             />
                         )}
                         label="Home"
-                        //onPress={() => {props.navigation.navigate('Home')}}
+                        onPress={() => {navigation.navigate('Home')}}
                     />
                     <DrawerItem 
                         icon={({color, size}) => (
                             <Icon 
-                            name="home2" 
+                            name="home" 
                             color={color}
                             size={size}
                             />
                         )}
                         label="Home2"
-                        //onPress={() => {props.navigation.navigate('Home2')}}
+                        onPress={() => {navigation.navigate('Home2')}}
                     />
                 </Drawer.Section>
             </View>
