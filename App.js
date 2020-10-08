@@ -79,11 +79,12 @@ const AuthStackScreen = () => (
 );
 
 const Drawer = createDrawerNavigator();
-const DrawerScreen = (props) => (
+const DrawerScreen = ({user}) => (
     console.log('jiro'),
-    //console.log(JSON.stringify(props.user)),
-    console.log(props),
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props}  />}>
+    console.log(JSON.stringify(user)),
+    //console.log(props),
+    <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), console.log(user),
+    <DrawerContent {...props} user={user} />  )}>
         <Drawer.Screen name="Home"  component={Home} />
 
         <Drawer.Screen name="Home2" component={Home2} />
