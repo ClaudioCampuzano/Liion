@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
+import Home from "./screens/Home/Home";
 import TabPersonalizado from "./Component/TabPersonalizado";
 import Notificaciones from "./screens/Notificaciones"
 import UnirseViaje from "./screens/UnirseViaje";
@@ -15,6 +15,7 @@ import Bienvenida from "./screens/Bienvenida/Bienvenida";
 import SignIn from "./screens/Login/EmailAuthentication/LoginScreen/SignIn";
 import SignUp from "./screens/Login/EmailAuthentication/RegistrationScreen/signUp";
 import PhoneAuthentication from "./screens/Login/phoneAuthentication/Login"
+import DrawerContent from "./Component/customDrawer"
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -29,27 +30,24 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 );
 
-const DrawerScreen = () => (
-    <Drawer.Navigator initialRouteName="Home">
+const DrawerScreen = ({user}) => (
+    <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), console.log(user),
+        <DrawerContent {...props} user={user} />  )}>
+        <Drawer.Screen name="Home"  component={TabPersonalizado} />
         <Drawer.Screen name="Perfil" component={Perfil} />
-        <Drawer.Screen name="Notificaciones" component={Notificaciones} />
-        <Drawer.Screen name="Home" component={TabPersonalizado} />
         <Drawer.Screen name="Crear Viaje" component={CrearViaje} />
         <Drawer.Screen name="Unirse a viajes" component={UnirseViaje} />
     </Drawer.Navigator>
 );
 
+
+
 const StackScreen = ({ user }) => (
     <Stack.Navigator headerMode="none">
         {user ? (
-            <Stack.Screen
-                //user = {user}
-                name="DrawerScreen"
-                component={DrawerScreen}
-                options={{
-                    animationEnabled: true
-                }}
-            />
+            <Stack.Screen name="DrawerScreen" >
+                {(props) => < DrawerScreen  {...props} user={user} />}
+            </Stack.Screen>
         ) : (
             <Stack.Screen
                 name="Auth"

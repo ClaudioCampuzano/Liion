@@ -9,6 +9,8 @@ export default function CrearViaje({ navigation }) {
                 onPress={() => navigation.goBack()}
                 title="Go back home"
             />
+            <Button onPress={() => navigation.toggleDrawer()} title="Toggle Drawer" />
+
         </View>
     );
 }
