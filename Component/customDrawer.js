@@ -16,13 +16,9 @@ import {
     DrawerItem
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Home from '../screens/Home/Home';
-import UnirseViaje from "../screens/UnirseViaje";
-import CrearViaje from "../screens/CrearViaje";
-import Perfil from "../screens/Perfil";
-import TabPersonalizado from "../Component/TabPersonalizado"
 
-export default function DrawerContent({navigation, user}){
+
+export default function DrawerContent({ navigation, user}){
     console.log('ayuua22')
     //console.log(props)
     return(
@@ -61,7 +57,8 @@ export default function DrawerContent({navigation, user}){
                                 />
                             )}
                             label="Home"
-                            onPress={() => {navigation.navigate('TabPersonalizado')}}
+                            onPress={() => {navigation.navigate('Home')}}
+                              
                         />
                         <DrawerItem
                             icon={({color, size}) => (
@@ -83,7 +80,7 @@ export default function DrawerContent({navigation, user}){
                                 />
                             )}
                             label="UnirseViaje"
-                            onPress={() => {navigation.navigate('UnirseViaje')}}
+                            onPress={() => {navigation.navigate('Unirse a viajes')}}
                         />
                         <DrawerItem
                             icon={({color, size}) => (
@@ -94,7 +91,7 @@ export default function DrawerContent({navigation, user}){
                                 />
                             )}
                             label="CrearViaje"
-                            onPress={() => {navigation.navigate('CrearViaje')}}
+                            onPress={() => {navigation.navigate('Crear Viaje')}}
                         />
                     </Drawer.Section>
                 </View>
@@ -128,6 +125,10 @@ export default function DrawerContent({navigation, user}){
                         //clicking out side of alert will not cancel
                     );   }}
                 />
+
+
+            
+            
             </Drawer.Section>
         </View>
     );

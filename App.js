@@ -30,7 +30,9 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 );
 
-const DrawerScreen = ({user}) => (
+
+ 
+const DrawerScreen = ({props, user}) => (
     <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), console.log(user),
         <DrawerContent {...props} user={user} />  )}>
         <Drawer.Screen name="Home"  component={TabPersonalizado} />
@@ -38,8 +40,7 @@ const DrawerScreen = ({user}) => (
         <Drawer.Screen name="Crear Viaje" component={CrearViaje} />
         <Drawer.Screen name="Unirse a viajes" component={UnirseViaje} />
     </Drawer.Navigator>
-);
-
+);   
 
 
 const StackScreen = ({ user }) => (

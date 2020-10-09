@@ -7,7 +7,7 @@ import Notificaciones from "../screens/Notificaciones";
 
 const Tab = createBottomTabNavigator();
 
-export default function TabPersonalizado() {
+export default function TabPersonalizado({navigation}) {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
