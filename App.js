@@ -16,6 +16,7 @@ import SignIn from "./screens/Login/EmailAuthentication/LoginScreen/SignIn";
 import SignUp from "./screens/Login/EmailAuthentication/RegistrationScreen/signUp";
 import PhoneAuthentication from "./screens/Login/phoneAuthentication/Login"
 import DrawerContent from "./Component/customDrawer"
+//import Bienvenida from "./screens/Bienvenida/Bienvenida"
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -33,12 +34,14 @@ const AuthStackScreen = () => (
 
  
 const DrawerScreen = ({props, user}) => (
-    <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), console.log(user),
+    <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), 
         <DrawerContent {...props} user={user} />  )}>
         <Drawer.Screen name="Home"  component={TabPersonalizado} />
         <Drawer.Screen name="Perfil" component={Perfil} />
         <Drawer.Screen name="Crear Viaje" component={CrearViaje} />
         <Drawer.Screen name="Unirse a viajes" component={UnirseViaje} />
+        <Drawer.Screen name="exit" component={StackScreen} />
+        
     </Drawer.Navigator>
 );   
 
@@ -46,6 +49,7 @@ const DrawerScreen = ({props, user}) => (
 const StackScreen = ({ user }) => (
     <Stack.Navigator headerMode="none">
         {user ? (
+            console.log("hay ac"),
             <Stack.Screen name="DrawerScreen" >
                 {(props) => < DrawerScreen  {...props} user={user} />}
             </Stack.Screen>

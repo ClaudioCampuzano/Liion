@@ -16,10 +16,17 @@ import {
     DrawerItem
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import logout from '../screens/Login/logout'
+import firebase from '../api/firebase'
 
+import { CommonActions,  NavigationActions, StackActions } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import useAuthFirebase from '../hooks/useAuthFirebase';
+import Bienvenida from '../screens/Bienvenida/Bienvenida';
+//import { NavigationActions, StackActions } from 'react-navigation';
 
 export default function DrawerContent({ navigation, user}){
-    console.log('ayuua22')
+    //console.log('ayuua22')
     //console.log(props)
     return(
         <View style={{flex:1}}>
@@ -108,18 +115,68 @@ export default function DrawerContent({ navigation, user}){
                     label="Sign Out"
                     onPress={() => {Alert.alert(
                         //title
-                        'Hello',
+                        'Wena  King',
                         //body
-                        'I am two option alert. Do you want to cancel me ?',
+                        'OK',
                         [
                             {
-                                text: 'Yes',
-                                onPress: () => console.log('Yes Pressed')
+                                text: '',
+                                onPress: async ()   =>  {
+                                //user=false
+                                
+                                await firebase.auth().signOut().then(function() {
+                                    console.log('A')
+                                    navigation.dispatch(
+                                        CommonActions.reset({
+                                          index: 1,
+                                          routes: [
+                                            
+                                            {
+                                              name: 'exit',
+                                              params: { user: '' },
+                                            },
+                                          ],
+                                        })
+                                      );
+                                      navigation.navigate('exit')
+
+
+                                  }).catch(function(error) {
+                                    console.log('B')
+                                    console.log(error)
+                                  });
+                                  
+                                //const navigations = useNavigation();
+                                //try{
+                                    //await firebase.auth().signOut().then( () =>{
+                                    // console.log('pan') 
+                                      
+                                     //navigation.reset({
+                                     //    index: 0,
+                                         //routes: [{name:'Bienvenido'}]
+                                     //    routes: [{name:'exit'}]
+                                    // })  })
+                                    //})
+                                   
+                                    //await firebase.auth().onAuthStateChanged(user => {
+                                    //    console.log(user)
+                                    //}).then(async () => {
+                                        //firebase.auth().signOut()
+                                    //    console.log("aka")
+                                    //})
+                                    //console.log(userji)
+
+
+                                
+                                //} catch(e){
+                                //    console.log('queso')
+                                //    console.log(e)
+                                    
+                                //}
+
+                                }
                             },
-                            {
-                                text: 'No',
-                                onPress: () => console.log('No Pressed'), style: 'cancel'
-                            },
+                            
                         ],
                         {cancelable: false},
                         //clicking out side of alert will not cancel
@@ -132,6 +189,20 @@ export default function DrawerContent({ navigation, user}){
             </Drawer.Section>
         </View>
     );
+}
+
+jurout = async () => {
+    try{
+        await firebase.auth().signOut()
+        navigation.reset({
+            index: 0,
+            routes: [{name:'Bienvenida'}]
+        })
+    }catch(e){
+        console.log(e)
+    }
+
+
 }
 
 /*
