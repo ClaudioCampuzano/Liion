@@ -6,7 +6,8 @@ export default function HomeScreen() {
   const { user, logout } = useContext(AuthContext);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Home Screen</Text>
+      <Text style={styles.text}>Buena KinG!~{"\n"}
+       {user.email}</Text>
       <FormButton buttonTitle='Logout' onPress={() => logout()} />
     </View>
   );
