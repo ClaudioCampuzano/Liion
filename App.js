@@ -1,3 +1,41 @@
+import React from 'react';
+import Providers from './refact';
+export default function App() {
+  return <Providers />;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 import React, {useEffect,useState} from 'react';
 import { View, Text, Button} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -75,3 +113,4 @@ export default function App() {
     )
 }
 
+*/
