@@ -30,8 +30,6 @@ const AuthStackScreen = () => (
     </AuthStack.Navigator>
 );
 
-
- 
 const DrawerScreen = ({props, user}) => (
     <Drawer.Navigator drawerContent={props =>  (console.log('jonn'), console.log(user),
         <DrawerContent {...props} user={user} />  )}>
@@ -41,7 +39,6 @@ const DrawerScreen = ({props, user}) => (
         <Drawer.Screen name="Unirse a viajes" component={UnirseViaje} />
     </Drawer.Navigator>
 );   
-
 
 const StackScreen = ({ user }) => (
     <Stack.Navigator headerMode="none">
@@ -63,7 +60,6 @@ const StackScreen = ({ user }) => (
 
 export default function App() {
     const authFirebase = useAuthFirebase();
-
     return (
         <NavigationContainer>
             <StackScreen user={authFirebase.user} />
