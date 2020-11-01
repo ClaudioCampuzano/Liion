@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { windowHeight, windowWidth } from './Dimensions'
+import { windowHeight, windowWidth } from '../constants/Dimensions'
 
 export default function FormButton({ buttonTitle, ...rest }) {
     return (
@@ -9,7 +9,6 @@ export default function FormButton({ buttonTitle, ...rest }) {
       </TouchableOpacity>
     );
   }
-
 
   const styles = StyleSheet.create({
     buttonContainer: {

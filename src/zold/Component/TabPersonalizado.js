@@ -2,8 +2,8 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {Ionicons} from "@expo/vector-icons";
 import React from "react";
 
-import Home from "../screens/Home/Home";
-import Notificaciones from "../screens/Notificaciones";
+import Home from "../src/zold/screens/Home/Home";
+import Notificaciones from "../src/zold/screens/Notificaciones";
 
 const Tab = createBottomTabNavigator();
 

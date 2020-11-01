@@ -4,7 +4,7 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import Constants from 'expo-constants';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import firebase from '../../../api/firebase';
+import firebase from '../../../../../api/firebase';
 import 'firebase/firestore';
 import styles from './styles';
 

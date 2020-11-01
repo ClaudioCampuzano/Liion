@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import firebase from '../../api/firebase';
+import firebase from '../../../../api/firebase';
 import Bienvenida from '../Bienvenida/Bienvenida';
 
 export default function logout() {

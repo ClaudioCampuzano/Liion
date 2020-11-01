@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { View, Text,Button,Image, StyleSheet, Dimensions } from 'react-native';
 import MapView, {Marker} from "react-native-maps";
 //import styles from './styles'
-import useLocation from "../../hooks/useLocation";
+import useLocation from "../../../../hooks/useLocation";
 import Geocoder from "react-native-geocoding";
 
-import Search from "../../Component/Busqueda";
-import Directions from "../../Component/Direcciones"
-import { getPixelSize } from "../../Component/utils";
-import markerImage from "../../assets/marker.png";
-import backimage from "../../assets/back.png";
+import Search from "../../../../Component/Busqueda";
+import Directions from "../../../../Component/Direcciones"
+import { getPixelSize } from "../../../../Component/utils";
+import markerImage from "../../../../assets/marker.png";
+import backimage from "../../../../assets/back.png";
 
 import {
     LocationBox,

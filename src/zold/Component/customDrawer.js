@@ -16,13 +16,13 @@ import {
     DrawerItem
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import logout from '../screens/Login/logout'
+import logout from '../src/zold/screens/Login/logout'
 import firebase from '../api/firebase'
 
 import { CommonActions,  NavigationActions, StackActions } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import useAuthFirebase from '../hooks/useAuthFirebase';
-import Bienvenida from '../screens/Bienvenida/Bienvenida';
+import Bienvenida from '../src/zold/screens/Bienvenida/Bienvenida';
 //import { NavigationActions, StackActions } from 'react-navigation';
 
 export default function DrawerContent({ navigation, user}){

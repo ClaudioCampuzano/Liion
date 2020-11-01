@@ -1,5 +1,6 @@
 import React from 'react';
-import Providers from './refact';
+import Providers from './src/navigations';
+
 export default function App() {
   return <Providers />;
 }

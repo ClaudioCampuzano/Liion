@@ -1,9 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import FormButton from './FormButton';
-import FormInput from './FormInput';
-import { AuthContext } from './AuthProvider';
-
+import FormButton from '../components/FormButton';
+import FormInput from '../components/FormInput';
+import { AuthContext } from '../navigations/AuthProvider';
 
 export default function LoginScreen({ navigation }) {
     const { login } = useContext(AuthContext);
