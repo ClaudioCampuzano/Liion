@@ -3,10 +3,14 @@ import { View, Text, StyleSheet } from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigations/AuthProvider';
+//import FormPicker from "../components/FormPicker";
+import { Picker } from '@react-native-picker/picker';
 
 export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [tipo, setTipo] = useState('pasajero');
+
   const  { register } = useContext(AuthContext);
   return (
     <View style={styles.container}>
@@ -25,7 +29,20 @@ export default function SignupScreen() {
         onChangeText={userPassword => setPassword(userPassword)}
         secureTextEntry={true}
       />
-      <FormButton buttonTitle='Signup' onPress={() => register(email, password)} />
+
+      <Picker
+        selectedValue={tipo}
+        style={{height: 50, width: 200}}
+        onValueChange={(itemValue, itemIndex) => {
+            setTipo(itemValue);
+            console.log(itemValue);
+            }
+        }>
+        <Picker.Item label="Pasajero" value="pasajero" />
+        <Picker.Item label="Conductor" value="conductor" />
+      </Picker>
+
+      <FormButton buttonTitle='Signup' onPress={() => register(email, password, tipo)} />
     </View>
   );
 }
