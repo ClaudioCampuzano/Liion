@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import firebase from '../constants/firebase';
 import AuthStack from './AuthStack';
 import HomeStack from './HomeStack';
+import DrawerStack from "./DrawerStack";
 import { AuthContext } from './AuthProvider';
 import Loading from '../components/Loading';
 
@@ -25,7 +26,7 @@ export default function Routes() {
     }
     return (
       <NavigationContainer>
-        {user ? <HomeStack /> : <AuthStack />}
+        {user ? <DrawerStack /> : <AuthStack />}
       </NavigationContainer>
     );
   }

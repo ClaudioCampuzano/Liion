@@ -3,7 +3,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigations/AuthProvider';
-//import FormPicker from "../components/FormPicker";
 import { Picker } from '@react-native-picker/picker';
 
 export default function SignupScreen() {
@@ -14,7 +13,7 @@ export default function SignupScreen() {
   const  { register } = useContext(AuthContext);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Create an account</Text>
+      <Text style={styles.text}>Cree su cuenta</Text>
       <FormInput
         value={email}
         placeholderText='Email'

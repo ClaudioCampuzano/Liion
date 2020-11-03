@@ -10,7 +10,7 @@ export default function LoginScreen({ navigation }) {
     const [password, setPassword] = useState('');
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Welcome to Firebase app</Text>
+        <Text style={styles.text}>Login</Text>
         <FormInput
           value={email}
           placeholderText='Email'
@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
         />
         <FormInput
           value={password}
-          placeholderText='Password'
+          placeholderText='Contraseña'
           onChangeText={userPassword => setPassword(userPassword)}
           secureTextEntry={true}
         />
@@ -30,7 +30,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.navButton}
           onPress={() => navigation.navigate('Signup')}
         >
-          <Text style={styles.navButtonText}>New user? Join here</Text>
+          <Text style={styles.navButtonText}>¿No tienes cuenta aun? Crea tu cuenta aqui</Text>
         </TouchableOpacity>
       </View>
     );
