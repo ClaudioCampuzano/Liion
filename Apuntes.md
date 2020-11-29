@@ -339,3 +339,4 @@ asyn function funcionAsincronaDeclarada(){
 ### Datos
 - https://github.com/react-navigation/react-navigation/issues/2728
 - https://stackoverflow.com/questions/58821736/live-location-tracking-in-react-native-with-expo
+- https://www.campusmvp.es/recursos/post/truco-actualizar-a-la-ultima-las-versiones-de-dependencias-npm-en-package-json.aspx
