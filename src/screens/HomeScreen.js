@@ -8,7 +8,7 @@ export default function HomeScreen() {
   console.log(tipo);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Buena KinG jiro!~{"\n"}
+      <Text style={styles.text}>Buena KinG jiro!~{"\n"+tipo}
        {tipo} </Text>
 
       <FormButton buttonTitle='Logout' onPress={() => logout()} />
