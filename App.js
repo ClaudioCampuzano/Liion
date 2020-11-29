@@ -1,8 +1,10 @@
 import React from 'react';
+import {LogBox} from 'react-native';
 import Providers from './src/navigations';
 
 export default function App() {
-  return <Providers />;
+    LogBox.ignoreLogs(['Setting a timer']);
+    return <Providers />;
 }
 
 
