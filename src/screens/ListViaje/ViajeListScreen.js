@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Button } from 'react-native';
+import { Button } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from "../../constants/firebase";
 import { ListItem, Avatar } from "react-native-elements";
@@ -10,8 +10,7 @@ const ViajeListScreen = (props) => {
 
     useEffect(() => {
         firebase.firestore().collection('users').onSnapshot(querySnapshot => {
-        const users = [];
-
+            const users = [];
             querySnapshot.docs.forEach(doc => {
                 const { name, email, phone } = doc.data()
                 users.push({
@@ -21,18 +20,12 @@ const ViajeListScreen = (props) => {
                     phone
                 })
             });
-
             setUsers(users)
         })
     }, [])
 
     return (
         <ScrollView>
-            <Button
-                title="Crear Viaje"
-                onPress={() => props.navigation.navigate('CrearViajeScreen')}
-            />
-
             {
                 users.map(user => {
                     return(
@@ -43,7 +36,7 @@ const ViajeListScreen = (props) => {
                         }}>
                             <ListItem.Chevron/>
                             <Avatar
-                                source={{uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'}}
+                                source={{uri: 'https://image.freepik.com/vector-gratis/mapa-geografico-mundo-politico-coloreado_23-2148313098.jpg'}}
                                 rounded
                             />
                             <ListItem.Content>

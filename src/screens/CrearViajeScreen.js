@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { View, Button, TextInput, ScrollView, StyleSheet } from 'react-native';
-import firebase from '../../constants/firebase';
+import firebase from '../constants/firebase';
 
 const CrearViajeScreen = (props) => {
 
