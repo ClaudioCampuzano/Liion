@@ -6,6 +6,12 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [tipo, setTipo] = useState('');
+    /*         nombre: '',
+        apellido: '',
+        run: '',
+        email: '',
+        cel: '',
+        tipo_user:'', */
     return (
       <AuthContext.Provider
         value={{

@@ -5,26 +5,32 @@ import firebase from '../constants/firebase';
 const CrearViajeScreen = (props) => {
 
     const [state, setState] = useState({
-        name: '',
-        email: '',
-        phone: ''
+        origen: '',
+        destino: '',
+        precio: '',
+        cupos: '',
+        fecha: '',
+        hora: ''
     })
 
     const handleChangeText = (name, value) => {
         setState({...state, [name]: value})
     }
 
-    const createNewUser = async () => {
-        if(state.name === ''){
-            alert('Complete el nombre')
+    const crearNuevoViaje = async () => {
+        if(state.origen === '' || state.destino === '' || state.fecha === ''){
+            alert('Completa la informacion')
         }else {
             try {
-                await firebase.firestore().collection('users').add({
-                    name: state.name,
-                    email: state.email,
-                    phone: state.phone
+                await firebase.firestore().collection('viajes').add({
+                    origen: state.origen,
+                    destino: state.destino,
+                    precio: state.precio,
+                    cupos: state.cupos,
+                    fecha: state.fecha,
+                    hora: state.hora,
                 })
-                props.navigation.navigate('ViajeListScreen')
+                props.navigation.navigate('ListViaje')
             } catch (error) {
                 console.log(error);
             }
@@ -35,24 +41,42 @@ const CrearViajeScreen = (props) => {
         <ScrollView style={styles.container}>
             <View style={styles.inputGroup}>
                 <TextInput
-                    placeholder="Nombre del viaje"
-                    onChangeText={(value) => handleChangeText('name', value)}
+                    placeholder="Origen del viaje"
+                    onChangeText={(value) => handleChangeText('origen', value)}
                 />
             </View>
             <View style={styles.inputGroup}>
                 <TextInput
-                    placeholder="Cantidad de cupos"
-                    onChangeText={(value) => handleChangeText('email', value)}
+                    placeholder="Destino del viaje"
+                    onChangeText={(value) => handleChangeText('destino', value)}
                 />
             </View>
             <View style={styles.inputGroup}>
                 <TextInput
-                    placeholder="Valor del viaje"
-                    onChangeText={(value) => handleChangeText('phone', value)}
+                    placeholder="Precio"
+                    onChangeText={(value) => handleChangeText('precio', value)}
+                />
+            </View>
+            <View style={styles.inputGroup}>
+                <TextInput
+                    placeholder="Cupos"
+                    onChangeText={(value) => handleChangeText('cupos', value)}
+                />
+            </View>
+            <View style={styles.inputGroup}>
+                <TextInput
+                    placeholder="Fecha"
+                    onChangeText={(value) => handleChangeText('fecha', value)}
+                />
+            </View>
+            <View style={styles.inputGroup}>
+                <TextInput
+                    placeholder="Hora"
+                    onChangeText={(value) => handleChangeText('hora', value)}
                 />
             </View>
             <View>
-                <Button title="Guardar Usuario" onPress={() => createNewUser()}/>
+                <Button title="Crear viaje" onPress={() => crearNuevoViaje()}/>
             </View>
         </ScrollView>
     )
