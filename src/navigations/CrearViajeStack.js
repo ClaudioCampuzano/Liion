@@ -8,7 +8,7 @@ import CrearViajeScreen from "../screens/CrearViajeScreen";
 export default function CrearViajeStack(){
     return(
     <Stack.Navigator>
-        <Stack.Screen name="CrearViajeScreen" component={ CrearViajeScreen } options={{title: 'Crear Viaje'}}/>
+        <Stack.Screen name="CrearViajeScreen" component={ CrearViajeScreen } options={{ title: 'Crear Viaje', headerStyle: {backgroundColor: '#009999'}}}/>
     </Stack.Navigator>
     );
 }

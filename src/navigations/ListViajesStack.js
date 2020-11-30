@@ -9,8 +9,8 @@ import DetallesViajeScreen from "../screens/ListViaje/DetallesViajeScreen";
 export default function ListViajesStack(){
     return(
     <Stack.Navigator>
-        <Stack.Screen name="ViajeListScreen" component={ ViajeListScreen } options={{title: 'Lista de Viajes'}}/>
-        <Stack.Screen name="DetallesViajeScreen" component={ DetallesViajeScreen } options={{title: 'Detalle del Viaje'}} />
+        <Stack.Screen name="ViajeListScreen" component={ ViajeListScreen } options={{title: 'Lista de Viajes', headerStyle: {backgroundColor: '#009999'}}}/>
+        <Stack.Screen name="DetallesViajeScreen" component={ DetallesViajeScreen } options={{title: 'Detalle del Viaje', headerStyle: {backgroundColor: '#009999'}}} />
     </Stack.Navigator>
     );
 }
