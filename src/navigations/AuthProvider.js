@@ -21,7 +21,13 @@ export const AuthProvider = ({ children }) => {
           setTipo,
           login: async (email, password) => {
             try {
-              await firebase.auth().signInWithEmailAndPassword(email, password);
+              await firebase.auth().signInWithEmailAndPassword(email, password)
+              .then((res)=>{
+                const uid = res.user.uid;
+                console.log(uid);
+              }).catch(error => {
+                alert(error)
+              });
             } catch (e) {
               console.log(e);
             }
