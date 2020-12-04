@@ -24,8 +24,24 @@ export const AuthProvider = ({ children }) => {
               await firebase.auth().signInWithEmailAndPassword(email, password)
               .then((res)=>{
                 const uid = res.user.uid;
+                
                 console.log(uid);
-              }).catch(error => {
+                return uid
+              }).then((uid)  => {
+                const usersRef = firebase.firestore().collection('users')
+                usersRef.doc(uid).get().then(firestoreDocument => {
+                  if (!firestoreDocument.exists) {
+                      alert("User does not exist anymore.")
+                      return;
+                  }
+                  const user = firestoreDocument.data()
+                  console.log(JSON.stringify(user.tipo))
+                  setTipo(user.tipo)
+              })
+
+              }).
+              
+              catch(error => {
                 alert(error)
               });
             } catch (e) {
