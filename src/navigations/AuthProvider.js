@@ -6,12 +6,6 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [tipo, setTipo] = useState('');
-    /*         nombre: '',
-        apellido: '',
-        run: '',
-        email: '',
-        cel: '',
-        tipo_user:'', */
     return (
       <AuthContext.Provider
         value={{
@@ -19,13 +13,12 @@ export const AuthProvider = ({ children }) => {
           setUser,
           tipo,
           setTipo,
+        
           login: async (email, password) => {
             try {
               await firebase.auth().signInWithEmailAndPassword(email, password)
               .then((res)=>{
                 const uid = res.user.uid;
-                
-                console.log(uid);
                 return uid
               }).then((uid)  => {
                 const usersRef = firebase.firestore().collection('users')
@@ -35,7 +28,6 @@ export const AuthProvider = ({ children }) => {
                       return;
                   }
                   const user = firestoreDocument.data()
-                  console.log(JSON.stringify(user.tipo))
                   setTipo(user.tipo)
               })
 
@@ -76,9 +68,29 @@ export const AuthProvider = ({ children }) => {
           logout: async () => {
             try {
               await firebase.auth().signOut();
-              setTipo('');
             } catch (e) {
               console.error(e);
+            }
+          },
+          insertarDb: async (nombreColeccion, datos) => {
+            try{
+              await firebase.firestore().collection(nombreColeccion).add(datos);
+            }catch(e){
+              console.error("Error al crear: " + e);
+            }
+          },
+          actualizarDb: async (nombreColeccion, datos, id) =>{
+            try{
+              await firebase.firestore().collection(nombreColeccion).doc(id).set(datos);
+            }catch(e){
+              console.log("Error al actualizar" + e);
+            }
+          },
+          eliminarDb: async(nombreColeccion, id) => {
+            try{
+              await firebase.firestore().collection(nombreColeccion).doc(id).delete();
+            }catch(e){
+              console.log("Error al eliminat "+ e)
             }
           }
         }}

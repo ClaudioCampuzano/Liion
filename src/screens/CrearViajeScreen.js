@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { View, Button, TextInput, ScrollView, StyleSheet } from 'react-native';
 import firebase from '../constants/firebase';
+import { AuthContext } from '../navigations/AuthProvider';
 
 const CrearViajeScreen = (props) => {
+    const { insertarDb } = useContext(AuthContext);
+
 
     const [state, setState] = useState({
         origen: '',
@@ -21,19 +24,8 @@ const CrearViajeScreen = (props) => {
         if(state.origen === '' || state.destino === '' || state.fecha === ''){
             alert('Completa la informacion')
         }else {
-            try {
-                await firebase.firestore().collection('viajes').add({
-                    origen: state.origen,
-                    destino: state.destino,
-                    precio: state.precio,
-                    cupos: state.cupos,
-                    fecha: state.fecha,
-                    hora: state.hora,
-                })
-                props.navigation.navigate('ListViaje')
-            } catch (error) {
-                console.log(error);
-            }
+            insertarDb('viajes', state);
+            props.navigation.navigate('ListViaje')
         }
     }
 
