@@ -1,14 +1,17 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import { View, Button, TextInput, ScrollView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import firebase from "../../constants/firebase";
+import { AuthContext } from '../../navigations/AuthProvider';
 
 const DetallesViajeScreen = (props) => {
 
+    const { actualizarDb, eliminarDb, recuperarDb } = useContext(AuthContext);
+
+
     const initialState = {
         id: '',
-        name: '',
         email: '',
-        phone: ''
+        tipo: ''
     }
 
     const [user, setUser] = useState();
@@ -19,6 +22,7 @@ const DetallesViajeScreen = (props) => {
        const dbRef =  firebase.firestore().collection('users').doc(id);
        const doc = await dbRef.get();
        const user = doc.data();
+       console.log(user);
        setUser({
            ...user,
            id: doc.id,
@@ -35,18 +39,16 @@ const DetallesViajeScreen = (props) => {
     }
 
     const deleteUSer = async () => {
-        const dbRef = firebase.firestore().collection('users').doc(props.route.params.userId);
-        await dbRef.delete();
+        eliminarDb('users',props.route.params.userId);
         props.navigation.navigate('ViajeListScreen');
     }
 
     const updateUser = async () => {
-        const dbRef = firebase.firestore().collection('users').doc(props.route.params.userId);
-        await dbRef.set({
-            name: user.name,
+        let data ={
             email: user.email,
-            phone: user.phone
-        })
+            tipo: user.tipo
+        }
+        actualizarDb('users', data,  props.route.params.userId)
         setUser(initialState)
         props.navigation.navigate('ViajeListScreen');
     }
@@ -70,13 +72,6 @@ const DetallesViajeScreen = (props) => {
         <ScrollView style={styles.container}>
             <View style={styles.inputGroup}>
                 <TextInput
-                    placeholder="Nombre de usuario"
-                    value={user.name}
-                    onChangeText={(value) => handleChangeText('name', value)}
-                />
-            </View>
-            <View style={styles.inputGroup}>
-                <TextInput
                     placeholder="Correo de usuario"
                     value={user.email}
                     onChangeText={(value) => handleChangeText('email', value)}
@@ -85,8 +80,8 @@ const DetallesViajeScreen = (props) => {
             <View style={styles.inputGroup}>
                 <TextInput
                     placeholder="Teléfono de usuario"
-                    value={user.phone}
-                    onChangeText={(value) => handleChangeText('phone', value)}
+                    value={user.tipo}
+                    onChangeText={(value) => handleChangeText('tipo', value)}
                 />
             </View>
             <View>

@@ -6,7 +6,6 @@ import { AuthContext } from '../navigations/AuthProvider';
 const CrearViajeScreen = (props) => {
     const { insertarDb } = useContext(AuthContext);
 
-
     const [state, setState] = useState({
         origen: '',
         destino: '',
