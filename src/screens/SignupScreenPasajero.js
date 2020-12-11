@@ -19,7 +19,7 @@ const [rut, setRut] = useState('')
 
     return(
         <View style={styles.container}>
-            <Text style={styles.text}>Hola nuevo  Liioner Pasajero</Text>
+            <Text style={styles.text}>Hola nuevo  Liioner </Text>
             <Text style={styles.text}>Cree su cuenta</Text>
 
             <FormInput
@@ -79,7 +79,8 @@ const [rut, setRut] = useState('')
                     apellidos: apellidos,
                     telefono: telefono,
                     rut: rut,
-                    tipo: false
+                    espasajero: true,
+                    esconductor: false
                 };
                 register2(user,email, password)
             }

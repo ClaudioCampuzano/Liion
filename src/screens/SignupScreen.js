@@ -11,8 +11,8 @@ export default function SignupScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Seleccione tipo de cuenta</Text>      
-      <FormButton buttonTitle='Pasajero' onPress={() => navigation.navigate('SignupPasajero')} />
-      <FormButton buttonTitle='Conductor' onPress={() => navigation.navigate('SignupConductor')} />
+      <FormButton buttonTitle='Registro' onPress={() => navigation.navigate('SignupPasajero')} />
+      
     </View>
   );
 }

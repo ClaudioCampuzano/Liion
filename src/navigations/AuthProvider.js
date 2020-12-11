@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import firebase from '../constants/firebase'
 
 export const AuthContext = createContext({});
@@ -6,6 +6,9 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [tipo, setTipo] = useState('');
+    const [espasajero, setEspasajero] = useState('')
+    const [esconductor, setEsconductor] = useState('')
+    const [userobj, setUserobj] = useState(null)
     /*         nombre: '',
         apellido: '',
         run: '',
@@ -17,8 +20,8 @@ export const AuthProvider = ({ children }) => {
         value={{
           user,
           setUser,
-          tipo,
-          setTipo,
+          userobj,
+          setUserobj,
           login: async (email, password) => {
             try {
               await firebase.auth().signInWithEmailAndPassword(email, password)
@@ -35,8 +38,8 @@ export const AuthProvider = ({ children }) => {
                       return;
                   }
                   const user = firestoreDocument.data()
-                  console.log(JSON.stringify(user.tipo))
-                  setTipo(user.tipo)
+                  //console.log(user)
+                  setUserobj(user)
               })
 
               }).
@@ -73,8 +76,8 @@ export const AuthProvider = ({ children }) => {
               console.log(e);
             }
           },
-          register2: async (user, email, password) => {
-            console.log(email)
+          register2: async (userr, email, password) => {
+            //console.log(email)
             try {
               await firebase.auth().createUserWithEmailAndPassword(email, password)
                   .then((response) =>{
@@ -84,15 +87,15 @@ export const AuthProvider = ({ children }) => {
                           email,
                           tipo,
                       };
-                      console.log(email)
-                      user.id= uid
-                      user.email=email
-                      
-                      setTipo(user.tipo);
+                      //console.log(email)
+                      userr.id= uid
+                      userr.email=email
+                      setUserobj(userr)
+                                 
                       const usersRef = firebase.firestore().collection('users')
                       usersRef
                           .doc(uid)
-                          .set(user)
+                          .set(userr)
                           .then(() => {
                           })
                           .catch((error) => {
@@ -106,7 +109,7 @@ export const AuthProvider = ({ children }) => {
           logout: async () => {
             try {
               await firebase.auth().signOut();
-              setTipo('');
+              setUserobj(null)
             } catch (e) {
               console.error(e);
             }
