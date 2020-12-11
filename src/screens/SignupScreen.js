@@ -1,6 +1,41 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import FormButton from '../components/FormButton';
+
+
+
+export default function SignupScreen({ navigation }) {
+
+
+ 
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Seleccione tipo de cuenta</Text>      
+      <FormButton buttonTitle='Registro' onPress={() => navigation.navigate('SignupPasajero')} />
+      
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#f5f5f5',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    fontSize: 24,
+    marginBottom: 10
+  }
+});
+
+
+
+/*
+
+import React, { useContext, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigations/AuthProvider';
 import { Picker } from '@react-native-picker/picker';
@@ -57,3 +92,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
+
+
+*/

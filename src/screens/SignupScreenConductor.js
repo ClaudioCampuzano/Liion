@@ -2,12 +2,12 @@ import React, { useContext, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FormButton from "../components/FormButton";
 
-export default function WelcomeScreen ({ navigation }){
+export default function SignupScreenConductor ({ navigation }){
 
     return(
         <View style={styles.container}>
-            <Text style={styles.text}>Bienvenido a Liion</Text>
-            <FormButton buttonTitle='Comenzemos' onPress={() => navigation.navigate('Login')} />
+            <Text style={styles.text}>Hola nuevo Liioner Conductor</Text>
+            <FormButton buttonTitle='Volver' onPress={() => navigation.navigate('Signup')} />
         </View>
     );
 }

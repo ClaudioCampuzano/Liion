@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import firebase from '../constants/firebase'
 
 export const AuthContext = createContext({});
@@ -6,19 +6,29 @@ export const AuthContext = createContext({});
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [tipo, setTipo] = useState('');
+    const [espasajero, setEspasajero] = useState('')
+    const [esconductor, setEsconductor] = useState('')
+    const [userobj, setUserobj] = useState(null)
+    /*         nombre: '',
+        apellido: '',
+        run: '',
+        email: '',
+        cel: '',
+        tipo_user:'', */
     return (
       <AuthContext.Provider
         value={{
           user,
           setUser,
-          tipo,
-          setTipo,
-        
+          userobj,
+          setUserobj,
           login: async (email, password) => {
             try {
               await firebase.auth().signInWithEmailAndPassword(email, password)
               .then((res)=>{
                 const uid = res.user.uid;
+                
+                console.log(uid);
                 return uid
               }).then((uid)  => {
                 const usersRef = firebase.firestore().collection('users')
@@ -28,7 +38,8 @@ export const AuthProvider = ({ children }) => {
                       return;
                   }
                   const user = firestoreDocument.data()
-                  setTipo(user.tipo)
+                  //console.log(user)
+                  setUserobj(user)
               })
 
               }).
@@ -65,32 +76,42 @@ export const AuthProvider = ({ children }) => {
               console.log(e);
             }
           },
+          register2: async (userr, email, password) => {
+            //console.log(email)
+            try {
+              await firebase.auth().createUserWithEmailAndPassword(email, password)
+                  .then((response) =>{
+                      const uid = response.user.uid
+                      const data = {
+                          id :uid,
+                          email,
+                          tipo,
+                      };
+                      //console.log(email)
+                      userr.id= uid
+                      userr.email=email
+                      setUserobj(userr)
+                                 
+                      const usersRef = firebase.firestore().collection('users')
+                      usersRef
+                          .doc(uid)
+                          .set(userr)
+                          .then(() => {
+                          })
+                          .catch((error) => {
+                              console.log(error);
+                          });
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          },
           logout: async () => {
             try {
               await firebase.auth().signOut();
+              setUserobj(null)
             } catch (e) {
               console.error(e);
-            }
-          },
-          insertarDb: async (nombreColeccion, datos) => {
-            try{
-              await firebase.firestore().collection(nombreColeccion).add(datos);
-            }catch(e){
-              console.error("Error al crear: " + e);
-            }
-          },
-          actualizarDb: async (nombreColeccion, datos, id) =>{
-            try{
-              await firebase.firestore().collection(nombreColeccion).doc(id).set(datos);
-            }catch(e){
-              console.log("Error al actualizar" + e);
-            }
-          },
-          eliminarDb: async(nombreColeccion, id) => {
-            try{
-              await firebase.firestore().collection(nombreColeccion).doc(id).delete();
-            }catch(e){
-              console.log("Error al eliminat "+ e)
             }
           }
         }}
