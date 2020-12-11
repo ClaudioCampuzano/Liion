@@ -22,7 +22,7 @@ export default function HomeScreen() {
         <Text style={{ fontFamily: 'GothamSSM-Bold', fontSize: 40 }}>GothamSSM-Bold</Text>
         <Text style={{ fontFamily: 'GothamSSM-Medium', fontSize: 40 }}>Platform Default</Text>
         <FormButton buttonTitle='Logout' onPress={() => logout()} />
-        <Text style={styles.text}>Buena KinG jiro!~{"\n"} {tipo} </Text>
+        <Text style={styles.text}>Buena KinG jiro!~{"\n"} {JSON.stringify(tipo)} </Text>
       </View>
 
     )
