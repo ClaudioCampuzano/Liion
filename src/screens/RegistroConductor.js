@@ -7,7 +7,7 @@ import FormButton from "../components/FormButton";
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigations/AuthProvider';
 
-export default function SignupScreenPasajero ({ navigation }){
+export default function RegistroConductor ({ navigation }){
 const [modelovehiculo, setModelovehiculo] = useState('')
 const [patentevehiculo, setPatentevehiculo] = useState('')
 const [certAntecedentes, setCertAntecedentes] = useState('')
@@ -17,7 +17,7 @@ const [licConducir, setLicConducir] = useState('')
 
 
   if(!userobj || !userobj.nombre || !userobj.apellidos){
-    console.log(JSON.stringify(userobj))
+    //console.log(JSON.stringify(userobj))
     return <Loading />;
   }
 

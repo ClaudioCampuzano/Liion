@@ -7,7 +7,7 @@ import Loading from '../components/Loading';
 
 export default function HomeScreen() {
   const { user, logout, userobj } = useContext(AuthContext);
-  useEffect(() => console.log(JSON.stringify(userobj)));
+  //useEffect(() => console.log(JSON.stringify(userobj)));
   //currentuser=userobj.userr
   //console.log(currentuser)
   let [fonstLoaded] = useFonts({
@@ -16,7 +16,7 @@ export default function HomeScreen() {
   });
 
   if(!fonstLoaded || !userobj || !userobj.nombre || !userobj.apellidos){
-    console.log(JSON.stringify(userobj))
+    //console.log(JSON.stringify(userobj))
     return <Loading />;
   }
   

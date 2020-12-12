@@ -22,7 +22,7 @@ const DetallesViajeScreen = (props) => {
        const dbRef =  firebase.firestore().collection('users').doc(id);
        const doc = await dbRef.get();
        const user = doc.data();
-       console.log(user);
+       //console.log(user);
        setUser({
            ...user,
            id: doc.id,

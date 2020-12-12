@@ -19,33 +19,47 @@ async function getData (key)  {
 
 
 
+
+
 export default function Routes() {
-    const { user, setUser, userobj, setUserobj } = useContext(AuthContext);
+  var [i, setI] = useState(0)
+    const { user, setUser, userobj, setUserobj, getbyid, flag, setFlag} = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [initializing, setInitializing] = useState(true);
     // Handle user state changes
     function onAuthStateChanged(user) {
       setUser(user);
+      
       if (initializing) setInitializing(false);
       setLoading(false);
-      
-      getData('usersave').then(res => {console.log("jon"), console.log(JSON.stringify(res)), setUserobj(res), console.log('jon2')})
+      }
+   
+    function test12(user){
+ if(user) {
+   //console.log(user.uid)
+    if(user.uid !== null) {
+      console.log(user.uid)
+      getbyid('users' ,user.uid)
+  }
+ }
+}
 
-      
-      
-      
 
-
-
-
-    }
     useEffect(() => {
       const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
-      return subscriber; // unsubscribe on unmount
-    }, []);
+      console.log(user)
+
+      test12(user)
+      console.log('cambio flag o user')
+
+     return subscriber; // unsubscribe on unmount
+    }, [user, flag]);
     if (loading) {
       return <Loading />;
     }
+
+    //console.log(user)
+      
     return (
       <NavigationContainer>
         {user ? <DrawerStack /> : <AuthStack />}

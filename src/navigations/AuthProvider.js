@@ -30,6 +30,7 @@ async function removeItemValue(key) {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [flag, setFlag] = useState('')
     const [tipo, setTipo] = useState('');
     const [espasajero, setEspasajero] = useState('')
     const [esconductor, setEsconductor] = useState('')
@@ -47,13 +48,15 @@ export const AuthProvider = ({ children }) => {
           setUser,
           userobj,
           setUserobj,
+          flag,
+          setFlag,
           login: async (email, password) => {
             try {
               await firebase.auth().signInWithEmailAndPassword(email, password)
               .then((res)=>{
                 const uid = res.user.uid;
                 
-                console.log(uid);
+                //console.log(uid);
                 return uid
               }).then((uid)  => {
                 const usersRef = firebase.firestore().collection('users')
@@ -63,9 +66,10 @@ export const AuthProvider = ({ children }) => {
                       return;
                   }
                   const user = firestoreDocument.data()
+                  setFlag('log')
                   //console.log(user)
-                  setUserobj(user)
-                  storeData(user)
+                  //setUserobj(user)
+                  //storeData(user)
               })
 
               }).
@@ -116,14 +120,15 @@ export const AuthProvider = ({ children }) => {
                       //console.log(email)
                       userr.id= uid
                       userr.email=email
-                      setUserobj(userr)
-                       storeData(userr)
+                      //setUserobj(userr)
+                       //storeData(userr)
                                  
                       const usersRef = firebase.firestore().collection('users')
                       usersRef
                           .doc(uid)
                           .set(userr)
                           .then(() => {
+                            setFlag('r2')
                           })
                           .catch((error) => {
                               console.log(error);
@@ -133,12 +138,41 @@ export const AuthProvider = ({ children }) => {
               console.log(e);
             }
           },
-         
+          getbyid: async (col, id) => {
+
+            try{
+              
+              let colref = firebase.firestore().collection(col).doc(id);
+              let getDoc = colref.get().then(doc => {
+                if (!doc.exists) {
+                  console.log('No such document!');
+                } else {
+                  //console.log('Document data:', doc.data());
+                  setUserobj(doc.data())
+                }
+              })
+              .catch(err => {
+                console.log('Error getting document', err);
+              });
+            
+                
+                
+
+              
+              
+            }catch(e){
+              console.log("Errorr" + e);
+            }
+
+          },
 
           actualizarDb: async (nombreColeccion, datos, id) =>{
             try{
-              await firebase.firestore().collection(nombreColeccion).doc(id).set(datos);
-              setUserobj(datos)
+              
+              await firebase.firestore().collection(nombreColeccion).doc(id).set(datos).then(
+                () => {setFlag('upd')})
+              
+              
             }catch(e){
               console.log("Error al actualizar" + e);
             }
@@ -149,8 +183,9 @@ export const AuthProvider = ({ children }) => {
           logout: async () => {
             try {
               await firebase.auth().signOut();
-              await removeItemValue('usersave')
-              //setUserobj(null)
+              //await removeItemValue('usersave')
+              setUserobj(null)
+              setFlag('logout')
 
             } catch (e) {
               console.error(e);
