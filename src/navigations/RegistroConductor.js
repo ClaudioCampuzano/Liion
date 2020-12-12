@@ -16,7 +16,22 @@ const [licConducir, setLicConducir] = useState('')
   const  { register, register2, updateconductor, userobj, actualizarDb} = useContext(AuthContext);
 
 
+  if(!userobj || !userobj.nombre || !userobj.apellidos){
+    console.log(JSON.stringify(userobj))
+    return <Loading />;
+  }
+
+  else{
+
+
+    if(!userobj.esconductor) { //no es conductor
+
+
     return(
+        
+
+        
+
         <View style={styles.container}>
             <Text style={styles.text}>Hola nuevo  Liioner </Text>
             <Text style={styles.text}>Cree su cuenta</Text>
@@ -78,6 +93,22 @@ const [licConducir, setLicConducir] = useState('')
             
         </View>
     );
+            }
+    else{
+        return(
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={styles2.text}>Buena Ya eres conductor </Text>
+        </View>
+        )
+    }
+
+
+
+
+
+
+
+            }
 }
 
 
@@ -100,3 +131,18 @@ const styles = StyleSheet.create({
         color: '#6646ee'
     }
 });
+
+
+const styles2 = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f5f5f1'
+    },
+    text: {
+      fontSize: 20,
+      color: '#333333',
+      marginBottom: 50
+    }
+  });
