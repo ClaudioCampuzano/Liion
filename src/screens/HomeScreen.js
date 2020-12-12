@@ -16,13 +16,13 @@ export default function HomeScreen() {
   });
 
   if(!fonstLoaded || !userobj || !userobj.nombre || !userobj.apellidos){
-    
+    console.log(JSON.stringify(userobj))
     return <Loading />;
   }
   
   else{
-    console.log('jiro')
-    console.log(JSON.stringify(userobj))
+    //console.log('jiro')
+    //console.log(JSON.stringify(userobj))
     return(
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontFamily: 'GothamSSM-Bold', fontSize: 40 }}>GothamSSM-Bold</Text>

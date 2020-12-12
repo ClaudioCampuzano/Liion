@@ -1,7 +1,32 @@
 import React, { createContext, useState, useEffect } from 'react';
 import firebase from '../constants/firebase'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = createContext({});
+
+
+
+
+async function storeData(value)  {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('usersave', jsonValue)
+  } catch (e) {
+    // saving error
+  }
+}
+
+async function removeItemValue(key) {
+  try {
+      await AsyncStorage.removeItem(key);
+      return true;
+  }
+  catch(exception) {
+      return false;
+  }
+}
+
+
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -40,6 +65,7 @@ export const AuthProvider = ({ children }) => {
                   const user = firestoreDocument.data()
                   //console.log(user)
                   setUserobj(user)
+                  storeData(user)
               })
 
               }).
@@ -91,6 +117,7 @@ export const AuthProvider = ({ children }) => {
                       userr.id= uid
                       userr.email=email
                       setUserobj(userr)
+                       storeData(userr)
                                  
                       const usersRef = firebase.firestore().collection('users')
                       usersRef
@@ -106,10 +133,25 @@ export const AuthProvider = ({ children }) => {
               console.log(e);
             }
           },
+         
+
+          actualizarDb: async (nombreColeccion, datos, id) =>{
+            try{
+              await firebase.firestore().collection(nombreColeccion).doc(id).set(datos);
+              setUserobj(datos)
+            }catch(e){
+              console.log("Error al actualizar" + e);
+            }
+          },
+
+
+
           logout: async () => {
             try {
               await firebase.auth().signOut();
-              setUserobj(null)
+              await removeItemValue('usersave')
+              //setUserobj(null)
+
             } catch (e) {
               console.error(e);
             }

@@ -2,9 +2,15 @@ import React from 'react';
 import {LogBox} from 'react-native';
 import Providers from './src/navigations';
 
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
 export default function App() {
     LogBox.ignoreLogs(['Setting a timer']);
-    return <Providers />;
+    return (
+        
+    <Providers />
+    
+    );
 }
 
 
