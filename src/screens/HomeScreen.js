@@ -2,7 +2,7 @@ import React, {useContext, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import FormButton from '../components/FormButton';
 import { AuthContext } from '../navigations/AuthProvider';
-import { useFonts } from 'expo-font';
+import { useFonts } from '@expo-google-fonts/inter';
 import Loading from '../components/Loading';
 
 export default function HomeScreen() {

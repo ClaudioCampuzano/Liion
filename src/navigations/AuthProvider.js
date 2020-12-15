@@ -178,6 +178,13 @@ export const AuthProvider = ({ children }) => {
             }
           },
 
+          insertarDb: async (nombreColeccion, datos, accion) => {
+            try{
+              await firebase.firestore().collection(nombreColeccion).add(datos).then(() => {setFlag(accion)})
+            }catch(e){
+              console.error("Error al crear: " + e);
+            }
+          },
 
 
           logout: async () => {
