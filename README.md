@@ -47,6 +47,8 @@ Dirígete a Firebase.com y crea una nueva cuenta. Una vez que haya iniciado sesi
 
 # Caracteristicas generales de la App Liion
 
+[LINK-A-MOCKUP](https://xd.adobe.com/view/5bca987e-04d8-459d-bbb2-f714875e9b75-0e99/)
+
 ## Producto viable mínimo (MVP)
 
 - Identificación y registro de usuarios. - Login utilizando numero de celular.
