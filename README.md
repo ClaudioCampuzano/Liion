@@ -47,7 +47,13 @@ Dirígete a Firebase.com y crea una nueva cuenta. Una vez que haya iniciado sesi
 
 # Caracteristicas generales de la App Liion
 
-[LINK-A-MOCKUP](https://xd.adobe.com/view/5bca987e-04d8-459d-bbb2-f714875e9b75-0e99/)
+- [LINK-A-MOCKUP](https://xd.adobe.com/view/5bca987e-04d8-459d-bbb2-f714875e9b75-0e99/)
+## Firebase
+- Cuenta de firebase -> user: liion.carpoolapp@gmail.com --- pass: Jiroto99
+- Nombre del proyecto: Liion-CarpoolApp (liion-carpoolapp)
+- Servicios inicializados:
+    - CloudFirestore
+    - Authentication: telefono
 
 ## Producto viable mínimo (MVP)
 
