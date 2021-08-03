@@ -32,9 +32,12 @@
 
 ## Frontend
 
-- Paquete1
-- Paquete2
-
+- npm install @react-navigation/native
+- expo install react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context
+- npm install @react-navigation/stack
+- expo install expo-app-loading
+- expo install expo-font
+- 
 # Servicios
 
 ## Firebase
