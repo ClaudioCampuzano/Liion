@@ -1,21 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text } from "react-native";
 
-export default function App() {
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+
+import BienvenidaScreen from "./src/screens/BienvenidaScreen";
+import BuscarScreen from "./src/screens/BuscarScreen";
+
+const Stack = createStackNavigator();
+
+const App = () => {
+  const fake_tkn = useState(true);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {fake_tkn ? (
+          <Stack.Screen
+            name="BienvenidaScreen"
+            component={BienvenidaScreen}
+            options={{headerShown: false}}
+          />
+        ) : (
+          <Stack.Screen name="BuscarScreen" component={BuscarScreen} />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
+
+/*
+<Stack.Navigator headerMode="none">
+        {user ? (
+            <Stack.Screen name="DrawerScreen" >
+                {(props) => < DrawerScreen  {...props} user={user} />}
+            </Stack.Screen>
+        ) : (
+            <Stack.Screen
+                name="Auth"
+                component={AuthStackScreen}
+                options={{
+                    animationEnabled: true
+                }}
+            />
+        )}
+    </Stack.Navigator>*/
