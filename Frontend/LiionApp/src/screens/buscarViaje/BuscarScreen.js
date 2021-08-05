@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Animated } from "react-native";
 
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 
 const BuscarScreen = () => {
   const translation = useRef(new Animated.Value(0)).current;

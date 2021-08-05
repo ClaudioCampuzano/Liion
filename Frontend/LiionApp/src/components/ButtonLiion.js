@@ -1,9 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const ButtonLiion = ({ title }) => {
+const ButtonLiion = ({onPress, title }) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
         <Text style={styles.text}>{title}</Text>
       </View>
@@ -17,17 +17,15 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     width: 333,
-        height: 40,
-        margin: 5,
-
+    height: 40,
+    margin: 5,
   },
   text: {
     fontSize: 20,
     color: "#fff",
     fontFamily: "Gotham-Medium",
-      textAlign: "center",
-      margin: -10,
-
+    textAlign: "center",
+    margin: -10,
   },
 });
 export default ButtonLiion;

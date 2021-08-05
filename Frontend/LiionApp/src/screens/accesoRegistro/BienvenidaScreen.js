@@ -1,11 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-import Layout from "../components/Layout";
-import ButtonLiion from "../components/ButtonLiion";
+import Layout from "../../components/Layout";
+import ButtonLiion from "../../components/ButtonLiion";
 
 
-const BienvenidaScreen = () => {
+const BienvenidaScreen = ({navigation}) => {
 
   return (
     <Layout>
@@ -13,11 +13,11 @@ const BienvenidaScreen = () => {
         <Image
           resizeMode="contain"
           style={styles.logo}
-          source={require("../../assets/images/logo.png")}
+          source={require("../../../assets/images/logo.png")}
         />
         <Text style={styles.textBienvenida}>¡Bienvenidos a Liion!</Text>
         <Text style={styles.textSubBienvenida}>Viajemos en manada...</Text>
-        <ButtonLiion title="Acceder" />
+        <ButtonLiion title="Acceder" onPress={() =>navigation.navigate("AccesoCuenta")}/>
         <ButtonLiion title="Crear cuenta"/>
       </View>
     </Layout>

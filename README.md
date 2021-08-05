@@ -37,7 +37,8 @@
 - npm install @react-navigation/stack
 - expo install expo-app-loading
 - expo install expo-font
-- 
+- yarn add react-native-paper
+
 # Servicios
 
 ## Firebase
