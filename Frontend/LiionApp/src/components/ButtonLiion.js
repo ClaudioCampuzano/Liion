@@ -1,7 +1,32 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const ButtonLiion = ({onPress, title }) => {
+
+const ButtonLiion = (props) => {
+  return (
+    <TouchableOpacity onPress={props.onPress}>
+      <View style={[styles.button, {...props.styleView}]}>
+        <Text style={[styles.text, {...props.styleText}]}>{props.title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#009999",
+    borderRadius: 32,
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 20,
+    color: "#fff",
+    fontFamily: "Gotham-SSm-Medium",
+    textAlign: "center",
+  },
+});
+
+/*const ButtonLiion = ({onPress, title }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.button}>
@@ -27,5 +52,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     margin: -10,
   },
-});
+});*/
 export default ButtonLiion;
