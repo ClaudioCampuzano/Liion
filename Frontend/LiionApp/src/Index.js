@@ -29,8 +29,12 @@ const App = () => {
             title: "Acceso",
             headerShown: true,
             headerStyle: { backgroundColor: "#009999", height: 60 },
-            headerTitleAlign: 'center',
-            headerTitleStyle: { color: "#ffffff", fontFamily: "Gotham-Book", fontSize: 30 },
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              color: "#ffffff",
+              fontFamily: "Gotham-SSm-Book",
+              fontSize: 30,
+            },
             headerLeft: () => (
               <TouchableOpacity
                 onPress={() => navigation.navigate("BienvenidaScreen")}
@@ -45,6 +49,7 @@ const App = () => {
             ),
           })}
         />
+        <Stack.Screen name="BuscarScreen" component={BuscarScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

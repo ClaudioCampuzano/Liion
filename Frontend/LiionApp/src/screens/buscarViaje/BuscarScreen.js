@@ -1,36 +1,27 @@
-import React from "react";
-import { View, Text, Animated } from "react-native";
+import React, {useState} from 'react';
+import {Button, Text, View} from 'react-native';
+import Modal from 'react-native-modal';
 
-import Layout from "../../components/Layout";
+function BuscarScreen() {
+  const [isModalVisible, setModalVisible] = useState(false);
 
-const BuscarScreen = () => {
-  const translation = useRef(new Animated.Value(0)).current;
-  const position = useRef(new Animated.ValueXY({ x: 0, y: 0 }));
-  useEffect(() => {
-    Animated.sequence([
-      Animated.timing(translation, {
-        toValue: 50,
-        delay: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.timing(position, {
-        toValue: { x: 100, y: 100 },
-        duration: 1000,
-      }),
-    ]).start();
-  }, []);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
-    <View>
-      <Animated.View
-        style={{
-          width: 100,
-          height: 100,
-          backgroundColor: "orange",
-          transform: [{ translateX: translation }],
-        }}
-      />
+    <View style={{flex: 1}}>
+      <Button title="Show modal" onPress={toggleModal} />
+
+      <Modal isVisible={isModalVisible}>
+        <View style={{flex: 1}}>
+          <Text>Hello!</Text>
+
+          <Button title="Hide modal" onPress={toggleModal} />
+        </View>
+      </Modal>
     </View>
   );
-};
+}
 
 export default BuscarScreen;

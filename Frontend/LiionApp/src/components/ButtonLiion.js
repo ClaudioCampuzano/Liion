@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     color: "#fff",
-    fontFamily: "Gotham-Medium",
+    fontFamily: "Gotham-SSm-Medium",
     textAlign: "center",
     margin: -10,
   },

@@ -19,13 +19,13 @@ const AccesoCuenta = () => {
 
 const styles = StyleSheet.create({
   text_1: {
-    fontFamily: "Gotham-Bold",
+    fontFamily: "Gotham-SSm-Bold",
     fontSize: 25,
     color: "#009999",
     paddingTop: 50,
   },
   text_2: {
-    fontFamily: "Gotham-Medium",
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: 20,
     color: "#60BFB6",
     paddingTop: 50,

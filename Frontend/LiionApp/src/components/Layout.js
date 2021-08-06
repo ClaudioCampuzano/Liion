@@ -5,9 +5,9 @@ import AppLoading from "expo-app-loading";
 
 const Layout = ({ children }) => {
   const [fontsLoaded, error] = useFonts({
-    "Gotham-Bold": require("../../assets/fonts/GothamBold.otf"),
-    "Gotham-Book": require("../../assets/fonts/GothamBook.otf"),
-    "Gotham-Medium": require("../../assets/fonts/GothamMedium.otf"),
+    "Gotham-SSm-Bold": require("../../assets/fonts/GothamSSm-Bold.ttf"),
+    "Gotham-SSm-Book": require("../../assets/fonts/GothamSSm-Book.ttf"),
+    "Gotham-SSm-Medium": require("../../assets/fonts/GothamSSm-Medium.ttf")
   });
 
   if (!fontsLoaded) {

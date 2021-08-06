@@ -7,5 +7,5 @@
 * Forma de ejecución
   ```
   cd Liion
-  yarn start or yarn android or expo start
+  yarn start or yarn android or expo start or expo start -c
   ```
