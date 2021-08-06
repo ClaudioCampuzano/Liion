@@ -9,17 +9,47 @@ import {
 } from "react-native";
 
 const ModalPopUp = ({ visible, children, setModalVisible }) => {
+  const [showModal, setShowModal] = React.useState(visible);
+  const scaleValue = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    toggleModal();
+  }, [visible]);
+  const toggleModal = () => {
+    if (visible) {
+      setShowModal(true);
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setTimeout(() => setShowModal(false), 200);
+      Animated.timing(scaleValue, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
   return (
-    <Modal transparent={true} visible={visible}>
+    <Modal transparent={true} visible={showModal}>
       <View style={styles.modalBackGround}>
-        <View style={styles.modalContainer}>
+        <Animated.View
+          style={[
+            styles.modalContainer,
+            { transform: [{ scale: scaleValue }] },
+          ]}
+        >
           <Text style={styles.text}>{children}</Text>
-          <TouchableOpacity style={{ alignItems: "center" }} onPress={() => setModalVisible(false)}>
+          <TouchableOpacity
+            style={{ alignItems: "center" }}
+            onPress={() => setModalVisible(false)}
+          >
             <View style={styles.button}>
               <Text style={styles.text2}>Aceptar</Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -39,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingVertical: 30,
-    borderRadius: 20,
+    borderRadius: 52,
     elevation: 20,
   },
   text: {
