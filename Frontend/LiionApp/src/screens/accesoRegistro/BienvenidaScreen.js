@@ -9,7 +9,7 @@ const BienvenidaScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <Layout>
-      <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>No disponible compadre, me leiste chuchetumare?</ModalPopUp>
+      <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>No disponible compadre, me entendiste chonchetumare?</ModalPopUp>
       <View style={styles.container}>
         <Image
           resizeMode="contain"

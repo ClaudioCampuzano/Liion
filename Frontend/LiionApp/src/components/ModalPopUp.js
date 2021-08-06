@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 const ModalPopUp = ({ visible, children, setModalVisible }) => {
-  const [showModal, setShowModal] = React.useState(visible);
+  const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     toggleModal();
