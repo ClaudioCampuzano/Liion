@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./navigations/AuthNavigator";
 import { ActivityIndicator } from "react-native";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GlobalContext } from "./context/Provider";
 
-const App = () => {
-  const isLoggedIn = false;
+const Index = () => {
+  const {
+    authState: { isLoggedIn },
+  } = useContext(GlobalContext);
+
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [authLoaded, setAuthLoaded] = useState(false);
 
   const getUsuario = async () => {
     try {
-      const user = await AsyncStorage.getItem('user');
+      const user = await AsyncStorage.getItem("user");
       setAuthLoaded(true);
       if (user) {
         setIsAuthenticated(true);
@@ -35,10 +38,10 @@ const App = () => {
           {isAuthenticated ? <AuthNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
-        <ActivityIndicator size="large" color="#009999"/>
+        <ActivityIndicator size="large" color="#009999" />
       )}
     </>
   );
 };
 
-export default App;
+export default Index;
