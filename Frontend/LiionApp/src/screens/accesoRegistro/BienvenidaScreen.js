@@ -5,6 +5,8 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import ModalPopUp from "../../components/ModalPopUp";
 
+import {COLORS} from "../../constants/styleThemes"
+
 const BienvenidaScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -50,13 +52,13 @@ const styles = StyleSheet.create({
   textBienvenida: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: 30,
-    color: "#009999",
+    color: COLORS.TURKEY,
     paddingTop: 10,
   },
   textSubBienvenida: {
     fontFamily: "Gotham-SSm-Medium",
     fontSize: 25,
-    color: "#009999",
+    color: COLORS.TURKEY,
     paddingTop: 25,
     paddingBottom: 100,
   },

@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, StatusBar } from "react-native";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
+import {COLORS} from "../constants/styleThemes"
 
 const Layout = ({ children }) => {
   const [fontsLoaded, error] = useFonts({
@@ -15,7 +16,7 @@ const Layout = ({ children }) => {
   } else {
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+        <StatusBar barStyle="dark-content" backgroundColor={COLORS.WHITE} />
         {children}
       </View>
     );
@@ -26,7 +27,7 @@ export default Layout;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#ffffff",
+    backgroundColor: COLORS.WHITE,
     alignItems: "center",
     flex: 1,
   },

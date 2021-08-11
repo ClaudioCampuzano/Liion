@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import {COLORS} from "../constants/styleThemes"
+
 const ModalPopUp = ({ visible, children, setModalVisible }) => {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
@@ -66,7 +68,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "70%",
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.WHITE,
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 52,
@@ -77,17 +79,17 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: "center",
     fontFamily: "Gotham-SSm-Medium",
-    color: "#60BFB6",
+    color: COLORS.TURKEY_CLEAR,
   },
   text2: {
     fontSize: 20,
-    color: "#fff",
+    color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Medium",
     textAlign: "center",
     margin: -12,
   },
   button: {
-    backgroundColor: "#009999",
+    backgroundColor: COLORS.TURKEY,
     borderRadius: 32,
     padding: 16,
     alignItems: "center",

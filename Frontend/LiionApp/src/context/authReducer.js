@@ -2,7 +2,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT_USER,
     REGISTER_SUCCESS,
-} from '../actionTypes/types';
+} from '../constants/actionTypes/types';
 
 const authReducer = (state, action) => {
   const { payload, type } = action;

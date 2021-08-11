@@ -37,9 +37,10 @@
 - npm install @react-navigation/stack
 - expo install expo-app-loading
 - expo install expo-font
-- yarn add react-native-paper
+- yarn add react-native-paper [borrar]
 - npm install @react-navigation/drawer
 - expo install @react-native-async-storage/async-storage
+- react-native-textinput-effects [borrar]
 
 
 # Servicios

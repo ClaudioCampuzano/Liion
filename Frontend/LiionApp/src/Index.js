@@ -5,6 +5,8 @@ import { ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GlobalContext } from "./context/Provider";
 
+import { COLORS } from "./constants/styleThemes"
+
 const Index = () => {
   const {
     authState: { isLoggedIn },
@@ -38,7 +40,7 @@ const Index = () => {
           {isAuthenticated ? <AuthNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
-        <ActivityIndicator size="large" color="#009999" />
+        <ActivityIndicator size="large" color={COLORS.TURKEY} />
       )}
     </>
   );
