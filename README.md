@@ -27,8 +27,8 @@
 
 ## Backend
 
-- Paquete1
-- Paquete2
+- npm i express morgan cors dotenv firebase-admin (servidor para produccion, dotenv no necesario ya q nuestro repo es privado)
+- npm i nodemon @babel/core @babel/cli @babel/preset-env -D (solo para la etapa de desarrollo)
 
 ## Frontend
 
@@ -41,6 +41,7 @@
 - npm install @react-navigation/drawer
 - expo install @react-native-async-storage/async-storage
 - react-native-textinput-effects [borrar]
+- email-validator, validate.js react-native-form-validator [borrar]
 
 
 # Servicios

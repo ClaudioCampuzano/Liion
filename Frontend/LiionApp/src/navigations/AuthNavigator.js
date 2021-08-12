@@ -27,7 +27,7 @@ const AuthNavigator = () => {
           headerTitleStyle: {
             color: "#ffffff",
             fontFamily: "Gotham-SSm-Book",
-            fontSize: 30,
+            fontSize: 28,
           },
           headerLeft: () => (
             <TouchableOpacity

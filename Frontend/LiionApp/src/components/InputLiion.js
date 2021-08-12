@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
   },
   error: {
     marginTop: 4,
-    marginLeft: 12,
-    fontSize: 15,
+    marginLeft: 10,
+    fontSize: 12,
     color: '#B00020',
     fontFamily: 'Gotham-SSm-Medium',
   },
