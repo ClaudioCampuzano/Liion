@@ -8,12 +8,9 @@ import ModalPopUp from "../../components/ModalPopUp";
 import { COLORS, DEVICE } from "../../constants/styleThemes";
 
 const BienvenidaScreen = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
   return (
     <Layout>
-      <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-        No disponible compadre, me entendiste chonchetumare?
-      </ModalPopUp>
+
       <View style={styles.container}>
         <Image
           resizeMode="contain"
@@ -33,13 +30,29 @@ const BienvenidaScreen = ({ navigation }) => {
             title="Crear cuenta"
             styleView={styles.button}
             styleText={{ margin: -10 }}
-            onPress={() => setModalVisible(true)}
+            onPress={() => navigation.navigate("RegistroCuenta")}
           />
         </View>
       </View>
     </Layout>
   );
 };
+
+/*
+  const [modalVisible, setModalVisible] = useState(false);
+
+  
+      <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
+        No disponible compadre, me entendiste chonchetumare?
+      </ModalPopUp>
+
+                <ButtonLiion
+            title="Crear cuenta"
+            styleView={styles.button}
+            styleText={{ margin: -10 }}
+            onPress={() => setModalVisible(true)}
+          />
+*/
 
 const styles = StyleSheet.create({
   container: {

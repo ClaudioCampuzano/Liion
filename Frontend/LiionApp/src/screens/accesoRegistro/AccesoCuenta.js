@@ -66,12 +66,14 @@ const AccesoCuenta = () => {
           label="Email"
           value={valueEmail}
           errorText={error}
+          secureTextEntry={false}
           onChangeText={(text) => setValueEmail(text)}
         />
         <InputLiion
           style={styles.input}
           label="Contraseña"
           value={valueContraseña}
+          secureTextEntry={true}
           onChangeText={(text) => setValueContraseña(text)}
         />
 
@@ -82,7 +84,7 @@ const AccesoCuenta = () => {
         </TouchableOpacity>
         <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 40 }}>
           <ButtonLiion
-            title="Ingresar"
+            title="Siguiente"
             styleView={styles.button}
             styleText={{ margin: -10 }}
           />

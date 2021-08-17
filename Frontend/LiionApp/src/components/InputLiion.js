@@ -19,6 +19,7 @@ const InputLiion = (props) => {
     style,
     onBlur,
     onFocus,
+    secureTextEntry,
     ...restOfProps
   } = props
 
@@ -51,6 +52,7 @@ const InputLiion = (props) => {
         ref={inputRef}
         {...restOfProps}
         value={value}
+        secureTextEntry={secureTextEntry}
         onBlur={(event) => {
           setIsFocused(false)
           onBlur?.(event)
