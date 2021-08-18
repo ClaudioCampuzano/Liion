@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, Keyboard } from "react-native";
 
 import Layout from "../../components/Layout";
 
@@ -8,12 +8,27 @@ import InputLiion from "../../components/InputLiion";
 
 import { COLORS } from "../../constants/styleThemes";
 
+import { validate, clean, format, getCheckDigit } from "../../utils/utils";
+
+import { useKeyboard } from "../../hooks/useKeyboard";
+
 const RegistroCuenta = ({ navigation }) => {
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
-  const [valueNumDocument, setValueNumDocument] = useState("");
   const [error, setError] = useState(null);
+
+  const {isKeyboardVisible} = useKeyboard()
+
+  useEffect(() => {
+    if (valueRun != "") {
+      setValueRun(format(valueRun));
+
+      if (!validate(valueRun)) {
+        setError("Run no valido");
+      } else setError(null);
+    } else setError(null);
+  }, [isKeyboardVisible]);
 
   return (
     <Layout>
@@ -25,7 +40,6 @@ const RegistroCuenta = ({ navigation }) => {
           style={styles.input}
           label="Nombre"
           value={valueNombre}
-          errorText={error}
           secureTextEntry={false}
           onChangeText={(text) => setValueNombre(text)}
         />
@@ -39,20 +53,15 @@ const RegistroCuenta = ({ navigation }) => {
         <InputLiion
           style={styles.input}
           label="Run"
+          errorText={error}
+          keyboardType="numeric"
           value={valueRun}
           secureTextEntry={false}
           onChangeText={(text) => setValueRun(text)}
         />
-        <InputLiion
-          style={styles.input}
-          label="Numero de documento"
-          value={valueNumDocument}
-          secureTextEntry={false}
-          onChangeText={(text) => setValueNumDocument(text)}
-        />
         <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 40 }}>
           <ButtonLiion
-            title="Ingresar"
+            title="Siguiente"
             styleView={styles.button}
             styleText={{ margin: -10 }}
             onPress={() => navigation.navigate("RegistroCuentaCorreo")}
