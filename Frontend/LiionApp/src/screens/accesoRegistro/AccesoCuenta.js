@@ -21,6 +21,7 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 
 const AccesoCuenta = () => {
   const [valueEmail, setValueEmail] = useState("");
+  const [focusEmailInput, setfocusEmailInput] = useState(false);
   const [valueContraseña, setValueContraseña] = useState("");
   const [error, setError] = useState(null);
 
@@ -28,10 +29,10 @@ const AccesoCuenta = () => {
 
   useEffect(() => {
     if (valueEmail != "") {
-      if (!validateEmail(valueEmail)) setError("Formato de email incorrecto");
+      if (!validateEmail(valueEmail) ) setError("Formato de email incorrecto");
       else setError(null);
     }
-  }, [isKeyboardVisible]);
+  }, [focusEmailInput, isKeyboardVisible]);
 
   return (
     <Layout>
@@ -44,6 +45,8 @@ const AccesoCuenta = () => {
           value={valueEmail}
           errorText={error}
           secureTextEntry={false}
+          onBlur={() => setfocusEmailInput(false)}
+          onFocus={() => setfocusEmailInput(true) }
           onChangeText={(text) => setValueEmail(text)}
         />
         <InputLiion

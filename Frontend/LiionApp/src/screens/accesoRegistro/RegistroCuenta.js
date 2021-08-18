@@ -17,6 +17,8 @@ const RegistroCuenta = ({ navigation }) => {
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
   const [error, setError] = useState(null);
+  const [focusEmailInput, setfocusEmailInput] = useState(false);
+
 
   const {isKeyboardVisible} = useKeyboard()
 
@@ -28,7 +30,7 @@ const RegistroCuenta = ({ navigation }) => {
         setError("Run no valido");
       } else setError(null);
     } else setError(null);
-  }, [isKeyboardVisible]);
+  }, [isKeyboardVisible, focusEmailInput]);
 
   return (
     <Layout>
@@ -56,6 +58,8 @@ const RegistroCuenta = ({ navigation }) => {
           errorText={error}
           keyboardType="numeric"
           value={valueRun}
+          onBlur={() => setfocusEmailInput(false)}
+          onFocus={() => setfocusEmailInput(true) }
           secureTextEntry={false}
           onChangeText={(text) => setValueRun(text)}
         />
