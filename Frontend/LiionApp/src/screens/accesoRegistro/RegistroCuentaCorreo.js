@@ -1,11 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Keyboard,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 import Layout from "../../components/Layout";
 
@@ -14,54 +8,50 @@ import InputLiion from "../../components/InputLiion";
 
 import { COLORS } from "../../constants/styleThemes";
 
-import { validateEmail} from "../../utils/utils";
-
-import { useKeyboard } from "../../hooks/useKeyboard";
-
-
-const AccesoCuenta = () => {
+const RegistroCuentaCorreo = ({ navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
-  const [focusEmailInput, setfocusEmailInput] = useState(false);
-  const [valueContraseña, setValueContraseña] = useState("");
+  const [valueEmailConfirm, setValueEmailConfirm] = useState("");
+  const [valuePass, setValuePass] = useState("");
+  const [valuePassConfirm, setValuePassConfirm] = useState("");
   const [error, setError] = useState(null);
-
-  const {isKeyboardVisible} = useKeyboard()
-
-  useEffect(() => {
-    if (valueEmail != "") {
-      if (!validateEmail(valueEmail) ) setError("Formato de email incorrecto");
-      else setError(null);
-    }
-  }, [focusEmailInput, isKeyboardVisible]);
 
   return (
     <Layout>
       <View>
-        <Text style={styles.text_1}>Bienvenido de vuelta</Text>
-        <Text style={styles.text_2}>Ingresa tus datos</Text>
+        <Text style={styles.text_1}>Correo electronico </Text>
+        <Text style={styles.text_2}>
+          Aqui te enviaremos los recibos e 
+        </Text>
+
         <InputLiion
           style={styles.input}
           label="Email"
           value={valueEmail}
           errorText={error}
           secureTextEntry={false}
-          onBlur={() => setfocusEmailInput(false)}
-          onFocus={() => setfocusEmailInput(true) }
           onChangeText={(text) => setValueEmail(text)}
         />
         <InputLiion
           style={styles.input}
-          label="Contraseña"
-          value={valueContraseña}
-          secureTextEntry={true}
-          onChangeText={(text) => setValueContraseña(text)}
+          label="Confirma tu email"
+          value={valueEmailConfirm}
+          secureTextEntry={false}
+          onChangeText={(text) => setValueEmailConfirm(text)}
         />
-
-        <TouchableOpacity>
-          <View>
-            <Text style={styles.text_3}>¿Olvidaste tu contraseña?</Text>
-          </View>
-        </TouchableOpacity>
+        <InputLiion
+          style={styles.input}
+          label="Contraseña"
+          value={valuePass}
+          secureTextEntry={false}
+          onChangeText={(text) => setValuePass(text)}
+        />
+        <InputLiion
+          style={styles.input}
+          label="Confirma tu contraseña"
+          value={valuePassConfirm}
+          secureTextEntry={false}
+          onChangeText={(text) => setValuePassConfirm(text)}
+        />
         <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 40 }}>
           <ButtonLiion
             title="Siguiente"
@@ -88,14 +78,17 @@ const styles = StyleSheet.create({
     color: COLORS.TURKEY_CLEAR,
     paddingTop: 50,
     alignSelf: "center",
-    marginBottom: 50,
   },
   text_3: {
     fontFamily: "Gotham-SSm-Medium",
-    fontSize: 16,
-    color: COLORS.TURKEY,
-    paddingTop: 15,
-    marginBottom: 5,
+    fontSize: 20,
+    color: COLORS.TURKEY_CLEAR,
+    alignSelf: "center",
+    marginBottom: 50,
+  },
+  input: {
+    marginTop: 32,
+    width: 333,
   },
   button: {
     width: 333,
@@ -103,10 +96,6 @@ const styles = StyleSheet.create({
     padding: 16,
     margin: 5,
   },
-  input: {
-    marginTop: 32,
-    width: 333,
-  },
 });
 
-export default AccesoCuenta;
+export default RegistroCuentaCorreo;
