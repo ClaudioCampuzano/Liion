@@ -18,6 +18,12 @@ export const post_ = async (req, res) => {
     })
 };
 
+export const login_foward = async (req, res) => {
+    console.log('login_jiro')
+    console.log(db)
+
+};
+
 export const delete_ = async (req, res) => {};
 
 export const put_ = async (req, res) => {};
