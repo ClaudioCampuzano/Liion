@@ -20,7 +20,9 @@ const RegistroCuenta = ({ navigation }) => {
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
-  const [error, setError] = useState(null);
+  const [errorNombre, setErrorNombre] = useState(null);
+  const [errorApellido, setErrorApellido] = useState(null);
+  const [errorRun, setErrorRun] = useState(null);
   const [focusRunInput, setfocusRunInput] = useState(false);
 
   const { isKeyboardVisible } = useKeyboard();
@@ -30,10 +32,30 @@ const RegistroCuenta = ({ navigation }) => {
       setValueRun(format(valueRun));
 
       if (!validate(clean(valueRun))) {
-        setError("Run no valido");
-      } else setError(null);
-    } else setError(null);
+        setErrorRun("Run no valido");
+      } else setErrorRun(null);
+    } else setErrorRun(null);
   }, [isKeyboardVisible, focusRunInput]);
+
+  const checkValidator = () => {
+    if (valueNombre == "") setErrorNombre("Falta tu nombre");
+    else setErrorNombre(null);
+    if (valueApellido == "") setErrorApellido("Falta tu apellido");
+    else setErrorApellido(null);
+    if (valueRun == "") setErrorRun("Falto tu Run");
+    else if (!validate(clean(valueRun))) {
+      setErrorRun("Run no valido");
+    } else setErrorRun(null);
+
+    if (
+      valueNombre != "" &&
+      valueApellido != "" &&
+      valueRun != "" &&
+      validate(clean(valueRun))
+    ) {
+      navigation.navigate("RegistroCuentaCorreo");
+    }
+  };
 
   return (
     <Layout>
@@ -50,12 +72,14 @@ const RegistroCuenta = ({ navigation }) => {
           <InputLiion
             style={styles.input}
             label="Nombre"
+            errorText={errorNombre}
             value={valueNombre}
             secureTextEntry={false}
             onChangeText={(text) => setValueNombre(text)}
           />
           <InputLiion
             style={styles.input}
+            errorText={errorApellido}
             label="Apellido"
             value={valueApellido}
             secureTextEntry={false}
@@ -64,7 +88,7 @@ const RegistroCuenta = ({ navigation }) => {
           <InputLiion
             style={styles.input}
             label="Run"
-            errorText={error}
+            errorText={errorRun}
             keyboardType="numeric"
             value={valueRun}
             onBlur={() => setfocusRunInput(false)}
@@ -78,7 +102,7 @@ const RegistroCuenta = ({ navigation }) => {
           <ButtonLiion
             title="Siguiente"
             styleView={styles.button}
-            onPress={() => navigation.navigate("RegistroCuentaCorreo")}
+            onPress={() => checkValidator()}
           />
         </View>
       </KeyboardAvoidingWrapper>
@@ -100,7 +124,7 @@ const styles = StyleSheet.create({
     color: COLORS.TURKEY_CLEAR,
     paddingTop: heightPercentageToDP("6"),
     textAlign: "center",
-    paddingBottom: heightPercentageToDP("10"),
+    paddingBottom: heightPercentageToDP("5"),
   },
   input: {
     marginTop: heightPercentageToDP("1.8"),
@@ -111,7 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: heightPercentageToDP("23"),
     justifyContent: "flex-end",
-    paddingBottom: heightPercentageToDP('4.7'),
+    paddingBottom: heightPercentageToDP("8"),
   },
   button: {
     width: widthPercentageToDP("78.6"),

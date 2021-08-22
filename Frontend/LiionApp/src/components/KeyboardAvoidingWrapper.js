@@ -6,7 +6,7 @@ import { COLORS } from "../constants/styleThemes";
 const KeyboardAvoidingWrapper = ({ children }) => {
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
-      <ScrollView>{children}</ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false} >{children}</ScrollView>
     </KeyboardAvoidingView>
   );
 };

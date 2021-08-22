@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: heightPercentageToDP("23"),
     justifyContent: "flex-end",
-    paddingBottom: heightPercentageToDP("4.7"),
+    paddingBottom: heightPercentageToDP("8"),
   },
   button: {
     width: widthPercentageToDP("78.6"),
