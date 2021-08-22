@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import Layout from "../../components/Layout";
 
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
+import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import Layout from "../../components/Layout";
 
 import {
   COLORS,
@@ -14,7 +15,6 @@ import {
 import { validate, format, clean } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
-import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 const RegistroCuenta = ({ navigation }) => {
   const [valueNombre, setValueNombre] = useState("");
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: widthPercentageToDP("78.6"),
-    padding: heightPercentageToDP("0"),
     height: heightPercentageToDP("4.8"),
     alignSelf: "center",
   },
