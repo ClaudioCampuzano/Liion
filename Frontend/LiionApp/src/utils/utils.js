@@ -82,4 +82,10 @@ export const validateEmail = (text) => {
     } else {
       return true;
     }
-  };
+};
+  
+// Strong Password
+// at least 8 characters
+// must contain at least 1 uppercase letter, 1 lowercase
+// can contain special characters
+export const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;

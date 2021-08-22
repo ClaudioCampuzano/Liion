@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -8,6 +8,11 @@ import AccesoCuenta from "../screens/accesoRegistro/AccesoCuenta";
 import RegistroCuenta from "../screens/accesoRegistro/RegistroCuenta";
 import RegistroCuentaCorreo from "../screens/accesoRegistro/RegistroCuentaCorreo";
 
+import {
+  COLORS,
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from "../constants/styleThemes";
 
 const AuthNavigator = () => {
   const AuthStack = createStackNavigator();
@@ -25,13 +30,9 @@ const AuthNavigator = () => {
         options={({ navigation }) => ({
           title: "Acceso",
           headerShown: true,
-          headerStyle: { backgroundColor: "#009999", height: 60 },
+          headerStyle: styles.headerContainer,
           headerTitleAlign: "center",
-          headerTitleStyle: {
-            color: "#ffffff",
-            fontFamily: "Gotham-SSm-Book",
-            fontSize: 28,
-          },
+          headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate("BienvenidaScreen")}
@@ -39,7 +40,7 @@ const AuthNavigator = () => {
               <AntDesign
                 name="left"
                 size={40}
-                color="#ffffff"
+                color={COLORS.WHITE}
                 style={{ marginLeft: 10 }}
               />
             </TouchableOpacity>
@@ -52,13 +53,9 @@ const AuthNavigator = () => {
         options={({ navigation }) => ({
           title: "Registro",
           headerShown: true,
-          headerStyle: { backgroundColor: "#009999", height: 60 },
+          headerStyle: styles.headerContainer,
           headerTitleAlign: "center",
-          headerTitleStyle: {
-            color: "#ffffff",
-            fontFamily: "Gotham-SSm-Book",
-            fontSize: 28,
-          },
+          headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate("BienvenidaScreen")}
@@ -66,26 +63,22 @@ const AuthNavigator = () => {
               <AntDesign
                 name="left"
                 size={40}
-                color="#ffffff"
+                color={COLORS.WHITE}
                 style={{ marginLeft: 10 }}
               />
             </TouchableOpacity>
           ),
         })}
       />
-            <AuthStack.Screen
+      <AuthStack.Screen
         name="RegistroCuentaCorreo"
         component={RegistroCuentaCorreo}
         options={({ navigation }) => ({
           title: "Registro",
           headerShown: true,
-          headerStyle: { backgroundColor: "#009999", height: 60 },
+          headerStyle: styles.headerContainer,
           headerTitleAlign: "center",
-          headerTitleStyle: {
-            color: "#ffffff",
-            fontFamily: "Gotham-SSm-Book",
-            fontSize: 28,
-          },
+          headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate("RegistroCuenta")}
@@ -93,7 +86,7 @@ const AuthNavigator = () => {
               <AntDesign
                 name="left"
                 size={40}
-                color="#ffffff"
+                color={COLORS.WHITE}
                 style={{ marginLeft: 10 }}
               />
             </TouchableOpacity>
@@ -103,5 +96,17 @@ const AuthNavigator = () => {
     </AuthStack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    backgroundColor: COLORS.TURKEY,
+    height: heightPercentageToDP("7"),
+  },
+  headerText: {
+    color: COLORS.WHITE,
+    fontFamily: "Gotham-SSm-Book",
+    fontSize: 28,
+  },
+});
 
 export default AuthNavigator;

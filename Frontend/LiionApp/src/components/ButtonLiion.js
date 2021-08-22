@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.TURKEY,
     borderRadius: 32,
     alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 20,

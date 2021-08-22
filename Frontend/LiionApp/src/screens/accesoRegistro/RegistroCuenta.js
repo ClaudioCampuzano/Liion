@@ -1,113 +1,123 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Keyboard } from "react-native";
-
+import { StyleSheet, Text, View } from "react-native";
 import Layout from "../../components/Layout";
 
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
 
-import { COLORS } from "../../constants/styleThemes";
+import {
+  COLORS,
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from "../../constants/styleThemes";
 
-import { validate, clean, format, getCheckDigit } from "../../utils/utils";
+import { validate, format, clean } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
+import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 const RegistroCuenta = ({ navigation }) => {
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
   const [error, setError] = useState(null);
-  const [focusEmailInput, setfocusEmailInput] = useState(false);
+  const [focusRunInput, setfocusRunInput] = useState(false);
 
-
-  const {isKeyboardVisible} = useKeyboard()
+  const { isKeyboardVisible } = useKeyboard();
 
   useEffect(() => {
     if (valueRun != "") {
       setValueRun(format(valueRun));
 
-      if (!validate(valueRun)) {
+      if (!validate(clean(valueRun))) {
         setError("Run no valido");
       } else setError(null);
     } else setError(null);
-  }, [isKeyboardVisible, focusEmailInput]);
+  }, [isKeyboardVisible, focusRunInput]);
 
   return (
     <Layout>
-      <View>
-        <Text style={styles.text_1}>Datos personales</Text>
-        <Text style={styles.text_2}>Tus datos dan seguridad </Text>
-        <Text style={styles.text_3}>a la comunidad </Text>
-        <InputLiion
-          style={styles.input}
-          label="Nombre"
-          value={valueNombre}
-          secureTextEntry={false}
-          onChangeText={(text) => setValueNombre(text)}
-        />
-        <InputLiion
-          style={styles.input}
-          label="Apellido"
-          value={valueApellido}
-          secureTextEntry={false}
-          onChangeText={(text) => setValueApellido(text)}
-        />
-        <InputLiion
-          style={styles.input}
-          label="Run"
-          errorText={error}
-          keyboardType="numeric"
-          value={valueRun}
-          onBlur={() => setfocusEmailInput(false)}
-          onFocus={() => setfocusEmailInput(true) }
-          secureTextEntry={false}
-          onChangeText={(text) => setValueRun(text)}
-        />
-        <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 40 }}>
+      <KeyboardAvoidingWrapper>
+        <View
+          style={{
+            height: heightPercentageToDP("70"),
+          }}
+        >
+          <Text style={styles.text_titulo}>Datos personales</Text>
+          <Text style={styles.text_subTitulo}>
+            Tus datos dan seguridad a la comunidad
+          </Text>
+          <InputLiion
+            style={styles.input}
+            label="Nombre"
+            value={valueNombre}
+            secureTextEntry={false}
+            onChangeText={(text) => setValueNombre(text)}
+          />
+          <InputLiion
+            style={styles.input}
+            label="Apellido"
+            value={valueApellido}
+            secureTextEntry={false}
+            onChangeText={(text) => setValueApellido(text)}
+          />
+          <InputLiion
+            style={styles.input}
+            label="Run"
+            errorText={error}
+            keyboardType="numeric"
+            value={valueRun}
+            onBlur={() => setfocusRunInput(false)}
+            onFocus={() => setfocusRunInput(true)}
+            secureTextEntry={false}
+            onChangeText={(text) => setValueRun(text)}
+          />
+        </View>
+
+        <View style={styles.buttonView}>
           <ButtonLiion
             title="Siguiente"
             styleView={styles.button}
-            styleText={{ margin: -10 }}
             onPress={() => navigation.navigate("RegistroCuentaCorreo")}
           />
         </View>
-      </View>
+      </KeyboardAvoidingWrapper>
     </Layout>
   );
 };
 
 const styles = StyleSheet.create({
-  text_1: {
+  text_titulo: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: 25,
     color: COLORS.TURKEY,
-    paddingTop: 50,
-    alignSelf: "center",
+    paddingTop: heightPercentageToDP("6"),
+    textAlign: "center",
   },
-  text_2: {
+  text_subTitulo: {
     fontFamily: "Gotham-SSm-Medium",
     fontSize: 20,
     color: COLORS.TURKEY_CLEAR,
-    paddingTop: 50,
-    alignSelf: "center",
-  },
-  text_3: {
-    fontFamily: "Gotham-SSm-Medium",
-    fontSize: 20,
-    color: COLORS.TURKEY_CLEAR,
-    alignSelf: "center",
-    marginBottom: 50,
+    paddingTop: heightPercentageToDP("6"),
+    textAlign: "center",
+    paddingBottom: heightPercentageToDP("10"),
   },
   input: {
-    marginTop: 32,
-    width: 333,
+    marginTop: heightPercentageToDP("1.8"),
+    width: widthPercentageToDP("78.6"),
+    alignSelf: "center",
+  },
+  buttonView: {
+    flex: 1,
+    height: heightPercentageToDP("23"),
+    justifyContent: "flex-end",
+    paddingBottom: heightPercentageToDP('4.7'),
   },
   button: {
-    width: 333,
-    height: 40,
-    padding: 16,
-    margin: 5,
+    width: widthPercentageToDP("78.6"),
+    padding: heightPercentageToDP("0"),
+    height: heightPercentageToDP("4.8"),
+    alignSelf: "center",
   },
 });
-
 export default RegistroCuenta;
