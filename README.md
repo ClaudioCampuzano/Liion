@@ -82,3 +82,6 @@ Modelo de comparticion completa de gastos, donde el costo total vendra determina
 - Rendimiento mixto por kilometro del vehiculo
 
 El costo final, se dividira por la cantidad maxima de asientos del ofertados, y se sugirira dicha tarifa al conductor.
+
+## Guia sencilla de GIT
+ - https://rogerdudler.github.io/git-guide/
