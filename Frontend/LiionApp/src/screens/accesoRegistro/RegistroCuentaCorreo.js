@@ -19,12 +19,13 @@ import {
 } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
+import { RegisterBackend } from "../../api/api"
 
-const RegistroCuentaCorreo = ({ navigation }) => {
-  const [valueEmail, setValueEmail] = useState("");
-  const [valueEmailConfirm, setValueEmailConfirm] = useState("");
-  const [valuePass, setValuePass] = useState("");
-  const [valuePassConfirm, setValuePassConfirm] = useState("");
+const RegistroCuentaCorreo = ({ route, navigation }) => {
+  const [valueEmail, setValueEmail] = useState("jon@jiron.com");
+  const [valueEmailConfirm, setValueEmailConfirm] = useState("jon@jiron.com");
+  const [valuePass, setValuePass] = useState("123456789Aa");
+  const [valuePassConfirm, setValuePassConfirm] = useState("123456789Aa");
 
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorEmailConfirm, seterrorEmailConfirm] = useState(null);
@@ -41,6 +42,7 @@ const RegistroCuentaCorreo = ({ navigation }) => {
 
   const { isKeyboardVisible } = useKeyboard();
   const isFirst = isFirstRender();
+  const {name, lastname, run} = route.params
 
   useEffect(() => {
     if (valueEmail != "") {
@@ -73,6 +75,7 @@ const RegistroCuentaCorreo = ({ navigation }) => {
   ]);
 
   useEffect(() => {
+    //console.log(name, lastname, run);
     if ( pushButton &&
       !isFirst &&
       !errorEmail &&
@@ -80,7 +83,18 @@ const RegistroCuentaCorreo = ({ navigation }) => {
       !errorPass &&
       !errorPassConfirm
     )
-      console.log("entramosJiropaOtravez1");
+    
+    //crack porfavor revisar
+    if  (name && lastname && run){
+      (async function  () {
+      const [resval, resmsg] = await RegisterBackend({name:name, lastname:lastname, run:run, email:valueEmail,
+      password:valuePass, isPassenger:"true", isDriver:"false"})
+      console.log(resval, resmsg)
+      })();
+    }
+    else {
+      console.log("Ingresa todo")
+    }
     setPushButton(false)
 
   }, [pushButton]);

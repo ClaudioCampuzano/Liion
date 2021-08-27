@@ -49,3 +49,32 @@ export const unProtectedRoute = async () =>{
         console.log(e.response)
     }
 }
+
+
+export const RegisterBackend = async (payload) => {
+    const payloadStr = JSON.stringify(payload)
+    //console.log(payloadStr)
+    try {
+        const res = await client({
+            method: 'post',
+            url: '/register',
+            headers: {'Content-Type': 'application/json'},
+            data:payloadStr,
+        },
+        )
+    return [true, res.data.message]
+    }
+ catch (e) {
+     //error propio de datos validacion
+     if(e.response.data.msg){
+        //console.log(e.response.data.msg)
+    return [false, e.response.data.msg]
+     }
+     else {
+         //error de firebase
+        //console.log(e.response.data.msg)
+        //console.log('jiro')
+        return [false, e.response.data.message]
+     }
+}
+}

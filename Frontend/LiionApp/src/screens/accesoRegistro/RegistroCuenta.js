@@ -17,13 +17,17 @@ import { validate, format, clean } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
 
 const RegistroCuenta = ({ navigation }) => {
-  const [valueNombre, setValueNombre] = useState("");
-  const [valueApellido, setValueApellido] = useState("");
-  const [valueRun, setValueRun] = useState("");
+  const [valueNombre, setValueNombre] = useState("jon");
+  const [valueApellido, setValueApellido] = useState("jiron");
+  const [valueRun, setValueRun] = useState("12345674");
   const [errorNombre, setErrorNombre] = useState(null);
   const [errorApellido, setErrorApellido] = useState(null);
   const [errorRun, setErrorRun] = useState(null);
   const [focusRunInput, setfocusRunInput] = useState(false);
+  
+  //luego mejor crear un objecto reactivo, en vez de objetos chicos por separados
+  //const [state, setState] = useState({ fName: "", lName: "" });
+  //con teclado numerico que pasa con rut raya K
 
   const { isKeyboardVisible } = useKeyboard();
 
@@ -53,7 +57,8 @@ const RegistroCuenta = ({ navigation }) => {
       valueRun != "" &&
       validate(clean(valueRun))
     ) {
-      navigation.navigate("RegistroCuentaCorreo");
+      const data1 = {name: valueNombre, lastname:valueApellido, run:valueRun}
+      navigation.navigate("RegistroCuentaCorreo", data1);
     }
   };
 

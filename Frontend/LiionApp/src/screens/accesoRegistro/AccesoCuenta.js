@@ -27,7 +27,7 @@ import {GlobalContext} from '../../context/Provider';
 const AccesoCuenta = () => {
   const [valueEmail, setValueEmail] = useState("jon@jiron.cl");
   const [focusEmailInput, setfocusEmailInput] = useState(false);
-  const [valuePassword, setValuePassword] = useState("123456789");
+  const [valuePassword, setvaluePassword] = useState("123456789");
   const [error, setError] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -72,9 +72,9 @@ const HandleLoggin = (payload) => {
           <InputLiion
             style={styles.input}
             label="Contraseña"
-            value={valueContraseña}
+            value={valuePassword}
             secureTextEntry={true}
-            onChangeText={(text) => setValueContraseña(text)}
+            onChangeText={(text) => setvaluePassword(text)}
           />
           <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
             No disponible compadre, me entendiste chonchetumare?
