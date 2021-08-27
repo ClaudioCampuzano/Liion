@@ -2,6 +2,7 @@ import React, { createContext, useReducer } from "react";
 
 import authReducer from "./authReducer";
 
+
 export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
@@ -13,7 +14,7 @@ const GlobalProvider = ({ children }) => {
   const [authState, authDispatch] = useReducer(authReducer, initialState);
 
   return (
-    <GlobalContext.Provider value={{ authState }}>
+    <GlobalContext.Provider value={{ authState, authDispatch }}>
       {children}
     </GlobalContext.Provider>
   );

@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Keyboard,
+} from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -15,11 +21,13 @@ import {
 
 import { validateEmail } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
+import loginUser from "../../context/actions/auth/loginUser";
+import {GlobalContext} from '../../context/Provider';
 
 const AccesoCuenta = () => {
-  const [valueEmail, setValueEmail] = useState("");
+  const [valueEmail, setValueEmail] = useState("jon@jiron.cl");
   const [focusEmailInput, setfocusEmailInput] = useState(false);
-  const [valueContraseña, setValueContraseña] = useState("");
+  const [valuePassword, setValuePassword] = useState("123456789");
   const [error, setError] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +40,14 @@ const AccesoCuenta = () => {
       else setError(null);
     }
   }, [focusEmailInput, isKeyboardVisible]);
+
+  const { authDispatch } = useContext(GlobalContext);
+
+const HandleLoggin = (payload) => {
+  //console.log(authDispatch)
+  //console.log(authState)
+  loginUser({email:valueEmail, password:valuePassword})(authDispatch);
+}
 
   return (
     <Layout>
@@ -76,7 +92,8 @@ const AccesoCuenta = () => {
           <ButtonLiion
             title="Siguiente"
             styleView={styles.button}
-            onPress={() => navigation.navigate("RegistroCuentaCorreo")}
+            styleText={{ margin: -10 }}
+            onPress={() => HandleLoggin()}
           />
         </View>
       </KeyboardAvoidingWrapper>

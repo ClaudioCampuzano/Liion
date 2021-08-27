@@ -36,9 +36,9 @@ export const post_ = async (req, res) => {
   });
 };
 
-export const login_foward = async (req, res) => {
-    console.log('login_jiro')
-    console.log(db)
+export const testRoute = async (req, res) => {
+    res.json({msg:'ruta de prueba'})
+    
 
 };
 
