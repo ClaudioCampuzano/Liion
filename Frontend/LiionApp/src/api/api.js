@@ -2,7 +2,7 @@ import axios from 'axios'
 import firebase from 'firebase'
 
 const client = axios.create({
-    baseURL: 'http://192.168.0.17:3000'
+    baseURL: 'http://192.168.0.2:3000'
   })
 
 

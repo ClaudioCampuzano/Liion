@@ -70,7 +70,8 @@ const RegisterStepOne = ({ navigation }) => {
       validate(clean(valueRun)) &&
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
     ) {
-      navigation.navigate("RegisterStepTwo");
+      const data1 = {name: valueNombre, lastname:valueApellido, run:valueRun}
+      navigation.navigate("RegisterStepTwo",data1);
     }
   };
 

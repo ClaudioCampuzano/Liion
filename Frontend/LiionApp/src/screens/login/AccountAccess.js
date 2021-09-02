@@ -32,6 +32,12 @@ const AccountAccess = () => {
 
   const { isKeyboardVisible } = useKeyboard();
 
+  const { authDispatch } = useContext(GlobalContext);
+
+  const HandleLoggin = (payload) => {
+    loginUser({email:valueEmail, password:valuePass})(authDispatch);
+  }
+
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
     if (valuePass != "") setErrorPass(null);
@@ -65,7 +71,7 @@ const AccountAccess = () => {
     else setErrorEmail(null);
 
     if (validateEmail(valueEmail) && validatePassword(valuePass))
-      console.log("entramosJdiropaOtravez1");
+      HandleLoggin();
   };
 
   return (

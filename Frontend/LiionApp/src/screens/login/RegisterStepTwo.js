@@ -11,9 +11,9 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validateEmail, validatePassword } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
-import { RegisterBackend } from "../../api/api"
+import { RegisterBackend } from "../../api/api";
 
-const RegisterStepTwo = ({ navigation }) => {
+const RegisterStepTwo = ({ route, navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
   const [valuePass, setValuePass] = useState("");
   const [valuePassConfirm, setValuePassConfirm] = useState("");
@@ -28,8 +28,8 @@ const RegisterStepTwo = ({ navigation }) => {
     useState(false);
 
   const { isKeyboardVisible } = useKeyboard();
-  const isFirst = isFirstRender();
-  const {name, lastname, run} = route.params
+
+  const { name, lastname, run } = route.params;
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -84,7 +84,22 @@ const RegisterStepTwo = ({ navigation }) => {
       validatePassword(valuePass) &&
       valuePass == valuePassConfirm
     )
-      console.log("entramosJdiropaOtravez1");
+      if (name && lastname && run) {
+        (async function () {
+          const [resval, resmsg] = await RegisterBackend({
+            name: name,
+            lastname: lastname,
+            run: run,
+            email: valueEmail,
+            password: valuePass,
+            isPassenger: "true",
+            isDriver: "false",
+          });
+          console.log(resval, resmsg);
+        })();
+      } else {
+        console.log("Ingresa todo");
+      }
   };
 
   return (

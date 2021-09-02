@@ -72,7 +72,7 @@ const InputDataTime = (props) => {
           ]}
           {...restOfProps}
         >
-          {console.log(date.utc())}
+          {/* {console.log(date.utc())} */}
           {!(date.format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) &&
             date.utc().format("YYYY-MM-DD")}
         </Text>
