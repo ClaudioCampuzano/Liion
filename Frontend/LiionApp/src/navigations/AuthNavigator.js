@@ -3,16 +3,12 @@ import { TouchableOpacity, StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AntDesign } from "@expo/vector-icons";
 
-import BienvenidaScreen from "../screens/accesoRegistro/BienvenidaScreen";
-import AccesoCuenta from "../screens/accesoRegistro/AccesoCuenta";
-import RegistroCuenta from "../screens/accesoRegistro/RegistroCuenta";
-import RegistroCuentaCorreo from "../screens/accesoRegistro/RegistroCuentaCorreo";
+import WelcomeScreen from "../screens/WelcomeScreen";
+import AccountAccess from "../screens/login/AccountAccess";
+import RegisterStepOne from "../screens/login/RegisterStepOne";
+import RegisterStepTwo from "../screens/login/RegisterStepTwo";
 
-import {
-  COLORS,
-  widthPercentageToDP,
-  heightPercentageToDP,
-} from "../constants/styleThemes";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const AuthNavigator = () => {
   const AuthStack = createStackNavigator();
@@ -20,13 +16,13 @@ const AuthNavigator = () => {
   return (
     <AuthStack.Navigator>
       <AuthStack.Screen
-        name="BienvenidaScreen"
-        component={BienvenidaScreen}
+        name="WelcomeScreen"
+        component={WelcomeScreen}
         options={{ headerShown: false }}
       />
       <AuthStack.Screen
-        name="AccesoCuenta"
-        component={AccesoCuenta}
+        name="AccountAccess"
+        component={AccountAccess}
         options={({ navigation }) => ({
           title: "Acceso",
           headerShown: true,
@@ -35,21 +31,21 @@ const AuthNavigator = () => {
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("BienvenidaScreen")}
+              onPress={() => navigation.navigate("WelcomeScreen")}
             >
               <AntDesign
                 name="left"
-                size={40}
+                size={hp('5%')}
                 color={COLORS.WHITE}
-                style={{ marginLeft: 10 }}
+                style={{ marginLeft: wp('2.5%') }}
               />
             </TouchableOpacity>
           ),
         })}
       />
       <AuthStack.Screen
-        name="RegistroCuenta"
-        component={RegistroCuenta}
+        name="RegisterStepOne"
+        component={RegisterStepOne}
         options={({ navigation }) => ({
           title: "Registro",
           headerShown: true,
@@ -58,21 +54,21 @@ const AuthNavigator = () => {
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("BienvenidaScreen")}
+              onPress={() => navigation.navigate("WelcomeScreen")}
             >
               <AntDesign
                 name="left"
-                size={40}
+                size={hp('5%')}
                 color={COLORS.WHITE}
-                style={{ marginLeft: 10 }}
+                style={{ marginLeft: wp('2.5%') }}
               />
             </TouchableOpacity>
           ),
         })}
       />
       <AuthStack.Screen
-        name="RegistroCuentaCorreo"
-        component={RegistroCuentaCorreo}
+        name="RegisterStepTwo"
+        component={RegisterStepTwo}
         options={({ navigation }) => ({
           title: "Registro",
           headerShown: true,
@@ -81,13 +77,13 @@ const AuthNavigator = () => {
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("RegistroCuenta")}
+              onPress={() => navigation.navigate("RegisterStepOne")}
             >
               <AntDesign
                 name="left"
-                size={40}
+                size={hp('5%')}
                 color={COLORS.WHITE}
-                style={{ marginLeft: 10 }}
+                style={{ marginLeft: wp('2.5%') }}
               />
             </TouchableOpacity>
           ),
@@ -100,12 +96,12 @@ const AuthNavigator = () => {
 const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: COLORS.TURKEY,
-    height: heightPercentageToDP("7"),
+    height: hp('7%'),
   },
   headerText: {
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
-    fontSize: 28,
+    fontSize: hp('3.5%'),
   },
 });
 

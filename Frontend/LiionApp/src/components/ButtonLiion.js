@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
-import {COLORS} from "../constants/styleThemes"
+import {COLORS, hp} from "../constants/styleThemes"
 
 const ButtonLiion = (props) => {
   return (
@@ -16,12 +16,12 @@ const ButtonLiion = (props) => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: COLORS.TURKEY,
-    borderRadius: 32,
+    borderRadius: hp('3.8%'),
     alignItems: "center",
     justifyContent: "center",
   },
   text: {
-    fontSize: 20,
+    fontSize: hp('2.4%'),
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Medium",
     textAlign: "center",

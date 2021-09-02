@@ -42,7 +42,10 @@
 - expo install @react-native-async-storage/async-storage
 - react-native-textinput-effects [borrar]
 - email-validator, validate.js react-native-form-validator [borrar]
-
+- react-native-responsive-screen
+- react-native-picker-select [borrar]
+- @react-native-community/datetimepicker
+- add react-native-device-info [borrar]
 
 # Servicios
 
