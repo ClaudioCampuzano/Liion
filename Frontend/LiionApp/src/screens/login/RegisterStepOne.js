@@ -29,10 +29,6 @@ const RegisterStepOne = ({ navigation }) => {
   const [errorFecha, setErrorFecha] = useState(null);
 
   const [focusRunInput, setfocusRunInput] = useState(false);
-  
-  //luego mejor crear un objecto reactivo, en vez de objetos chicos por separados
-  //const [state, setState] = useState({ fName: "", lName: "" });
-  //con teclado numerico que pasa con rut raya K
 
   const { isKeyboardVisible } = useKeyboard();
 
@@ -70,8 +66,8 @@ const RegisterStepOne = ({ navigation }) => {
       validate(clean(valueRun)) &&
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
     ) {
-      const data1 = {name: valueNombre, lastname:valueApellido, run:valueRun}
-      navigation.navigate("RegisterStepTwo",data1);
+      const dataToStep2 = {name: valueNombre, lastname:valueApellido, run:valueRun, dateBirth: valueFecha.utc().format("YYYY-MM-DD")}
+      navigation.navigate("RegisterStepTwo",dataToStep2);
     }
   };
 

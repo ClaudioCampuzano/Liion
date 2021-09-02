@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Keyboard,
 } from "react-native";
 
 import Layout from "../../components/Layout";

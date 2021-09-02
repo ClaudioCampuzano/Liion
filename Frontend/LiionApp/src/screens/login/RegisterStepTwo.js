@@ -5,11 +5,10 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import ModalPopUp from "../../components/ModalPopUp";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
-
 import { validateEmail, validatePassword } from "../../utils/utils";
-
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { RegisterBackend } from "../../api/api";
 
@@ -27,9 +26,9 @@ const RegisterStepTwo = ({ route, navigation }) => {
   const [focusPasswordConfirmInput, setfocusPasswordConfirmInput] =
     useState(false);
 
+  const [modalVisible, setModalVisible] = useState(false);
   const { isKeyboardVisible } = useKeyboard();
-
-  const { name, lastname, run } = route.params;
+  const { name, lastname, run, dateBirth } = route.params;
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -83,23 +82,21 @@ const RegisterStepTwo = ({ route, navigation }) => {
       validateEmail(valueEmail) &&
       validatePassword(valuePass) &&
       valuePass == valuePassConfirm
-    )
-      if (name && lastname && run) {
-        (async function () {
-          const [resval, resmsg] = await RegisterBackend({
-            name: name,
-            lastname: lastname,
-            run: run,
-            email: valueEmail,
-            password: valuePass,
-            isPassenger: "true",
-            isDriver: "false",
-          });
-          console.log(resval, resmsg);
-        })();
-      } else {
-        console.log("Ingresa todo");
-      }
+    ) {
+      (async function () {
+        const [resval, resmsg] = await RegisterBackend({
+          name: name,
+          lastname: lastname,
+          run: run,
+          email: valueEmail,
+          password: valuePass,
+          birth: dateBirth,
+          isPassenger: "true",
+          isDriver: "false",
+        });
+        resval ? navigation.navigate("AccountAccess") : setModalVisible(true)
+      })();
+    }
   };
 
   return (
@@ -110,6 +107,9 @@ const RegisterStepTwo = ({ route, navigation }) => {
             height: hp("78%"),
           }}
         >
+          <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
+            Errores en el registro, consulte con el administrador
+          </ModalPopUp>
           <Text style={styles.text_titulo}>Correo electronico </Text>
           <Text style={styles.text_subTitulo}>
             Aquí te enviaremos los recibos e informaciónes sobre tus viajes
@@ -149,7 +149,7 @@ const RegisterStepTwo = ({ route, navigation }) => {
         </View>
         <View style={styles.buttonView}>
           <ButtonLiion
-            title="Siguiente"
+            title="Registrar"
             styleView={styles.button}
             onPress={() => checkValidator()}
           />
