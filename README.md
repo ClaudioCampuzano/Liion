@@ -29,6 +29,7 @@
 
 - npm i express morgan cors dotenv firebase-admin firebase (servidor para produccion, dotenv no necesario ya q nuestro repo es privado)
 - npm i nodemon @babel/core @babel/cli @babel/preset-env -D (solo para la etapa de desarrollo)
+- npm i add body-parser express-validator
 
 ## Frontend
 

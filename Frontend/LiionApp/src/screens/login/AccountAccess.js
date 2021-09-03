@@ -115,7 +115,7 @@ const AccountAccess = () => {
         </View>
         <View style={styles.buttonView}>
           <ButtonLiion
-            title="Siguiente"
+            title="Ingresar"
             styleView={styles.button}
             onPress={() => checkValidator()}
           />

@@ -1,15 +1,18 @@
 import { db, auth, firebase } from "../config/config";
+import { isEmail, isLength, isDate,isAlphanumeric,isEmpty } from "validator";
+import { validateRun } from "../middleware/validations"
 
 export const register = async (req, res) => {
   const { name, lastname, run, email, birth, password, isPassenger, isDriver } =
     req.body;
   if (
-    name &&
-    lastname &&
-    run &&
-    email &&
-    birth &&
-    password &&
+    !isEmpty(name) &&
+    !isEmpty(lastname) &&
+    validateRun(run) &&
+    isEmail(email) &&
+    isDate(birth) &&
+    isLength(password, { min: 8 }) &&
+    isAlphanumeric(password,'es-ES') &&
     isPassenger &&
     isDriver
   ) {
@@ -36,12 +39,14 @@ export const register = async (req, res) => {
         });
         res.json({ message: "Successful Registration" });
       } catch (e) {
-        auth.deleteUser(uid).then(() => {
-          console.log('"Failed save in Firestore auth user removed');
-        })
-        .catch((error) => {
-          console.log('Error deleting user:', error);
-        });
+        auth
+          .deleteUser(uid)
+          .then(() => {
+            console.log('"Failed save in Firestore auth user removed');
+          })
+          .catch((error) => {
+            console.log("Error deleting user:", error);
+          });
       }
     } catch (e) {
       //console.log(e);
@@ -52,4 +57,3 @@ export const register = async (req, res) => {
     res.status(400).json({ message: msg });
   }
 };
-

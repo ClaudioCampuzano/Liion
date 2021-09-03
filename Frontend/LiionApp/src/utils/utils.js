@@ -85,8 +85,7 @@ export const validateEmail = (text) => {
   }
 };
 
-// Strong Password
-// at least 8 characters
+// Strong Password at least 8 characters
 // must contain at least 1 uppercase letter, 1 lowercase
 // can contain special characters
 export const validatePassword = (text) => {
@@ -98,7 +97,7 @@ export const validatePassword = (text) => {
   }
 };
 
-//  const isMount = isFirstRender();
+// Forma de utilizar: const isMount = isFirstRender();
 export const isFirstRender = () => {
   const isMountRef = useRef(true);
   useEffect(() => {
