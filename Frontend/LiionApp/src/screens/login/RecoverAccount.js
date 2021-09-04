@@ -61,7 +61,7 @@ const RecoverAccount = () => {
         </View>
         <View style={styles.buttonView}>
           <ButtonLiion
-            title="Registrar"
+            title="Enviar"
             styleView={styles.button}
             onPress={() => checkValidator()}
           />
