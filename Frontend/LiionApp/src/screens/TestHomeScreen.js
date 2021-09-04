@@ -8,10 +8,7 @@ import { protectedRoute, unProtectedRoute } from "../api/api";
 import { COLORS, DEVICE } from "../constants/styleThemes";
 
 const HandleLogout = async () => {
-  //console.log(await isUserLoggedIn())
-
   await firelogout()
-  //testfunc()
 }
 
 const TestHomeScreen = ({ navigation }) => {
@@ -46,22 +43,6 @@ const TestHomeScreen = ({ navigation }) => {
     </Layout>
   );
 };
-
-/*
-  const [modalVisible, setModalVisible] = useState(false);
-
-  
-      <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-        No disponible compadre, me entendiste chonchetumare?
-      </ModalPopUp>
-
-                <ButtonLiion
-            title="Crear cuenta"
-            styleView={styles.button}
-            styleText={{ margin: -10 }}
-            onPress={() => setModalVisible(true)}
-          />
-*/
 
 const styles = StyleSheet.create({
   container: {

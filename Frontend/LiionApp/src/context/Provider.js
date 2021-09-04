@@ -2,7 +2,6 @@ import React, { createContext, useReducer } from "react";
 
 import authReducer from "./authReducer";
 
-
 export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
@@ -18,6 +17,6 @@ const GlobalProvider = ({ children }) => {
       {children}
     </GlobalContext.Provider>
   );
-};
+}; 
 
 export default GlobalProvider;

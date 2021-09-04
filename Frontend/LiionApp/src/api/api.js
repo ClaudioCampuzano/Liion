@@ -58,11 +58,11 @@ export const RegisterBackend = async (payload) => {
     return [true, res.data.message];
   } catch (e) {
     try {
-      console.log(e.response.data.message)
-      return [false,e.response.data.message]
+      console.log(e.response.data.message);
+      return [false, e.response.data.message];
     } catch (eS) {
-      console.log(e)
-      return [false,e]
+      console.log(e);
+      return [false, e];
     }
   }
 };

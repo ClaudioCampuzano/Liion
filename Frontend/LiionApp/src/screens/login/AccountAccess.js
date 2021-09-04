@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -13,11 +8,11 @@ import ModalPopUp from "../../components/ModalPopUp";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
-
 import { validateEmail, validatePassword } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
+
 import loginUser from "../../context/actions/auth/loginUser";
-import {GlobalContext} from '../../context/Provider';
+import { GlobalContext } from "../../context/Provider";
 
 const AccountAccess = () => {
   const [valueEmail, setValueEmail] = useState("");
@@ -34,8 +29,8 @@ const AccountAccess = () => {
   const { authDispatch } = useContext(GlobalContext);
 
   const HandleLoggin = (payload) => {
-    loginUser({email:valueEmail, password:valuePass})(authDispatch);
-  }
+    loginUser({ email: valueEmail, password: valuePass })(authDispatch);
+  };
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);

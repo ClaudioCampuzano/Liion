@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -29,6 +35,8 @@ const RegisterStepTwo = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { isKeyboardVisible } = useKeyboard();
   const { name, lastname, run, dateBirth } = route.params;
+
+  const [waitingRegister, setWaitingRegister] = useState(false);
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -83,6 +91,7 @@ const RegisterStepTwo = ({ route, navigation }) => {
       validatePassword(valuePass) &&
       valuePass == valuePassConfirm
     ) {
+      setWaitingRegister(true);
       (async function () {
         const [resval, resmsg] = await RegisterBackend({
           name: name,
@@ -94,67 +103,81 @@ const RegisterStepTwo = ({ route, navigation }) => {
           isPassenger: "true",
           isDriver: "false",
         });
-        resval ? navigation.navigate("AccountAccess") : setModalVisible(true)
+        if (resval)
+          navigation.navigate("AccountAccess")
+        else {
+          setModalVisible(true);
+          setWaitingRegister(false);
+        }
       })();
     }
   };
 
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
-        <View
-          style={{
-            height: hp("78%"),
-          }}
-        >
-          <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-            Errores en el registro, consulte con el administrador
-          </ModalPopUp>
-          <Text style={styles.text_titulo}>Correo electronico </Text>
-          <Text style={styles.text_subTitulo}>
-            Aquí te enviaremos los recibos e informaciónes sobre tus viajes
-          </Text>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <InputLiion
-              style={styles.input}
-              label="Email"
-              value={valueEmail}
-              errorText={errorEmail}
-              secureTextEntry={false}
-              onBlur={() => setfocusEmailInput(false)}
-              onFocus={() => setfocusEmailInput(true)}
-              onChangeText={(text) => setValueEmail(text)}
-            />
-            <InputLiion
-              style={styles.input}
-              label="Contraseña"
-              value={valuePass}
-              errorText={errorPass}
-              onBlur={() => setfocusPasswordInput(false)}
-              onFocus={() => setfocusPasswordInput(true)}
-              secureTextEntry={true}
-              onChangeText={(text) => setValuePass(text)}
-            />
-            <InputLiion
-              style={styles.input}
-              label="Confirma tu contraseña"
-              value={valuePassConfirm}
-              errorText={errorPassConfirm}
-              onBlur={() => setfocusPasswordConfirmInput(false)}
-              onFocus={() => setfocusPasswordConfirmInput(true)}
-              secureTextEntry={true}
-              onChangeText={(text) => setValuePassConfirm(text)}
-            />
-          </ScrollView>
+      {waitingRegister ? (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" color={COLORS.TURKEY} />
         </View>
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Registrar"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
-      </KeyboardAvoidingWrapper>
+      ) : (
+        <KeyboardAvoidingWrapper>
+          <View
+            style={{
+              height: hp("78%"),
+            }}
+          >
+            <ModalPopUp
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+            >
+              Errores en el registro, consulte con el administrador
+            </ModalPopUp>
+            <Text style={styles.text_titulo}>Correo electronico </Text>
+            <Text style={styles.text_subTitulo}>
+              Aquí te enviaremos los recibos e informaciónes sobre tus viajes
+            </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <InputLiion
+                style={styles.input}
+                label="Email"
+                value={valueEmail}
+                errorText={errorEmail}
+                secureTextEntry={false}
+                onBlur={() => setfocusEmailInput(false)}
+                onFocus={() => setfocusEmailInput(true)}
+                onChangeText={(text) => setValueEmail(text)}
+              />
+              <InputLiion
+                style={styles.input}
+                label="Contraseña"
+                value={valuePass}
+                errorText={errorPass}
+                onBlur={() => setfocusPasswordInput(false)}
+                onFocus={() => setfocusPasswordInput(true)}
+                secureTextEntry={true}
+                onChangeText={(text) => setValuePass(text)}
+              />
+              <InputLiion
+                style={styles.input}
+                label="Confirma tu contraseña"
+                value={valuePassConfirm}
+                errorText={errorPassConfirm}
+                onBlur={() => setfocusPasswordConfirmInput(false)}
+                onFocus={() => setfocusPasswordConfirmInput(true)}
+                secureTextEntry={true}
+                onChangeText={(text) => setValuePassConfirm(text)}
+              />
+            </ScrollView>
+          </View>
+          <View style={styles.buttonView}>
+            <ButtonLiion
+              title="Registrar"
+              styleView={styles.button}
+              onPress={() => checkValidator()}
+            />
+          </View>
+        </KeyboardAvoidingWrapper>
+      )}
     </Layout>
   );
 };
