@@ -19,3 +19,13 @@
    * and would fire every time the component re-renders.
    * REF:  https://reactjs.org/tutorial/tutorial.html   Primera 'Note'
    ******************/
+
+
+   * Forma de ocupar el modalUp disponibles 
+   * 
+import ModalPopUp from "../../components/ModalPopUp";
+const [modalVisible, setModalVisible] = useState(false);
+<ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
+  No disponible compadre, me entendiste chonchetumare?
+</ModalPopUp>
+   * 
