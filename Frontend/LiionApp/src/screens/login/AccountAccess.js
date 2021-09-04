@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
-import ModalPopUp from "../../components/ModalPopUp";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
@@ -14,7 +13,7 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 import loginUser from "../../context/actions/auth/loginUser";
 import { GlobalContext } from "../../context/Provider";
 
-const AccountAccess = () => {
+const AccountAccess = ({ navigation}) => {
   const [valueEmail, setValueEmail] = useState("");
   const [focusEmailInput, setfocusEmailInput] = useState(false);
   const [valuePass, setValuePass] = useState("");
@@ -22,7 +21,6 @@ const AccountAccess = () => {
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorPass, setErrorPass] = useState(null);
 
-  const [modalVisible, setModalVisible] = useState(false);
 
   const { isKeyboardVisible } = useKeyboard();
 
@@ -96,11 +94,9 @@ const AccountAccess = () => {
             secureTextEntry={true}
             onChangeText={(text) => setValuePass(text)}
           />
-          <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-            No disponible compadre, me entendiste chonchetumare?
-          </ModalPopUp>
 
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          
+          <TouchableOpacity onPress={() => navigation.navigate("RecoverAccount")}>
             <View>
               <Text style={styles.text_Olvidaste}>
                 ¿Olvidaste tu contraseña?
