@@ -28,8 +28,6 @@ export const fireLogin = async (payload) => {
       .signInWithEmailAndPassword(payload.email, payload.password);
     console.log(res);
     const resmsg = res.message;
-    //console.log(resmsg)
-    //isUserLoggedIn()
   } catch (e) {
     const errormsg = e.message;
     console.log(errormsg);
@@ -42,5 +40,14 @@ export const firelogout = async () => {
   } catch (e) {
     const errormsg = e.message;
     console.log(errormsg);
+  }
+};
+
+export const recoverEmail = async (payload) => {
+  try {
+    const res = await firebase.auth().sendPasswordResetEmail(payload.email);
+    return true;
+  } catch (e) {
+    return false;
   }
 };

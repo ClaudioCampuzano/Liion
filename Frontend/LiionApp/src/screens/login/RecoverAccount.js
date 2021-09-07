@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import Layout from "../../components/Layout";
@@ -10,19 +10,21 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { validateEmail } from "../../utils/utils";
 
+import { recoverEmail } from "../../firebase/Auth";
 
-const RecoverAccount = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const RecoverAccount = ({ navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
   const [errorEmail, setErrorEmail] = useState(null);
   const [focusEmailInput, setfocusEmailInput] = useState(false);
 
   const { isKeyboardVisible } = useKeyboard();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [textModal, setTextModal] = useState("");
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
   }, [valueEmail]);
-    
+
   useEffect(() => {
     if (valueEmail != "") {
       if (!validateEmail(valueEmail))
@@ -31,7 +33,31 @@ const RecoverAccount = () => {
     }
   }, [focusEmailInput, isKeyboardVisible]);
 
-  const checkValidator = () => {};
+  const checkValidator = () => {
+    if (valueEmail == "") setErrorEmail("Falta que ingreses tu email");
+    else if (!validateEmail(valueEmail))
+      setErrorEmail("Formato de email incorrecto");
+    else setErrorEmail(null);
+    if (validateEmail(valueEmail)) {
+      (async () => {
+        const stadeRecovery = await recoverEmail({ email: valueEmail });
+        setModalVisible(true);
+        if (stadeRecovery) {
+          setTextModal(
+            "En unos instantes te llegara un correo de recuperación"
+          );
+        } else setTextModal("Email no registrado");
+      })();
+    }
+  };
+
+  useEffect(() => {
+    if (
+      textModal == "En unos instantes te llegara un correo de recuperación" &&
+      !modalVisible
+    )
+    navigation.navigate("AccountAccess")
+  }, [modalVisible]);
 
   return (
     <Layout>
@@ -42,7 +68,7 @@ const RecoverAccount = () => {
           }}
         >
           <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-            En unos instantes te llegara un correo de recuperación.
+            {textModal}
           </ModalPopUp>
           <Text style={styles.text_titulo}>¿Cuál es tu email? </Text>
           <Text style={styles.text_subTitulo}>

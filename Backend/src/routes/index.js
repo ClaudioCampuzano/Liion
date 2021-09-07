@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register } from "../controllers/index";
+import { register, recoverEmail } from "../controllers/index";
 import { checkIsAuth } from "../middleware/guard";
 
 const router = Router();
