@@ -1,23 +1,28 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Layout from "../components/Layout";
 import ButtonLiion from "../components/ButtonLiion";
 import ModalPopUp from "../components/ModalPopUp";
-import { firelogout, isUserLoggedIn, testfunc } from "../firebase/Auth";
+import { fireLogout, isUserLoggedIn, testfunc } from "../firebase/Auth";
 import { protectedRoute, unProtectedRoute } from "../api/api";
 import { COLORS, DEVICE } from "../constants/styleThemes";
 
+import { GlobalContext } from "../context/Provider";
+
 const HandleLogout = async () => {
-  await firelogout()
+  await fireLogout()
 }
 
 const TestHomeScreen = ({ navigation }) => {
+
+  const { logoutUser } = useContext(GlobalContext);
+
   return (
     <Layout>
 
       <View style={styles.container}>
-        
-        <Text style={styles.textBienvenida}>TestHomeScreen</Text>
+                <Text style={styles.textBienvenida}>TestHomeScreen</Text>
+
         <Text style={styles.textSubBienvenida}>TestHomeScreen2</Text>
         <View style={styles.ViewButton}>
           <ButtonLiion
@@ -36,7 +41,7 @@ const TestHomeScreen = ({ navigation }) => {
             title="Logout"
             styleView={styles.button}
             styleText={{ margin: -10 }}
-            onPress={() => HandleLogout()}
+            onPress={() => logoutUser()}
           />
         </View>
       </View>

@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "expo-constants": "^11.0.1",
-    "firebase": "^8.10.0"
-  }
-}

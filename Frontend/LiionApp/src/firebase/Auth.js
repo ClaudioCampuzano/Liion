@@ -26,20 +26,17 @@ export const fireLogin = async (payload) => {
     const res = await firebase
       .auth()
       .signInWithEmailAndPassword(payload.email, payload.password);
-    console.log(res);
-    const resmsg = res.message;
+    return res;
   } catch (e) {
-    const errormsg = e.message;
-    console.log(errormsg);
+    return e;
   }
 };
 
-export const firelogout = async () => {
+export const fireLogout = async () => {
   try {
     await firebase.auth().signOut();
   } catch (e) {
-    const errormsg = e.message;
-    console.log(errormsg);
+    console.log(e);
   }
 };
 
@@ -48,6 +45,7 @@ export const recoverEmail = async (payload) => {
     const res = await firebase.auth().sendPasswordResetEmail(payload.email);
     return true;
   } catch (e) {
+    console.log(e);
     return false;
   }
 };

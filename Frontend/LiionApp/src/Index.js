@@ -10,11 +10,9 @@ import { GlobalContext } from "./context/Provider";
 import { COLORS } from "./constants/styleThemes";
 
 const Index = () => {
-  const {
-    authState: { isLoggedIn },
-  } = useContext(GlobalContext);
+  const { isLogged } = useContext(GlobalContext);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
+  const [isAuthenticated, setIsAuthenticated] = useState(isLogged);
   const [authLoaded, setAuthLoaded] = useState(false);
 
   // no es nesesario utilizar el async storage si se utiliza el watcher de firebase
@@ -25,7 +23,6 @@ const Index = () => {
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       setIsAuthenticated(true);
-      var uid = user.uid;
       setAuthLoaded(true);
       //añadir user, token, id, jiro... etc cualquier wea que utilize el manejador de estados
     } else {
@@ -35,7 +32,7 @@ const Index = () => {
       //eliminar user, token, id, jiro...etc cualquier wea que utilize el provider
     }
   });
-
+  
   return (
     <>
       {authLoaded ? (
