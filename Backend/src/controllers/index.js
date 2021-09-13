@@ -2,6 +2,7 @@ import { db, auth } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 
+
 export const register = async (req, res) => {
   const { name, lastname, run, email, birth, password, isPassenger, isDriver } =
     req.body;

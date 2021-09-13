@@ -9,7 +9,8 @@ import "firebase/firestore";
 import "firebase/storage";
 
 export default function App() {
-  firebase.initializeApp(Constants.manifest.extra.firebase);
+  !firebase.apps.length ? firebase.initializeApp(Constants.manifest.extra.firebase) : firebase.app();
+  
   return (
     <GlobalProvider>
       <Index />

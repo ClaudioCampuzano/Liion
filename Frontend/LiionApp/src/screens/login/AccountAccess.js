@@ -5,15 +5,15 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import ModalPopUp from "../../components/ModalPopUp";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validateEmail, validatePassword } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
 
-import loginUser from "../../context/actions/auth/loginUser";
 import { GlobalContext } from "../../context/Provider";
 
-const AccountAccess = ({ navigation}) => {
+const AccountAccess = ({ navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
   const [focusEmailInput, setfocusEmailInput] = useState(false);
   const [valuePass, setValuePass] = useState("");
@@ -21,14 +21,13 @@ const AccountAccess = ({ navigation}) => {
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorPass, setErrorPass] = useState(null);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [textModal, setTextModal] = useState("");
+
 
   const { isKeyboardVisible } = useKeyboard();
 
-  const { authDispatch } = useContext(GlobalContext);
-
-  const HandleLoggin = (payload) => {
-    loginUser({ email: valueEmail, password: valuePass })(authDispatch);
-  };
+  const { loginUser } = useContext(GlobalContext);
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -63,7 +62,10 @@ const AccountAccess = ({ navigation}) => {
     else setErrorEmail(null);
 
     if (validateEmail(valueEmail) && validatePassword(valuePass))
-      HandleLoggin();
+      (async () => {
+        await loginUser({ email: valueEmail, password: valuePass });
+      })();
+    
   };
 
   return (
@@ -74,6 +76,9 @@ const AccountAccess = ({ navigation}) => {
             height: hp("70%"),
           }}
         >
+          <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
+            Errores en el registro, consulte con el administrador
+          </ModalPopUp>
           <Text style={styles.text_titulo}>Bienvenido de vuelta</Text>
           <Text style={styles.text_subTitulo}>Ingresa tus datos</Text>
           <InputLiion
@@ -95,8 +100,9 @@ const AccountAccess = ({ navigation}) => {
             onChangeText={(text) => setValuePass(text)}
           />
 
-          
-          <TouchableOpacity onPress={() => navigation.navigate("RecoverAccount")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("RecoverAccount")}
+          >
             <View>
               <Text style={styles.text_Olvidaste}>
                 ¿Olvidaste tu contraseña?
