@@ -51,7 +51,7 @@ const GlobalProvider = ({ children }) => {
       value={{
         isLogged: state.isLoggedIn,
         userData: state.userData,
-        token: state.token,
+        uid: state.uid,
         loginUser,
         logoutUser,
       }}
