@@ -1,48 +1,38 @@
-import React, { useState, useEffect, useContext } from "react";
-import { ActivityIndicator } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase";
 import { NavigationContainer } from "@react-navigation/native";
 
 import AuthNavigator from "./navigations/AuthNavigator";
 import DrawerNavigator from "./navigations/DrawerNavigator";
-
 import { GlobalContext } from "./context/Provider";
-import { COLORS } from "./constants/styleThemes";
 
 const Index = () => {
-  const { isLogged } = useContext(GlobalContext);
+  const { reLoadUserInfo, isLoggedIn } = useContext(GlobalContext);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(isLogged);
-  const [authLoaded, setAuthLoaded] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
 
-  // no es nesesario utilizar el async storage si se utiliza el watcher de firebase
-  //es como un hook que esta mirando cada vez que hay cambios del auth con onAuthStateChanged
-  //que por debajo utiliza el mismo Asyncstorage:
-  //https://stackoverflow.com/questions/46011436/what-and-how-to-store-to-keep-users-logged-in-in-a-react-native-app-with-firebas
-  //https://firebase.google.com/docs/auth/web/auth-state-persistence?hl=es
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      setIsAuthenticated(true);
-      setAuthLoaded(true);
-      //añadir user, token, id, jiro... etc cualquier wea que utilize el manejador de estados
-    } else {
-      //console.log('logout form index')
-      setIsAuthenticated(false);
-      setAuthLoaded(true);
-      //eliminar user, token, id, jiro...etc cualquier wea que utilize el provider
-    }
+  const [user, setUser] = useState(() => {
+    const user = firebase.auth().currentUser;
+    return user;
   });
-  
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      setUser(firebaseUser);
+      firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
+    });
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (user && !isLoggedIn) {
+      reLoadUserInfo(user);
+    }
+  }, [user]);
+
   return (
-    <>
-      {authLoaded ? (
-        <NavigationContainer>
-          {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
-        </NavigationContainer>
-      ) : (
-        <ActivityIndicator size="large" color={COLORS.TURKEY} />
-      )}
-    </>
+    <NavigationContainer>
+      {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
+    </NavigationContainer>
   );
 };
 

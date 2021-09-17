@@ -9,21 +9,18 @@ import { COLORS, DEVICE } from "../constants/styleThemes";
 
 import { GlobalContext } from "../context/Provider";
 
-const HandleLogout = async () => {
-  await fireLogout()
-}
 
 const TestHomeScreen = ({ navigation }) => {
 
-  const { logoutUser } = useContext(GlobalContext);
+  const { logoutUser, uid, isLoggedIn } = useContext(GlobalContext);
 
   return (
     <Layout>
 
       <View style={styles.container}>
-                <Text style={styles.textBienvenida}>TestHomeScreen</Text>
+                <Text style={styles.textBienvenida}>{isLoggedIn}</Text>
 
-        <Text style={styles.textSubBienvenida}>TestHomeScreen2</Text>
+        <Text style={styles.textSubBienvenida}>{uid}</Text>
         <View style={styles.ViewButton}>
           <ButtonLiion
             title="ruta backend auth"

@@ -1,5 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useContext} from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -22,12 +28,11 @@ const AccountAccess = ({ navigation }) => {
   const [errorPass, setErrorPass] = useState(null);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [textModal, setTextModal] = useState("");
-
+  const [waitingLogin, setWaitingLogin] = useState(false);
 
   const { isKeyboardVisible } = useKeyboard();
 
-  const { loginUser } = useContext(GlobalContext);
+  const { loginUser } = useContext(GlobalContext);  
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -61,63 +66,78 @@ const AccountAccess = ({ navigation }) => {
       setErrorEmail("Formato de email incorrecto");
     else setErrorEmail(null);
 
-    if (validateEmail(valueEmail) && validatePassword(valuePass))
+    if (validateEmail(valueEmail) && validatePassword(valuePass)) {
+      setWaitingLogin(true);
       (async () => {
-        await loginUser({ email: valueEmail, password: valuePass });
+        const res = await loginUser({ email: valueEmail, password: valuePass });
+        if (!res.state) {
+          setModalVisible(!res.state);
+          setWaitingLogin(false);
+        }
       })();
-    
+    }
   };
+
 
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
-        <View
-          style={{
-            height: hp("70%"),
-          }}
-        >
-          <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-            Errores en el registro, consulte con el administrador
-          </ModalPopUp>
-          <Text style={styles.text_titulo}>Bienvenido de vuelta</Text>
-          <Text style={styles.text_subTitulo}>Ingresa tus datos</Text>
-          <InputLiion
-            style={styles.input}
-            label="Email"
-            value={valueEmail}
-            errorText={errorEmail}
-            secureTextEntry={false}
-            onBlur={() => setfocusEmailInput(false)}
-            onFocus={() => setfocusEmailInput(true)}
-            onChangeText={(text) => setValueEmail(text)}
-          />
-          <InputLiion
-            style={styles.input}
-            label="Contraseña"
-            value={valuePass}
-            errorText={errorPass}
-            secureTextEntry={true}
-            onChangeText={(text) => setValuePass(text)}
-          />
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("RecoverAccount")}
+      {waitingLogin ? (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" color={COLORS.TURKEY} />
+        </View>
+      ) : (
+        <KeyboardAvoidingWrapper>
+          <View
+            style={{
+              height: hp("70%"),
+            }}
           >
-            <View>
-              <Text style={styles.text_Olvidaste}>
-                ¿Olvidaste tu contraseña?
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Ingresar"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
-      </KeyboardAvoidingWrapper>
+            <ModalPopUp
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+            >
+              Usuario no registrado o contraseña incorrecta
+            </ModalPopUp>
+            <Text style={styles.text_titulo}>Bienvenido de vuelta</Text>
+            <Text style={styles.text_subTitulo}>Ingresa tus datos</Text>
+            <InputLiion
+              style={styles.input}
+              label="Email"
+              value={valueEmail}
+              errorText={errorEmail}
+              secureTextEntry={false}
+              onBlur={() => setfocusEmailInput(false)}
+              onFocus={() => setfocusEmailInput(true)}
+              onChangeText={(text) => setValueEmail(text)}
+            />
+            <InputLiion
+              style={styles.input}
+              label="Contraseña"
+              value={valuePass}
+              errorText={errorPass}
+              secureTextEntry={true}
+              onChangeText={(text) => setValuePass(text)}
+            />
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RecoverAccount")}
+            >
+              <View>
+                <Text style={styles.text_Olvidaste}>
+                  ¿Olvidaste tu contraseña?
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonView}>
+            <ButtonLiion
+              title="Ingresar"
+              styleView={styles.button}
+              onPress={() => checkValidator()}
+            />
+          </View>
+        </KeyboardAvoidingWrapper>
+      )}
     </Layout>
   );
 };

@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT_USER } from "./types";
+import { LOGIN_SUCCESS, LOGOUT_USER, RE_LOAD_USER_INFO } from "./types";
 
 const authReducer = (state, action) => {
   const { payload, type } = action;
@@ -9,8 +9,8 @@ const authReducer = (state, action) => {
         ...state,
         isLoggedIn: true,
         userData: payload.profile,
-        uid: payload.uid,      };
-
+        uid: payload.uid,
+      };
     case LOGOUT_USER:
       return {
         ...state,

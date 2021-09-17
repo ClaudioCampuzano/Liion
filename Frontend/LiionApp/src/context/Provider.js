@@ -2,7 +2,7 @@ import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
 
 import authReducer from "./authReducer";
-import { LOGOUT_USER, LOGIN_SUCCESS } from "./types";
+import { LOGOUT_USER, LOGIN_SUCCESS,RE_LOAD_USER_INFO } from "./types";
 
 export const GlobalContext = createContext({});
 
@@ -31,9 +31,10 @@ const GlobalProvider = ({ children }) => {
           type: LOGIN_SUCCESS,
           payload: { profile: profile, uid: uid },
         });
-      } else console.log(res);
+      } else throw res;
+      return { state: true };
     } catch (err) {
-      console.log(err);
+      return { state: false, msg: err.message };
     }
   };
 
@@ -41,19 +42,42 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await fireLogout();
       authDispatch({ type: LOGOUT_USER });
+      console.log()
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const reLoadUserInfo = async (payload) => {
+    
+    try {
+      const profile = {
+        email: payload.email,
+        emailVerified: payload.emailVerified,
+        lastLoginAt: payload.lastLoginAt,
+        phoneNumber: payload.phoneNumber,
+        photoURL: payload.photoURL,
+      };
+      const uid = payload.uid;
+       authDispatch({
+        type: LOGIN_SUCCESS,
+        payload: { profile: profile, uid: uid },
+       });
+      return true;
+    } catch (err) {
+      return false;
     }
   };
 
   return (
     <GlobalContext.Provider
       value={{
-        isLogged: state.isLoggedIn,
         userData: state.userData,
         uid: state.uid,
+        isLoggedIn: state.isLoggedIn,
         loginUser,
         logoutUser,
+        reLoadUserInfo
       }}
     >
       {children}

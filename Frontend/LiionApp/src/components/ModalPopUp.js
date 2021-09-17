@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     fontSize: hp('2.1%'),
     textAlign: "center",
     fontFamily: "Gotham-SSm-Medium",
+    marginHorizontal: wp('2%'),
     color: COLORS.TURKEY_CLEAR,
   },
   text2: {

@@ -11,7 +11,6 @@ const DrawerNavigator = () => {
             component={TestHomeScreen}
             options={{ headerShown: false }}
             >
-
             </Drawer.Screen>
         </Drawer.Navigator>
     )

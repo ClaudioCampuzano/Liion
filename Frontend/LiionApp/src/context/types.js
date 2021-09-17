@@ -2,3 +2,4 @@ export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const LOGIN_LOADING = 'LOGIN_LOADING';
+export const RE_LOAD_USER_INFO = 'RE_LOAD_USER_INFO';
