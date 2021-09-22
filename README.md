@@ -47,6 +47,9 @@
 - react-native-picker-select [borrar]
 - @react-native-community/datetimepicker
 - add react-native-device-info [borrar]
+- yarn add @react-navigation/bottom-tabs
+- yarn add @react-navigation/drawer
+- expo install react-native-gesture-handler react-native-reanimated
 
 # Servicios
 
