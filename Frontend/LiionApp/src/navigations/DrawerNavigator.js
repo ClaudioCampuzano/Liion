@@ -13,7 +13,10 @@ const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
 
   return (
-    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent {...props} />}
+      screenOptions={{drawerStyle:styles.drawerStyle}}
+    >
       <Drawer.Screen
         name="TestHomeScreen"
         component={TestHomeScreen}
@@ -53,6 +56,12 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
     fontSize: hp("3.5%"),
+  },
+  drawerStyle: {
+    backgroundColor: COLORS.WHITE,
+    borderBottomRightRadius: 40,
+    borderTopRightRadius: 40,
+    width: wp('65') 
   },
 });
 

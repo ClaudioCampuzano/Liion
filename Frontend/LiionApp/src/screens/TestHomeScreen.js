@@ -1,4 +1,4 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Layout from "../components/Layout";
 import ButtonLiion from "../components/ButtonLiion";
@@ -9,16 +9,13 @@ import { COLORS, DEVICE } from "../constants/styleThemes";
 
 import { GlobalContext } from "../context/Provider";
 
-
 const TestHomeScreen = ({ navigation }) => {
-
   const { logoutUser, uid, isLoggedIn } = useContext(GlobalContext);
 
   return (
     <Layout>
-
       <View style={styles.container}>
-                <Text style={styles.textBienvenida}>{isLoggedIn}</Text>
+        <Text style={styles.textBienvenida}>{isLoggedIn}</Text>
 
         <Text style={styles.textSubBienvenida}>{uid}</Text>
         <View style={styles.ViewButton}>
@@ -51,7 +48,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   logo: {
     width: 260,
@@ -76,10 +73,10 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   ViewButton: {
-    flex: 1, 
-    justifyContent: 'flex-end',
-    marginBottom: 40 
-  }
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 40,
+  },
 });
 
 export default TestHomeScreen;
