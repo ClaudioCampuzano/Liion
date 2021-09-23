@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { useFonts } from "expo-font";
 
 export const clean = (rut) => {
   return typeof rut === "string"
