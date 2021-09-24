@@ -1,14 +1,22 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-const SearchStepOne = () => {
+import Layout from "../../components/Layout";
+
+const SearchStepOne = ({ navigation }) => {
   return (
-    <View>
-      <Text></Text>
-    </View>
-  )
-}
+    <Layout>
+      <View>
+        <Text>Buscar Viaje</Text>
 
-export default SearchStepOne
+        <TouchableOpacity onPress={() => navigation.navigate("SeachStepTwo")}>
+          <Text>Go to two</Text>
+        </TouchableOpacity>
+      </View>
+    </Layout>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default SearchStepOne;
+
+const styles = StyleSheet.create({});
