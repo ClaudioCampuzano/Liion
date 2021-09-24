@@ -50,6 +50,9 @@
 - yarn add @react-navigation/bottom-tabs
 - yarn add @react-navigation/drawer
 - expo install react-native-gesture-handler react-native-reanimated
+- expo install react-native-pager-view
+- yarn add @react-navigation/material-top-tabs react-native-tab-view
+
 
 # Servicios
 

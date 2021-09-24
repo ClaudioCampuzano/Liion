@@ -1,32 +1,42 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { StyleSheet } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { useFonts } from "expo-font";
 
 import SearchNavigator from "./SearchNavigator";
+import CreateNavigator from "./CreateNavigator";
+import MyTravelNavigator from "./TravelNavigator";
 
-import SearchStepOne from "../screens/searchTrip/SearchStepOne";
-
-import { DrawerContent } from "./drawer/DrawerContent";
+import DrawerContent from "./drawer/DrawerContent";
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
 
   return (
-      <Drawer.Navigator
-        drawerContent={(props) => <DrawerContent {...props} />}
-        screenOptions={{ drawerStyle: styles.drawerStyle }}
-      >
-        <Drawer.Screen
-          name="SearchStack"
-          component={SearchNavigator}
-          options={{ headerShown: false }}t 
-        />
-      </Drawer.Navigator>
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent {...props} />}
+      screenOptions={{ drawerStyle: styles.drawerStyle }}
+    >
+      <Drawer.Screen
+        name="SearchStack"
+        component={SearchNavigator}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="CreateNavigator"
+        component={CreateNavigator}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="MyTravelNavigator"
+        component={MyTravelNavigator}
+        options={{ headerShown: false }}
+      />
+    </Drawer.Navigator>
   );
 };
+
+export default DrawerNavigator;
 
 const styles = StyleSheet.create({
   headerContainer: {
@@ -45,6 +55,3 @@ const styles = StyleSheet.create({
     width: wp("65"),
   },
 });
-
-export default DrawerNavigator;
-

@@ -1,20 +1,22 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View,TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 
-import SearchStepOne from "../screens/searchTrip/SearchStepOne";
-import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
+import TravelTabNavigator from './TravelTabNavigator'
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
-const SearchNavigator = () => {
-  const SearchStack = createStackNavigator();
+// La idea aca es que, en el tab va a poder elegir entre conductor o pasajero para
+// y de ahi va a poder ir a los demas elemos de este stack, que reaccionan
+// en base a los viajes q hayan
+const TravelNavigator = () => {
+  const TravelStack = createStackNavigator();
 
   return (
-    <SearchStack.Navigator>
-      <SearchStack.Screen
-        name="SeachStepOne"
-        component={SearchStepOne}
+    <TravelStack.Navigator>
+      <TravelStack.Screen
+        name="TravelTabNavigator"
+        component={TravelTabNavigator}
         options={({ navigation }) => ({
           headerShown: true,
           headerStyle: styles.headerContainer,
@@ -52,34 +54,11 @@ const SearchNavigator = () => {
           ),
         })}
       />
-      <SearchStack.Screen
-        name="SeachStepTwo"
-        component={SearchStepTwo}
-        options={({ navigation }) => ({
-          headerShown: true,
-          title: "busqueda2",
-          headerStyle: styles.headerContainer,
-          headerTitleAlign: "center",
-          headerTitleStyle: styles.headerText,
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("SeachStepOne")}
-            >
-              <Ionicons
-                name="md-chevron-back"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-    </SearchStack.Navigator>
+    </TravelStack.Navigator>
   );
 };
 
-export default SearchNavigator;
+export default TravelNavigator;
 
 const styles = StyleSheet.create({
   headerContainer: {

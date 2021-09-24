@@ -7,6 +7,8 @@ const SearchStepOne = ({ navigation }) => {
   return (
     <Layout>
       <View>
+        <Text>Buscar Viaje</Text>
+
         <TouchableOpacity onPress={() => navigation.navigate("SeachStepTwo")}>
           <Text>Go to two</Text>
         </TouchableOpacity>
