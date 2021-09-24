@@ -8,11 +8,16 @@ import AuthNavigator from "./navigations/AuthNavigator";
 import DrawerNavigator from "./navigations/DrawerNavigator";
 import { GlobalContext } from "./context/Provider";
 
+import { loadFonts } from "./constants/styleThemes";
+
+
 const Index = () => {
   const { reLoadUserInfo, isLoggedIn } = useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const fontsLoaded = loadFonts();
 
   const [user, setUser] = useState(() => {
     const user = firebase.auth().currentUser;
@@ -35,7 +40,7 @@ const Index = () => {
 
   return (
     <>
-      {isLoaded ? (
+      {isLoaded && fontsLoaded ?  (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>

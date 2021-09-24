@@ -5,14 +5,12 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
-import { COLORS, hp, wp, loadFonts } from "../constants/styleThemes";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const SearchNavigator = () => {
   const SearchStack = createStackNavigator();
-  const fontsLoaded = loadFonts();
 
   return (
-    fontsLoaded && (
       <SearchStack.Navigator>
         <SearchStack.Screen
           name="SeachStepOne"
@@ -69,7 +67,6 @@ const SearchNavigator = () => {
           })}
         />
       </SearchStack.Navigator>
-    )
   );
 };
 

@@ -9,14 +9,12 @@ import SearchNavigator from "./SearchNavigator";
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 
 import { DrawerContent } from "./drawer/DrawerContent";
-import { COLORS, hp, wp, loadFonts } from "../constants/styleThemes";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
-  const fontsLoaded = loadFonts();
 
   return (
-    fontsLoaded && (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} />}
         screenOptions={{ drawerStyle: styles.drawerStyle }}
@@ -24,10 +22,9 @@ const DrawerNavigator = () => {
         <Drawer.Screen
           name="SearchStack"
           component={SearchNavigator}
-          options={{ headerShown: false }}
+          options={{ headerShown: false }}t 
         />
       </Drawer.Navigator>
-    )
   );
 };
 
