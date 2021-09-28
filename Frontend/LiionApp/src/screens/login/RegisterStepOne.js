@@ -12,7 +12,7 @@ import { validate, format, clean } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
 
-import InputDataTime from "../../components/InputDataTime";
+import InputDataDate from "../../components/InputDataDate";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -112,7 +112,7 @@ const RegisterStepOne = ({ navigation }) => {
               secureTextEntry={false}
               onChangeText={(text) => setValueRun(text)}
             />
-            <InputDataTime
+            <InputDataDate
               label="Fecha de nacimiento"
               errorText={errorFecha}
               style={styles.input}

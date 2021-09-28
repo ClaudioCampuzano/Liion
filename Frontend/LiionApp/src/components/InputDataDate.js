@@ -17,7 +17,7 @@ import "moment/locale/es";
 
 moment.locale("es");
 
-const InputDataTime = (props) => {
+const InputDataDate = (props) => {
   const {
     label,
     errorText,
@@ -140,11 +140,11 @@ const InputDataTime = (props) => {
   );
 };
 
-InputDataTime.defaultProps = {
+InputDataDate.defaultProps = {
   onDataChange: () => {},
 };
 
-export default InputDataTime;
+export default InputDataDate;
 
 const styles = StyleSheet.create({
   input: {
