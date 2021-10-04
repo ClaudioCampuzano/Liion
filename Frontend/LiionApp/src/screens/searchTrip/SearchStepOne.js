@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import InputDataDate from "../../components/InputDataDate";
+import InputSearch from "../../components/InputSearch";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 
@@ -45,14 +45,7 @@ const SearchStepOne = ({ navigation }) => {
             height: hp("78%"),
           }}
         >
-          <Text>Buscar Viaje</Text>
-
-          <InputDataDate
-            label="Fecha de nacimiento"
-            errorText={searchError.errorDate}
-            style={styles.input}
-            onDataChange={(value) => changeValuesHandler("date", value)}
-          />
+          <InputSearch style={styles.input} />
         </View>
         <View style={styles.buttonView}>
           <ButtonLiion
