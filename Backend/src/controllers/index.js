@@ -57,3 +57,28 @@ export const register = async (req, res) => {
     res.status(400).json({ message: msg });
   }
 };
+
+export const getUserData = async (req, res) => {
+  let uid = req.body.uid
+  
+  if(uid){
+   
+    try{
+      const q = await db.collection('users').doc(uid).get();
+      const docExist = q.exists
+      if (docExist){
+        res.send(q.data())
+      }
+      else{
+        res.status(404).send("User not found")
+      }
+    }
+    catch(e){
+      console.log(e)
+      res.status(403).send("Token UID Inválido2");
+
+    }
+  } else{
+    res.status(403).send("Token UID Inválido");
+  }
+}

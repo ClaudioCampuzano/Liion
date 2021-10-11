@@ -42,7 +42,6 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await fireLogout();
       authDispatch({ type: LOGOUT_USER });
-      console.log()
     } catch (err) {
       console.error(err);
     }
@@ -63,6 +62,7 @@ const GlobalProvider = ({ children }) => {
         type: LOGIN_SUCCESS,
         payload: { profile: profile, uid: uid },
        });
+       //console.log(uid)
       return true;
     } catch (err) {
       return false;

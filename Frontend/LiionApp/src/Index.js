@@ -19,13 +19,23 @@ const Index = () => {
 
   const fontsLoaded = loadFonts();
 
-  const [user, setUser] = useState(() => {
+  const [user, setUser] = useState( () => {
+    
     const user = firebase.auth().currentUser;
+    
+    
     return user;
   });
 
   useEffect(() => {
+    
     firebase.auth().onAuthStateChanged((firebaseUser) => {
+      
+      
+      
+      
+      
+
       setUser(firebaseUser);
       firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
       setIsLoaded(true);
@@ -33,7 +43,9 @@ const Index = () => {
   }, [isLoggedIn]);
 
   useEffect(() => {
+    
     if (user && !isLoggedIn) {
+      
       reLoadUserInfo(user);
     }
   }, [user]);

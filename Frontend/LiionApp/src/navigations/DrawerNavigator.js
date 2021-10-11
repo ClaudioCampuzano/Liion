@@ -16,6 +16,7 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ drawerStyle: styles.drawerStyle }}
+      initialRouteName="MyTravelNavigator"
     >
       <Drawer.Screen
         name="SearchStack"

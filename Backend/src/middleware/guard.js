@@ -12,6 +12,7 @@ const checkTkn = (req) => {
 
 export const checkIsAuth = async (req, res, next) => {
   let tkn = checkTkn(req);
+  
   if (tkn) {
     try {
       const res = await auth.verifyIdToken(tkn);
@@ -19,9 +20,11 @@ export const checkIsAuth = async (req, res, next) => {
       //para nuestro caso es como un 'filtro' que filtra las llamadas
       next(); //woo dale crack con el callback!!
     } catch (e) {
-      res.status(503).send("Service Unavailable");
+     
+      res.status(403).send("Token UID Inválido");
     }
   } else {
-    res.status(403).send("Forbidden");
+    
+    res.status(403).send("Envie Token UID");
   }
 };
