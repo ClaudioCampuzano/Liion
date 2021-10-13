@@ -1,8 +1,9 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
+import { retrieveUserDataFromApi } from "../api/api";
 
 import authReducer from "./authReducer";
-import { LOGOUT_USER, LOGIN_SUCCESS,RE_LOAD_USER_INFO } from "./types";
+import { LOGOUT_USER, LOGIN_SUCCESS, LOAD_FIRESTORE_DATA, GET_WHOLE_STATE } from "./types";
 
 export const GlobalContext = createContext({});
 
@@ -11,6 +12,7 @@ const GlobalProvider = ({ children }) => {
     isLoggedIn: false,
     userData: {},
     uid: "",
+    userFirestoreData: {},
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
 
@@ -48,7 +50,6 @@ const GlobalProvider = ({ children }) => {
   };
 
   const reLoadUserInfo = async (payload) => {
-    
     try {
       const profile = {
         email: payload.email,
@@ -58,16 +59,38 @@ const GlobalProvider = ({ children }) => {
         photoURL: payload.photoURL,
       };
       const uid = payload.uid;
-       authDispatch({
+      authDispatch({
         type: LOGIN_SUCCESS,
         payload: { profile: profile, uid: uid },
-       });
-       //console.log(uid)
+      });
+      
       return true;
     } catch (err) {
       return false;
     }
   };
+
+  const loadUserFirestoreData = async (user) => {
+    const [flag, res] = await retrieveUserDataFromApi(user);
+    if (flag) {
+      
+      //update estado
+      authDispatch({
+        type:LOAD_FIRESTORE_DATA,
+        payload:res
+      });
+      return true;
+    } else {
+      console.log(res);
+      return false;
+      //nada, error no pudo actualizar datos
+    }
+  };
+
+  const getState = async () => {
+    const data = authDispatch({type:GET_WHOLE_STATE});
+    return data;
+  }
 
   return (
     <GlobalContext.Provider
@@ -75,9 +98,13 @@ const GlobalProvider = ({ children }) => {
         userData: state.userData,
         uid: state.uid,
         isLoggedIn: state.isLoggedIn,
+        userFirestoreData: state.userFirestoreData,
+        getState2:state,
+        getState,
         loginUser,
         logoutUser,
-        reLoadUserInfo
+        reLoadUserInfo,
+        loadUserFirestoreData,
       }}
     >
       {children}

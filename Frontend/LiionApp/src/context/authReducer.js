@@ -1,4 +1,9 @@
-import { LOGIN_SUCCESS, LOGOUT_USER, RE_LOAD_USER_INFO } from "./types";
+import {
+  LOGIN_SUCCESS,
+  LOGOUT_USER,
+  LOAD_FIRESTORE_DATA,
+  GET_WHOLE_STATE,
+} from "./types";
 
 const authReducer = (state, action) => {
   const { payload, type } = action;
@@ -18,6 +23,14 @@ const authReducer = (state, action) => {
         userData: null,
         uid: "",
       };
+    case LOAD_FIRESTORE_DATA:
+      return {
+        ...state,
+        userFirestoreData: payload,
+      };
+    case GET_WHOLE_STATE:
+      
+      return state;
     default:
       return state;
   }

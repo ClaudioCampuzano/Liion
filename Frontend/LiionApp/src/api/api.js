@@ -2,7 +2,7 @@ import axios from "axios";
 import firebase from "firebase";
 
 const client = axios.create({
-  baseURL: "http://127.0.0.1:3000",
+  baseURL: "http://192.168.0.197:3000",
   timeout: 2000,
 });
 
@@ -22,7 +22,7 @@ export const protectedRoute = async () => {
           token: tkn,
         },
       });
-      console.log(res.data);
+      
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +40,7 @@ export const unProtectedRoute = async () => {
         token: "fakeToken",
       },
     });
-    console.log(res.data);
+    
   } catch (e) {
     console.log(e.response);
   }
@@ -54,18 +54,34 @@ export const RegisterBackend = async (payload) => {
       url: "/register",
       headers: { "Content-Type": "application/json" },
       data: payloadStr,
-      timeout: 2000,
     });
     return [true, res.data.message];
   } catch (e) {
     try {
-      console.log(e.response.data.message);
+      
       return [false, e.response.data.message];
     } catch (eS) {
-      console.log(e);
+      
       return [false, e];
     }
   }
 };
 
-
+export const retrieveUserDataFromApi = async (user) => {
+  try {
+    const atoken = await user.getIdToken(true);
+    const uid = await user.uid;
+    const data = JSON.stringify({ uid: uid, atoken: atoken });
+    const res = await client({
+      method: "post",
+      url: "/getuserdata",
+      headers: { "Content-Type": "application/json" },
+      data: data,
+    });
+    
+    return [true, res.data];
+  } catch (e) {
+    
+    return [false, e];
+  }
+};
