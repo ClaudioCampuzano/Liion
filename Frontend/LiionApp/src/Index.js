@@ -11,7 +11,7 @@ import { GlobalContext } from "./context/Provider";
 import { loadFonts } from "./constants/styleThemes";
 
 const Index = () => {
-  const { reLoadUserInfo, isLoggedIn, loadUserFirestoreData, userData, uid, userFirestoreData, getState } =
+  const { reLoadUserInfo, isLoggedIn, loadUserFirestoreData, userData, uid, userFirestoreData, getState2 } =
     useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
@@ -32,6 +32,8 @@ const Index = () => {
     });
   }, [isLoggedIn]);
 
+
+
   useEffect(() => {
     if (user && !isLoggedIn) {
       (async () => {
@@ -43,6 +45,15 @@ const Index = () => {
       })();
     }
   }, [user]);
+
+
+  useEffect (() => {
+    let flag = Object.keys(userFirestoreData).length !== 0 && Object.getPrototypeOf(userFirestoreData) === Object.prototype; 
+    if(userFirestoreData && flag){
+        //ejemplo de cuando leer los datos de firstore y bueno todos los demas
+    }   
+}, [getState2] )
+
 
   return (
     <>

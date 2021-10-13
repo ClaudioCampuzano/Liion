@@ -42,7 +42,7 @@ const DrawerContent = (props) => {
             <Text style={styles.texTouchable}>Ver perfil</Text>
           </TouchableOpacity>
         </View>
-        <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
+        <Drawer.Section style={{ paddingTop: hp("4"), elevation: 0 }}>
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (
@@ -52,6 +52,21 @@ const DrawerContent = (props) => {
             labelStyle={styles.labelDrawerItem}
             onPress={() => {
               props.navigation.navigate("SearchStack");
+            }}
+          />
+          <DrawerItem
+            style={{ marginBottom: -hp("0.5") }}
+            icon={() => (
+              <Feather
+                name="clipboard"
+                size={hp("3.5")}
+                color={COLORS.TURKEY}
+              />
+            )}
+            label="Registro de Conductor"
+            labelStyle={styles.labelDrawerItem}
+            onPress={() => {
+              props.navigation.navigate("DriverSigninStack");
             }}
           />
           <DrawerItem
@@ -80,7 +95,9 @@ const DrawerContent = (props) => {
             )}
             label="Mis viajes"
             labelStyle={styles.labelDrawerItem}
-            onPress={() => {props.navigation.navigate("MyTravelNavigator")}}
+            onPress={() => {
+              props.navigation.navigate("MyTravelNavigator");
+            }}
           />
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
