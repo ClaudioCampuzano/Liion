@@ -15,6 +15,7 @@ const COLORS = {
   LIGHT_LEAD: "#CCCCCC",
   REAL_BLACK:"#000000",
   WARN_RED:"#ff0f0f",
+  CHECK_GREEN:"#0FF506",
 };
 
 const loadFonts = () => {

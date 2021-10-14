@@ -14,12 +14,14 @@ const DriverFiles = (props) => {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={[styles.files, { ...props.styleView }]}>
-        <Text style={[styles.text, styles.textIcon, { ...props.styleText }]}>{props.title}</Text>
+        <Text style={[styles.text, styles.textIcon, { ...props.styleText }]}>
+          {props.title}
+        </Text>
         <Feather
-          name="file-plus"
+          name={props.iconname}
           style={[[styles.icon, { ...props.styleText }]]}
           size={hp("5")}
-          color={COLORS.WARN_RED}
+          color={props.color}
         />
       </View>
     </TouchableOpacity>
@@ -37,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   text: {
-    fontSize: hp("2.4%"),
+    fontSize: hp("2%"),
     color: COLORS.REAL_BLACK,
     fontFamily: "Gotham-SSm-Bold",
     textAlign: "left",
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     marginTop: hp("0.8%"),
   },
   textIcon: {
-    marginTop: hp("1.5%"),
+    marginTop: hp("2%"),
   },
 });
 

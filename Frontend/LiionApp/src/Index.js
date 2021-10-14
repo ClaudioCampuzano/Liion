@@ -37,8 +37,10 @@ const Index = () => {
   useEffect(() => {
     if (user && !isLoggedIn) {
       (async () => {
+        setIsLoaded(false);
         const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
+        setIsLoaded(true);
         if (reload && loadfirestore) {
           console.log('datos cargados exitosamente')
         }
