@@ -10,9 +10,9 @@ import { GlobalContext } from "./context/Provider";
 
 import { loadFonts } from "./constants/styleThemes";
 
-
 const Index = () => {
-  const { reLoadUserInfo, isLoggedIn } = useContext(GlobalContext);
+  const { reLoadUserInfo, isLoggedIn, loadUserFirestoreData, userData, uid, userFirestoreData, getState } =
+    useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -34,13 +34,19 @@ const Index = () => {
 
   useEffect(() => {
     if (user && !isLoggedIn) {
-      reLoadUserInfo(user);
+      (async () => {
+        const reload = await reLoadUserInfo(user);
+        const loadfirestore = await loadUserFirestoreData(user);
+        if (reload && loadfirestore) {
+          console.log('datos cargados exitosamente')
+        }
+      })();
     }
   }, [user]);
 
   return (
     <>
-      {isLoaded && fontsLoaded ?  (
+      {isLoaded && fontsLoaded ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>

@@ -2,7 +2,6 @@ import { db, auth } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 
-
 export const register = async (req, res) => {
   const { name, lastname, run, email, birth, password, isPassenger, isDriver } =
     req.body;
@@ -55,5 +54,26 @@ export const register = async (req, res) => {
   } else {
     const msg = "Failed registration";
     res.status(400).json({ message: msg });
+  }
+};
+
+export const getUserData = async (req, res) => {
+  let uid = req.body.uid;
+
+  if (uid) {
+    try {
+      const q = await db.collection("users").doc(uid).get();
+      const docExist = q.exists;
+      if (docExist) {
+        res.send(q.data());
+      } else {
+        res.status(404).send("User not found");
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido2");
+    }
+  } else {
+    res.status(403).send("Token UID Inválido");
   }
 };
