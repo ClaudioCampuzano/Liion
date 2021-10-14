@@ -1,14 +1,15 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-const InputSearch = () => {
-    return (
-        <View>
-            <Text>DALEjiro</Text>
-        </View>
-    )
-}
+const InputSearch = (props) => {
+  const { style, ...restOfProps } = props;
+  return (
+    <View style={style}>
+      <Text>DALEjiro</Text>
+    </View>
+  );
+};
 
-export default InputSearch
+export default InputSearch;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
