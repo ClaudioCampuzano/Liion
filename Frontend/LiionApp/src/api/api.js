@@ -85,3 +85,22 @@ export const retrieveUserDataFromApi = async (user) => {
     return [false, e];
   }
 };
+
+export const updateDriverStatus = async (flag, payload) => {
+  try {
+    const obj = {...payload, ...{flagDriver:flag}}
+    const dataSend = JSON.stringify(obj)
+    //console.log(dataSend)
+    const res = await client({
+      method: "post",
+      url: "/updateusersdriverstatus",
+      headers: { "Content-Type": "application/json" },
+      data: dataSend,
+    });
+    return [true, res.data];
+
+  }catch(e){
+    //console.log(e.response.data)
+    return [false, e.response.data];
+  }
+}

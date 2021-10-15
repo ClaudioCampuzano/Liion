@@ -11,8 +11,19 @@ import { GlobalContext } from "./context/Provider";
 import { loadFonts } from "./constants/styleThemes";
 
 const Index = () => {
-  const { reLoadUserInfo, isLoggedIn, loadUserFirestoreData, userData, uid, userFirestoreData, getState2 } =
-    useContext(GlobalContext);
+  const {
+    reLoadUserInfo,
+    isLoggedIn,
+    loadUserFirestoreData,
+    userData,
+    uid,
+    userFirestoreData,
+    getState2,
+    accesstoken,
+    isLoadedDATA,
+    setIsLoadedDATA,
+    reloadTrigger,
+  } = useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,13 +37,12 @@ const Index = () => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
+      setIsLoaded(false);
       setUser(firebaseUser);
       firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
       setIsLoaded(true);
     });
   }, [isLoggedIn]);
-
-
 
   useEffect(() => {
     if (user && !isLoggedIn) {
@@ -42,24 +52,29 @@ const Index = () => {
         const loadfirestore = await loadUserFirestoreData(user);
         setIsLoaded(true);
         if (reload && loadfirestore) {
-          console.log('datos cargados exitosamente')
+          console.log("datos cargados exitosamente");
+          setIsLoadedDATA(true);
         }
       })();
     }
   }, [user]);
 
-
-  useEffect (() => {
-    let flag = Object.keys(userFirestoreData).length !== 0 && Object.getPrototypeOf(userFirestoreData) === Object.prototype; 
-    if(userFirestoreData && flag){
-        //ejemplo de cuando leer los datos de firstore y bueno todos los demas
-    }   
-}, [getState2] )
-
+  useEffect(() => {
+    (async () => {
+      setIsLoaded(false);
+      const reload = await reLoadUserInfo(user);
+      const loadfirestore = await loadUserFirestoreData(user);
+      setIsLoaded(true);
+      if (reload && loadfirestore) {
+        console.log("datos cargados exitosamente load & reload");
+        setIsLoadedDATA(true);
+      }
+    })();
+  }, [reloadTrigger]);
 
   return (
     <>
-      {isLoaded && fontsLoaded ? (
+      {isLoaded && fontsLoaded && isLoadedDATA ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
