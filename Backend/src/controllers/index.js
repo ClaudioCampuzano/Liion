@@ -77,3 +77,23 @@ export const getUserData = async (req, res) => {
     res.status(403).send("Token UID Inválido");
   }
 };
+
+export const updateUserDriverStatus = async (req, res) => {
+  let uid = req.body.uid;
+  let flagDriver = req.body.flagDriver;
+  if (uid && flagDriver) {
+    try {
+      const q = await db
+        .collection("users")
+        .doc(uid)
+        .update("isDriver", flagDriver);
+      //console.log(q)
+      res.send("Actualización de Driver Status exitoso");
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido2");
+    }
+  } else {
+    res.status(403).send("Token UID Inválido o flagDriver inválido");
+  }
+};
