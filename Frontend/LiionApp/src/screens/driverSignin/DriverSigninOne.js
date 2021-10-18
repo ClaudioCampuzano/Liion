@@ -68,6 +68,21 @@ const DriverSignupOne = () => {
     else return "Aún Faltan Datos";
   };
 
+  const toType = function (obj) {
+    return {}.toString
+      .call(obj)
+      .match(/\s([a-zA-Z]+)/)[1]
+      .toLowerCase();
+  };
+
+  const checkDriverVar = (obj) => {
+    let type = toType(obj);
+    //console.log(obj, type)
+    if (type === "string") return obj === "true";
+    else if (type === "boolean") return obj === true;
+    else return false;
+  };
+
   useEffect(() => {
     let flag = true;
     files.forEach((x, i) => (flag = x.state && flag));
@@ -79,10 +94,13 @@ const DriverSignupOne = () => {
     let document = [...files];
     //console.log(isDriver, typeof isDriver === 'string' || isDriver instanceof String)
     ///console.log(isDriver, isDriver === "true", isDriver === true)
-    if (isDriver === true) {
+
+    if (checkDriverVar(true)) {
       document.forEach((x) => (x.state = true));
       setFiles(document);
     }
+
+    //console.log(getState2.accesstoken);
   }, [getState2]);
 
   const updateDriverHandle = async (flag) => {
@@ -92,8 +110,6 @@ const DriverSignupOne = () => {
     });
     if (status) await updateReloadTrigger(!reloadTrigger);
   };
-
-  let isDriverg = userFirestoreData.isDriver;
 
   return (
     <Layout>
@@ -120,7 +136,7 @@ const DriverSignupOne = () => {
               />
             ))}
           </View>
-          {!isDriverg ? (
+          {!userFirestoreData.isDriver ? (
             <View style={[styles.buttonView]}>
               <ButtonLiionDisable
                 colordisable={defineColor(ready)}
