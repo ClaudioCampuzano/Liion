@@ -1,6 +1,7 @@
-import { db, auth } from "../config/config";
+import { db, auth, FieldValue } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
+
 
 export const register = async (req, res) => {
   const { name, lastname, run, email, birth, password, isPassenger, isDriver } =
@@ -83,10 +84,18 @@ export const updateUserDriverStatus = async (req, res) => {
   let flagDriver = req.body.flagDriver;
   if (uid && flagDriver) {
     try {
+      const driverData = {
+        car: "Tesla Model S",
+        carcolor: "Gris",
+        plate: "DLJR01",
+        url: "https://cdn.folhape.com.br/upload/dn_arquivo/2021/06/tesla-model-s-2_1.png",
+        sRating: 0,
+        nRating: 0,
+      };
       const q = await db
         .collection("users")
         .doc(uid)
-        .update("isDriver", flagDriver);
+        .update("isDriver", flagDriver, "driverData", driverData);
       //console.log(q)
       res.send("Actualización de Driver Status exitoso");
     } catch (e) {
@@ -95,5 +104,28 @@ export const updateUserDriverStatus = async (req, res) => {
     }
   } else {
     res.status(403).send("Token UID Inválido o flagDriver inválido");
+  }
+};
+export const updateDriverRating = async (req, res) => {
+  let uid = req.body.uid;
+  let rating = req.body.rating;
+  if (uid && rating) {
+    try {
+      // db.FieldValue.increment(50)
+      const q = await db
+        .collection("users")
+        .doc(uid)
+        .update( 
+          {"driverData.sRating":FieldValue.increment(rating), "driverData.nRating":FieldValue.increment(1)}
+        );
+        
+      //console.log(q)
+      res.send("Actualización de Driver Status exitoso");
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido2");
+    }
+  } else {
+    res.status(403).send("Token UID Inválido o Llamada inválida");
   }
 };

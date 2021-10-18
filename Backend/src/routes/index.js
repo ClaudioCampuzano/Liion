@@ -4,6 +4,7 @@ import {
   recoverEmail,
   getUserData,
   updateUserDriverStatus,
+  updateDriverRating,
 } from "../controllers/index";
 import { checkIsAuth } from "../middleware/guard";
 
@@ -11,6 +12,7 @@ const router = Router();
 router.use("/protected", checkIsAuth);
 router.post("/getuserdata", checkIsAuth, getUserData);
 router.post("/updateusersdriverstatus", checkIsAuth, updateUserDriverStatus);
+router.post("/updatedriverrating",checkIsAuth,updateDriverRating)
 router.post("/register", register);
 
 export default router;
