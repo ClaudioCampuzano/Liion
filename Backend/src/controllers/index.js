@@ -37,6 +37,8 @@ export const register = async (req, res) => {
           isPassenger: isPassenger,
           isDriver: isDriver,
           DriverData: {},
+          sRating: 0,
+          nRating: 0,
         });
         res.json({ message: "Successful Registration" });
       } catch (e) {
@@ -120,7 +122,31 @@ export const updateDriverRating = async (req, res) => {
         );
         
       //console.log(q)
-      res.send("Actualización de Driver Status exitoso");
+      res.send("Puntuación de conductor exitosa");
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido2");
+    }
+  } else {
+    res.status(403).send("Token UID Inválido o Llamada inválida");
+  }
+};
+
+export const updateUserRating = async (req, res) => {
+  let uid = req.body.uid;
+  let rating = req.body.rating;
+  if (uid && rating) {
+    try {
+      // db.FieldValue.increment(50)
+      const q = await db
+        .collection("users")
+        .doc(uid)
+        .update( 
+          {"sRating":FieldValue.increment(rating), "nRating":FieldValue.increment(1)}
+        );
+        
+      //console.log(q)
+      res.send("Puntuación de pasajero exitosa");
     } catch (e) {
       console.log(e);
       res.status(403).send("Token UID Inválido2");
