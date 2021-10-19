@@ -5,16 +5,19 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import InputLocation from "../../components/InputLocation/InputLocation";
+import InputDataDate from "../../components/InputDataDate";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 
+
+import moment from "moment";
+import "moment/locale/es";
+
 import DatePicker from 'react-native-modern-datepicker';
-
-
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Constants from "expo-constants";
-
 const SearchStepOne = ({ navigation }) => {
+  const [valueFecha, setValueFecha] = useState(moment());
+  const [errorFecha, setErrorFecha] = useState(null);
+
   const [searchValues, setSearchValues] = useState({
     origin: "",
     destination: "",
@@ -45,38 +48,34 @@ const SearchStepOne = ({ navigation }) => {
   };
   return (
     <Layout>
-        <View
-          style={{
-            height: hp("78%"),
-          }}
-        >
-          <InputLocation
-            style={styles.inputLocation}
-            labelO="Ingresa tu origen"
-            labelD="Ingresa tu destino"
-            value0={searchValues['origin']}
-            valueD={searchValues['destination']}
-          />
-{/*       <GooglePlacesAutocomplete
-        query={{
-          key: Constants.manifest.extra.firebase.apiKey,
-          language: "es",
-          components: 'country:cl',
+      <View
+        style={{
+          height: hp("78%"),
         }}
-        fetchDetails={true}
-        nearbyPlacesAPI="GooglePlacesSearch"
-        debounce={400}
-      /> */}
-{/* <DatePicker
-    /> */}
-        </View>
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Buscar"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
+      >
+        <InputLocation
+          style={styles.inputLocation}
+          labelO="Ingresa tu origen"
+          labelD="Ingresa tu destino"
+          value0={searchValues["origin"]}
+          valueD={searchValues["destination"]}
+        />
+        <InputDataDate
+          label="Fecha de salida"
+          errorText={errorFecha}
+          style={styles.input}
+          onDataChange={(value) => setValueFecha(value)}
+          maximum='-10'
+          minimum='0'
+        />
+      </View>
+      <View style={styles.buttonView}>
+        <ButtonLiion
+          title="Buscar"
+          styleView={styles.button}
+          onPress={() => checkValidator()}
+        />
+      </View>
     </Layout>
   );
 };
@@ -104,6 +103,12 @@ const styles = StyleSheet.create({
   inputDateTime: {
     marginTop: hp("1.8%"),
     width: wp("78.6%"),
+    alignSelf: "center",
+  },
+  inputLocation: {
+    marginTop: hp("25%"),
+    width: wp("78.6%"),
+    height: hp("15%"),
     alignSelf: "center",
   },
 });

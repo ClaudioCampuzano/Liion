@@ -37,16 +37,20 @@ const InputLiion = (props) => {
   }, [focusAnim, isFocused, value]);
 
   let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
+  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
+
   if (errorText) {
     color = "#B00020";
+    colorText = "#B00020";
   }
+
   return (
     <View style={style}>
       <TextInput
         style={[
           styles.input,
           {
-            borderColor: color,
+            borderColor: colorText,
           },
         ]}
         ref={inputRef}

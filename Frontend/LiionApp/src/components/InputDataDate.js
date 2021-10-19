@@ -25,6 +25,8 @@ const InputDataDate = (props) => {
     onBlur,
     onFocus,
     secureTextEntry,
+    maximum,
+    minimum,
     ...restOfProps
   } = props;
 
@@ -49,6 +51,7 @@ const InputDataDate = (props) => {
   if (errorText) {
     color = "#B00020";
   }
+  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
 
   const onChange = (e, selectedDate) => {
     setIsFocused(false);
@@ -66,7 +69,7 @@ const InputDataDate = (props) => {
           style={[
             styles.input,
             {
-              borderColor: color,
+              borderColor: colorText,
               height: hp("8.4%"),
             },
           ]}
@@ -80,6 +83,7 @@ const InputDataDate = (props) => {
 
       {isFocused && (
         <DateTimePicker
+          style={{ position: "absolute" }}
           timeZoneOffsetInMinutes={0}
           value={new Date(date)}
           mode="date"
@@ -87,10 +91,10 @@ const InputDataDate = (props) => {
           display="default"
           onChange={onChange}
           maximumDate={
-            new Date(moment().subtract(18, "years").format("YYYY-MM-DD"))
+            new Date(moment().subtract(maximum, "years").format("YYYY-MM-DD"))
           }
           minimumDate={
-            new Date(moment().subtract(100, "years").format("YYYY-MM-DD"))
+            new Date(moment().subtract(minimum, "years").format("YYYY-MM-DD"))
           }
         />
       )}

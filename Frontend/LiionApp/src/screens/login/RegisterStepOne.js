@@ -117,6 +117,8 @@ const RegisterStepOne = ({ navigation }) => {
               errorText={errorFecha}
               style={styles.input}
               onDataChange={(value) => setValueFecha(value)}
+              maximum="18"
+              minimum="100"
             />
           </ScrollView>
         </View>
