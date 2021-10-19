@@ -21,7 +21,7 @@ export const checkIsAuth = async (req, res, next) => {
       next(); //woo dale crack con el callback!!
     } catch (e) {
      
-      res.status(403).send("Token UID Inválido");
+      res.status(403).send("Token de Acceso Inválido o caducado");
     }
   } else {
     

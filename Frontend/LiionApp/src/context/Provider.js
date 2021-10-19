@@ -1,18 +1,28 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { retrieveUserDataFromApi } from "../api/api";
+import { retrieveUserDataFromApi, updateDriverStatus } from "../api/api";
 
 import authReducer from "./authReducer";
-import { LOGOUT_USER, LOGIN_SUCCESS, LOAD_FIRESTORE_DATA, GET_WHOLE_STATE } from "./types";
+import {
+  LOGOUT_USER,
+  LOGIN_SUCCESS,
+  LOAD_FIRESTORE_DATA,
+  GET_WHOLE_STATE,
+  SET_IS_LOADED,
+  TRIGGER_RELOAD
+} from "./types";
 
 export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
   const initialState = {
     isLoggedIn: false,
+    isLoadedDATA: false,
     userData: {},
     uid: "",
     userFirestoreData: {},
+    accesstoken: "",
+    reloadTrigger:false,
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
 
@@ -59,11 +69,13 @@ const GlobalProvider = ({ children }) => {
         photoURL: payload.photoURL,
       };
       const uid = payload.uid;
+      const atoken = await payload.getIdToken(true);
+
       authDispatch({
         type: LOGIN_SUCCESS,
-        payload: { profile: profile, uid: uid },
+        payload: { profile: profile, uid: uid, atoken: atoken },
       });
-      
+
       return true;
     } catch (err) {
       return false;
@@ -73,23 +85,43 @@ const GlobalProvider = ({ children }) => {
   const loadUserFirestoreData = async (user) => {
     const [flag, res] = await retrieveUserDataFromApi(user);
     if (flag) {
-      
       //update estado
       authDispatch({
-        type:LOAD_FIRESTORE_DATA,
-        payload:res
+        type: LOAD_FIRESTORE_DATA,
+        payload: res,
       });
       return true;
     } else {
-      console.log(res);
+      //console.log(res);
       return false;
       //nada, error no pudo actualizar datos
     }
   };
 
   const getState = async () => {
-    const data = authDispatch({type:GET_WHOLE_STATE});
+    const data = authDispatch({ type: GET_WHOLE_STATE });
     return data;
+  };
+
+  const setIsLoadedDATA = async (load) => {
+    //console.log(load)
+    authDispatch({
+      type: SET_IS_LOADED,
+      payload: load,
+    });
+  };
+
+  const updateDriverApicall = async (flag, payload) => {
+    const [result, res] = await updateDriverStatus(flag, payload)
+    //console.log(result, res)
+    return( [result, res])
+  }
+  const updateReloadTrigger = async (actualTrigger) => {
+    authDispatch({
+      type:TRIGGER_RELOAD,
+      payload:actualTrigger
+    })
+
   }
 
   return (
@@ -99,7 +131,13 @@ const GlobalProvider = ({ children }) => {
         uid: state.uid,
         isLoggedIn: state.isLoggedIn,
         userFirestoreData: state.userFirestoreData,
-        getState2:state,
+        getState2: state,
+        accesstoken: state.accesstoken,
+        isLoadedDATA: state.isLoadedDATA,
+        reloadTrigger: state.reloadTrigger,
+        updateReloadTrigger,
+        updateDriverApicall,
+        setIsLoadedDATA,
         getState,
         loginUser,
         logoutUser,

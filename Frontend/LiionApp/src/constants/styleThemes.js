@@ -12,7 +12,10 @@ const COLORS = {
   LEAD: "#666666",
   BORDER_COLOR: "#D9D9D9",
   BLACK: "#333333",
-  LIGHT_LEAD: "#CCCCCC"
+  LIGHT_LEAD: "#CCCCCC",
+  REAL_BLACK:"#000000",
+  WARN_RED:"#ff0f0f",
+  CHECK_GREEN:"#0FF506",
 };
 
 const loadFonts = () => {

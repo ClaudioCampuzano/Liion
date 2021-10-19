@@ -11,8 +11,19 @@ import { GlobalContext } from "./context/Provider";
 import { loadFonts } from "./constants/styleThemes";
 
 const Index = () => {
-  const { reLoadUserInfo, isLoggedIn, loadUserFirestoreData, userData, uid, userFirestoreData, getState } =
-    useContext(GlobalContext);
+  const {
+    reLoadUserInfo,
+    isLoggedIn,
+    loadUserFirestoreData,
+    userData,
+    uid,
+    userFirestoreData,
+    getState2,
+    accesstoken,
+    isLoadedDATA,
+    setIsLoadedDATA,
+    reloadTrigger,
+  } = useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,6 +37,7 @@ const Index = () => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
+      setIsLoaded(false);
       setUser(firebaseUser);
       firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
       setIsLoaded(true);
@@ -35,18 +47,34 @@ const Index = () => {
   useEffect(() => {
     if (user && !isLoggedIn) {
       (async () => {
+        setIsLoaded(false);
         const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
+        setIsLoaded(true);
         if (reload && loadfirestore) {
-          console.log('datos cargados exitosamente')
+          console.log("datos cargados exitosamente");
+          setIsLoadedDATA(true);
         }
       })();
     }
   }, [user]);
 
+  useEffect(() => {
+    (async () => {
+      setIsLoaded(false);
+      const reload = await reLoadUserInfo(user);
+      const loadfirestore = await loadUserFirestoreData(user);
+      setIsLoaded(true);
+      if (reload && loadfirestore) {
+        console.log("datos cargados exitosamente load & reload");
+        setIsLoadedDATA(true);
+      }
+    })();
+  }, [reloadTrigger]);
+
   return (
     <>
-      {isLoaded && fontsLoaded ? (
+      {isLoaded && fontsLoaded && isLoadedDATA ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>

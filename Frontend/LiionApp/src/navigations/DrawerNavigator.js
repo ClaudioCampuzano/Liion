@@ -5,6 +5,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import SearchNavigator from "./SearchNavigator";
 import CreateNavigator from "./CreateNavigator";
 import MyTravelNavigator from "./TravelNavigator";
+import DriverSigninNavigator from "./DriverSigninNavigator";
 
 import DrawerContent from "./drawer/DrawerContent";
 import { COLORS, hp, wp } from "../constants/styleThemes";
@@ -16,11 +17,16 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ drawerStyle: styles.drawerStyle }}
-      initialRouteName="CreateNavigator"
+      initialRouteName="DriverSigninStack"
     >
       <Drawer.Screen
         name="SearchStack"
         component={SearchNavigator}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="DriverSigninStack"
+        component={DriverSigninNavigator}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
@@ -53,6 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderBottomRightRadius: 40,
     borderTopRightRadius: 40,
-    width: wp("65"),
+    width: wp("78"),
   },
 });

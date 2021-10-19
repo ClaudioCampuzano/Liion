@@ -3,6 +3,8 @@ import {
   LOGOUT_USER,
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
+  SET_IS_LOADED,
+  TRIGGER_RELOAD
 } from "./types";
 
 const authReducer = (state, action) => {
@@ -15,6 +17,7 @@ const authReducer = (state, action) => {
         isLoggedIn: true,
         userData: payload.profile,
         uid: payload.uid,
+        accesstoken: payload.atoken,
       };
     case LOGOUT_USER:
       return {
@@ -29,8 +32,12 @@ const authReducer = (state, action) => {
         userFirestoreData: payload,
       };
     case GET_WHOLE_STATE:
-      
       return state;
+    case SET_IS_LOADED:
+      return { ...state, isLoadedDATA: payload };
+    case TRIGGER_RELOAD:
+      return {...state, reloadTrigger:payload}
+
     default:
       return state;
   }
