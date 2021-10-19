@@ -103,4 +103,4 @@ export const updateDriverStatus = async (flag, payload) => {
     //console.log(e.response.data)
     return [false, e.response.data];
   }
-}
+};

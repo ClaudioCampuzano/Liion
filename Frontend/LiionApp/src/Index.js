@@ -32,31 +32,38 @@ const Index = () => {
 
   const [user, setUser] = useState(() => {
     const user = firebase.auth().currentUser;
+    //console.log(user)
     return user;
   });
 
+  //console.log(isAuthenticated)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       setIsLoaded(false);
       setUser(firebaseUser);
+      //console.log(firebaseUser)
       firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
       setIsLoaded(true);
     });
   }, [isLoggedIn]);
 
   useEffect(() => {
+    
     if (user && !isLoggedIn) {
       (async () => {
         setIsLoaded(false);
         const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
+        console.log("jiro")
         setIsLoaded(true);
+        setIsLoadedDATA(true);
         if (reload && loadfirestore) {
           console.log("datos cargados exitosamente");
-          setIsLoadedDATA(true);
+          
         }
       })();
     }
+    
   }, [user]);
 
   useEffect(() => {
@@ -64,13 +71,16 @@ const Index = () => {
       setIsLoaded(false);
       const reload = await reLoadUserInfo(user);
       const loadfirestore = await loadUserFirestoreData(user);
+      setIsLoadedDATA(true);
       setIsLoaded(true);
       if (reload && loadfirestore) {
         console.log("datos cargados exitosamente load & reload");
-        setIsLoadedDATA(true);
+        
       }
     })();
   }, [reloadTrigger]);
+
+  //console.log("isLoaded: ",isLoaded,"fontsLoaded: ",fontsLoaded,"isLoadedDATA: ",isLoadedDATA )
 
   return (
     <>
