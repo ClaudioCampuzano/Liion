@@ -63,7 +63,7 @@ const SearchStepOne = ({ navigation }) => {
         <InputDataDate
           label="Fecha de salida"
           errorText={errorFecha}
-          style={styles.input}
+          style={styles.inputDateTime}
           onDataChange={(value) => setValueFecha(value)}
           maximum='-10'
           minimum='0'
