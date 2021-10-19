@@ -28,21 +28,27 @@ const DrawerContent = (props) => {
               size={hp("12")}
             />
             <View style={styles.viewLabelName}>
-              <Title style={styles.labelName}>{userFirestoreData.name + ' '+ userFirestoreData.apellido}</Title>
+              <Title style={styles.labelName}>
+                {userFirestoreData.name + " " + userFirestoreData.apellido}
+              </Title>
               <View style={{ flexDirection: "row" }}>
-                <MaterialIcons name="stars" size={20} color={COLORS.TURKEY} />
+                <MaterialIcons
+                  name="stars"
+                  size={hp("2.5")}
+                  color={COLORS.TURKEY}
+                />
                 <Text style={styles.labelRankings}>4.6/5</Text>
               </View>
+              <TouchableOpacity
+                style={styles.touchablePerfil}
+                onPress={() => console.log("Ir a perfil")}
+              >
+                <Text style={styles.texTouchable}>Ver perfil</Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
-            style={styles.touchablePerfil}
-            onPress={() => console.log("Ir a perfil")}
-          >
-            <Text style={styles.texTouchable}>Ver perfil</Text>
-          </TouchableOpacity>
         </View>
-        <Drawer.Section style={{ paddingTop: hp("4"), elevation: 0 }}>
+        <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (
@@ -205,8 +211,9 @@ const styles = StyleSheet.create({
   viewUserGlobal: {
     flex: 1,
     borderTopRightRadius: 40,
-    width: wp("65"),
+    width: wp("76"),
     paddingLeft: wp("2"),
+    paddingBottom: hp('1'),
     borderBottomColor: COLORS.BORDER_COLOR,
     borderBottomWidth: 1,
     borderBottomEndRadius: 20,
@@ -216,7 +223,7 @@ const styles = StyleSheet.create({
     paddingLeft: wp("1.5"),
     paddingTop: hp("0.2"),
     fontFamily: "Gotham-SSm-Medium",
-    fontSize: hp("1.5"),
+    fontSize: hp("1.7"),
     color: COLORS.BLACK,
   },
   texTouchable: {
@@ -225,7 +232,6 @@ const styles = StyleSheet.create({
     color: COLORS.LEAD,
   },
   touchablePerfil: {
-    paddingLeft: wp("3"),
     paddingTop: hp("0.5"),
     paddingBottom: hp("0.5"),
   },

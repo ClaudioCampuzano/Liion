@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: COLORS.WHITE,
     height: hp("7%"),
-    borderBottomWidth: 0,
+    elevation: 0
   },
   headerText: {
     color: COLORS.TURKEY,

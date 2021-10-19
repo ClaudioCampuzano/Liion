@@ -114,9 +114,9 @@ const DriverSignupOne = () => {
   return (
     <Layout>
       <View style={[styles.container]}>
-        <Text style={styles.textDriversignin}>Registro de Conductor</Text>
-        <Text style={styles.tesxtSubDriversignin}>
-          Para habilitarte como condctor, sube los siguiente documentos:{" "}
+        <Text style={styles.text_titulo}>Registro de Conductor</Text>
+        <Text style={styles.text_subTitulo}>
+          Para habilitarte como conductor, sube los siguiente documentos:
         </Text>
       </View>
 
@@ -172,14 +172,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
   },
-  logo: {
-    height: hp("35%"),
-  },
-  textDriversignin: {
+  text_titulo: {
     fontFamily: "Gotham-SSm-Bold",
-    fontSize: hp("4%"),
+    fontSize: hp("3%"),
     color: COLORS.TURKEY,
     paddingTop: hp("5%"),
+    textAlign: "center",
   },
   textDriversigninReady: {
     fontFamily: "Gotham-SSm-Bold",
@@ -187,12 +185,13 @@ const styles = StyleSheet.create({
     color: COLORS.TURKEY,
     paddingBottom: hp("7%"),
   },
-  tesxtSubDriversignin: {
-    fontFamily: "Gotham-SSm-Book",
+  text_subTitulo: {
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("2.5%"),
-    color: COLORS.TURKEY,
-    paddingTop: hp("9%"),
+    color: COLORS.TURKEY_CLEAR,
+    paddingTop: hp("6%"),
     paddingHorizontal: hp("4%"),
+    textAlign: "center",
   },
   button: {
     width: wp("78.6%"),
