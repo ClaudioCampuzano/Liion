@@ -9,7 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-
+import firebase from "firebase";
 import {
   Ionicons,
   MaterialIcons,
@@ -46,6 +46,15 @@ const DriverSignupOne = () => {
     { name: "Cédula de Identidad", state: false },
     { name: "Hoja de vida del Conductor", state: false },
   ]);
+
+  //recarga local
+  const [user, setUser] = useState(() => {
+    const user = firebase.auth().currentUser;
+    return user;
+  });
+  const [localLoad, setLocalLoad] = useState(false)
+  const [localTrigger, setLocalTrigger] = useState(false)
+
   const [ready, setReady] = useState(false);
 
   const defineColor = (docState) => {
@@ -108,16 +117,21 @@ const DriverSignupOne = () => {
       uid: uid,
       atoken: accesstoken,
     });
-    if (status) await updateReloadTrigger(!reloadTrigger);
+    setLocalTrigger(!reloadTrigger);
   };
 
-  /*
+  //recarga local
   useEffect(() => {
-    ( () => {
-       updateReloadTrigger(!reloadTrigger);
+    (async () => {
+      setLocalLoad(false);
+      const reload = await reLoadUserInfo(user);
+      const loadfirestore = await loadUserFirestoreData(user);
+      setLocalLoad(true);
+      if (reload && loadfirestore) {
+        console.log("datos cargados exitosamente load & reload");
+      }
     })();
-  }, []);
-  */
+  }, [localTrigger]);
 
   return (
     <Layout>
@@ -128,7 +142,7 @@ const DriverSignupOne = () => {
         </Text>
       </View>
 
-      {isLoadedDATA ? (
+      {localLoad ? (
         <>
           <View style={[styles.driverfilesView]}>
             {files.map((document, index) => (
