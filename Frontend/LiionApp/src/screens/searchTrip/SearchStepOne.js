@@ -4,9 +4,15 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import InputSearch from "../../components/InputSearch";
+import InputLocation from "../../components/InputLocation/InputLocation";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
+
+import DatePicker from 'react-native-modern-datepicker';
+
+
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Constants from "expo-constants";
 
 const SearchStepOne = ({ navigation }) => {
   const [searchValues, setSearchValues] = useState({
@@ -39,13 +45,30 @@ const SearchStepOne = ({ navigation }) => {
   };
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
         <View
           style={{
             height: hp("78%"),
           }}
         >
-          <InputSearch style={styles.input} />
+          <InputLocation
+            style={styles.inputLocation}
+            labelO="Ingresa tu origen"
+            labelD="Ingresa tu destino"
+            value0={searchValues['origin']}
+            valueD={searchValues['destination']}
+          />
+{/*       <GooglePlacesAutocomplete
+        query={{
+          key: Constants.manifest.extra.firebase.apiKey,
+          language: "es",
+          components: 'country:cl',
+        }}
+        fetchDetails={true}
+        nearbyPlacesAPI="GooglePlacesSearch"
+        debounce={400}
+      /> */}
+{/* <DatePicker
+    /> */}
         </View>
         <View style={styles.buttonView}>
           <ButtonLiion
@@ -54,7 +77,6 @@ const SearchStepOne = ({ navigation }) => {
             onPress={() => checkValidator()}
           />
         </View>
-      </KeyboardAvoidingWrapper>
     </Layout>
   );
 };
@@ -73,7 +95,13 @@ const styles = StyleSheet.create({
     height: hp("4.8%"),
     alignSelf: "center",
   },
-  input: {
+  inputLocation: {
+    marginTop: hp("25%"),
+    width: wp("78.6%"),
+    height: hp("15%"),
+    alignSelf: "center",
+  },
+  inputDateTime: {
     marginTop: hp("1.8%"),
     width: wp("78.6%"),
     alignSelf: "center",

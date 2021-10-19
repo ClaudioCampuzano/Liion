@@ -14,7 +14,7 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { GlobalContext } from "../../context/Provider";
 
 const DrawerContent = (props) => {
-  const { logoutUser, userData } = useContext(GlobalContext);
+  const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
 
   return (
     <View style={{ flex: 1 }}>
@@ -28,7 +28,7 @@ const DrawerContent = (props) => {
               size={hp("12")}
             />
             <View style={styles.viewLabelName}>
-              <Title style={styles.labelName}>{userData.email}</Title>
+              <Title style={styles.labelName}>{userFirestoreData.name + ' '+ userFirestoreData.apellido}</Title>
               <View style={{ flexDirection: "row" }}>
                 <MaterialIcons name="stars" size={20} color={COLORS.TURKEY} />
                 <Text style={styles.labelRankings}>4.6/5</Text>
