@@ -1,27 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Text,
-  TextInput,
   StyleSheet,
+  Text,
   View,
   Animated,
   Easing,
   TouchableWithoutFeedback,
+  TextInput,
 } from "react-native";
 
-import { COLORS, hp, wp } from "../constants/styleThemes";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Constants from "expo-constants";
+//Constants.manifest.extra.firebase.apiKey
 
-const InputLiion = (props) => {
-  const {
-    label,
-    errorText,
-    value,
-    style,
-    onBlur,
-    onFocus,
-    secureTextEntry,
-    ...restOfProps
-  } = props;
+import { COLORS, hp, wp } from "../../constants/styleThemes";
+
+const CustomInput = (props) => {
+  const { label, value, secureTextEntry, onBlur, onFocus, ...restOfProps } =
+    props;
 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
@@ -37,20 +33,14 @@ const InputLiion = (props) => {
   }, [focusAnim, isFocused, value]);
 
   let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
-  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
-
-  if (errorText) {
-    color = "#B00020";
-    colorText = "#B00020";
-  }
 
   return (
-    <View style={style}>
+    <View>
       <TextInput
         style={[
           styles.input,
           {
-            borderColor: colorText,
+            borderColor: color,
           },
         ]}
         ref={inputRef}
@@ -65,7 +55,31 @@ const InputLiion = (props) => {
           setIsFocused(true);
           onFocus?.(event);
         }}
+      /> 
+{/*       <GooglePlacesAutocomplete
+        style={{position: 'absolute' }}
+        query={{
+          key: Constants.manifest.extra.firebase.apiKey,
+          language: "es",
+          components: "country:cl",
+        }}
+        fetchDetails={true}
+        nearbyPlacesAPI="GooglePlacesSearch"
+        debounce={400}
+        textInputProps={{
+          onFocus: (event) => {
+            setIsFocused(true);
+            onFocus?.(event);
+          },
+          onBlur: (event) => {
+            setIsFocused(false);
+            onBlur?.(event);
+          },
+          ref: { inputRef },
+        }}
       />
+ */}
+
       <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
         <Animated.View
           style={[
@@ -81,13 +95,13 @@ const InputLiion = (props) => {
                 {
                   translateY: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [24, -12],
+                    outputRange: [hp("0.8"), -hp("2")],
                   }),
                 },
                 {
                   translateX: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [16, 0],
+                    outputRange: [wp("1"), 0],
                   }),
                 },
               ],
@@ -103,22 +117,19 @@ const InputLiion = (props) => {
             ]}
           >
             {label}
-            {errorText ? "*" : ""}
           </Text>
         </Animated.View>
       </TouchableWithoutFeedback>
-      {!!errorText && <Text style={styles.error}>{errorText}</Text>}
     </View>
   );
 };
 
-export default InputLiion;
+export default CustomInput;
 
 const styles = StyleSheet.create({
   input: {
-    padding: hp("2.4%"),
-    borderWidth: 1,
-    borderRadius: 17,
+    paddingLeft: wp("4"),
+    paddingTop: hp("1"),
     fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
     color: COLORS.TURKEY,
@@ -130,12 +141,5 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("1.8%"),
-  },
-  error: {
-    marginTop: hp("0.5%"),
-    marginLeft: wp("2.3%"),
-    fontSize: hp("1.4%"),
-    color: "#B00020",
-    fontFamily: "Gotham-SSm-Medium",
   },
 });

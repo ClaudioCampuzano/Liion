@@ -20,9 +20,9 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 import { GlobalContext } from "../../context/Provider";
 
 const AccountAccess = ({ navigation }) => {
-  const [valueEmail, setValueEmail] = useState("");
+  const [valueEmail, setValueEmail] = useState("c@c.lion");
   const [focusEmailInput, setfocusEmailInput] = useState(false);
-  const [valuePass, setValuePass] = useState("");
+  const [valuePass, setValuePass] = useState("Jiroto99");
 
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorPass, setErrorPass] = useState(null);

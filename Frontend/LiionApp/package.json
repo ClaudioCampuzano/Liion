@@ -32,6 +32,7 @@
     "react-native-device-info": "^8.3.1",
     "react-native-form-validator": "^0.3.5",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-google-places-autocomplete": "^2.4.1",
     "react-native-modal": "^12.0.3",
     "react-native-pager-view": "5.0.12",
     "react-native-paper": "^4.9.2",
