@@ -2,7 +2,7 @@ import axios from "axios";
 import firebase from "firebase";
 
 const client = axios.create({
-  baseURL: "http://192.168.1.8:3000",
+  baseURL: "http://192.168.0.197:3000",
   timeout: 2000,
 });
 
@@ -22,7 +22,6 @@ export const protectedRoute = async () => {
           token: tkn,
         },
       });
-      
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +39,6 @@ export const unProtectedRoute = async () => {
         token: "fakeToken",
       },
     });
-    
   } catch (e) {
     console.log(e.response);
   }
@@ -58,10 +56,8 @@ export const RegisterBackend = async (payload) => {
     return [true, res.data.message];
   } catch (e) {
     try {
-      
       return [false, e.response.data.message];
     } catch (eS) {
-      
       return [false, e];
     }
   }
@@ -78,18 +74,17 @@ export const retrieveUserDataFromApi = async (user) => {
       headers: { "Content-Type": "application/json" },
       data: data,
     });
-    
+
     return [true, res.data];
   } catch (e) {
-    
     return [false, e];
   }
 };
 
 export const updateDriverStatus = async (flag, payload) => {
   try {
-    const obj = {...payload, ...{flagDriver:flag}}
-    const dataSend = JSON.stringify(obj)
+    const obj = { ...payload, ...{ flagDriver: flag } };
+    const dataSend = JSON.stringify(obj);
     //console.log(dataSend)
     const res = await client({
       method: "post",
@@ -98,8 +93,7 @@ export const updateDriverStatus = async (flag, payload) => {
       data: dataSend,
     });
     return [true, res.data];
-
-  }catch(e){
+  } catch (e) {
     //console.log(e.response.data)
     return [false, e.response.data];
   }

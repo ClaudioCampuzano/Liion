@@ -9,7 +9,7 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   SET_IS_LOADED,
-  TRIGGER_RELOAD
+  TRIGGER_RELOAD,
 } from "./types";
 
 export const GlobalContext = createContext({});
@@ -22,7 +22,7 @@ const GlobalProvider = ({ children }) => {
     uid: "",
     userFirestoreData: {},
     accesstoken: "",
-    reloadTrigger:false,
+    reloadTrigger: false,
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
 
@@ -112,17 +112,16 @@ const GlobalProvider = ({ children }) => {
   };
 
   const updateDriverApicall = async (flag, payload) => {
-    const [result, res] = await updateDriverStatus(flag, payload)
+    const [result, res] = await updateDriverStatus(flag, payload);
     //console.log(result, res)
-    return( [result, res])
-  }
-  const updateReloadTrigger = async (actualTrigger) => {
+    return [result, res];
+  };
+  const updateReloadTrigger = (actualTrigger) => {
     authDispatch({
-      type:TRIGGER_RELOAD,
-      payload:actualTrigger
-    })
-
-  }
+      type: TRIGGER_RELOAD,
+      payload: actualTrigger,
+    });
+  };
 
   return (
     <GlobalContext.Provider
