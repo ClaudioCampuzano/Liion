@@ -75,7 +75,6 @@ const GlobalProvider = ({ children }) => {
         type: LOGIN_SUCCESS,
         payload: { profile: profile, uid: uid, atoken: atoken },
       });
-
       return true;
     } catch (err) {
       return false;

@@ -32,41 +32,40 @@ const Index = () => {
 
   const [user, setUser] = useState(() => {
     const user = firebase.auth().currentUser;
-    //console.log(user)
     return user;
   });
 
-  //console.log(isAuthenticated)
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
-      setIsLoaded(false);
       setUser(firebaseUser);
-      //console.log(firebaseUser)
-      firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      if (firebaseUser) {
+        setIsAuthenticated(true)
+        const fetchData = async () => {
+          await reLoadUserInfo(user);
+          await loadUserFirestoreData(user);
+          setIsLoadedDATA(true);
+        }
+        fetchData();
+      }
+      else {
+        setIsAuthenticated(false)
+      }
       setIsLoaded(true);
     });
   }, [isLoggedIn]);
 
   useEffect(() => {
-    
     if (user && !isLoggedIn) {
-      (async () => {
-        setIsLoaded(false);
-        const reload = await reLoadUserInfo(user);
-        const loadfirestore = await loadUserFirestoreData(user);
-        console.log("jiro")
-        setIsLoaded(true);
+      const fetchData = async () => {
+        await reLoadUserInfo(user);
+        await loadUserFirestoreData(user);
         setIsLoadedDATA(true);
-        if (reload && loadfirestore) {
-          console.log("datos cargados exitosamente");
-          
-        }
-      })();
-    }
-    
+      }
+      fetchData();
+    } 
   }, [user]);
 
-  useEffect(() => {
+/*      useEffect(() => {
     (async () => {
       setIsLoaded(false);
       const reload = await reLoadUserInfo(user);
@@ -77,13 +76,11 @@ const Index = () => {
         console.log("datos cargados exitosamente load & reload");
       }
     })();
-  }, [reloadTrigger]);
-
-  //console.log("isLoaded: ",isLoaded,"fontsLoaded: ",fontsLoaded,"isLoadedDATA: ",isLoadedDATA )
+  }, [reloadTrigger]);  */
 
   return (
     <>
-      {isLoaded && fontsLoaded && isLoadedDATA ? (
+      {isLoaded && fontsLoaded && (!user || isLoadedDATA)  ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
