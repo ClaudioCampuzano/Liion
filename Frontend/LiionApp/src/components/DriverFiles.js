@@ -20,7 +20,7 @@ const DriverFiles = (props) => {
         <Feather
           name={props.iconname}
           style={[[styles.icon, { ...props.styleText }]]}
-          size={hp("5")}
+          size={hp("4")}
           color={props.color}
         />
       </View>
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: 'center'
   },
   text: {
     fontSize: hp("2%"),
@@ -46,11 +47,9 @@ const styles = StyleSheet.create({
     marginLeft: hp("2%"),
   },
   icon: {
-    marginRight: hp("2.5%"),
-    marginTop: hp("0.8%"),
+    marginRight: hp("1.5%"),
   },
   textIcon: {
-    marginTop: hp("2%"),
   },
 });
 

@@ -58,7 +58,7 @@ const DriverSignupOne = () => {
   const [ready, setReady] = useState(false);
 
   const defineColor = (docState) => {
-    if (docState) return COLORS.CHECK_GREEN;
+    if (docState) return COLORS.TURKEY;
     else return COLORS.WARN_RED;
   };
   const defineIcon = (docState) => {
@@ -73,8 +73,8 @@ const DriverSignupOne = () => {
   };
 
   const defineButtonText = (flag) => {
-    if (flag) return "Registrar Conductor";
-    else return "Aún Faltan Datos";
+    if (flag) return "Registrar conductor";
+    else return "Aún faltan datos";
   };
 
   const toType = function (obj) {
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   driverfiles: {
     width: wp("78.6%"),
-    height: hp("7%"),
+    height: hp("6%"),
     margin: hp("0.6%"),
   },
   buttonView: {

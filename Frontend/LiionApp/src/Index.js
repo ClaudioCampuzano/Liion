@@ -48,20 +48,22 @@ const Index = () => {
   }, [isLoggedIn]);
 
   useEffect(() => {
+    
     if (user && !isLoggedIn) {
       (async () => {
         setIsLoaded(false);
         const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
-        //console.log("jiro")
+        console.log("jiro")
         setIsLoaded(true);
         setIsLoadedDATA(true);
         if (reload && loadfirestore) {
           console.log("datos cargados exitosamente");
+          
         }
       })();
     }
-    //console.log(getState2)
+    
   }, [user]);
 
   useEffect(() => {
