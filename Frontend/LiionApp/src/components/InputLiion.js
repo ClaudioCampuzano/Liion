@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: hp("0.5%"),
     marginLeft: wp("2.3%"),
     fontSize: hp("1.4%"),
-    color: "#B00020",
+    color: COLORS.WARN_RED,
     fontFamily: "Gotham-SSm-Medium",
   },
 });

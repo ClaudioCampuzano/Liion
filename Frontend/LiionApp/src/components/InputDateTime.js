@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Text,
-  TextInput,
   StyleSheet,
   View,
   Animated,
@@ -10,37 +9,44 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { COLORS, hp, wp } from "../constants/styleThemes";
+import { COLORS, hp } from "../constants/styleThemes";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import "moment/locale/es";
 
 moment.locale("es");
 
-const InputDataDate = (props) => {
+const InputDateTime = (props) => {
   const {
     label,
-    errorText,
     style,
     onBlur,
     onFocus,
-    secureTextEntry,
     maximum,
     minimum,
+    mode,
     ...restOfProps
   } = props;
+
+  const defaultDate = moment();
 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
   const focusAnim = useRef(new Animated.Value(0)).current;
-  const [date, setDate] = useState(moment());
+  const [date, setDate] = useState(defaultDate);
+
+  const [limits, setLimits] = useState({
+    maximumDate: new Date(
+      moment().subtract(maximum, "days").format("YYYY-MM-DD")
+    ),
+    minimumDate: new Date(
+      moment().subtract(minimum, "days").format("YYYY-MM-DD")
+    ),
+  });
 
   useEffect(() => {
     Animated.timing(focusAnim, {
-      toValue:
-        isFocused || date.format("YYYY-MM-DD") != moment().format("YYYY-MM-DD")
-          ? 1
-          : 0,
+      toValue: isFocused || date != defaultDate ? 1 : 0,
       duration: 150,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: true,
@@ -48,20 +54,17 @@ const InputDataDate = (props) => {
   }, [focusAnim, isFocused, date]);
 
   let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
-  if (errorText) {
-    color = "#B00020";
-  }
   let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
 
   const onChange = (e, selectedDate) => {
     setIsFocused(false);
-
     if (selectedDate) {
       const currentDate = selectedDate || date;
       setDate(moment(currentDate));
       props.onDataChange(moment(currentDate));
     }
   };
+
   return (
     <View style={style}>
       <TouchableWithoutFeedback onPress={() => setIsFocused(true)}>
@@ -75,27 +78,23 @@ const InputDataDate = (props) => {
           ]}
           {...restOfProps}
         >
-          {/* {console.log(date.utc())} */}
-          {!(date.format("YYYY-MM-DD") == moment().format("YYYY-MM-DD")) &&
-            date.utc().format("YYYY-MM-DD")}
+          {mode === 'date' && date != defaultDate
+            ? date.utc().format("DD/MM/YYYY")
+            : date.format("hh:mm a")}
         </Text>
       </TouchableWithoutFeedback>
 
       {isFocused && (
         <DateTimePicker
           style={{ position: "absolute" }}
-          timeZoneOffsetInMinutes={0}
           value={new Date(date)}
-          mode="date"
+          mode={mode}
           locale="es-ES"
           display="default"
           onChange={onChange}
-          maximumDate={
-            new Date(moment().subtract(maximum, "years").format("YYYY-MM-DD"))
-          }
-          minimumDate={
-            new Date(moment().subtract(minimum, "years").format("YYYY-MM-DD"))
-          }
+          is24Hour={true}
+          maximumDate={limits.maximumDate}
+          minimumDate={limits.minimumDate}
         />
       )}
       <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
@@ -135,20 +134,18 @@ const InputDataDate = (props) => {
             ]}
           >
             {label}
-            {errorText ? "*" : ""}
           </Text>
         </Animated.View>
       </TouchableWithoutFeedback>
-      {!!errorText && <Text style={styles.error}>{errorText}</Text>}
     </View>
   );
 };
 
-InputDataDate.defaultProps = {
+InputDateTime.defaultProps = {
   onDataChange: () => {},
 };
 
-export default InputDataDate;
+export default InputDateTime;
 
 const styles = StyleSheet.create({
   input: {
@@ -166,12 +163,5 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("1.8%"),
-  },
-  error: {
-    marginTop: hp("0.5%"),
-    marginLeft: wp("2.3%"),
-    fontSize: hp("1.4%"),
-    color: "#B00020",
-    fontFamily: "Gotham-SSm-Medium",
   },
 });

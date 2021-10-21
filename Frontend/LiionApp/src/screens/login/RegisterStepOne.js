@@ -12,7 +12,7 @@ import { validate, format, clean } from "../../utils/utils";
 
 import { useKeyboard } from "../../hooks/useKeyboard";
 
-import InputDataDate from "../../components/InputDataDate";
+import InputDateTime from "../../components/InputDateTime";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -112,13 +112,13 @@ const RegisterStepOne = ({ navigation }) => {
               secureTextEntry={false}
               onChangeText={(text) => setValueRun(text)}
             />
-            <InputDataDate
-              label="Fecha de nacimiento"
-              errorText={errorFecha}
+            <InputDateTime
               style={styles.input}
-              onDataChange={(value) => setValueFecha(value)}
-              maximum="18"
-              minimum="100"
+              onDataChange={(value) => {setValueFecha(value)}}
+              label="Fecha de nacimiento"
+              mode="date"
+              maximum="6574"
+              minimum="33238"
             />
           </ScrollView>
         </View>

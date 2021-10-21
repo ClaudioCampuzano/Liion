@@ -83,6 +83,7 @@ const GlobalProvider = ({ children }) => {
 
   const loadUserFirestoreData = async (user) => {
     const [flag, res] = await retrieveUserDataFromApi(user);
+    console.log(res)
     if (flag) {
       //update estado
       authDispatch({

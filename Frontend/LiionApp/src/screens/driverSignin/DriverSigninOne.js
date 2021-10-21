@@ -52,8 +52,8 @@ const DriverSignupOne = () => {
     const user = firebase.auth().currentUser;
     return user;
   });
-  const [localLoad, setLocalLoad] = useState(false)
-  const [localTrigger, setLocalTrigger] = useState(false)
+  const [localLoad, setLocalLoad] = useState(false);
+  const [localTrigger, setLocalTrigger] = useState(false);
 
   const [ready, setReady] = useState(false);
 
@@ -169,14 +169,7 @@ const DriverSignupOne = () => {
               />
             </View>
           ) : (
-            <Text style={styles.textDriversigninReady}>
-              Ya estás Listo!
-              <Feather
-                name={"check-circle"}
-                size={hp("5")}
-                color={COLORS.CHECK_GREEN}
-              />
-            </Text>
+            <Text style={styles.textDriversigninReady}>Ya estás Listo!</Text>
           )}
         </>
       ) : (
@@ -204,7 +197,7 @@ const styles = StyleSheet.create({
   textDriversigninReady: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("4%"),
-    color: COLORS.TURKEY,
+    color: COLORS.TURKEY_CLEAR,
     paddingBottom: hp("7%"),
   },
   text_subTitulo: {

@@ -5,17 +5,15 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import InputLocation from "../../components/InputLocation/InputLocation";
-import InputDataDate from "../../components/InputDataDate";
+import InputDateTime from "../../components/InputDateTime";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
-
 
 import moment from "moment";
 import "moment/locale/es";
 
-import DatePicker from 'react-native-modern-datepicker';
 const SearchStepOne = ({ navigation }) => {
-  const [valueFecha, setValueFecha] = useState(moment());
+  const [date, setDate] = useState(moment("00/00/0000", "DD/MM/YYYY"));
   const [errorFecha, setErrorFecha] = useState(null);
 
   const [searchValues, setSearchValues] = useState({
@@ -60,13 +58,25 @@ const SearchStepOne = ({ navigation }) => {
           value0={searchValues["origin"]}
           valueD={searchValues["destination"]}
         />
-        <InputDataDate
-          label="Fecha de salida"
-          errorText={errorFecha}
+        <InputDateTime
           style={styles.inputDateTime}
-          onDataChange={(value) => setValueFecha(value)}
-          maximum='-10'
-          minimum='0'
+/*           onDataChange={(value) => {
+            setValueFecha(value);
+          }} */
+          mode="date"
+          label="Fecha de viaje"
+          maximum="-180"
+          minimum="-1"
+        />
+          <InputDateTime
+          style={styles.inputDateTime}
+/*           onDataChange={(value) => {
+            setValueFecha(value);
+          }} */
+          mode="time"
+          label="Hora de llegada"
+          maximum="-180"
+          minimum="-1"
         />
       </View>
       <View style={styles.buttonView}>
@@ -104,6 +114,12 @@ const styles = StyleSheet.create({
     marginTop: hp("1.8%"),
     width: wp("78.6%"),
     alignSelf: "center",
+  },
+  inputDateTime2: {
+    marginTop: hp("1.8%"),
+    width: wp("78.6%"),
+    alignSelf: "center",
+    backgroundColor: "yellow",
   },
   inputLocation: {
     marginTop: hp("25%"),
