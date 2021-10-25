@@ -80,7 +80,7 @@ const InputDateTime = (props) => {
         >
           {mode === 'date' && date != defaultDate
             ? date.utc().format("DD/MM/YYYY")
-            : date.format("hh:mm a")}
+            : date.format("HH:mm")}
         </Text>
       </TouchableWithoutFeedback>
 

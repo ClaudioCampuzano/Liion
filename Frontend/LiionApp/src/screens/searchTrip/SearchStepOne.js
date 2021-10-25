@@ -19,8 +19,8 @@ const SearchStepOne = ({ navigation }) => {
   const [searchValues, setSearchValues] = useState({
     origin: "",
     destination: "",
-    date: "",
-    time: "",
+    date: moment("00/00/0000", "DD/MM/YYYY"),
+    time: moment("00/00/0000", "DD/MM/YYYY"),
   });
 
   const [searchError, setSearchError] = useState({
@@ -31,7 +31,9 @@ const SearchStepOne = ({ navigation }) => {
   });
 
   useEffect(() => {
+    console.log("---------------searchValues---------------")
     console.log(searchValues);
+    console.log("------------------------------------------")
   }, [searchValues]);
 
   const changeValuesHandler = (field, value) => {
@@ -60,19 +62,19 @@ const SearchStepOne = ({ navigation }) => {
         />
         <InputDateTime
           style={styles.inputDateTime}
-/*           onDataChange={(value) => {
-            setValueFecha(value);
-          }} */
+          onDataChange={(value) => {
+            changeValuesHandler("date", value);
+          }}
           mode="date"
           label="Fecha de viaje"
           maximum="-180"
           minimum="-1"
         />
-          <InputDateTime
+        <InputDateTime
           style={styles.inputDateTime}
-/*           onDataChange={(value) => {
-            setValueFecha(value);
-          }} */
+          onDataChange={(value) => {
+            changeValuesHandler("time", value);
+          }}
           mode="time"
           label="Hora de llegada"
           maximum="-180"
