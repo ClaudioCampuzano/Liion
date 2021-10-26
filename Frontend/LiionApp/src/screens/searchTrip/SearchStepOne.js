@@ -5,41 +5,33 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
+import ModalPopUp from "../../components/ModalPopUp";
 
 import { hp, wp } from "../../constants/styleThemes";
-
-import moment from "moment";
-import "moment/locale/es";
 
 const SearchStepOne = ({ navigation }) => {
   const [searchValues, setSearchValues] = useState({
     addresses: null,
-    date: moment("00/00/0000", "DD/MM/YYYY"),
-    time: moment("00/00/0000", "DD/MM/YYYY"),
+    date: null,
+    time: null,
   });
 
-  const [searchError, setSearchError] = useState({
-    errorOrigin: null,
-    errorDestination: null,
-    errorDate: null,
-    errorTime: null,
-  });
+  const [modalVisible, setModalVisible] = useState(false);
 
-/*      useEffect(() => {
-    console.log("---------------searchValues---------------")
+  useEffect(() => {
+    console.log("---------------searchValues---------------");
     console.log(searchValues);
-    console.log("------------------------------------------")
-  }, [searchValues]);  */
+    console.log("------------------------------------------");
+  }, [searchValues]);
 
   const changeValuesHandler = (field, value) => {
     setSearchValues({ ...searchValues, [field]: value });
   };
-  const changeErrorHandler = (field, value) => {
-    setSearchError({ ...searchError, [field]: value });
-  };
 
   const checkValidator = () => {
-    navigation.navigate("SeachStepTwo");
+    if (searchValues.addresses && searchValues.date && searchValues.time)
+      navigation.navigate("SeachStepTwo");
+    else setModalVisible(true);
   };
   return (
     <Layout>
@@ -49,6 +41,9 @@ const SearchStepOne = ({ navigation }) => {
           flexDirection: "column",
         }}
       >
+        <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
+          Faltan datos para continuar Liioner
+        </ModalPopUp>
         <View
           style={{
             flexDirection: "row",
@@ -57,7 +52,7 @@ const SearchStepOne = ({ navigation }) => {
           <InputDateTime
             style={styles.inputDateTime}
             onDataChange={(value) => {
-              changeValuesHandler("date", value);
+              changeValuesHandler("date", value.local().format("DD/MM/YYYY"));
             }}
             mode="date"
             label="Fecha de viaje"
@@ -67,7 +62,7 @@ const SearchStepOne = ({ navigation }) => {
           <InputDateTime
             style={styles.inputDateTimeRight}
             onDataChange={(value) => {
-              changeValuesHandler("time", value);
+              changeValuesHandler("time", value.local().format("HH:mm"));
             }}
             mode="time"
             label="Hora de llegada"

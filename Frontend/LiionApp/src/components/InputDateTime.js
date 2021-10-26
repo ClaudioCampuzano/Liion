@@ -28,7 +28,7 @@ const InputDateTime = (props) => {
     ...restOfProps
   } = props;
 
-  const defaultDate = moment();
+  const defaultDate = new moment();
 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
@@ -78,15 +78,13 @@ const InputDateTime = (props) => {
             styles.input,
             {
               borderColor: colorText,
-              height: hp("8.4%"),
-              backgroundColor:'yellow',
-              
+              height: hp("8.4%"),              
             },
           ]}
           {...restOfProps}
         >
-          {showLabel && (mode === 'date' ? date.utc().format("DD/MM/YYYY")
-            : date.format("HH:mm"))}
+          {showLabel && (mode === 'date' ? date.local().format("DD/MM/YYYY")
+            : date.local().format("HH:mm"))}
         </Text>
       </TouchableWithoutFeedback>
 

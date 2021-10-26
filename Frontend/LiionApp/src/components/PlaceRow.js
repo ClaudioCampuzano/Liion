@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import { Entypo } from "@expo/vector-icons";
-import { COLORS } from "../constants/styleThemes";
+import { COLORS, hp } from "../constants/styleThemes";
 
 const PlaceRow = ({ data, index }) => {
   return (
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
+    marginTop: hp(1.4),
   },
   iconContainer: {
     padding: 5,

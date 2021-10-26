@@ -89,7 +89,7 @@ const InputLocation = (props) => {
             listView: styles.listViewSub,
             container: {
               ...styles.autocompleteContainer,
-              top: 55,
+              top: hp(6.6),
             },
             separator: styles.separator,
           }}
