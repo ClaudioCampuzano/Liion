@@ -3,7 +3,6 @@ import { StyleSheet, View } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
-import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
 
@@ -14,8 +13,7 @@ import "moment/locale/es";
 
 const SearchStepOne = ({ navigation }) => {
   const [searchValues, setSearchValues] = useState({
-    origin: null,
-    destination: null,
+    addresses: null,
     date: moment("00/00/0000", "DD/MM/YYYY"),
     time: moment("00/00/0000", "DD/MM/YYYY"),
   });
@@ -27,11 +25,11 @@ const SearchStepOne = ({ navigation }) => {
     errorTime: null,
   });
 
-  /*   useEffect(() => {
+/*      useEffect(() => {
     console.log("---------------searchValues---------------")
     console.log(searchValues);
     console.log("------------------------------------------")
-  }, [searchValues]); */
+  }, [searchValues]);  */
 
   const changeValuesHandler = (field, value) => {
     setSearchValues({ ...searchValues, [field]: value });
@@ -83,7 +81,7 @@ const SearchStepOne = ({ navigation }) => {
           labelO="Ingresa tu origen"
           labelD="Ingresa tu destino"
           onDataChange={(value) => {
-            console.log(value);
+            changeValuesHandler("addresses", value);
           }}
         />
       </View>

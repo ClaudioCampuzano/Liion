@@ -20,7 +20,6 @@ const InputLocation = (props) => {
 
   useEffect(() => {
     if (origin && destination) {
-      console.log({ origin, destination });
       props.onDataChange({ origin, destination });
     }
   }, [origin, destination]);

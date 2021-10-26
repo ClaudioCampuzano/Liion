@@ -35,6 +35,8 @@ const InputDateTime = (props) => {
   const focusAnim = useRef(new Animated.Value(0)).current;
   const [date, setDate] = useState(defaultDate);
 
+  const [showLabel, SetShowLabel] = useState(false);
+
   const [limits, setLimits] = useState({
     maximumDate: new Date(
       moment().subtract(maximum, "days").format("YYYY-MM-DD")
@@ -59,9 +61,12 @@ const InputDateTime = (props) => {
   const onChange = (e, selectedDate) => {
     setIsFocused(false);
     if (selectedDate) {
+      SetShowLabel(true);
       const currentDate = selectedDate || date;
       setDate(moment(currentDate));
       props.onDataChange(moment(currentDate));
+    }else{
+      SetShowLabel(false);
     }
   };
 
@@ -74,19 +79,20 @@ const InputDateTime = (props) => {
             {
               borderColor: colorText,
               height: hp("8.4%"),
+              backgroundColor:'yellow',
+              
             },
           ]}
           {...restOfProps}
         >
-          {mode === 'date' && date != defaultDate
-            ? date.utc().format("DD/MM/YYYY")
-            : date.format("HH:mm")}
+          {showLabel && (mode === 'date' ? date.utc().format("DD/MM/YYYY")
+            : date.format("HH:mm"))}
         </Text>
       </TouchableWithoutFeedback>
 
       {isFocused && (
         <DateTimePicker
-          style={{ position: "absolute" }}
+          style={{  }}
           value={new Date(date)}
           mode={mode}
           locale="es-ES"
@@ -130,6 +136,7 @@ const InputDateTime = (props) => {
               styles.label,
               {
                 color,
+                position: "absolute"
               },
             ]}
           >
