@@ -30,7 +30,7 @@ const SearchStepOne = ({ navigation }) => {
 
   const checkValidator = () => {
     if (searchValues.addresses && searchValues.date && searchValues.time)
-      navigation.navigate("SeachStepTwo");
+      navigation.navigate("SeachStepTwo", searchValues);
     else setModalVisible(true);
   };
   return (
@@ -42,7 +42,7 @@ const SearchStepOne = ({ navigation }) => {
         }}
       >
         <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-          Faltan datos para continuar Liioner
+          Faltan datos para la busqueda Liioner
         </ModalPopUp>
         <View
           style={{
