@@ -161,7 +161,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
   label: {
-    fontFamily: "Gotham-SSm-Bold",
+    justifyContent: 'center',
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
   },
 });

@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
   label: {
-    fontFamily: "Gotham-SSm-Bold",
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
   },
   error: {

@@ -12,6 +12,9 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import moment from "moment";
 import "moment/locale/es";
 
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Constants from "expo-constants";
+
 const SearchStepOne = ({ navigation }) => {
   const [date, setDate] = useState(moment("00/00/0000", "DD/MM/YYYY"));
   const [errorFecha, setErrorFecha] = useState(null);
@@ -30,11 +33,11 @@ const SearchStepOne = ({ navigation }) => {
     errorTime: null,
   });
 
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log("---------------searchValues---------------")
     console.log(searchValues);
     console.log("------------------------------------------")
-  }, [searchValues]);
+  }, [searchValues]); */
 
   const changeValuesHandler = (field, value) => {
     setSearchValues({ ...searchValues, [field]: value });
@@ -51,35 +54,45 @@ const SearchStepOne = ({ navigation }) => {
       <View
         style={{
           height: hp("78%"),
+          flexDirection: "column",
         }}
       >
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <InputDateTime
+            style={styles.inputDateTime}
+            onDataChange={(value) => {
+              changeValuesHandler("date", value);
+            }}
+            mode="date"
+            label="Fecha de viaje"
+            maximum="-180"
+            minimum="-1"
+          />
+          <InputDateTime
+            style={styles.inputDateTimeRight}
+            onDataChange={(value) => {
+              changeValuesHandler("time", value);
+            }}
+            mode="time"
+            label="Hora de llegada"
+            maximum="-180"
+            minimum="-1"
+          />
+        </View>
+
         <InputLocation
           style={styles.inputLocation}
           labelO="Ingresa tu origen"
           labelD="Ingresa tu destino"
-          value0={searchValues["origin"]}
-          valueD={searchValues["destination"]}
-        />
-        <InputDateTime
-          style={styles.inputDateTime}
           onDataChange={(value) => {
-            changeValuesHandler("date", value);
+            //console.log(value)
           }}
-          mode="date"
-          label="Fecha de viaje"
-          maximum="-180"
-          minimum="-1"
         />
-        <InputDateTime
-          style={styles.inputDateTime}
-          onDataChange={(value) => {
-            changeValuesHandler("time", value);
-          }}
-          mode="time"
-          label="Hora de llegada"
-          maximum="-180"
-          minimum="-1"
-        />
+        
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
@@ -107,26 +120,19 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   inputLocation: {
-    marginTop: hp("25%"),
+    marginTop: hp("1.8%"),
     width: wp("78.6%"),
-    height: hp("15%"),
     alignSelf: "center",
   },
   inputDateTime: {
-    marginTop: hp("1.8%"),
-    width: wp("78.6%"),
-    alignSelf: "center",
-  },
-  inputDateTime2: {
-    marginTop: hp("1.8%"),
-    width: wp("78.6%"),
-    alignSelf: "center",
-    backgroundColor: "yellow",
-  },
-  inputLocation: {
     marginTop: hp("25%"),
-    width: wp("78.6%"),
-    height: hp("15%"),
+    width: wp("38%"),
+    alignSelf: "center",
+  },
+  inputDateTimeRight: {
+    marginLeft: wp('2.6'),
+    marginTop: hp("25%"),
+    width: wp("38%"),
     alignSelf: "center",
   },
 });

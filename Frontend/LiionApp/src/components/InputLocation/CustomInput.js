@@ -16,8 +16,17 @@ import Constants from "expo-constants";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 
 const CustomInput = (props) => {
-  const { label, value, secureTextEntry, onBlur, onFocus, ...restOfProps } =
-    props;
+  const {
+    label,
+    value,
+    secureTextEntry,
+    style,
+    onBlur,
+    onFocus,
+    ...restOfProps
+  } = props;
+
+  const [location, setLocation] = useState("");
 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
@@ -25,101 +34,37 @@ const CustomInput = (props) => {
 
   useEffect(() => {
     Animated.timing(focusAnim, {
-      toValue: isFocused || value ? 1 : 0,
+      toValue: isFocused || location ? 1 : 0,
       duration: 150,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: true,
     }).start();
-  }, [focusAnim, isFocused, value]);
+  }, [focusAnim, isFocused, location]);
 
   let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
+  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
 
   return (
-    <View>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            borderColor: color,
-          },
-        ]}
-        ref={inputRef}
-        {...restOfProps}
-        value={value}
-        secureTextEntry={secureTextEntry}
-        onBlur={(event) => {
-          setIsFocused(false);
-          onBlur?.(event);
-        }}
-        onFocus={(event) => {
-          setIsFocused(true);
-          onFocus?.(event);
-        }}
-      /> 
-{/*       <GooglePlacesAutocomplete
-        style={{position: 'absolute' }}
+    <View style={style}>
+      <GooglePlacesAutocomplete
+        listViewDisplayed="auto"
         query={{
           key: Constants.manifest.extra.firebase.apiKey,
           language: "es",
           components: "country:cl",
         }}
         fetchDetails={true}
-        nearbyPlacesAPI="GooglePlacesSearch"
-        debounce={400}
-        textInputProps={{
-          onFocus: (event) => {
-            setIsFocused(true);
-            onFocus?.(event);
-          },
-          onBlur: (event) => {
-            setIsFocused(false);
-            onBlur?.(event);
-          },
-          ref: { inputRef },
+        onPress={(data, details = null) => {
+          // 'details' is provided when fetchDetails = true
+          console.log(data, details);
         }}
+        placeholder={label}
+        minLength={4}
+        enablePoweredByContainer={false}
+        disableScroll={true}
+        nearbyPlacesAPI="none"
+        debounce={400}
       />
- */}
-
-      <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
-        <Animated.View
-          style={[
-            styles.labelContainer,
-            {
-              transform: [
-                {
-                  scale: focusAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [1, 0.75],
-                  }),
-                },
-                {
-                  translateY: focusAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [hp("0.8"), -hp("2")],
-                  }),
-                },
-                {
-                  translateX: focusAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [wp("1"), 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-        >
-          <Text
-            style={[
-              styles.label,
-              {
-                color,
-              },
-            ]}
-          >
-            {label}
-          </Text>
-        </Animated.View>
-      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -135,10 +80,11 @@ const styles = StyleSheet.create({
     color: COLORS.TURKEY,
   },
   labelContainer: {
-    position: "absolute",
+    paddingTop: hp("3"),
     backgroundColor: COLORS.WHITE,
   },
   label: {
+    backgroundColor: "yellow",
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("1.8%"),
   },
