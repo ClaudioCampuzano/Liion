@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
-import InputLocation from "../../components/InputLocation/InputLocation";
+import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
 
-import { COLORS, hp, wp } from "../../constants/styleThemes";
+import { hp, wp } from "../../constants/styleThemes";
 
 import moment from "moment";
 import "moment/locale/es";
 
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Constants from "expo-constants";
-
 const SearchStepOne = ({ navigation }) => {
-  const [date, setDate] = useState(moment("00/00/0000", "DD/MM/YYYY"));
-  const [errorFecha, setErrorFecha] = useState(null);
-
   const [searchValues, setSearchValues] = useState({
-    origin: "",
-    destination: "",
+    origin: null,
+    destination: null,
     date: moment("00/00/0000", "DD/MM/YYYY"),
     time: moment("00/00/0000", "DD/MM/YYYY"),
   });
@@ -89,10 +83,9 @@ const SearchStepOne = ({ navigation }) => {
           labelO="Ingresa tu origen"
           labelD="Ingresa tu destino"
           onDataChange={(value) => {
-            //console.log(value)
+            console.log(value);
           }}
         />
-        
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
@@ -125,13 +118,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   inputDateTime: {
-    marginTop: hp("25%"),
+    marginTop: hp("10%"),
     width: wp("38%"),
     alignSelf: "center",
   },
   inputDateTimeRight: {
-    marginLeft: wp('2.6'),
-    marginTop: hp("25%"),
+    marginLeft: wp("2.6"),
+    marginTop: hp("10%"),
     width: wp("38%"),
     alignSelf: "center",
   },

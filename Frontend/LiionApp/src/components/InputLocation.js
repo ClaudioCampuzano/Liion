@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, SafeAreaView } from "react-native";
-import { COLORS, hp, wp } from "../../constants/styleThemes";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 import { FontAwesome } from "@expo/vector-icons";
-import PlaceRow from "../PlaceRow";
+import PlaceRow from "./PlaceRow";
 
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import Constants from "expo-constants";
@@ -14,12 +14,13 @@ const InputLocation = (props) => {
 
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const errorMsg = useRef(null);
 
   Location.installWebGeolocationPolyfill();
 
   useEffect(() => {
-    if (origin != "" && destination != "") {
+    if (origin && destination) {
+      console.log({ origin, destination });
       props.onDataChange({ origin, destination });
     }
   }, [origin, destination]);
@@ -28,10 +29,9 @@ const InputLocation = (props) => {
     (async () => {
       var { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        errorMsg.current = "Permission to access location was denied";
         return;
       }
-      var location = await Location.getCurrentPositionAsync({});
     })();
   }, []);
 
@@ -44,7 +44,7 @@ const InputLocation = (props) => {
         <GooglePlacesAutocomplete
           placeholder={labelO}
           onPress={(data, details = null) => {
-            console.log({
+            setOrigin({
               vicinity: details.vicinity,
               formatted_address: details.formatted_address,
               location: details.geometry.location,
@@ -75,8 +75,7 @@ const InputLocation = (props) => {
         <GooglePlacesAutocomplete
           placeholder={labelD}
           onPress={(data, details = null) => {
-            console.log({data,details})
-            console.log({
+            setDestination({
               vicinity: details.vicinity,
               formatted_address: details.formatted_address,
               location: details.geometry.location,
@@ -146,11 +145,11 @@ InputLocation.defaultProps = {
 
 export default InputLocation;
 const styles = StyleSheet.create({
-  figure1: { top: 20, left: 15, position: "absolute" },
-  figure2: { top: 45, left: 21, position: "absolute" },
-  figure3: { top: 55, left: 21, position: "absolute" },
-  figure4: { top: 65, left: 21, position: "absolute" },
-  figure5: { top: 75, left: 15, position: "absolute" },
+  figure1: { top: hp('2.4'), left: wp('3.5'), position: "absolute" },
+  figure2: { top: hp('5.4'), left: wp('5'), position: "absolute" },
+  figure3: { top: hp('6.6'), left: wp('5'), position: "absolute" },
+  figure4: { top: hp('7.8'), left: wp('5'), position: "absolute" },
+  figure5: { top: hp('9'), left: wp('3.5'), position: "absolute" },
 
   firstView: {
     borderWidth: 1,
@@ -164,14 +163,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomStartRadius: 5,
     borderBottomEndRadius: 20,
-    paddingBottom: 15,
+    paddingBottom: hp('1.8'),
   },
 
   autocompleteContainer: {
     position: "absolute",
     top: 0,
-    left: 10,
-    right: 15,
+    left: wp(2.4),
+    right: wp(3.5),
   },
   separator: {
     backgroundColor: COLORS.WHITE,
@@ -181,20 +180,19 @@ const styles = StyleSheet.create({
     height: 1,
   },
   textInput: {
-    padding: 10,
-    marginVertical: 5,
-    marginLeft: 30,
+    paddingTop: hp(1.8),
+    marginLeft: wp(7.1),
     fontFamily: "Gotham-SSm-Medium",
     color: COLORS.TURKEY,
     fontSize: hp("1.8%"),
   },
   listView: {
     position: "absolute",
-    top: 115,
+    top: hp('13.8'),
   },
   listViewSub: {
     position: "absolute",
-    top: 60,
+    top: hp(7.2),
   },
   container: {
     padding: 0,
