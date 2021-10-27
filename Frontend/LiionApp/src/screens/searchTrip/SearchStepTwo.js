@@ -1,10 +1,12 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-const SearchStepTwo = () => {
+const SearchStepTwo = ({ route, navigation }) => {
+    console.log(route.params.searchValues)
+    
     return (
         <View>
-            <Text>etapa2</Text>
+            <Text></Text>
         </View>
     )
 }

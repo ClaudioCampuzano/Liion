@@ -9,7 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-
+import firebase from "firebase";
 import {
   Ionicons,
   MaterialIcons,
@@ -46,10 +46,19 @@ const DriverSignupOne = () => {
     { name: "Cédula de Identidad", state: false },
     { name: "Hoja de vida del Conductor", state: false },
   ]);
+
+  //recarga local
+  const [user, setUser] = useState(() => {
+    const user = firebase.auth().currentUser;
+    return user;
+  });
+  const [localLoad, setLocalLoad] = useState(false);
+  const [localTrigger, setLocalTrigger] = useState(false);
+
   const [ready, setReady] = useState(false);
 
   const defineColor = (docState) => {
-    if (docState) return COLORS.CHECK_GREEN;
+    if (docState) return COLORS.TURKEY;
     else return COLORS.WARN_RED;
   };
   const defineIcon = (docState) => {
@@ -64,8 +73,8 @@ const DriverSignupOne = () => {
   };
 
   const defineButtonText = (flag) => {
-    if (flag) return "Registrar Conductor";
-    else return "Aún Faltan Datos";
+    if (flag) return "Registrar conductor";
+    else return "Aún faltan datos";
   };
 
   const toType = function (obj) {
@@ -77,7 +86,6 @@ const DriverSignupOne = () => {
 
   const checkDriverVar = (obj) => {
     let type = toType(obj);
-    //console.log(obj, type)
     if (type === "string") return obj === "true";
     else if (type === "boolean") return obj === true;
     else return false;
@@ -94,13 +102,14 @@ const DriverSignupOne = () => {
     let document = [...files];
     //console.log(isDriver, typeof isDriver === 'string' || isDriver instanceof String)
     ///console.log(isDriver, isDriver === "true", isDriver === true)
-
-    if (checkDriverVar(true)) {
+    console.log(ready, checkDriverVar(ready));
+    if (checkDriverVar(isDriver)) {
       document.forEach((x) => (x.state = true));
       setFiles(document);
-    }
-
-    //console.log(getState2.accesstoken);
+    } //else {
+    //document.forEach((x) => (x.state = false));
+    //setFiles(document);
+    //}
   }, [getState2]);
 
   const updateDriverHandle = async (flag) => {
@@ -108,19 +117,32 @@ const DriverSignupOne = () => {
       uid: uid,
       atoken: accesstoken,
     });
-    if (status) await updateReloadTrigger(!reloadTrigger);
+    setLocalTrigger(!reloadTrigger);
   };
+
+  //recarga local
+  useEffect(() => {
+    (async () => {
+      setLocalLoad(false);
+      const reload = await reLoadUserInfo(user);
+      const loadfirestore = await loadUserFirestoreData(user);
+      setLocalLoad(true);
+      if (reload && loadfirestore) {
+        console.log("datos cargados exitosamente load & reload");
+      }
+    })();
+  }, [localTrigger]);
 
   return (
     <Layout>
       <View style={[styles.container]}>
-        <Text style={styles.textDriversignin}>Registro de Conductor</Text>
-        <Text style={styles.tesxtSubDriversignin}>
-          Para habilitarte como condctor, sube los siguiente documentos:{" "}
+        <Text style={styles.text_titulo}>Registro de Conductor</Text>
+        <Text style={styles.text_subTitulo}>
+          Para habilitarte como conductor, sube los siguiente documentos:
         </Text>
       </View>
 
-      {isLoadedDATA ? (
+      {localLoad ? (
         <>
           <View style={[styles.driverfilesView]}>
             {files.map((document, index) => (
@@ -136,7 +158,7 @@ const DriverSignupOne = () => {
               />
             ))}
           </View>
-          {!userFirestoreData.isDriver ? (
+          {!checkDriverVar(userFirestoreData.isDriver) ? (
             <View style={[styles.buttonView]}>
               <ButtonLiionDisable
                 colordisable={defineColor(ready)}
@@ -147,14 +169,7 @@ const DriverSignupOne = () => {
               />
             </View>
           ) : (
-            <Text style={styles.textDriversigninReady}>
-              Ya estás Listo!
-              <Feather
-                name={"check-circle"}
-                size={hp("5")}
-                color={COLORS.CHECK_GREEN}
-              />
-            </Text>
+            <Text style={styles.textDriversigninReady}>Ya estás Listo!</Text>
           )}
         </>
       ) : (
@@ -172,27 +187,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
   },
-  logo: {
-    height: hp("35%"),
-  },
-  textDriversignin: {
+  text_titulo: {
     fontFamily: "Gotham-SSm-Bold",
-    fontSize: hp("4%"),
+    fontSize: hp("3%"),
     color: COLORS.TURKEY,
     paddingTop: hp("5%"),
+    textAlign: "center",
   },
   textDriversigninReady: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("4%"),
-    color: COLORS.TURKEY,
+    color: COLORS.TURKEY_CLEAR,
     paddingBottom: hp("7%"),
   },
-  tesxtSubDriversignin: {
-    fontFamily: "Gotham-SSm-Book",
+  text_subTitulo: {
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("2.5%"),
-    color: COLORS.TURKEY,
-    paddingTop: hp("9%"),
+    color: COLORS.TURKEY_CLEAR,
+    paddingTop: hp("6%"),
     paddingHorizontal: hp("4%"),
+    textAlign: "center",
   },
   button: {
     width: wp("78.6%"),
@@ -201,7 +215,7 @@ const styles = StyleSheet.create({
   },
   driverfiles: {
     width: wp("78.6%"),
-    height: hp("7%"),
+    height: hp("6%"),
     margin: hp("0.6%"),
   },
   buttonView: {

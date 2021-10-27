@@ -37,16 +37,20 @@ const InputLiion = (props) => {
   }, [focusAnim, isFocused, value]);
 
   let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
+  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
+
   if (errorText) {
     color = "#B00020";
+    colorText = "#B00020";
   }
+
   return (
     <View style={style}>
       <TextInput
         style={[
           styles.input,
           {
-            borderColor: color,
+            borderColor: colorText,
           },
         ]}
         ref={inputRef}
@@ -124,14 +128,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
   label: {
-    fontFamily: "Gotham-SSm-Bold",
+    fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
   },
   error: {
     marginTop: hp("0.5%"),
     marginLeft: wp("2.3%"),
     fontSize: hp("1.4%"),
-    color: "#B00020",
+    color: COLORS.WARN_RED,
     fontFamily: "Gotham-SSm-Medium",
   },
 });

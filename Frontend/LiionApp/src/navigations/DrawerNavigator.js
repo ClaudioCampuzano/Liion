@@ -17,7 +17,7 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ drawerStyle: styles.drawerStyle }}
-      initialRouteName="DriverSigninStack"
+      initialRouteName="SearchStack"
     >
       <Drawer.Screen
         name="SearchStack"
@@ -59,6 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
     borderBottomRightRadius: 40,
     borderTopRightRadius: 40,
-    width: wp("78"),
+    width: wp("76"),
   },
 });

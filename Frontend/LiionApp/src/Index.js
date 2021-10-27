@@ -37,44 +37,50 @@ const Index = () => {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
-      setIsLoaded(false);
       setUser(firebaseUser);
-      firebaseUser ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      if (firebaseUser) {
+        setIsAuthenticated(true)
+        const fetchData = async () => {
+          await reLoadUserInfo(user);
+          await loadUserFirestoreData(user);
+          setIsLoadedDATA(true);
+        }
+        fetchData();
+      }
+      else {
+        setIsAuthenticated(false)
+      }
       setIsLoaded(true);
     });
   }, [isLoggedIn]);
 
   useEffect(() => {
     if (user && !isLoggedIn) {
-      (async () => {
-        setIsLoaded(false);
-        const reload = await reLoadUserInfo(user);
-        const loadfirestore = await loadUserFirestoreData(user);
-        setIsLoaded(true);
-        if (reload && loadfirestore) {
-          console.log("datos cargados exitosamente");
-          setIsLoadedDATA(true);
-        }
-      })();
-    }
+      const fetchData = async () => {
+        await reLoadUserInfo(user);
+        await loadUserFirestoreData(user);
+        setIsLoadedDATA(true);
+      }
+      fetchData();
+    } 
   }, [user]);
 
-  useEffect(() => {
+/*      useEffect(() => {
     (async () => {
       setIsLoaded(false);
       const reload = await reLoadUserInfo(user);
       const loadfirestore = await loadUserFirestoreData(user);
+      setIsLoadedDATA(true);
       setIsLoaded(true);
       if (reload && loadfirestore) {
         console.log("datos cargados exitosamente load & reload");
-        setIsLoadedDATA(true);
       }
     })();
-  }, [reloadTrigger]);
+  }, [reloadTrigger]);  */
 
   return (
     <>
-      {isLoaded && fontsLoaded && isLoadedDATA ? (
+      {isLoaded && fontsLoaded && (!user || isLoadedDATA)  ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
