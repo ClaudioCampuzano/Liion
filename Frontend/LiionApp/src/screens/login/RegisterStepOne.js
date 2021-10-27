@@ -114,6 +114,7 @@ const RegisterStepOne = ({ navigation }) => {
             />
             <InputDateTime
               style={styles.input}
+              errorText={errorFecha}
               onDataChange={(value) => {setValueFecha(value)}}
               label="Fecha de nacimiento"
               mode="date"

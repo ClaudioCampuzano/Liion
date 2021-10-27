@@ -10,7 +10,7 @@ import Constants from "expo-constants";
 import * as Location from "expo-location";
 
 const InputLocation = (props) => {
-  const { style, labelO, labelD, onBlur, onFocus, ...restOfProps } = props;
+  const { style, labelO, labelD, errorText, onFocus, ...restOfProps } = props;
 
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
@@ -34,14 +34,24 @@ const InputLocation = (props) => {
     })();
   }, []);
 
+  let color = COLORS.LEAD;
+  let labelOrigin = labelO;
+  let labelDestination = labelD;
+
+  if (errorText) {
+    color = COLORS.WARN_RED;
+    labelOrigin += "*";
+    labelDestination += "*";
+  }
+
   return (
     <SafeAreaView>
       <View style={[style, styles.container]}>
-        <View style={styles.firstView}>
+        <View style={[styles.firstView, errorText && { borderColor: color }]}>
           <Text></Text>
         </View>
         <GooglePlacesAutocomplete
-          placeholder={labelO}
+          placeholder={labelOrigin}
           onPress={(data, details = null) => {
             setOrigin({
               vicinity: details.vicinity,
@@ -54,12 +64,18 @@ const InputLocation = (props) => {
           currentLocation={true}
           currentLocationLabel="Locacion actual"
           styles={{
-            textInput: { ...styles.textInput, ...styles.barSeparator },
+            textInput: [
+              { ...styles.textInput, ...styles.barSeparator },
+              errorText && { borderBottomColor: color },
+            ],
             container: { ...styles.autocompleteContainer, top: 0 },
             listView: styles.listView,
             separator: styles.separator,
           }}
-          textInputProps={{ placeholderTextColor: COLORS.LEAD }}
+          textInputProps={{
+            placeholderTextColor: color,
+            onFocus: (event) => onFocus?.(event),
+          }}
           fetchDetails
           minLength={4}
           query={{
@@ -72,7 +88,7 @@ const InputLocation = (props) => {
           renderDescription={(data) => data.description || data.vicinity}
         />
         <GooglePlacesAutocomplete
-          placeholder={labelD}
+          placeholder={labelDestination}
           onPress={(data, details = null) => {
             setDestination({
               vicinity: details.vicinity,
@@ -83,7 +99,10 @@ const InputLocation = (props) => {
           enablePoweredByContainer={false}
           suppressDefaultStyles
           minLength={4}
-          textInputProps={{ placeholderTextColor: COLORS.LEAD }}
+          textInputProps={{
+            placeholderTextColor: color,
+            onFocus: (event) => onFocus?.(event),
+          }}
           styles={{
             textInput: styles.textInput,
             listView: styles.listViewSub,
@@ -133,6 +152,7 @@ const InputLocation = (props) => {
           color={COLORS.TURKEY}
           style={styles.figure5}
         />
+        {!!errorText && <Text style={styles.error}>{errorText}</Text>}
       </View>
     </SafeAreaView>
   );
@@ -144,11 +164,11 @@ InputLocation.defaultProps = {
 
 export default InputLocation;
 const styles = StyleSheet.create({
-  figure1: { top: hp('2.4'), left: wp('3.5'), position: "absolute" },
-  figure2: { top: hp('5.4'), left: wp('5'), position: "absolute" },
-  figure3: { top: hp('6.6'), left: wp('5'), position: "absolute" },
-  figure4: { top: hp('7.8'), left: wp('5'), position: "absolute" },
-  figure5: { top: hp('9'), left: wp('3.5'), position: "absolute" },
+  figure1: { top: hp("2.4"), left: wp("3.5"), position: "absolute" },
+  figure2: { top: hp("5.4"), left: wp("5"), position: "absolute" },
+  figure3: { top: hp("6.6"), left: wp("5"), position: "absolute" },
+  figure4: { top: hp("7.8"), left: wp("5"), position: "absolute" },
+  figure5: { top: hp("9"), left: wp("3.5"), position: "absolute" },
 
   firstView: {
     borderWidth: 1,
@@ -162,7 +182,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomStartRadius: 5,
     borderBottomEndRadius: 20,
-    paddingBottom: hp('1.8'),
+    paddingBottom: hp("1.8"),
   },
 
   autocompleteContainer: {
@@ -187,7 +207,7 @@ const styles = StyleSheet.create({
   },
   listView: {
     position: "absolute",
-    top: hp('13.8'),
+    top: hp("14"),
   },
   listViewSub: {
     position: "absolute",
@@ -196,5 +216,12 @@ const styles = StyleSheet.create({
   container: {
     padding: 0,
     height: hp("40%"),
+  },
+  error: {
+    marginTop: hp("0.5%"),
+    marginLeft: wp("2.3%"),
+    fontSize: hp("1.4%"),
+    color: COLORS.WARN_RED,
+    fontFamily: "Gotham-SSm-Medium",
   },
 });

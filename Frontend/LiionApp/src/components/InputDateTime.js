@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { COLORS, hp } from "../constants/styleThemes";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
 import "moment/locale/es";
@@ -21,6 +21,7 @@ const InputDateTime = (props) => {
     label,
     style,
     onBlur,
+    errorText,
     onFocus,
     maximum,
     minimum,
@@ -28,12 +29,12 @@ const InputDateTime = (props) => {
     ...restOfProps
   } = props;
 
-  const defaultDate = new moment();
+  const defaultDate = useRef(moment());
 
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
   const focusAnim = useRef(new Animated.Value(0)).current;
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState(defaultDate.current);
 
   const [showLabel, SetShowLabel] = useState(false);
 
@@ -48,15 +49,12 @@ const InputDateTime = (props) => {
 
   useEffect(() => {
     Animated.timing(focusAnim, {
-      toValue: isFocused || date != defaultDate ? 1 : 0,
+      toValue: isFocused || date != defaultDate.current ? 1 : 0,
       duration: 150,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: true,
     }).start();
   }, [focusAnim, isFocused, date]);
-
-  let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
-  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
 
   const onChange = (e, selectedDate) => {
     setIsFocused(false);
@@ -66,9 +64,20 @@ const InputDateTime = (props) => {
       setDate(moment(currentDate));
       props.onDataChange(moment(currentDate));
     } else {
+      console.log("no valido");
+      console.log(date.local().format("DD/MM/YYYY HH:mm"));
+      console.log(defaultDate.current.local().format("DD/MM/YYYY HH:mm"));
       SetShowLabel(false);
     }
   };
+
+  let color = isFocused ? COLORS.TURKEY : COLORS.LEAD;
+  let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
+
+  if (errorText) {
+    color = COLORS.WARN_RED;
+    colorText = COLORS.WARN_RED;
+  }
 
   return (
     <View style={style}>
@@ -131,7 +140,7 @@ const InputDateTime = (props) => {
             },
           ]}
         >
-          {showLabel || isFocused  ? (
+          {showLabel ? (
             <Text
               style={[
                 styles.label,
@@ -141,6 +150,7 @@ const InputDateTime = (props) => {
               ]}
             >
               {label}
+              {errorText ? "*" : ""}
             </Text>
           ) : (
             <Text
@@ -150,13 +160,16 @@ const InputDateTime = (props) => {
                   color,
                   position: "absolute",
                 },
+                isFocused && { position: "relative" },
               ]}
             >
               {label}
+              {errorText ? "*" : ""}
             </Text>
           )}
         </Animated.View>
       </TouchableWithoutFeedback>
+      {!!errorText && <Text style={styles.error}>{errorText}</Text>}
     </View>
   );
 };
@@ -183,5 +196,12 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
+  },
+  error: {
+    marginTop: hp("0.5%"),
+    marginLeft: wp("2.3%"),
+    fontSize: hp("1.4%"),
+    color: COLORS.WARN_RED,
+    fontFamily: "Gotham-SSm-Medium",
   },
 });

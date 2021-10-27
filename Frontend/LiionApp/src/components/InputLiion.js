@@ -40,8 +40,8 @@ const InputLiion = (props) => {
   let colorText = isFocused ? COLORS.TURKEY : COLORS.BORDER_COLOR;
 
   if (errorText) {
-    color = "#B00020";
-    colorText = "#B00020";
+    color = COLORS.WARN_RED;
+    colorText = COLORS.WARN_RED;
   }
 
   return (
