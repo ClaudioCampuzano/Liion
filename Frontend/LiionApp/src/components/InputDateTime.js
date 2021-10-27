@@ -65,7 +65,7 @@ const InputDateTime = (props) => {
       const currentDate = selectedDate || date;
       setDate(moment(currentDate));
       props.onDataChange(moment(currentDate));
-    }else{
+    } else {
       SetShowLabel(false);
     }
   };
@@ -78,19 +78,21 @@ const InputDateTime = (props) => {
             styles.input,
             {
               borderColor: colorText,
-              height: hp("8.4%"),              
+              height: hp("8.4%"),
             },
           ]}
           {...restOfProps}
         >
-          {showLabel && (mode === 'date' ? date.local().format("DD/MM/YYYY")
-            : date.local().format("HH:mm"))}
+          {showLabel &&
+            (mode === "date"
+              ? date.local().format("DD/MM/YYYY")
+              : date.local().format("HH:mm"))}
         </Text>
       </TouchableWithoutFeedback>
 
       {isFocused && (
         <DateTimePicker
-          style={{  }}
+          style={{}}
           value={new Date(date)}
           mode={mode}
           locale="es-ES"
@@ -122,24 +124,37 @@ const InputDateTime = (props) => {
                 {
                   translateX: focusAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [16, 0],
+                    outputRange: [15, -18],
                   }),
                 },
               ],
             },
           ]}
         >
-          <Text
-            style={[
-              styles.label,
-              {
-                color,
-                position: "absolute"
-              },
-            ]}
-          >
-            {label}
-          </Text>
+          {showLabel || isFocused  ? (
+            <Text
+              style={[
+                styles.label,
+                {
+                  color,
+                },
+              ]}
+            >
+              {label}
+            </Text>
+          ) : (
+            <Text
+              style={[
+                styles.label,
+                {
+                  color,
+                  position: "absolute",
+                },
+              ]}
+            >
+              {label}
+            </Text>
+          )}
         </Animated.View>
       </TouchableWithoutFeedback>
     </View>
@@ -166,7 +181,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE,
   },
   label: {
-    justifyContent: 'center',
     fontFamily: "Gotham-SSm-Medium",
     fontSize: hp("1.8%"),
   },
