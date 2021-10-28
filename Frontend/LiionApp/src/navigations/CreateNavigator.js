@@ -5,6 +5,10 @@ import { Entypo } from "@expo/vector-icons";
 
 import CreateStepOne from "../screens/createTrip/CreateStepOne";
 import CreateStepTwo from "../screens/createTrip/CreateStepTwo";
+import CreateStepThree from "../screens/createTrip/CreateStepThree";
+import CreateStepFour from "../screens/createTrip/CreateStepFour";
+import CreateStepFive from "../screens/createTrip/CreateStepFive";
+import SucessScreen from "../screens/SucessScreen";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
@@ -55,6 +59,34 @@ const CreateNavigator = () => {
       <CreateStack.Screen
         name="CreateStepTwo"
         component={CreateStepTwo}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <CreateStack.Screen
+        name="CreateStepThree"
+        component={CreateStepThree}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <CreateStack.Screen
+        name="CreateStepFour"
+        component={CreateStepFour}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <CreateStack.Screen
+        name="CreateStepFive"
+        component={CreateStepFive}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <CreateStack.Screen
+        name="SucessScreen"
+        component={SucessScreen}
         options={({ navigation }) => ({
           headerShown: false,
         })}

@@ -15,10 +15,11 @@ import MapViewCustom from "../../components/MapViewCustom";
 
 import { numberWithSep } from "../../utils/utils";
 
-const CreateStepTwo = ({ navigation }) => {
+const CreateStepTwo = ({ navigation, route }) => {
+  //console.log(route.params.createValues)
   const { userFirestoreData, getState2 } = useContext(GlobalContext);
 
-  const [searchValues, setSearchValues] = useState({
+  const [createValues, setSearchValues] = useState({
     origin: "Casablanca, Valparaíso",
     destination: "Chillán, Ñuble",
     date: "October 21st 2021",
@@ -37,16 +38,13 @@ const CreateStepTwo = ({ navigation }) => {
 
   const [focusEmailInput, setfocusPriceInput] = useState(false);
 
-  useEffect(()=>{
-    if (focusEmailInput) setErrorPrice(false)
-
-  },[focusEmailInput])
+  useEffect(() => {
+    if (focusEmailInput) setErrorPrice(false);
+  }, [focusEmailInput]);
 
   const ButtonGo = () => {
-    if (price > 0 && nOfSeats > 0)
-      console.log("ButtonGo");
-    else setErrorPrice(' ')
-    
+    if (price > 0 && nOfSeats > 0) navigation.navigate("CreateStepThree");
+    else setErrorPrice(" ");
   };
 
   useEffect(() => {
@@ -85,16 +83,16 @@ const CreateStepTwo = ({ navigation }) => {
         <View style={styles.bottomPanel}>
           <View style={styles.InfoView}>
             <Text style={styles.titleStyle}>
-              {searchValues["date"] + " | " + searchValues["timeStart"]}
+              {createValues["date"] + " | " + createValues["timeStart"]}
             </Text>
 
             <View style={styles.bar2}>
               <ShowTravel
                 style={styles.inputLocation}
-                timeStart={searchValues["timeStart"]}
-                timeEnd={searchValues["timeEnd"]}
-                labelO={searchValues["origin"]}
-                labelD={searchValues["destination"]}
+                timeStart={createValues["timeStart"]}
+                timeEnd={createValues["timeEnd"]}
+                labelO={createValues["origin"]}
+                labelD={createValues["destination"]}
               />
             </View>
             <View style={styles.textStyle}>
@@ -135,12 +133,12 @@ const CreateStepTwo = ({ navigation }) => {
               <Text style={styles.textPSeats}>Valor por asiento</Text>
               <InputLiion
                 style={styles.input}
-                label=''
+                label=""
                 errorText={errorPrice}
                 //value={price.toString()}
                 secureTextEntry={false}
                 onBlur={() => setfocusPriceInput(false)}
-                onFocus={() => setfocusPriceInput(true)} 
+                onFocus={() => setfocusPriceInput(true)}
                 onChangeText={(price) => NumberFormatter(price)}
                 keyboardType="numeric"
               />

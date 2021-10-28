@@ -5,15 +5,14 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 
-const SearchStepTwo = ({ navigation, route }) => {
+const SearchStepThree = ({ navigation, route }) => {
   const checkValidator = () => {
-    navigation.navigate("SearchStepThree");
+    navigation.navigate("SearchStepFour");
   };
-
   return (
     <Layout>
       <View>
-        <Text>ETAPA DOS</Text>
+        <Text>ETAPA TRES</Text>
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
@@ -26,7 +25,7 @@ const SearchStepTwo = ({ navigation, route }) => {
   );
 };
 
-export default SearchStepTwo;
+export default SearchStepThree;
 
 const styles = StyleSheet.create({
   buttonView: {

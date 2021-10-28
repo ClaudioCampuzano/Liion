@@ -9,7 +9,7 @@ import InputDateTime from "../../components/InputDateTime";
 import { hp, wp } from "../../constants/styleThemes";
 
 const CreateStepOne = ({ navigation }) => {
-  const [searchValues, setSearchValues] = useState({
+  const [createValues, setSearchValues] = useState({
     addresses: null,
     date: null,
     time: null,
@@ -21,7 +21,7 @@ const CreateStepOne = ({ navigation }) => {
   const [focusInputLocation, setfocusInputLocation] = useState(false);
 
   const changeValuesHandler = (field, value) => {
-    setSearchValues({ ...searchValues, [field]: value });
+    setSearchValues({ ...createValues, [field]: value });
   };
   
   useEffect(()=>{
@@ -30,17 +30,17 @@ const CreateStepOne = ({ navigation }) => {
   },[focusInputLocation]);
 
   useEffect(() => {
-    if (searchValues.date) SetErrorDate(null)
-    if (searchValues.time) SetErrorTime(null)
-    if (searchValues.addresses) SetErrorAddresses(null)
-  }, [searchValues]);
+    if (createValues.date) SetErrorDate(null)
+    if (createValues.time) SetErrorTime(null)
+    if (createValues.addresses) SetErrorAddresses(null)
+  }, [createValues]);
 
   const checkValidator = () => {
-    if (!searchValues.date) SetErrorDate('Falta la fecha')
-    if (!searchValues.time) SetErrorTime('Falta la hora')
-    if (!searchValues.addresses) SetErrorAddresses('Falta las direcciones')
-    if (searchValues.addresses && searchValues.date && searchValues.time)
-      navigation.navigate("CreateStepTwo", {searchValues});
+    if (!createValues.date) SetErrorDate('Falta la fecha')
+    if (!createValues.time) SetErrorTime('Falta la hora')
+    if (!createValues.addresses) SetErrorAddresses('Falta las direcciones')
+    if (createValues.addresses && createValues.date && createValues.time)
+      navigation.navigate("CreateStepTwo", {createValues});
   };
   return (
     <Layout>

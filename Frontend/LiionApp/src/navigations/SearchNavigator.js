@@ -5,6 +5,10 @@ import { Entypo, Ionicons } from "@expo/vector-icons";
 
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
+import SearchStepThree from "../screens/searchTrip/SearchStepThree";
+import SearchStepFour from "../screens/searchTrip/SearchStepFour";
+import SucessScreen from "../screens/SucessScreen";
+
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const SearchNavigator = () => {
@@ -73,6 +77,27 @@ const SearchNavigator = () => {
               />
             </TouchableOpacity>
           ),
+        })}
+      />
+      <SearchStack.Screen
+        name="SearchStepThree"
+        component={SearchStepThree}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <SearchStack.Screen
+        name="SearchStepFour"
+        component={SearchStepFour}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <SearchStack.Screen
+        name="SucessScreen"
+        component={SucessScreen}
+        options={({ navigation }) => ({
+          headerShown: false,
         })}
       />
     </SearchStack.Navigator>

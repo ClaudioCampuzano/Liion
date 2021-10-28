@@ -1,19 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import Layout from "../../components/Layout";
-import ButtonLiion from "../../components/ButtonLiion";
-import { COLORS, hp, wp } from "../../constants/styleThemes";
+import Layout from "../components/Layout";
+import ButtonLiion from "../components/ButtonLiion";
+import { COLORS, hp, wp } from "../constants/styleThemes";
 
-const SearchStepTwo = ({ navigation, route }) => {
+const SucessScreen = ({ navigation, route }) => {
   const checkValidator = () => {
-    navigation.navigate("SearchStepThree");
+    navigation.navigate("MyTravelNavigator");
   };
-
   return (
     <Layout>
       <View>
-        <Text>ETAPA DOS</Text>
+        <Text>SucessScreen</Text>
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
@@ -26,7 +25,7 @@ const SearchStepTwo = ({ navigation, route }) => {
   );
 };
 
-export default SearchStepTwo;
+export default SucessScreen;
 
 const styles = StyleSheet.create({
   buttonView: {
