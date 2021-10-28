@@ -11,15 +11,13 @@ const SucessScreen = ({ navigation, route }) => {
   //console.log(route.params.createValues)
   const { titulo, subTitulo, initialRoute } = route.params;
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        const action = e.data.action;
-        e.preventDefault();
-        e.data.action.type == 'POP_TO_TOP' && navigation.dispatch(e.data.action);
-      }),
-    [navigation]
-  );
+  useEffect(() => {
+    navigation.addListener("beforeRemove", (e) => {
+      const action = e.data.action;
+      e.preventDefault();
+      e.data.action.type == "POP_TO_TOP" && navigation.dispatch(e.data.action);
+    });
+  }, [navigation]);
 
   const checkValidator = () => {
     navigation.dispatch(StackActions.popToTop());
