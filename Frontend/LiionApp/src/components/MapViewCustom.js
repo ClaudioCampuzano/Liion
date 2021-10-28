@@ -10,21 +10,10 @@ import * as Location from "expo-location";
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const MapViewCustom = (props) => {
-  const {
-    dimensions,
-    coordinates,
-    mapDirections,
-    showGps,
-    ...restOfProps
-  } = props;
+  const { dimensions, coordinates, mapDirections, showGps, ...restOfProps } =
+    props;
 
   const mapRef = useRef();
-
-  const [ruteInfo, setRuteInfo] = useState({
-    distance: null,
-    duration: null,
-    coordinates: null,
-  });
 
   if (showGps) {
     useEffect(() => {
@@ -52,11 +41,12 @@ const MapViewCustom = (props) => {
   };
 
   const changeRuteInfoHandler = (InfoObj) => {
-    let aux = { ...ruteInfo };
-    aux.distance = InfoObj.distance;
-    aux.duration = InfoObj.duration;
-    aux.coordinates = InfoObj.coordinates;
-    setRuteInfo(aux);
+    let aux2 = {
+      distance: InfoObj.distance,
+      duration: InfoObj.duration,
+      coordinates: InfoObj.coordinates,
+    };
+    props.onDataExtract(aux2);
   };
 
   const [sGPS, setsGPS] = useState(() => {
@@ -81,7 +71,7 @@ const MapViewCustom = (props) => {
   };
 
   const ArrowBack = () => {
-    props.onDataChange(true)
+    props.onDataChange(true);
   };
 
   const overviewRegion = () => {
@@ -212,6 +202,9 @@ MapViewCustom.defaultProps = {
   onDataChange: () => {},
 };
 
+MapViewCustom.defaultProps = {
+  onDataExtract: () => {},
+};
 
 const styles = StyleSheet.create({
   mapView: {

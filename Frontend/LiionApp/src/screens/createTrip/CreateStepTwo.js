@@ -79,6 +79,7 @@ const CreateStepTwo = ({ navigation }) => {
             mapDirections={true}
             showGps={false}
             onDataChange={() => navigation.navigate("CreateStepOne")}
+            //onDataExtract={(value)=> console.log(value)}
           />
         </View>
         <View style={styles.bottomPanel}>
