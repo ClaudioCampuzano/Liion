@@ -105,3 +105,7 @@ export const isFirstRender = () => {
   }, []);
   return isMountRef.current;
 };
+
+export const  numberWithSep =(x)=> {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}

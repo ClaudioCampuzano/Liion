@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalContext } from "../../context/Provider";
 import Layout from "../../components/Layout";
@@ -12,9 +13,10 @@ import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 import MapViewCustom from "../../components/MapViewCustom";
 
-import { Ionicons } from "@expo/vector-icons";
+import { numberWithSep } from "../../utils/utils";
 
-const CreateStepTwo = () => {
+
+const CreateStepTwo = ({ navigation }) => {
   const { userFirestoreData, getState2 } = useContext(GlobalContext);
 
   const [searchValues, setSearchValues] = useState({
@@ -57,10 +59,6 @@ const CreateStepTwo = () => {
     setPrice(nn);
   };
 
-  function numberWithSep(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
-
   return (
     <Layout>
       <KeyboardAvoidingWrapper>
@@ -70,6 +68,7 @@ const CreateStepTwo = () => {
             coordinates={hardCodedGpsData.current}
             mapDirections={true}
             showGps={false}
+            onDataChange={() => navigation.navigate("CreateStepOne")}
           />
         </View>
         <View style={styles.bottomPanel}>

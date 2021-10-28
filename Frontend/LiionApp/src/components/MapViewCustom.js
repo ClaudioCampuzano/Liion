@@ -13,7 +13,6 @@ const MapViewCustom = (props) => {
   const {
     dimensions,
     coordinates,
-    navigator,
     mapDirections,
     showGps,
     ...restOfProps
@@ -82,7 +81,7 @@ const MapViewCustom = (props) => {
   };
 
   const ArrowBack = () => {
-    console.log("back");
+    props.onDataChange(true)
   };
 
   const overviewRegion = () => {
@@ -208,6 +207,11 @@ const MapViewCustom = (props) => {
 };
 
 export default MapViewCustom;
+
+MapViewCustom.defaultProps = {
+  onDataChange: () => {},
+};
+
 
 const styles = StyleSheet.create({
   mapView: {
