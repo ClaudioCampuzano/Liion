@@ -5,7 +5,6 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
-import ModalPopUp from "../../components/ModalPopUp";
 
 import { hp, wp } from "../../constants/styleThemes";
 
@@ -16,22 +15,32 @@ const CreateStepOne = ({ navigation }) => {
     time: null,
   });
 
-  const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    console.log("---------------searchValues---------------");
-    console.log(searchValues);
-    console.log("------------------------------------------");
-  }, [searchValues]);
+  const [errorDate, SetErrorDate] = useState(null)
+  const [errorTime, SetErrorTime] = useState(null)
+  const [errorAddresses, SetErrorAddresses] = useState(null)
+  const [focusInputLocation, setfocusInputLocation] = useState(false);
 
   const changeValuesHandler = (field, value) => {
     setSearchValues({ ...searchValues, [field]: value });
   };
+  
+  useEffect(()=>{
+    SetErrorAddresses(null)
+    setfocusInputLocation(false)
+  },[focusInputLocation]);
+
+  useEffect(() => {
+    if (searchValues.date) SetErrorDate(null)
+    if (searchValues.time) SetErrorTime(null)
+    if (searchValues.addresses) SetErrorAddresses(null)
+  }, [searchValues]);
 
   const checkValidator = () => {
+    if (!searchValues.date) SetErrorDate('Falta la fecha')
+    if (!searchValues.time) SetErrorTime('Falta la hora')
+    if (!searchValues.addresses) SetErrorAddresses('Falta las direcciones')
     if (searchValues.addresses && searchValues.date && searchValues.time)
-      navigation.navigate("SeachStepTwo", searchValues);
-    else setModalVisible(true);
+      navigation.navigate("CreateStepTwo", {searchValues});
   };
   return (
     <Layout>
@@ -41,9 +50,6 @@ const CreateStepOne = ({ navigation }) => {
           flexDirection: "column",
         }}
       >
-        <ModalPopUp visible={modalVisible} setModalVisible={setModalVisible}>
-          Faltan datos para la busqueda Liioner
-        </ModalPopUp>
         <View
           style={{
             flexDirection: "row",
@@ -54,6 +60,7 @@ const CreateStepOne = ({ navigation }) => {
             onDataChange={(value) => {
               changeValuesHandler("date", value.local().format("DD/MM/YYYY"));
             }}
+            errorText={errorDate}
             mode="date"
             label="Fecha de viaje"
             maximum="-180"
@@ -64,6 +71,7 @@ const CreateStepOne = ({ navigation }) => {
             onDataChange={(value) => {
               changeValuesHandler("time", value.local().format("HH:mm"));
             }}
+            errorText={errorTime}
             mode="time"
             label="Hora de llegada"
             maximum="-180"
@@ -72,6 +80,8 @@ const CreateStepOne = ({ navigation }) => {
         </View>
 
         <InputLocation
+          errorText={errorAddresses}
+          onFocus={() => setfocusInputLocation(true)}
           style={styles.inputLocation}
           labelO="Ingresa tu origen"
           labelD="Ingresa tu destino"

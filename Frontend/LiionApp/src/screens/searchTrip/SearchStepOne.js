@@ -40,8 +40,7 @@ const SearchStepOne = ({ navigation }) => {
     if (!searchValues.time) SetErrorTime('Falta la hora')
     if (!searchValues.addresses) SetErrorAddresses('Falta las direcciones')
     if (searchValues.addresses && searchValues.date && searchValues.time)
-      navigation.navigate("SeachStepTwo", searchValues);
-    //else setModalVisible(true);
+      navigation.navigate("SeachStepTwo", {searchValues});
   };
   return (
     <Layout>
