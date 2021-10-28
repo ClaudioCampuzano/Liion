@@ -15,7 +15,6 @@ import MapViewCustom from "../../components/MapViewCustom";
 
 import { numberWithSep } from "../../utils/utils";
 
-
 const CreateStepTwo = ({ navigation }) => {
   const { userFirestoreData, getState2 } = useContext(GlobalContext);
 
@@ -204,6 +203,8 @@ const styles = StyleSheet.create({
   },
   textColor: {
     color: COLORS.TURKEY,
+    fontFamily: "Gotham-SSm-Medium",
+    textAlign: "center",
   },
   middleSection: {
     flex: 2,
