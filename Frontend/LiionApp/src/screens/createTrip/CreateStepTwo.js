@@ -5,7 +5,7 @@ import { GlobalContext } from "../../context/Provider";
 import Layout from "../../components/Layout";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ButtonLiion from "../../components/ButtonLiion";
-import ShowTravel from "../../components/InputLocation/ShowTravel";
+import ShowTravel from "../../components/ShowTravel";
 import NumericInput from "react-native-numeric-input";
 import InputLiion from "../../components/InputLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";

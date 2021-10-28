@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
 
 import CreateStepOne from "../screens/createTrip/CreateStepOne";
+import CreateStepTwo from "../screens/createTrip/CreateStepTwo";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
@@ -49,6 +50,13 @@ const CreateNavigator = () => {
               />
             </TouchableOpacity>
           ),
+        })}
+      />
+      <CreateStack.Screen
+        name="CreateStepTwo"
+        component={CreateStepTwo}
+        options={({ navigation }) => ({
+          headerShown: false,
         })}
       />
     </CreateStack.Navigator>

@@ -14,8 +14,11 @@ const COLORS = {
   BLACK: "#333333",
   LIGHT_LEAD: "#CCCCCC",
   REAL_BLACK:"#000000",
-  WARN_RED:"#D90707",
+  WARN_RED:"#ff0f0f",
   CHECK_GREEN:"#0FF506",
+  WARN_YELLOW:"#f5dd0a",
+  GRAY:"#BFBFBF",
+  TURKEY_CLEARER:"#84FFF3",
 };
 
 const loadFonts = () => {
