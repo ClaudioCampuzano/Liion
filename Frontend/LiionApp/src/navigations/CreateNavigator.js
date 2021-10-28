@@ -15,7 +15,7 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 const CreateNavigator = () => {
   const CreateStack = createStackNavigator();
   return (
-    <CreateStack.Navigator>
+    <CreateStack.Navigator initialRouteName="CreateStepOne" >
       <CreateStack.Screen
         name="CreateStepOne"
         component={CreateStepOne}

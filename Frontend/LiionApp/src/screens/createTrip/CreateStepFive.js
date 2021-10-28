@@ -7,7 +7,15 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 
 const CreateStepFive = ({ navigation, route }) => {
   const checkValidator = () => {
-    navigation.navigate("SucessScreen");
+    const titulo = "¡Creación de viaje realizada!";
+    const subTitulo =
+      "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
+    const initialRoute = 'CreateStepOne'
+    navigation.navigate("SucessScreen", {
+      titulo: titulo,
+      subTitulo: subTitulo,
+      initialRoute: initialRoute
+    });
   };
   return (
     <Layout>
