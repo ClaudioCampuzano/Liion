@@ -15,14 +15,8 @@ const Index = () => {
     reLoadUserInfo,
     isLoggedIn,
     loadUserFirestoreData,
-    userData,
-    uid,
-    userFirestoreData,
-    getState2,
-    accesstoken,
     isLoadedDATA,
     setIsLoadedDATA,
-    reloadTrigger,
   } = useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
@@ -30,10 +24,7 @@ const Index = () => {
 
   const fontsLoaded = loadFonts();
 
-  const [user, setUser] = useState(() => {
-    const user = firebase.auth().currentUser;
-    return user;
-  });
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
@@ -41,9 +32,9 @@ const Index = () => {
       if (firebaseUser) {
         setIsAuthenticated(true)
         const fetchData = async () => {
-          await reLoadUserInfo(user);
-          await loadUserFirestoreData(user);
-          setIsLoadedDATA(true);
+          const reload = await reLoadUserInfo(user);
+          const loadfirestore = await loadUserFirestoreData(user);
+          reload && loadfirestore && setIsLoadedDATA(true);
         }
         fetchData();
       }
@@ -57,9 +48,9 @@ const Index = () => {
   useEffect(() => {
     if (user && !isLoggedIn) {
       const fetchData = async () => {
-        await reLoadUserInfo(user);
-        await loadUserFirestoreData(user);
-        setIsLoadedDATA(true);
+        const reload = await reLoadUserInfo(user);
+        const loadfirestore = await loadUserFirestoreData(user);
+        reload && loadfirestore && setIsLoadedDATA(true);
       }
       fetchData();
     } 

@@ -11,7 +11,7 @@ export const isUserLoggedIn = async () => {
   }
 };
 
-export const testfunc = async () => {
+/* export const testfunc = async () => {
   const user = firebase.auth().currentUser;
   if (user) {
     const tkn = await user.getIdToken(true);
@@ -19,7 +19,7 @@ export const testfunc = async () => {
   } else {
     console.log("jiro");
   }
-};
+}; */
 
 export const fireLogin = async (payload) => {
   try {
