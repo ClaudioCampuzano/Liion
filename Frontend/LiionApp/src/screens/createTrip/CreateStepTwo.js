@@ -32,10 +32,21 @@ const CreateStepTwo = ({ navigation }) => {
   ]);
   const [nOfSeats, setnOfSeats] = useState(0);
   const [price, setPrice] = useState(0);
+
+  const [errorPrice, setErrorPrice] = useState(null);
+
   const [focusEmailInput, setfocusPriceInput] = useState(false);
 
+  useEffect(()=>{
+    if (focusEmailInput) setErrorPrice(false)
+
+  },[focusEmailInput])
+
   const ButtonGo = () => {
-    console.log("ButtonGo");
+    if (price > 0 && nOfSeats > 0)
+      console.log("ButtonGo");
+    else setErrorPrice(' ')
+    
   };
 
   useEffect(() => {
@@ -102,7 +113,7 @@ const CreateStepTwo = ({ navigation }) => {
           <View style={styles.middleSection}>
             <View style={{ paddingBottom: wp("1%") }}>
               <View>
-                <Text style={styles.NSeats}>N° de asientos</Text>
+                <Text style={styles.textNSeats}>N° de asientos</Text>
                 <NumericInput
                   value={nOfSeats}
                   onChange={(n) => setnOfSeats(n)}
@@ -120,14 +131,15 @@ const CreateStepTwo = ({ navigation }) => {
               </View>
             </View>
             <View>
-              <Text style={styles.PSeats}>Valor por asiento</Text>
+              <Text style={styles.textPSeats}>Valor por asiento</Text>
               <InputLiion
                 style={styles.input}
-                label="$"
-                value={price.toString()}
+                label=''
+                errorText={errorPrice}
+                //value={price.toString()}
                 secureTextEntry={false}
                 onBlur={() => setfocusPriceInput(false)}
-                onFocus={() => setfocusPriceInput(true)}
+                onFocus={() => setfocusPriceInput(true)} 
                 onChangeText={(price) => NumberFormatter(price)}
                 keyboardType="numeric"
               />
@@ -213,13 +225,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: wp("5%"),
   },
-  NSeats: {
-    paddingLeft: wp("1.5%"),
-    fontSize: wp("3%"),
+  textNSeats: {
+    fontFamily: "Gotham-SSm-Medium",
+    paddingLeft: wp("1%"),
+    fontSize: hp("1.3%"),
   },
-  PSeats: {
-    paddingLeft: wp("4.5%"),
-    fontSize: wp("2.5%"),
+  textPSeats: {
+    fontFamily: "Gotham-SSm-Medium",
+    paddingLeft: wp("1%"),
+    fontSize: hp("1.3%"),
   },
   input: {
     width: wp("35%"),
