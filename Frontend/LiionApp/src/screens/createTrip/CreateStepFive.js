@@ -24,7 +24,7 @@ const CreateStepFive = ({ navigation, route }) => {
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
-          title="Ingresar"
+          title="Confirmar viaje"
           styleView={styles.button}
           onPress={() => checkValidator()}
         />

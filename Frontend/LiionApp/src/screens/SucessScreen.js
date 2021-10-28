@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { StackActions } from '@react-navigation/native';
+import { StackActions } from "@react-navigation/native";
 
 import Layout from "../components/Layout";
 import ButtonLiion from "../components/ButtonLiion";
@@ -11,9 +11,20 @@ const SucessScreen = ({ navigation, route }) => {
   //console.log(route.params.createValues)
   const { titulo, subTitulo, initialRoute } = route.params;
 
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        const action = e.data.action;
+        e.preventDefault();
+        e.data.action.type == 'POP_TO_TOP' && navigation.dispatch(e.data.action);
+      }),
+    [navigation]
+  );
+
   const checkValidator = () => {
-    navigation.navigate("MyTravelNavigator");
     navigation.dispatch(StackActions.popToTop());
+
+    navigation.navigate("MyTravelNavigator");
   };
   return (
     <Layout>

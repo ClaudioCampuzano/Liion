@@ -25,7 +25,7 @@ const SearchStepFour = ({ navigation, route }) => {
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
-          title="Ingresar"
+          title="Confirmar solicitud"
           styleView={styles.button}
           onPress={() => checkValidator()}
         />
