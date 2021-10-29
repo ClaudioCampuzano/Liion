@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 
 import CreateStepOne from "../screens/createTrip/CreateStepOne";
 import CreateStepTwo from "../screens/createTrip/CreateStepTwo";
@@ -15,7 +15,7 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 const CreateNavigator = () => {
   const CreateStack = createStackNavigator();
   return (
-    <CreateStack.Navigator initialRouteName="CreateStepOne" >
+    <CreateStack.Navigator initialRouteName="CreateStepOne">
       <CreateStack.Screen
         name="CreateStepOne"
         component={CreateStepOne}
@@ -67,7 +67,19 @@ const CreateNavigator = () => {
         name="CreateStepThree"
         component={CreateStepThree}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <CreateStack.Screen
@@ -106,5 +118,10 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
     fontSize: hp("3.5%"),
+  },
+  headerContainerEmpty: {
+    backgroundColor: COLORS.WHITE,
+    height: hp("7%"),
+    elevation: 0,
   },
 });
