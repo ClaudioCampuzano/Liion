@@ -17,7 +17,7 @@ const ShowTravel = (props) => {
 
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const BigIconSize = 7;
+  const BigIconSize = 10;
   const TinyIconSize = 5;
 
   return (
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   },
   timeTextStyle: {
     fontFamily: "Gotham-SSm-Bold",
+    color: COLORS.BLACK
   },
   addressView: {
     borderRadius: 17,
@@ -119,11 +120,13 @@ const styles = StyleSheet.create({
     fontSize: hp("1.5%"),
     paddingLeft: wp("1%"),
     paddingTop: hp("0.0%"),
+    color : COLORS.LEAD
   },
   text2Style: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("2%"),
     paddingLeft: wp("1%"),
     paddingTop: hp("0.1%"),
+    color: COLORS.BLACK
   },
 });

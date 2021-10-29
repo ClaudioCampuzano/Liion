@@ -35,6 +35,7 @@ const CreateStepTwo = ({ navigation, route }) => {
   const [price, setPrice] = useState(0);
 
   const [errorPrice, setErrorPrice] = useState(null);
+  const [errornSeat, setErrornSeat] = useState(COLORS.BORDER_COLOR);
 
   const [focusEmailInput, setfocusPriceInput] = useState(false);
 
@@ -42,9 +43,16 @@ const CreateStepTwo = ({ navigation, route }) => {
     if (focusEmailInput) setErrorPrice(false);
   }, [focusEmailInput]);
 
+  useEffect(() => {
+    setErrornSeat(COLORS.BORDER_COLOR)
+  }, [nOfSeats])
+
   const ButtonGo = () => {
     if (price > 0 && nOfSeats > 0) navigation.navigate("CreateStepThree");
-    else setErrorPrice(" ");
+    else {
+      if (price < 1) setErrorPrice(" ");
+      if (nOfSeats < 1) setErrornSeat(COLORS.WARN_RED);
+    }
   };
 
   useEffect(() => {
@@ -126,6 +134,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                   totalWidth={wp("22%")}
                   minValue={0}
                   maxValue={10}
+                  borderColor={errornSeat}
                 />
               </View>
             </View>
@@ -192,6 +201,7 @@ const styles = StyleSheet.create({
     fontSize: hp("2.5%"),
     paddingLeft: wp("7%"),
     paddingTop: hp("1.5%"),
+    color: COLORS.BLACK,
   },
   inputLocation: {
     marginTop: hp("1%"),
@@ -228,11 +238,13 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-SSm-Medium",
     paddingLeft: wp("1%"),
     fontSize: hp("1.3%"),
+    color: COLORS.LEAD,
   },
   textPSeats: {
     fontFamily: "Gotham-SSm-Medium",
     paddingLeft: wp("1%"),
     fontSize: hp("1.3%"),
+    color: COLORS.LEAD,
   },
   input: {
     width: wp("35%"),
