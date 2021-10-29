@@ -76,18 +76,15 @@ const CreateNavigator = () => {
         component={CreateStepFour}
         options={({ navigation }) => ({
           headerShown: true,
-          headerStyle: {...styles.headerContainerEmpty },
+          headerStyle: styles.headerContainerEmpty,
           headerTitle: "",
-          headerTitleAlign: "center",
-          headerTitleStyle: styles.headerText,
-        
           headerLeft: () => (
-            <TouchableOpacity onPress={() => {console.log("jirito"); navigation.goBack()}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Feather
                 name="chevron-left"
                 size={hp("5.5")}
                 color={COLORS.TURKEY}
-                style={{ marginLeft: wp("3%")}}
+                style={{ marginLeft: wp("3%") }}
               />
             </TouchableOpacity>
           ),
@@ -98,13 +95,25 @@ const CreateNavigator = () => {
         component={CreateStepFive}
         options={({ navigation }) => ({
           headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <CreateStack.Screen
         name="SucessScreen"
         component={SucessScreen}
         options={({ navigation }) => ({
-          headerShown: true,
+          headerShown: false,
         })}
       />
     </CreateStack.Navigator>

@@ -69,14 +69,13 @@ const ShowTravel = (props) => {
         <View style={styles.addressView}>
           <Text style={styles.text1Style}> Origen </Text>
           <Text style={{ ...styles.text2Style, fontSize: dirTextSize }}>
-            {" "}
-            {labelO}{" "}
+            {labelO}
           </Text>
           <View style={{ flex: 1, justifyContent: "center" }}>
             <Text style={styles.text1Style}> Destino </Text>
             <Text style={{ ...styles.text2Style, fontSize: dirTextSize }}>
-              {" "}
-              {labelD}{" "}
+
+              {labelD}
             </Text>
           </View>
         </View>
