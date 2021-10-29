@@ -1,42 +1,116 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
+import TouchableIcon from "../../components/TouchableIcon";
+import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
 const CreateStepThree = ({ navigation, route }) => {
-  const checkValidator = () => {
-    navigation.navigate("CreateStepFour");
+  const [preferences, setPreferences] = useState({
+    allGender: true,
+    onlyWoman: false,
+    onlyMen: false,
+    smoking: false,
+    approvalIns: false,
+  });
+
+  const changePreferencesHandler = (field, value) => {
+    setPreferences({ ...preferences, [field]: value });
   };
 
+  useEffect(() => {
+    console.log(preferences);
+  }, [preferences]);
+
+  const handleGender = (field) => {
+    let aux = { ...preferences };
+    switch (field) {
+      case "onlyWoman":
+        aux.allGender = false;
+        aux.onlyWoman = true;
+        aux.onlyMen = false;
+        break;
+      case "onlyMen":
+        aux.allGender = false;
+        aux.onlyWoman = false;
+        aux.onlyMen = true;
+        break;
+      default:
+        aux.allGender = true;
+        aux.onlyWoman = false;
+        aux.onlyMen = false;
+    }
+    setPreferences(aux);
+  };
+
+  const checkValidator = () => {
+    navigation.navigate("CreateStepFour",{...preferences});
+  };
   return (
     <Layout>
-      <View style={{ height: hp("70%") }}>
-        <Text style={styles.text_titulo}>Preferencias del viaje</Text>
-        <Text style={styles.text_subTitulo}>
-          {"Marque las características que\ndesea que tenga su viaje"}
-        </Text>
-        <Text style={styles.text_firstSection}>Genero:</Text>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableHighlight onPress={console.log("1")}>
-            <Text>1          </Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={console.log("2")}>
-            <Text>2</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={console.log("3")}>
-            <Text>3</Text>
-          </TouchableHighlight>
+      <KeyboardAvoidingWrapper>
+        <View style={{ height: hp("70%") }}>
+          <Text style={styles.text_titulo}>Preferencias del viaje</Text>
+          <Text style={styles.text_subTitulo}>
+            {"Pulse las características que\ndesea que tenga su viaje"}
+          </Text>
+          <Text style={styles.text_firstSection}>Genero:</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <TouchableIcon
+              valueDefault={preferences.allGender}
+              type={"allGender"}
+              onStateChange={(value) => value && handleGender("allGender")}
+              style={{ paddingTop: hp("1.5") }}
+            />
+            <TouchableIcon
+              valueDefault={preferences.onlyWoman}
+              type={"woman"}
+              onStateChange={(value) => value && handleGender("onlyWoman")}
+              style={{ paddingTop: hp("1.5") }}
+            />
+            <TouchableIcon
+              valueDefault={preferences.onlyMen}
+              type={"men"}
+              onStateChange={(value) => value && handleGender("onlyMen")}
+              style={{ paddingTop: hp("1.5") }}
+            />
+          </View>
+          <Text style={{ ...styles.text_firstSection, paddingTop: hp("2%") }}>
+            Otros:
+          </Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <TouchableIcon
+              valueDefault={preferences.smoking}
+              type={"smoking"}
+              onStateChange={(value) =>
+                value && changePreferencesHandler("smoking", value)
+              }
+              style={{ paddingTop: hp("1.5") }}
+            />
+            <TouchableIcon
+              valueDefault={preferences.approvalIns}
+              type={"approval"}
+              onStateChange={(value) =>
+                value && changePreferencesHandler("approvalIns", value)
+              }
+              style={{ paddingTop: hp("1.5") }}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.buttonView}>
-        <ButtonLiion
-          title="Siguiente"
-          styleView={styles.button}
-          onPress={() => checkValidator()}
-        />
-      </View>
+        <View style={styles.buttonView}>
+          <ButtonLiion
+            title="Siguiente"
+            styleView={styles.button}
+            onPress={() => checkValidator()}
+          />
+        </View>
+      </KeyboardAvoidingWrapper>
     </Layout>
   );
 };
@@ -71,7 +145,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp("5%"),
   },
   text_firstSection: {
-    fontSize: hp("2.3%"),
+    fontSize: hp("2.2%"),
     fontFamily: "Gotham-SSm-Medium",
     color: COLORS.BLACK,
   },
