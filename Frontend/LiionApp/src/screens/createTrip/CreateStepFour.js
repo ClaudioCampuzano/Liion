@@ -40,4 +40,9 @@ const styles = StyleSheet.create({
     height: hp("4.8%"),
     alignSelf: "center",
   },
+  headerContainerEmpty: {
+    backgroundColor: COLORS.WHITE,
+    height: hp("7%"),
+    elevation: 0,
+  },
 });

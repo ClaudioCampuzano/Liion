@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
-
+import { Feather } from "@expo/vector-icons";
 import CreateStepOne from "../screens/createTrip/CreateStepOne";
 import CreateStepTwo from "../screens/createTrip/CreateStepTwo";
 import CreateStepThree from "../screens/createTrip/CreateStepThree";
@@ -22,6 +22,7 @@ const CreateNavigator = () => {
         options={({ navigation }) => ({
           headerShown: true,
           headerStyle: styles.headerContainer,
+          headerTitle: "",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerText,
           headerTitle: (props) => (
@@ -67,28 +68,43 @@ const CreateNavigator = () => {
         name="CreateStepThree"
         component={CreateStepThree}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
         })}
       />
       <CreateStack.Screen
         name="CreateStepFour"
         component={CreateStepFour}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: {...styles.headerContainerEmpty },
+          headerTitle: "",
+          headerTitleAlign: "center",
+          headerTitleStyle: styles.headerText,
+        
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => {console.log("jirito"); navigation.goBack()}}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%")}}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <CreateStack.Screen
         name="CreateStepFive"
         component={CreateStepFive}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
         })}
       />
       <CreateStack.Screen
         name="SucessScreen"
         component={SucessScreen}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
         })}
       />
     </CreateStack.Navigator>
@@ -106,5 +122,10 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
     fontSize: hp("3.5%"),
+  },
+  headerContainerEmpty: {
+    height: hp("7%"),
+    elevation: 0,
+    backgroundColor: COLORS.WHITE,
   },
 });

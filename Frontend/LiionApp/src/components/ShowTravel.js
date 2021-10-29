@@ -12,6 +12,7 @@ const ShowTravel = (props) => {
     timeEnd,
     onBlur,
     onFocus,
+    dirTextSize,
     ...restOfProps
   } = props;
 
@@ -67,10 +68,16 @@ const ShowTravel = (props) => {
         </View>
         <View style={styles.addressView}>
           <Text style={styles.text1Style}> Origen </Text>
-          <Text style={styles.text2Style}> {labelO} </Text>
+          <Text style={{ ...styles.text2Style, fontSize: dirTextSize }}>
+            {" "}
+            {labelO}{" "}
+          </Text>
           <View style={{ flex: 1, justifyContent: "center" }}>
             <Text style={styles.text1Style}> Destino </Text>
-            <Text style={styles.text2Style}> {labelD} </Text>
+            <Text style={{ ...styles.text2Style, fontSize: dirTextSize }}>
+              {" "}
+              {labelD}{" "}
+            </Text>
           </View>
         </View>
       </View>
@@ -122,7 +129,7 @@ const styles = StyleSheet.create({
   },
   text2Style: {
     fontFamily: "Gotham-SSm-Bold",
-    fontSize: hp("2%"),
+    fontSize: 10,
     paddingLeft: wp("1%"),
     paddingTop: hp("0.1%"),
   },
