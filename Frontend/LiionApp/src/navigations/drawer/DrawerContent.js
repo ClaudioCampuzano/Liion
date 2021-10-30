@@ -12,10 +12,12 @@ import {
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { GlobalContext } from "../../context/Provider";
+import { EmailVerification } from "../../firebase/Auth";
 
 const DrawerContent = (props) => {
   const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
-
+  console.log("---------------");
+  console.log(userData);
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -41,9 +43,13 @@ const DrawerContent = (props) => {
               </View>
               <TouchableOpacity
                 style={styles.touchablePerfil}
-                onPress={() => console.log("Ir a perfil")}
+                onPress={() => userData && !userData.emailVerified && EmailVerification(userData.email)}
               >
-                <Text style={styles.texTouchable}>Ver perfil</Text>
+                <Text style={styles.texTouchable}>
+                  {userData && userData.emailVerified
+                    ? "Email verificado"
+                    : "Verificar email"}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -213,7 +219,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     width: wp("76"),
     paddingLeft: wp("2"),
-    paddingBottom: hp('1'),
+    paddingBottom: hp("1"),
     borderBottomColor: COLORS.BORDER_COLOR,
     borderBottomWidth: 1,
     borderBottomEndRadius: 20,

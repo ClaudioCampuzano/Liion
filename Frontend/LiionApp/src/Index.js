@@ -29,8 +29,8 @@ const Index = (props) => {
 
   useEffect(() => {
     const unsubscribe =  onAuthStateChanged(getAuth(), (firebaseUser) => {
-      setUser(firebaseUser);
       if (firebaseUser) {
+        setUser(firebaseUser);
         setIsAuthenticated(true);
         const fetchData = async () => {
           const reload = await reLoadUserInfo(user);

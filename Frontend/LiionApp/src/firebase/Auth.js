@@ -1,4 +1,10 @@
-import { getAuth, signInWithEmailAndPassword, signOut } from "@firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+  sendEmailVerification 
+} from "@firebase/auth";
 
 //es mejor usar el watcher. Busca el usuario si esta en el objeto firebase
 //lo uso a modo de esteo para comprobar cosas
@@ -47,10 +53,22 @@ export const fireLogout = async () => {
 
 export const recoverEmail = async (payload) => {
   try {
-    const res = await auth().sendPasswordResetEmail(payload.email);
+    const auth = getAuth();
+    const res = await sendPasswordResetEmail(auth, payload.email);
     return true;
   } catch (e) {
     console.log(e);
+    return false;
+  }
+};
+
+export const EmailVerification = async (payload) => {
+  try {
+    const auth = getAuth();
+    const res = await sendEmailVerification (auth.currentUser, payload.email);
+    return true;
+  } catch (e) {
+    console.log(e)
     return false;
   }
 };
