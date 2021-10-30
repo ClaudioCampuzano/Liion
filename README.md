@@ -95,3 +95,6 @@ El costo final, se dividira por la cantidad maxima de asientos del ofertados, y 
 
 ## Guia sencilla de GIT
  - https://rogerdudler.github.io/git-guide/
+ 
+## DotEnv en Expo
+ - https://medium.com/swlh/how-to-properly-use-environment-variables-in-an-expo-react-native-app-7ab852590b30
