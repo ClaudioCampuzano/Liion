@@ -68,7 +68,6 @@ export const EmailVerification = async (payload) => {
     const res = await sendEmailVerification (auth.currentUser, payload.email);
     return true;
   } catch (e) {
-    console.log(e)
     return false;
   }
 };

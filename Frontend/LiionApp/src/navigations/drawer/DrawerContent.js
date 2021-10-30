@@ -16,8 +16,7 @@ import { EmailVerification } from "../../firebase/Auth";
 
 const DrawerContent = (props) => {
   const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
-  console.log("---------------");
-  console.log(userData);
+
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
