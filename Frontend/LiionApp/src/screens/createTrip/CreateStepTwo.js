@@ -17,20 +17,16 @@ import { numberWithSep } from "../../utils/utils";
 
 const CreateStepTwo = ({ navigation, route }) => {
   //console.log(route.params.createValues)
-  const { userFirestoreData, getState2 } = useContext(GlobalContext);
+  
 
-  const [createValues, setSearchValues] = useState({
-    origin: "Casablanca, Valparaíso",
-    destination: "Chillán, Ñuble",
-    date: "October 21st 2021",
-    timeStart: "11:14",
-    timeEnd: "13:30",
-  });
+  
 
   const hardCodedGpsData = useRef([
-    { latitude: -33.049210440630844, longitude: -71.40008809942688 },
-    { latitude: -33.2367, longitude: -71.43895 },
+    { latitude: route.params.createValues.addresses.origin.location.lat, longitude: route.params.createValues.addresses.origin.location.lng },
+    { latitude: route.params.createValues.addresses.destination.location.lat, longitude: route.params.createValues.addresses.destination.location.lng },
   ]);
+ 
+
   const [nOfSeats, setnOfSeats] = useState(0);
   const [price, setPrice] = useState(0);
 
@@ -55,6 +51,8 @@ const CreateStepTwo = ({ navigation, route }) => {
     }
   };
 
+  /*
+  const { userFirestoreData, getState2 } = useContext(GlobalContext);
   useEffect(() => {
     let flag =
       Object.keys(userFirestoreData).length !== 0 &&
@@ -63,6 +61,7 @@ const CreateStepTwo = ({ navigation, route }) => {
       console.log("Create1");
     }
   }, [getState2]);
+  */
 
   const [totalMoney, setTotalMoney] = useState(0);
   useEffect(() => {
@@ -74,6 +73,8 @@ const CreateStepTwo = ({ navigation, route }) => {
     let nn = Number(n);
     setPrice(nn);
   };
+  
+  
 
   return (
     <Layout>
@@ -91,16 +92,25 @@ const CreateStepTwo = ({ navigation, route }) => {
         <View style={styles.bottomPanel}>
           <View style={styles.InfoView}>
             <Text style={styles.titleStyle}>
-              {createValues["date"] + " | " + createValues["timeStart"]}
+              {"    " +
+                route.params.createValues.date +
+                " | " +
+                route.params.createValues.time}
             </Text>
 
             <View style={styles.bar2}>
               <ShowTravel
                 style={styles.inputLocation}
-                timeStart={createValues["timeStart"]}
-                timeEnd={createValues["timeEnd"]}
-                labelO={createValues["origin"]}
-                labelD={createValues["destination"]}
+                timeStart={route.params.createValues.time}
+                timeEnd={"N/A"}
+                labelO={
+                  route.params.createValues.addresses.origin.formatted_address
+                }
+                labelD={
+                  route.params.createValues.addresses.destination
+                    .formatted_address
+                }
+                dirTextSize={wp("2.5%")}
               />
             </View>
             <View style={styles.textStyle}>

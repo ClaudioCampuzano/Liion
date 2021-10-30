@@ -22,6 +22,7 @@ const CreateNavigator = () => {
         options={({ navigation }) => ({
           headerShown: true,
           headerStyle: styles.headerContainer,
+          headerTitle: "",
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerText,
           headerTitle: (props) => (
@@ -86,14 +87,38 @@ const CreateNavigator = () => {
         name="CreateStepFour"
         component={CreateStepFour}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <CreateStack.Screen
         name="CreateStepFive"
         component={CreateStepFive}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <CreateStack.Screen

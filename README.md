@@ -97,3 +97,14 @@ El costo final, se dividira por la cantidad maxima de asientos del ofertados, y 
  
 ## DotEnv en Expo
  - https://medium.com/swlh/how-to-properly-use-environment-variables-in-an-expo-react-native-app-7ab852590b30
+
+
+
+
+
+ ## Eliminar Error Polyline
+  - buscar archivo: node_modules/react-native-maps/lib/components/MapPolyline.js
+  -Linea 136 en objeto defaultProps comentar (o borrar) props:
+   lineJoin: 'round',
+   lineCap: 'round',
+

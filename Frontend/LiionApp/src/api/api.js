@@ -1,8 +1,9 @@
 import axios from "axios";
 import firebase from 'firebase/compat/app';
+import {BACKEND_URL} from '@env';
 
 const client = axios.create({
-  baseURL: "http://192.168.1.10:3000",
+  baseURL: "http://"+BACKEND_URL+":3000",
   timeout: 2000,
 });
 
