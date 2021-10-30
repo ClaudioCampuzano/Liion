@@ -40,7 +40,6 @@
 - expo install expo-font
 - yarn add react-native-paper [borrar]
 - npm install @react-navigation/drawer
-- expo install @react-native-async-storage/async-storage
 - react-native-textinput-effects [borrar]
 - email-validator, validate.js react-native-form-validator [borrar]
 - react-native-responsive-screen

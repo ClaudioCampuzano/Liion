@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, View, Image } from "react-native";
 
 import { COLORS } from "./constants/styleThemes";
 import AuthNavigator from "./navigations/AuthNavigator";
@@ -11,7 +11,6 @@ import { GlobalContext } from "./context/Provider";
 import { loadFonts } from "./constants/styleThemes";
 
 const Index = (props) => {
-
   const {
     reLoadUserInfo,
     isLoggedIn,
@@ -28,7 +27,7 @@ const Index = (props) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe =  onAuthStateChanged(getAuth(), (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
         setIsAuthenticated(true);
@@ -43,7 +42,7 @@ const Index = (props) => {
       }
       setIsLoaded(true);
     });
-    return () => unsubscribe()
+    return () => unsubscribe();
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -77,7 +76,20 @@ const Index = (props) => {
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
-        <ActivityIndicator size="large" color={COLORS.TURKEY} />
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <Image
+            source={{
+              uri: "https://media.tenor.com/images/39d6060576a516f1dd437eafccafbdb1/tenor.gif",
+            }}
+            style={{
+              height: 400,
+              width: 400,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          />
+          {/* <ActivityIndicator size="large" color={COLORS.TURKEY} /> */}
+        </View>
       )}
     </>
   );
