@@ -70,6 +70,7 @@ const AccountAccess = ({ navigation }) => {
       setWaitingLogin(true);
       (async () => {
         const res = await loginUser({ email: valueEmail, password: valuePass });
+        console.log(res)
         if (!res.state) {
           setModalVisible(!res.state);
           setWaitingLogin(false);

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import firebase from "firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
 
@@ -10,7 +10,8 @@ import { GlobalContext } from "./context/Provider";
 
 import { loadFonts } from "./constants/styleThemes";
 
-const Index = () => {
+const Index = (props) => {
+
   const {
     reLoadUserInfo,
     isLoggedIn,
@@ -27,22 +28,22 @@ const Index = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((firebaseUser) => {
+    const unsubscribe =  onAuthStateChanged(getAuth(), (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
-        setIsAuthenticated(true)
+        setIsAuthenticated(true);
         const fetchData = async () => {
           const reload = await reLoadUserInfo(user);
           const loadfirestore = await loadUserFirestoreData(user);
           reload && loadfirestore && setIsLoadedDATA(true);
-        }
+        };
         fetchData();
-      }
-      else {
-        setIsAuthenticated(false)
+      } else {
+        setIsAuthenticated(false);
       }
       setIsLoaded(true);
     });
+    return () => unsubscribe()
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -51,12 +52,12 @@ const Index = () => {
         const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
         reload && loadfirestore && setIsLoadedDATA(true);
-      }
+      };
       fetchData();
-    } 
+    }
   }, [user]);
 
-/*      useEffect(() => {
+  /*      useEffect(() => {
     (async () => {
       setIsLoaded(false);
       const reload = await reLoadUserInfo(user);
@@ -71,7 +72,7 @@ const Index = () => {
 
   return (
     <>
-      {isLoaded && fontsLoaded && (!user || isLoadedDATA)  ? (
+      {isLoaded && fontsLoaded && (!user || isLoadedDATA) ? (
         <NavigationContainer>
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>

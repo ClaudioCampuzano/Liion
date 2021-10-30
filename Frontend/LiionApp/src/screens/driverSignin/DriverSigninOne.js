@@ -9,7 +9,8 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
-import firebase from "firebase";
+import { getAuth } from "@firebase/auth";
+
 import {
   Ionicons,
   MaterialIcons,
@@ -49,7 +50,7 @@ const DriverSignupOne = () => {
 
   //recarga local
   const [user, setUser] = useState(() => {
-    const user = firebase.auth().currentUser;
+    const user = getAuth().currentUser;
     return user;
   });
   const [localLoad, setLocalLoad] = useState(false);

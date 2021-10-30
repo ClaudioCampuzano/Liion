@@ -1,5 +1,5 @@
 import axios from "axios";
-import firebase from "firebase";
+import firebase from 'firebase/compat/app';
 
 const client = axios.create({
   baseURL: "http://192.168.1.10:3000",

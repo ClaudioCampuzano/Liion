@@ -1,9 +1,9 @@
-import firebase from "firebase";
+import { getAuth, signInWithEmailAndPassword, signOut } from "@firebase/auth";
 
 //es mejor usar el watcher. Busca el usuario si esta en el objeto firebase
 //lo uso a modo de esteo para comprobar cosas
 export const isUserLoggedIn = async () => {
-  const user = firebase.auth().currentUser;
+  const user = getAuth().currentUser;
   if (user) {
     return true;
   } else {
@@ -20,12 +20,14 @@ export const isUserLoggedIn = async () => {
     console.log("jiro");
   }
 }; */
-
 export const fireLogin = async (payload) => {
   try {
-    const res = await firebase
-      .auth()
-      .signInWithEmailAndPassword(payload.email, payload.password);
+    const auth = getAuth();
+    const res = await signInWithEmailAndPassword(
+      auth,
+      payload.email,
+      payload.password
+    );
     return res;
   } catch (e) {
     return e;
@@ -33,16 +35,19 @@ export const fireLogin = async (payload) => {
 };
 
 export const fireLogout = async () => {
-  try {
-    await firebase.auth().signOut();
-  } catch (e) {
-    console.log(e);
-  }
+  const auth = getAuth();
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful.
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 export const recoverEmail = async (payload) => {
   try {
-    const res = await firebase.auth().sendPasswordResetEmail(payload.email);
+    const res = await auth().sendPasswordResetEmail(payload.email);
     return true;
   } catch (e) {
     console.log(e);
