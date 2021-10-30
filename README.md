@@ -95,3 +95,13 @@ El costo final, se dividira por la cantidad maxima de asientos del ofertados, y 
 
 ## Guia sencilla de GIT
  - https://rogerdudler.github.io/git-guide/
+
+
+
+
+ ## Eliminar Error Polyline
+  - buscar archivo: node_modules/react-native-maps/lib/components/MapPolyline.js
+  -Linea 136 en objeto defaultProps comentar (o borrar) props:
+   lineJoin: 'round',
+   lineCap: 'round',
+
