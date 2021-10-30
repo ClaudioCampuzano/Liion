@@ -5,13 +5,8 @@ import ButtonLiion from "../../components/ButtonLiion";
 import InputLiion from "../../components/InputLiion";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import Layout from "../../components/Layout";
-
 import { COLORS, hp, wp } from "../../constants/styleThemes";
-
 import { validate, format, clean } from "../../utils/utils";
-
-import { useKeyboard } from "../../hooks/useKeyboard";
-
 import InputDateTime from "../../components/InputDateTime";
 
 import moment from "moment";
@@ -28,23 +23,18 @@ const RegisterStepOne = ({ navigation }) => {
   const [errorRun, setErrorRun] = useState(null);
   const [errorFecha, setErrorFecha] = useState(null);
 
-  const [focusRunInput, setfocusRunInput] = useState(false);
-
-  const { isKeyboardVisible } = useKeyboard();
-
   useEffect(() => {
     if (valueNombre != "") setErrorNombre(null);
     if (valueApellido != "") setErrorApellido(null);
-    if (valueRun != "") setValueRun(format(valueRun));
+    if (valueRun != "") {
+      setValueRun(format(valueRun));
+      !validate(clean(valueRun))
+        ? setErrorRun("Run no valido")
+        : setErrorRun(null);
+    }
     if (!(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")))
       setErrorFecha(null);
   }, [valueNombre, valueApellido, valueRun, valueFecha]);
-
-  useEffect(() => {
-    if (valueRun != "" && !validate(clean(valueRun)))
-      setErrorRun("Run no valido");
-    else setErrorRun(null);
-  }, [focusRunInput, isKeyboardVisible]);
 
   const checkValidator = () => {
     if (valueNombre == "") setErrorNombre("Falta tu nombre");
@@ -66,8 +56,13 @@ const RegisterStepOne = ({ navigation }) => {
       validate(clean(valueRun)) &&
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
     ) {
-      const dataToStep2 = {name: valueNombre, lastname:valueApellido, run:valueRun, dateBirth: valueFecha.utc().format("YYYY-MM-DD")}
-      navigation.navigate("RegisterStepTwo",dataToStep2);
+      const dataToStep2 = {
+        name: valueNombre,
+        lastname: valueApellido,
+        run: valueRun,
+        dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
+      };
+      navigation.navigate("RegisterStepTwo", dataToStep2);
     }
   };
 
@@ -85,41 +80,52 @@ const RegisterStepOne = ({ navigation }) => {
           </Text>
 
           <ScrollView showsVerticalScrollIndicator={false}>
-            <InputLiion
-              style={styles.input}
-              label="Nombre"
-              errorText={errorNombre}
-              value={valueNombre}
-              secureTextEntry={false}
-              onChangeText={(text) => setValueNombre(text)}
-            />
-            <InputLiion
-              style={styles.input}
-              errorText={errorApellido}
-              label="Apellido"
-              value={valueApellido}
-              secureTextEntry={false}
-              onChangeText={(text) => setValueApellido(text)}
-            />
+            <View style={{ flexDirection: "row", alignSelf: "center" }}>
+              <InputLiion
+                style={{ ...styles.inputNames, marginRight: wp(1) }}
+                label="Nombre"
+                errorText={errorNombre}
+                value={valueNombre}
+                secureTextEntry={false}
+                onChangeText={(text) => setValueNombre(text)}
+              />
+              <InputLiion
+                style={styles.inputNames}
+                errorText={errorApellido}
+                label="Apellido"
+                value={valueApellido}
+                secureTextEntry={false}
+                onChangeText={(text) => setValueApellido(text)}
+              />
+            </View>
             <InputLiion
               style={styles.input}
               label="Run"
               errorText={errorRun}
               keyboardType="default"
               value={valueRun}
-              onBlur={() => setfocusRunInput(false)}
-              onFocus={() => setfocusRunInput(true)}
               secureTextEntry={false}
               onChangeText={(text) => setValueRun(text)}
             />
             <InputDateTime
               style={styles.input}
               errorText={errorFecha}
-              onDataChange={(value) => {setValueFecha(value)}}
+              onDataChange={(value) => {
+                setValueFecha(value);
+              }}
               label="Fecha de nacimiento"
               mode="date"
               maximum="6574"
               minimum="33238"
+            />
+            <InputLiion
+              style={styles.input}
+              label="Genero"
+              errorText={errorRun}
+              keyboardType="default"
+              value={valueRun}
+              secureTextEntry={false}
+              onChangeText={(text) => setValueRun(text)}
             />
           </ScrollView>
         </View>
@@ -154,6 +160,11 @@ const styles = StyleSheet.create({
   input: {
     marginTop: hp("1.8%"),
     width: wp("78.6%"),
+    alignSelf: "center",
+  },
+  inputNames: {
+    marginTop: hp("1.8%"),
+    width: wp("38.8"),
     alignSelf: "center",
   },
   buttonView: {
