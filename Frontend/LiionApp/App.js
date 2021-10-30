@@ -7,7 +7,6 @@ import * as firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
-
 export default function App() {
   !firebase.apps.length ? firebase.initializeApp(Constants.manifest.extra.firebase) : firebase.app();
   
