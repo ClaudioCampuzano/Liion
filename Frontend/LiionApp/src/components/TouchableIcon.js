@@ -51,7 +51,7 @@ const TouchableIcon = (props) => {
       <View style={{ ...styles.viewGeneral, ...style }}>
         <MaterialCommunityIcons
           name={nameIcon}
-          size={hp("6")}
+          size={hp("7")}
           color={color}
           style={{ alignSelf: "center" }}
         />

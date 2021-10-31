@@ -24,29 +24,52 @@ const CreateStepThree = ({ navigation, route }) => {
     console.log(preferences);
   }, [preferences]);
 
-  const handleGender = (field) => {
+  const handleGender = (field, value) => {
     let aux = { ...preferences };
-    switch (field) {
-      case "onlyWoman":
-        aux.allGender = false;
-        aux.onlyWoman = true;
-        aux.onlyMen = false;
-        break;
-      case "onlyMen":
-        aux.allGender = false;
-        aux.onlyWoman = false;
-        aux.onlyMen = true;
-        break;
-      default:
+
+    if (field === "allGender")
+      if (value) {
         aux.allGender = true;
         aux.onlyWoman = false;
         aux.onlyMen = false;
-    }
+      } else if (!aux.onlyWoman && !aux.onlyMen) aux.allGender = false;
+
+    if (field === "onlyWoman")
+      if (value) {
+        aux.allGender = false;
+        aux.onlyWoman = true;
+        aux.onlyMen = false;
+      } else if (!aux.onlyMen && !aux.allGender) aux.allGender = true;
+
+    if (field === "onlyMen")
+      if (value) {
+        aux.allGender = false;
+        aux.onlyWoman = false;
+        aux.onlyMen = true;
+      } else if (!aux.onlyWoman && !aux.allGender) aux.allGender = true;
     setPreferences(aux);
+
+    /*     if (value)
+      switch (field) {
+        case "onlyWoman":
+          aux.allGender = false;
+          aux.onlyWoman = true;
+          aux.onlyMen = false;
+          break;
+        case "onlyMen":
+          aux.allGender = false;
+          aux.onlyWoman = false;
+          aux.onlyMen = true;
+          break;
+        default:
+          aux.allGender = true;
+          aux.onlyWoman = false;
+          aux.onlyMen = false;
+      } */
   };
 
   const checkValidator = () => {
-    navigation.navigate("CreateStepFour",{...preferences});
+    navigation.navigate("CreateStepFour", { ...preferences });
   };
   return (
     <Layout>
@@ -63,19 +86,19 @@ const CreateStepThree = ({ navigation, route }) => {
             <TouchableIcon
               valueDefault={preferences.allGender}
               type={"allGender"}
-              onStateChange={(value) => value && handleGender("allGender")}
+              onStateChange={(value) => handleGender("allGender", value)}
               style={{ paddingTop: hp("1.5") }}
             />
             <TouchableIcon
               valueDefault={preferences.onlyWoman}
               type={"woman"}
-              onStateChange={(value) => value && handleGender("onlyWoman")}
+              onStateChange={(value) => handleGender("onlyWoman", value)}
               style={{ paddingTop: hp("1.5") }}
             />
             <TouchableIcon
               valueDefault={preferences.onlyMen}
               type={"men"}
-              onStateChange={(value) => value && handleGender("onlyMen")}
+              onStateChange={(value) => handleGender("onlyMen", value)}
               style={{ paddingTop: hp("1.5") }}
             />
           </View>
@@ -122,7 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: hp("23%"),
     justifyContent: "flex-end",
-    paddingBottom: hp("8%"),
+    paddingBottom: hp("6%"),
   },
   button: {
     width: wp("78.6%"),
@@ -133,12 +156,12 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-SSm-Bold",
     fontSize: hp("3%"),
     color: COLORS.TURKEY,
-    paddingTop: hp("5%"),
+    paddingTop: hp("2%"),
     textAlign: "center",
   },
   text_subTitulo: {
     fontFamily: "Gotham-SSm-Medium",
-    fontSize: hp("2.5%"),
+    fontSize: hp("2.4%"),
     color: COLORS.TURKEY_CLEAR,
     paddingTop: hp("6%"),
     textAlign: "center",

@@ -16,8 +16,8 @@ const CreateStepFour = ({ navigation, route }) => {
   const checkValidator = () => {
     navigation.navigate("CreateStepFive");
   };
-  const sideIconSize = hp("6%");
-  const mainIconSize = hp("12%");
+  const sideIconSize = hp("5%");
+  const mainIconSize = hp("9.5%");
 
   const [bagNumber, setBagNumber] = useState([0, 0, 0]);
 
@@ -31,98 +31,110 @@ const CreateStepFour = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <View style={styles.textSection}>
-        <Text style={styles.title}>Agregar Equipaje</Text>
-        <Text style={styles.desc}>
-          Todos los pasajeros tienen derecho a almenos un equipage de manos, aca
-          usted indica la cantidad de equipaje extra que dipsone fuera de los ya
-          garantiza Liion
-        </Text>
+      <View style={{ height: hp("78%") }}>
+        <View style={styles.textSection}>
+          <Text style={styles.title}>Agregar Equipaje</Text>
+          <Text style={styles.desc}>
+            {
+              "Indique el equipaje de mano,\nbolsos o maletas que permitirá\nen su viaje."
+            }
+          </Text>
+          <Text
+            style={{
+              ...styles.desc,
+              paddingTop: hp("0%"),
+              fontSize: hp("1.8%"),
+            }}
+          >
+            {"(Todos tienen derecho a un equipaje de mano)"}
+          </Text>
+        </View>
+
+        <View style={styles.iconsSection}>
+          <View>
+            <View style={styles.iconRow}>
+              <TouchableOpacity onPress={() => changeBagNumber(-1, 0)}>
+                <Feather
+                  style={styles.leftIcon}
+                  name="minus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+              <MaterialCommunityIcons
+                name="bag-personal-outline"
+                size={mainIconSize}
+                color={COLORS.TURKEY}
+              />
+              <TouchableOpacity onPress={() => changeBagNumber(1, 0)}>
+                <Feather
+                  style={styles.rightIcon}
+                  name="plus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.count}>{bagNumber[0]}</Text>
+          </View>
+          <View>
+            <View style={styles.iconRow}>
+              <TouchableOpacity onPress={() => changeBagNumber(-1, 1)}>
+                <Feather
+                  style={styles.leftIcon}
+                  name="minus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+              <Feather
+                name="briefcase"
+                size={mainIconSize}
+                color={COLORS.TURKEY}
+              />
+              <TouchableOpacity onPress={() => changeBagNumber(1, 1)}>
+                <Feather
+                  style={styles.rightIcon}
+                  name="plus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.count}>{bagNumber[1]}</Text>
+          </View>
+          <View>
+            <View style={styles.iconRow}>
+              <TouchableOpacity onPress={() => changeBagNumber(-1, 2)}>
+                <Feather
+                  style={styles.leftIcon}
+                  name="minus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+              <FontAwesome5
+                name="suitcase-rolling"
+                size={mainIconSize}
+                color={COLORS.TURKEY}
+              />
+              <TouchableOpacity onPress={() => changeBagNumber(1, 2)}>
+                <Feather
+                  style={styles.rightIcon}
+                  name="plus-circle"
+                  size={sideIconSize}
+                  color={COLORS.TURKEY}
+                />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.count}>{bagNumber[2]}</Text>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.iconsSection}>
-        <View>
-          <View style={styles.iconRow}>
-            <TouchableOpacity onPress={() => changeBagNumber(-1, 0)}>
-              <Feather
-                style={styles.leftIcon}
-                name="minus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-            <MaterialCommunityIcons
-              name="bag-personal-outline"
-              size={mainIconSize}
-              color={COLORS.TURKEY}
-            />
-            <TouchableOpacity onPress={() => changeBagNumber(1, 0)}>
-              <Feather
-                style={styles.rightIcon}
-                name="plus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.count}>{bagNumber[0]}</Text>
-        </View>
-        <View>
-          <View style={styles.iconRow}>
-            <TouchableOpacity onPress={() => changeBagNumber(-1, 1)}>
-              <Feather
-                style={styles.leftIcon}
-                name="minus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-            <Feather
-              name="briefcase"
-              size={mainIconSize}
-              color={COLORS.TURKEY}
-            />
-            <TouchableOpacity onPress={() => changeBagNumber(1, 1)}>
-              <Feather
-                style={styles.rightIcon}
-                name="plus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.count}>{bagNumber[1]}</Text>
-        </View>
-        <View>
-          <View style={styles.iconRow}>
-            <TouchableOpacity onPress={() => changeBagNumber(-1, 2)}>
-              <Feather
-                style={styles.leftIcon}
-                name="minus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-            <FontAwesome5
-              name="suitcase-rolling"
-              size={mainIconSize}
-              color={COLORS.TURKEY}
-            />
-            <TouchableOpacity onPress={() => changeBagNumber(1, 2)}>
-              <Feather
-                style={styles.rightIcon}
-                name="plus-circle"
-                size={sideIconSize}
-                color={COLORS.TURKEY}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.count}>{bagNumber[2]}</Text>
-        </View>
-      </View>
       <View style={styles.buttonView}>
         <ButtonLiion
-          title="Ingresar"
+          title="Siguiente"
           styleView={styles.button}
           onPress={() => checkValidator()}
         />
@@ -136,9 +148,9 @@ export default CreateStepFour;
 const styles = StyleSheet.create({
   buttonView: {
     flex: 1,
-    height: hp("23%"),
+    height: hp("15%"),
     justifyContent: "flex-end",
-    paddingBottom: hp("4%"),
+    paddingBottom: hp("6%"),
   },
   button: {
     width: wp("78.6%"),
@@ -153,19 +165,21 @@ const styles = StyleSheet.create({
   textSection: {
     flex: 6,
     alignItems: "center",
+    marginBottom: hp("8"),
   },
   title: {
     fontFamily: "Gotham-SSm-Bold",
-    fontSize: wp("6.5%"),
+    fontSize: hp("3%"),
+    paddingTop: hp("2%"),
     textAlign: "center",
     color: COLORS.TURKEY,
   },
   desc: {
-    fontFamily: "Gotham-SSm-Book",
-    fontSize: wp("3.7%"),
-    paddingTop: hp("5%"),
+    fontFamily: "Gotham-SSm-Medium",
+    fontSize: hp("2.4%"),
+    paddingTop: hp("6%"),
     textAlign: "center",
-    color: COLORS.TURKEY,
+    color: COLORS.TURKEY_CLEAR,
   },
   iconsSection: {
     flex: 18,

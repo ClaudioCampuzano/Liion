@@ -17,21 +17,23 @@ import { numberWithSep } from "../../utils/utils";
 
 const CreateStepTwo = ({ navigation, route }) => {
   //console.log(route.params.createValues)
-  
-
-  
 
   const hardCodedGpsData = useRef([
-    { latitude: route.params.createValues.addresses.origin.location.lat, longitude: route.params.createValues.addresses.origin.location.lng },
-    { latitude: route.params.createValues.addresses.destination.location.lat, longitude: route.params.createValues.addresses.destination.location.lng },
+    {
+      latitude: route.params.createValues.addresses.origin.location.lat,
+      longitude: route.params.createValues.addresses.origin.location.lng,
+    },
+    {
+      latitude: route.params.createValues.addresses.destination.location.lat,
+      longitude: route.params.createValues.addresses.destination.location.lng,
+    },
   ]);
- 
 
   const [nOfSeats, setnOfSeats] = useState(0);
   const [price, setPrice] = useState(0);
 
   const [errorPrice, setErrorPrice] = useState(null);
-  const [errornSeat, setErrornSeat] = useState(COLORS.BORDER_COLOR);
+  const [errornSeat, setErrornSeat] = useState(COLORS.TURKEY);
 
   const [focusEmailInput, setfocusPriceInput] = useState(false);
 
@@ -40,8 +42,8 @@ const CreateStepTwo = ({ navigation, route }) => {
   }, [focusEmailInput]);
 
   useEffect(() => {
-    setErrornSeat(COLORS.BORDER_COLOR)
-  }, [nOfSeats])
+    setErrornSeat(COLORS.TURKEY);
+  }, [nOfSeats]);
 
   const ButtonGo = () => {
     if (price > 0 && nOfSeats > 0) navigation.navigate("CreateStepThree");
@@ -73,8 +75,6 @@ const CreateStepTwo = ({ navigation, route }) => {
     let nn = Number(n);
     setPrice(nn);
   };
-  
-  
 
   return (
     <Layout>
@@ -138,13 +138,13 @@ const CreateStepTwo = ({ navigation, route }) => {
                   type="plus-minus"
                   textColor="#26547C"
                   iconStyle={{ color: COLORS.WHITE }}
-                  rightButtonBackgroundColor={COLORS.TURKEY}
-                  leftButtonBackgroundColor={COLORS.TURKEY}
+                  rightButtonBackgroundColor={errornSeat}
+                  leftButtonBackgroundColor={errornSeat}
                   totalHeight={hp("7%")}
                   totalWidth={wp("22%")}
                   minValue={0}
                   maxValue={10}
-                  borderColor={errornSeat}
+                  borderColor={COLORS.BORDER_COLOR}
                 />
               </View>
             </View>
