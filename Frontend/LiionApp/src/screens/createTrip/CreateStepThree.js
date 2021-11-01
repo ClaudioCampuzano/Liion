@@ -16,8 +16,17 @@ const CreateStepThree = ({ navigation, route }) => {
     approvalIns: false,
   });
 
-  const changePreferencesHandler = (field, value) => {
-    setPreferences({ ...preferences, [field]: value });
+  const changePreferencesHandler = (field) => {
+    let aux = { ...preferences };
+    switch (field) {
+      case "smoking":
+        aux.smoking ? (aux.smoking = false) : (aux.smoking = true);
+        break;
+      default:
+        aux.approvalIns ? (aux.approvalIns = false) : (aux.approvalIns = true);
+        break;
+    }
+    setPreferences(aux);
   };
 
   useEffect(() => {
@@ -52,46 +61,6 @@ const CreateStepThree = ({ navigation, route }) => {
         aux.onlyWoman = false;
       }
     setPreferences(aux);
-
-    /*    if (field === "allGender")
-      if (!aux.allGender) {
-        aux.allGender = true;
-        aux.onlyWoman = false;
-        aux.onlyMen = false;
-      } else if (!aux.onlyWoman && !aux.onlyMen) aux.allGender = false;
-
-    if (field === "onlyWoman")
-      if (!aux.onlyWoman) {
-        aux.allGender = false;
-        aux.onlyWoman = true;
-        aux.onlyMen = false;
-      } else if (!aux.onlyMen && !aux.allGender) aux.allGender = true;
-
-    if (field === "onlyMen")
-      if (!aux.onlyMen) {
-        aux.allGender = false;
-        aux.onlyWoman = false;
-        aux.onlyMen = true;
-      } else if (!aux.onlyWoman && !aux.allGender) aux.allGender = true;
-    setPreferences(aux);
-
-    /*    if (value)
-      switch (field) {
-        case "onlyWoman":
-          aux.allGender = false;
-          aux.onlyWoman = true;
-          aux.onlyMen = false;
-          break;
-        case "onlyMen":
-          aux.allGender = false;
-          aux.onlyWoman = false;
-          aux.onlyMen = true;
-          break;
-        default:
-          aux.allGender = true;
-          aux.onlyWoman = false;
-          aux.onlyMen = false;
-      }  */
   };
 
   const checkValidator = () => {
@@ -135,19 +104,15 @@ const CreateStepThree = ({ navigation, route }) => {
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
             <TouchableIcon
-              valueDefault={preferences.smoking}
+              value={preferences.smoking}
               type={"smoking"}
-              onStateChange={(value) =>
-                value && changePreferencesHandler("smoking", value)
-              }
+              onPress={() => changePreferencesHandler("smoking")}
               style={{ paddingTop: hp("1.5") }}
             />
             <TouchableIcon
-              valueDefault={preferences.approvalIns}
+              value={preferences.approvalIns}
               type={"approval"}
-              onStateChange={(value) =>
-                value && changePreferencesHandler("approvalIns", value)
-              }
+              onPress={() => changePreferencesHandler("approvalIns")}
               style={{ paddingTop: hp("1.5") }}
             />
           </View>
