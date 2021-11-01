@@ -15,6 +15,10 @@ import MapViewCustom from "../../components/MapViewCustom";
 
 import { numberWithSep } from "../../utils/utils";
 
+import moment from "moment";
+import "moment/locale/es";
+moment.locale("es");
+
 const CreateStepTwo = ({ navigation, route }) => {
   //console.log(route.params.createValues)
 
@@ -29,21 +33,40 @@ const CreateStepTwo = ({ navigation, route }) => {
     },
   ]);
 
+  const [viewInfo, setViewInfo] = useState({
+    time: moment(route.params.createValues.time, "hh:mm"),
+    date: moment(route.params.createValues.date, "DD-MM-YYYY"),
+  });
+
   const [nOfSeats, setnOfSeats] = useState(0);
   const [price, setPrice] = useState(0);
+  const [mapInfo, setMapInfo] = useState({});
+  const [totalMoney, setTotalMoney] = useState(0);
+
+  const [focusEmailInput, setfocusPriceInput] = useState(false);
 
   const [errorPrice, setErrorPrice] = useState(null);
   const [errornSeat, setErrornSeat] = useState(COLORS.TURKEY);
-
-  const [focusEmailInput, setfocusPriceInput] = useState(false);
 
   useEffect(() => {
     if (focusEmailInput) setErrorPrice(false);
   }, [focusEmailInput]);
 
   useEffect(() => {
-    setErrornSeat(COLORS.TURKEY);
+    if (errornSeat === COLORS.WARN_RED) setErrornSeat(COLORS.TURKEY);
   }, [nOfSeats]);
+
+  useEffect(() => {
+    //Supuestamente aqui se hace el calculo del precio, que incluye valor de la bencina ocupada + peajes
+    //Simularemos, que el costo de los peajes es 0, que la bencina esta a 900 el L, y que el auto rinde 15 km/L
+    setTotalMoney(Math.round(mapInfo.distance/15 * 900));
+  }, [mapInfo]);
+
+  const NumberFormatter = (str) => {
+    let n = str.replace(/\D/g, "");
+    let nn = Number(n);
+    setPrice(nn);
+  };
 
   const ButtonGo = () => {
     if (price > 0 && nOfSeats > 0) navigation.navigate("CreateStepThree");
@@ -51,29 +74,6 @@ const CreateStepTwo = ({ navigation, route }) => {
       if (price < 1) setErrorPrice(" ");
       if (nOfSeats < 1) setErrornSeat(COLORS.WARN_RED);
     }
-  };
-
-  /*
-  const { userFirestoreData, getState2 } = useContext(GlobalContext);
-  useEffect(() => {
-    let flag =
-      Object.keys(userFirestoreData).length !== 0 &&
-      Object.getPrototypeOf(userFirestoreData) === Object.prototype;
-    if (userFirestoreData && flag) {
-      console.log("Create1");
-    }
-  }, [getState2]);
-  */
-
-  const [totalMoney, setTotalMoney] = useState(0);
-  useEffect(() => {
-    setTotalMoney(nOfSeats * price);
-  }, [nOfSeats, price]);
-
-  const NumberFormatter = (str) => {
-    let n = str.replace(/\D/g, "");
-    let nn = Number(n);
-    setPrice(nn);
   };
 
   return (
@@ -86,23 +86,22 @@ const CreateStepTwo = ({ navigation, route }) => {
             mapDirections={true}
             showGps={false}
             onDataChange={() => navigation.navigate("CreateStepOne")}
-            //onDataExtract={(value)=> console.log(value)}
+            onDataExtract={(value) => setMapInfo(value)}
           />
         </View>
         <View style={styles.bottomPanel}>
           <View style={styles.InfoView}>
             <Text style={styles.titleStyle}>
-              {"    " +
-                route.params.createValues.date +
-                " | " +
-                route.params.createValues.time}
+              {"    " + viewInfo.date.format("LL")}
             </Text>
 
             <View style={styles.bar2}>
               <ShowTravel
                 style={styles.inputLocation}
-                timeStart={route.params.createValues.time}
-                timeEnd={"N/A"}
+                timeStart={viewInfo.time.format("LT")}
+                timeEnd={viewInfo.time
+                  .add(mapInfo.duration, "minutes")
+                  .format("LT")}
                 labelO={
                   route.params.createValues.addresses.origin.formatted_address
                 }

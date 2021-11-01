@@ -29,10 +29,6 @@ const CreateStepThree = ({ navigation, route }) => {
     setPreferences(aux);
   };
 
-  useEffect(() => {
-    console.log(preferences);
-  }, [preferences]);
-
   const handleGender = (field, value) => {
     let aux = { ...preferences };
 
