@@ -28,28 +28,54 @@ const CreateStepThree = ({ navigation, route }) => {
     let aux = { ...preferences };
 
     if (field === "allGender")
-      if (value) {
+      if (aux.allGender) {
+        if (aux.onlyWoman || aux.onlyMen) aux.allGender = false;
+      } else {
+        aux.allGender = true;
+        aux.onlyMen = false;
+        aux.onlyWoman = false;
+      }
+    else if (field === "onlyWoman")
+      if (aux.onlyWoman) {
+        if (aux.allGender || aux.onlyMen) aux.onlyWoman = false;
+      } else {
+        aux.onlyWoman = true;
+        aux.onlyMen = false;
+        aux.allGender = false;
+      }
+    else if (field === "onlyMen")
+      if (aux.onlyMen) {
+        if (aux.onlyWoman || aux.allGender) aux.onlyMen = false;
+      } else {
+        aux.onlyMen = true;
+        aux.allGender = false;
+        aux.onlyWoman = false;
+      }
+    setPreferences(aux);
+
+    /*    if (field === "allGender")
+      if (!aux.allGender) {
         aux.allGender = true;
         aux.onlyWoman = false;
         aux.onlyMen = false;
       } else if (!aux.onlyWoman && !aux.onlyMen) aux.allGender = false;
 
     if (field === "onlyWoman")
-      if (value) {
+      if (!aux.onlyWoman) {
         aux.allGender = false;
         aux.onlyWoman = true;
         aux.onlyMen = false;
       } else if (!aux.onlyMen && !aux.allGender) aux.allGender = true;
 
     if (field === "onlyMen")
-      if (value) {
+      if (!aux.onlyMen) {
         aux.allGender = false;
         aux.onlyWoman = false;
         aux.onlyMen = true;
       } else if (!aux.onlyWoman && !aux.allGender) aux.allGender = true;
     setPreferences(aux);
 
-    /*     if (value)
+    /*    if (value)
       switch (field) {
         case "onlyWoman":
           aux.allGender = false;
@@ -65,7 +91,7 @@ const CreateStepThree = ({ navigation, route }) => {
           aux.allGender = true;
           aux.onlyWoman = false;
           aux.onlyMen = false;
-      } */
+      }  */
   };
 
   const checkValidator = () => {
@@ -84,21 +110,21 @@ const CreateStepThree = ({ navigation, route }) => {
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
             <TouchableIcon
-              valueDefault={preferences.allGender}
+              value={preferences.allGender}
               type={"allGender"}
-              onStateChange={(value) => handleGender("allGender", value)}
+              onPress={() => handleGender("allGender")}
               style={{ paddingTop: hp("1.5") }}
             />
             <TouchableIcon
-              valueDefault={preferences.onlyWoman}
+              value={preferences.onlyWoman}
               type={"woman"}
-              onStateChange={(value) => handleGender("onlyWoman", value)}
+              onPress={() => handleGender("onlyWoman")}
               style={{ paddingTop: hp("1.5") }}
             />
             <TouchableIcon
-              valueDefault={preferences.onlyMen}
+              value={preferences.onlyMen}
               type={"men"}
-              onStateChange={(value) => handleGender("onlyMen", value)}
+              onPress={() => handleGender("onlyMen")}
               style={{ paddingTop: hp("1.5") }}
             />
           </View>

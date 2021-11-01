@@ -4,18 +4,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS, hp } from "../constants/styleThemes";
 
 const TouchableIcon = (props) => {
-  const { type, valueDefault, style, ...restOfProps } = props;
-  const [stateIcon, SetStateIcon] = useState(valueDefault);
+  const { type, value, style, ...restOfProps } = props;
 
-  useEffect(() => {
-    props.onStateChange(stateIcon);
-  }, [stateIcon]);
-
-  useEffect(() => {
-    SetStateIcon(valueDefault);
-  }, [valueDefault]);
-
-  let color = stateIcon ? COLORS.TURKEY : COLORS.LIGHT_LEAD;
+  let color = value ? COLORS.TURKEY : COLORS.LIGHT_LEAD;
   let labelShow = "";
   let nameIcon = "";
   switch (type) {
@@ -45,9 +36,7 @@ const TouchableIcon = (props) => {
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => (stateIcon ? SetStateIcon(false) : SetStateIcon(true))}
-    >
+    <TouchableWithoutFeedback {...restOfProps}>
       <View style={{ ...styles.viewGeneral, ...style }}>
         <MaterialCommunityIcons
           name={nameIcon}
