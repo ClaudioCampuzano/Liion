@@ -29,7 +29,7 @@ const CreateStepFive = ({ navigation, route }) => {
     destiny: "San Fernando, Region de Ohiggins",
     nOfSeats: 3,
     pricerPerSeat: 4000,
-    nofBags: [1, 1, 1],
+    bags: [1, 0, 1],
     vehicle: { model: "Tesla Model X", color: "Blanco", patente: "ABCD12" },
   });
   return (
@@ -99,7 +99,35 @@ const CreateStepFive = ({ navigation, route }) => {
             <Text style={styles.price}>$ {vars.current.pricerPerSeat}</Text>
           </View>
           <View style={styles.bagsContainer}>
-            <Text>ETAPA CINCO</Text>
+            <Text style={styles.equipajePermStyle}>
+              Equipaje extra permitido
+            </Text>
+            <View style={styles.bagIcons}>
+              
+              <View style={styles.bagIconText}>
+              <MaterialCommunityIcons
+                name="bag-personal-outline"
+                size={hp("7")}
+                color={COLORS.TURKEY}
+              />
+              <Text style={styles.bagIconTinyText}>Mochila {vars.current.bags[0]}</Text>
+              
+              </View>
+              <View style={styles.bagIconText}>
+              <Feather name="briefcase" size={hp("7")} color={COLORS.TURKEY} />
+              <Text style={styles.bagIconTinyText}>Maletín {vars.current.bags[1]}</Text>
+              </View>
+              
+              <View style={styles.bagIconText}>
+              <FontAwesome5
+                name="suitcase-rolling"
+                size={hp("7")}
+                color={COLORS.TURKEY}
+                />
+                <Text style={styles.bagIconTinyText}>Maleta {vars.current.bags[2]}</Text>
+                </View>
+              
+            </View>
           </View>
         </View>
         <View style={styles.buttonView}>
@@ -122,7 +150,6 @@ const styles = StyleSheet.create({
     height: hp("23%"),
     justifyContent: "flex-end",
     paddingBottom: hp("5%"),
-    backgroundColor: "green",
   },
   button: {
     width: wp("78.6%"),
@@ -137,7 +164,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   titleContainer: {
-    backgroundColor: "green",
     flex: 1.1,
     justifyContent: "center",
     alignItems: "center",
@@ -156,11 +182,9 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-SSm-Bold",
   },
   routeContainer: {
-    backgroundColor: "yellow",
     flex: 0.9,
   },
   vehicleContainer: {
-    backgroundColor: "green",
     flex: 0.7,
     display: "flex",
     flexDirection: "row",
@@ -186,11 +210,12 @@ const styles = StyleSheet.create({
     marginRight: wp("2%"),
   },
   priceContainer: {
-    backgroundColor: "yellow",
     flex: 1,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    borderBottomWidth:1,
+    borderColor:COLORS.GRAY,
   },
   price: {
     fontFamily: "Gotham-SSm-Bold",
@@ -224,11 +249,34 @@ const styles = StyleSheet.create({
   tinyIcons: {
     display: "flex",
     flexDirection: "row",
-    
   },
   bagsContainer: {
-    backgroundColor: "red",
     flex: 1.2,
+    marginTop:hp("1.5"),
+  },
+  equipajePermStyle: {
+    fontFamily: "Gotham-SSm-Bold",
+    fontSize: wp("3.2%"),
+    color: COLORS.LEAD,
+  },
+  bagIcons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginTop:hp("2.5"),
+  },
+  bagIconText:{
+    display:"flex",
+    flexDirection:"column",
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  bagIconTinyText:{
+    fontFamily: "Gotham-SSm-Medium",
+    fontSize: wp("3.7%"),
+    color: COLORS.TURKEY,
+    alignSelf:"center",
   },
   inputLocation: {
     width: wp("78.6%"),
