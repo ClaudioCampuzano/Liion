@@ -20,7 +20,7 @@ import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
-  //console.log(route.params.createValues)
+  console.log(route.params.createValues);
 
   const hardCodedGpsData = useRef([
     {
@@ -32,11 +32,6 @@ const CreateStepTwo = ({ navigation, route }) => {
       longitude: route.params.createValues.addresses.destination.location.lng,
     },
   ]);
-
-  const [viewInfo, setViewInfo] = useState({
-    time: moment(route.params.createValues.time, "hh:mm"),
-    date: moment(route.params.createValues.date, "DD-MM-YYYY"),
-  });
 
   const [nOfSeats, setnOfSeats] = useState(0);
   const [price, setPrice] = useState(0);
@@ -59,7 +54,7 @@ const CreateStepTwo = ({ navigation, route }) => {
   useEffect(() => {
     //Supuestamente aqui se hace el calculo del precio, que incluye valor de la bencina ocupada + peajes
     //Simularemos, que el costo de los peajes es 0, que la bencina esta a 900 el L, y que el auto rinde 15 km/L
-    setTotalMoney(Math.round(mapInfo.distance/15 * 900));
+    setTotalMoney(Math.round((mapInfo.distance / 15) * 900));
   }, [mapInfo]);
 
   const NumberFormatter = (str) => {
@@ -92,14 +87,20 @@ const CreateStepTwo = ({ navigation, route }) => {
         <View style={styles.bottomPanel}>
           <View style={styles.InfoView}>
             <Text style={styles.titleStyle}>
-              {"    " + viewInfo.date.format("LL")}
+              {"    " +
+                moment(route.params.createValues.date, "DD-MM-YYYY").format(
+                  "LL"
+                )}
             </Text>
 
             <View style={styles.bar2}>
               <ShowTravel
                 style={styles.inputLocation}
-                timeStart={viewInfo.time.format("LT")}
-                timeEnd={viewInfo.time
+                timeStart={moment(
+                  route.params.createValues.time,
+                  "hh:mm"
+                ).format("LT")}
+                timeEnd={moment(route.params.createValues.time, "hh:mm")
                   .add(mapInfo.duration, "minutes")
                   .format("LT")}
                 labelO={
@@ -153,7 +154,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                 style={styles.input}
                 label=""
                 errorText={errorPrice}
-                //value={price.toString()}
+                value={price.toString()}
                 secureTextEntry={false}
                 onBlur={() => setfocusPriceInput(false)}
                 onFocus={() => setfocusPriceInput(true)}

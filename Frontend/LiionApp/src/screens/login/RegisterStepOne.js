@@ -12,7 +12,14 @@ import InputDateTime from "../../components/InputDateTime";
 import moment from "moment";
 import "moment/locale/es";
 
+import {Picker} from '@react-native-picker/picker';
+
+
 const RegisterStepOne = ({ navigation }) => {
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
+
+
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
@@ -118,7 +125,7 @@ const RegisterStepOne = ({ navigation }) => {
               maximum="6574"
               minimum="33238"
             />
-            <InputLiion
+            {/*             <InputLiion
               style={styles.input}
               label="Genero"
               errorText={errorRun}
@@ -126,7 +133,15 @@ const RegisterStepOne = ({ navigation }) => {
               value={valueRun}
               secureTextEntry={false}
               onChangeText={(text) => setValueRun(text)}
-            />
+            /> */}
+<Picker
+  selectedValue={selectedLanguage}
+  onValueChange={(itemValue, itemIndex) =>
+    setSelectedLanguage(itemValue)
+  }>
+  <Picker.Item label="Java" value="java" />
+  <Picker.Item label="JavaScript" value="js" />
+</Picker>
           </ScrollView>
         </View>
         <View style={styles.buttonView}>
