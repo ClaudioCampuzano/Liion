@@ -13,13 +13,15 @@ import {
 } from "@expo/vector-icons";
 
 const CreateStepFour = ({ navigation, route }) => {
+  //console.log(route.params)
+
   const checkValidator = () => {
-    navigation.navigate("CreateStepFive");
+    navigation.navigate("CreateStepFive", { ...route.params, personalItem:bagNumber[0], bigBags:bagNumber[1]});
   };
   const sideIconSize = hp("5%");
   const mainIconSize = hp("9.5%");
 
-  const [bagNumber, setBagNumber] = useState([0, 0, 0]);
+  const [bagNumber, setBagNumber] = useState([0, 0]);
 
   const changeBagNumber = (num, pos) => {
     let arr = [...bagNumber];
@@ -52,6 +54,7 @@ const CreateStepFour = ({ navigation, route }) => {
 
         <View style={styles.iconsSection}>
           <View>
+          <Text style={styles.badTitle}>Equipaje de mano o articulo personal </Text>
             <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => changeBagNumber(-1, 0)}>
                 <Feather
@@ -75,37 +78,14 @@ const CreateStepFour = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
+            <Text style={styles.badDesc}>Dimensiones maximas </Text>
+            <Text style={styles.badDesc}>55x35x25 cm (alto, largo y ancho)</Text>
             <Text style={styles.count}>{bagNumber[0]}</Text>
           </View>
           <View>
+          <Text style={styles.badTitle}>Maletas de viaje </Text>
             <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => changeBagNumber(-1, 1)}>
-                <Feather
-                  style={styles.leftIcon}
-                  name="minus-circle"
-                  size={sideIconSize}
-                  color={COLORS.TURKEY}
-                />
-              </TouchableOpacity>
-              <Feather
-                name="briefcase"
-                size={mainIconSize}
-                color={COLORS.TURKEY}
-              />
-              <TouchableOpacity onPress={() => changeBagNumber(1, 1)}>
-                <Feather
-                  style={styles.rightIcon}
-                  name="plus-circle"
-                  size={sideIconSize}
-                  color={COLORS.TURKEY}
-                />
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.count}>{bagNumber[1]}</Text>
-          </View>
-          <View>
-            <View style={styles.iconRow}>
-              <TouchableOpacity onPress={() => changeBagNumber(-1, 2)}>
                 <Feather
                   style={styles.leftIcon}
                   name="minus-circle"
@@ -118,7 +98,7 @@ const CreateStepFour = ({ navigation, route }) => {
                 size={mainIconSize}
                 color={COLORS.TURKEY}
               />
-              <TouchableOpacity onPress={() => changeBagNumber(1, 2)}>
+              <TouchableOpacity onPress={() => changeBagNumber(1, 1)}>
                 <Feather
                   style={styles.rightIcon}
                   name="plus-circle"
@@ -127,7 +107,9 @@ const CreateStepFour = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={styles.count}>{bagNumber[2]}</Text>
+            <Text style={styles.badDesc}>todo lo que supere </Text>
+            <Text style={styles.badDesc}>las medidas antes mensionadas </Text>
+                        <Text style={styles.count}>{bagNumber[1]}</Text>
           </View>
         </View>
       </View>
@@ -197,6 +179,20 @@ const styles = StyleSheet.create({
     paddingTop: hp("0%"),
     textAlign: "center",
     color: COLORS.BLACK,
+  },
+  badDesc:{
+    fontFamily: "Gotham-SSm-Medium",
+    fontSize: wp("3%"),
+    paddingTop: hp("0%"),
+    textAlign: "center",
+    color: COLORS.TURKEY,
+  },
+  badTitle:{
+    fontFamily: "Gotham-SSm-Bold",
+    fontSize: wp("3.5%"),
+    marginBottom: hp("1.5%"),
+    textAlign: "center",
+    color: COLORS.TURKEY,
   },
   leftIcon: {
     paddingRight: wp("6.5%"),

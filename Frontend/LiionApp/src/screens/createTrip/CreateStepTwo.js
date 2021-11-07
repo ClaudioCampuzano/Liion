@@ -20,7 +20,9 @@ import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
-  console.log(route.params.createValues);
+  //console.log(route.params.createValues);
+  //1
+  //console.log('render ', typeof mapInfo === 'undefined')
 
   const hardCodedGpsData = useRef([
     {
@@ -63,8 +65,24 @@ const CreateStepTwo = ({ navigation, route }) => {
     setPrice(nn);
   };
 
+  //2
+  //js si se ejecuta secuencialmente en JS (apa la prueba reyKING)
+  //console.log('render ', typeof mapInfo === 'undefined')
+
+  //useEffect (() => {
+  //console.log(mapInfo)
+  //console.log('useffect ',typeof mapInfo === 'undefined')
+  //}, [mapInfo])
+
   const ButtonGo = () => {
-    if (price > 0 && nOfSeats > 0) navigation.navigate("CreateStepThree");
+    if (price > 0 && nOfSeats > 0)
+      navigation.navigate("CreateStepThree", {
+        nOfSeats: nOfSeats,
+        price: price,
+        totalMoney: totalMoney,
+        ...route.params.createValues,
+        ...mapInfo,
+      });
     else {
       if (price < 1) setErrorPrice(" ");
       if (nOfSeats < 1) setErrornSeat(COLORS.WARN_RED);
@@ -81,7 +99,9 @@ const CreateStepTwo = ({ navigation, route }) => {
             mapDirections={true}
             showGps={false}
             onDataChange={() => navigation.navigate("CreateStepOne")}
-            onDataExtract={(value) => setMapInfo(value)}
+            onDataExtract={(value) => {
+              setMapInfo(value);
+            }}
           />
         </View>
         <View style={styles.bottomPanel}>

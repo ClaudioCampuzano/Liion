@@ -11,8 +11,15 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ShowTravel from "../../components/ShowTravel";
+import { GlobalContext } from "../../context/Provider";
+import moment from "moment";
+import "moment/locale/es";
+moment.locale("es");
 
 const CreateStepFive = ({ navigation, route }) => {
+  const { userFirestoreData } = useContext(GlobalContext);
+  //console.log(route.params.time)
+
   const checkValidator = () => {
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
@@ -32,6 +39,47 @@ const CreateStepFive = ({ navigation, route }) => {
     bags: [1, 0, 1],
     vehicle: { model: "Tesla Model X", color: "Blanco", patente: "ABCD12" },
   });
+
+  const getSex = () => {
+    if (route.params.allGender) {
+      return (
+        <View style={styles.iconTextInfo}>
+          <Text style={styles.iconTextInfoText}>Todo Género</Text>
+          <MaterialCommunityIcons
+            name={"gender-male-female"}
+            size={hp("2")}
+            color={COLORS.TURKEY}
+            style={{ alignSelf: "center" }}
+          />
+        </View>
+      );
+    } else if (route.params.onlyWoman) {
+      return (
+        <View style={styles.iconTextInfo}>
+          <Text style={styles.iconTextInfoText}>Solo Mujeres</Text>
+          <MaterialCommunityIcons
+            name={"gender-female"}
+            size={hp("2")}
+            color={COLORS.TURKEY}
+            style={{ alignSelf: "center" }}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.iconTextInfo}>
+          <Text style={styles.iconTextInfoText}>Solo Hombres</Text>
+          <MaterialCommunityIcons
+            name={"gender-male"}
+            size={hp("2")}
+            color={COLORS.TURKEY}
+            style={{ alignSelf: "center" }}
+          />
+        </View>
+      );
+    }
+  };
+
   return (
     <Layout>
       <View style={styles.container}>
@@ -45,10 +93,12 @@ const CreateStepFive = ({ navigation, route }) => {
             <Text style={styles.rutaStyle}>Ruta</Text>
             <ShowTravel
               style={styles.inputLocation}
-              timeStart="16:00"
-              timeEnd="19:00"
-              labelO={vars.current.origin}
-              labelD={vars.current.destiny}
+              timeStart={route.params.time}
+              timeEnd={moment(route.params.time, "hh:mm")
+                .add(route.params.duration, "minutes")
+                .format("LT")}
+              labelO={route.params.addresses.origin.formatted_address}
+              labelD={route.params.addresses.destination.formatted_address}
               dirTextSize={wp("2.5%")}
             />
           </View>
@@ -60,14 +110,27 @@ const CreateStepFive = ({ navigation, route }) => {
             <View>
               <Text style={styles.vehicleModelTitle}>
                 {" "}
-                {vars.current.vehicle.model}
+                {userFirestoreData.driverData.car}
               </Text>
               <Text style={styles.vehicleModelColor}>
-                {vars.current.vehicle.patente}
+                {userFirestoreData.driverData.plate}
               </Text>
               <Text style={styles.vehicleModelColor}>
-                {vars.current.vehicle.color}
+                {userFirestoreData.driverData.carcolor}
               </Text>
+            </View>
+            <View style={{ marginLeft: wp("3") }}>
+              {getSex()}
+              {route.params.approvalIns ? (
+                <Text style={styles.iconTextInfoText}> Admisión Rápida</Text>
+              ) : (
+                <></>
+              )}
+              {route.params.smoking ? (
+                <Text style={styles.iconTextInfoText}> Permitido Fumar</Text>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
           <View style={styles.priceContainer}>
@@ -80,7 +143,7 @@ const CreateStepFive = ({ navigation, route }) => {
                 />
                 <View style={styles.tinyiconText}>
                   <View style={styles.tinyIcons}>
-                    {[...Array(vars.current.nOfSeats)].map((value, index) => (
+                    {[...Array(route.params.nOfSeats)].map((value, index) => (
                       <Ionicons
                         key={index}
                         name="person-circle-outline"
@@ -90,43 +153,42 @@ const CreateStepFive = ({ navigation, route }) => {
                     ))}
                   </View>
                   <Text style={styles.tinyTextStyle}>
-                    {vars.current.nOfSeats} asientos disponibles
+                    {route.params.nOfSeats} asientos disponibles
                   </Text>
                 </View>
               </View>
               <Text style={styles.prideDesc}>Precio por asiento</Text>
             </View>
-            <Text style={styles.price}>$ {vars.current.pricerPerSeat}</Text>
+            <Text style={styles.price}>$ {route.params.price}</Text>
           </View>
           <View style={styles.bagsContainer}>
             <Text style={styles.equipajePermStyle}>
               Equipaje extra permitido
             </Text>
             <View style={styles.bagIcons}>
-              
               <View style={styles.bagIconText}>
-              <MaterialCommunityIcons
-                name="bag-personal-outline"
-                size={hp("7")}
-                color={COLORS.TURKEY}
-              />
-              <Text style={styles.bagIconTinyText}>Mochila {vars.current.bags[0]}</Text>
-              
-              </View>
-              <View style={styles.bagIconText}>
-              <Feather name="briefcase" size={hp("7")} color={COLORS.TURKEY} />
-              <Text style={styles.bagIconTinyText}>Maletín {vars.current.bags[1]}</Text>
-              </View>
-              
-              <View style={styles.bagIconText}>
-              <FontAwesome5
-                name="suitcase-rolling"
-                size={hp("7")}
-                color={COLORS.TURKEY}
+                <MaterialCommunityIcons
+                  name="bag-personal-outline"
+                  size={hp("7")}
+                  color={COLORS.TURKEY}
                 />
-                <Text style={styles.bagIconTinyText}>Maleta {vars.current.bags[2]}</Text>
-                </View>
-              
+                <Text style={styles.bagIconTinyText}>Equipaje de mano </Text>
+                <Text style={styles.bagIconTinyText}>
+                  {route.params.personalItem}
+                </Text>
+              </View>
+
+              <View style={styles.bagIconText}>
+                <FontAwesome5
+                  name="suitcase-rolling"
+                  size={hp("7")}
+                  color={COLORS.TURKEY}
+                />
+                <Text style={styles.bagIconTinyText}>Maleta de viaje</Text>
+                <Text style={styles.bagIconTinyText}>
+                  {route.params.bigBags}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -188,7 +250,7 @@ const styles = StyleSheet.create({
     flex: 0.7,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -205,8 +267,8 @@ const styles = StyleSheet.create({
     color: COLORS.LEAD,
   },
   teslaImage: {
-    width: wp("25%"),
-    height: hp("7%"),
+    width: wp("17.5%"),
+    height: hp("4.9%"),
     marginRight: wp("2%"),
   },
   priceContainer: {
@@ -214,8 +276,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomWidth:1,
-    borderColor:COLORS.GRAY,
+    borderBottomWidth: 1,
+    borderColor: COLORS.GRAY,
   },
   price: {
     fontFamily: "Gotham-SSm-Bold",
@@ -252,7 +314,7 @@ const styles = StyleSheet.create({
   },
   bagsContainer: {
     flex: 1.2,
-    marginTop:hp("1.5"),
+    marginTop: hp("1.5"),
   },
   equipajePermStyle: {
     fontFamily: "Gotham-SSm-Bold",
@@ -264,24 +326,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    marginTop:hp("2.5"),
+    marginTop: hp("2.5"),
   },
-  bagIconText:{
-    display:"flex",
-    flexDirection:"column",
-    justifyContent:"center",
-    alignItems:"center",
+  bagIconText: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  bagIconTinyText:{
+  bagIconTinyText: {
     fontFamily: "Gotham-SSm-Medium",
     fontSize: wp("3.7%"),
     color: COLORS.TURKEY,
-    alignSelf:"center",
+    alignSelf: "center",
   },
   inputLocation: {
     width: wp("78.6%"),
     height: hp("12%"),
     alignSelf: "center",
     marginTop: -1 * wp("2%"),
+  },
+  iconTextInfo: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  iconTextInfoText: {
+    fontFamily: "Gotham-SSm-Medium",
+    fontSize: wp("3.5%"),
+    color: COLORS.TURKEY,
+    alignSelf: "auto",
   },
 });

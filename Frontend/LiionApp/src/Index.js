@@ -69,6 +69,8 @@ const Index = (props) => {
     })();
   }, [reloadTrigger]);  */
 
+  //console.log(user,isLoaded,fontsLoaded,isLoadedDATA,isAuthenticated, isLoggedIn)
+
   return (
     <>
       {isLoaded && fontsLoaded && (!user || isLoadedDATA) ? (

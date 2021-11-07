@@ -16,6 +16,8 @@ const CreateStepThree = ({ navigation, route }) => {
     approvalIns: false,
   });
 
+
+
   const changePreferencesHandler = (field) => {
     let aux = { ...preferences };
     switch (field) {
@@ -60,7 +62,7 @@ const CreateStepThree = ({ navigation, route }) => {
   };
 
   const checkValidator = () => {
-    navigation.navigate("CreateStepFour", { ...preferences });
+    navigation.navigate("CreateStepFour", { ...route.params, ...preferences });
   };
   return (
     <Layout>
