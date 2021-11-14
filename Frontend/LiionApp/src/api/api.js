@@ -45,7 +45,7 @@ export const unProtectedRoute = async () => {
   }
 };
 
-export const RegisterBackend = async (payload) => {
+export const registerBackend = async (payload) => {
   const payloadStr = JSON.stringify(payload);
   try {
     const res = await client({
