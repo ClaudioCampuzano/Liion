@@ -105,7 +105,7 @@ const RegisterStepTwo = ({ route, navigation }) => {
           isDriver: "false",
         });
         if (resval)
-          navigation.navigate("AccountAccess")
+          navigation.navigate("AccountAccess",{email: valueEmail})
         else {
           setModalVisible(true);
           setWaitingRegister(false);

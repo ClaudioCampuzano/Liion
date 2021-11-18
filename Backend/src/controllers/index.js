@@ -85,7 +85,7 @@ export const getUserData = async (req, res) => {
       }
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido");
@@ -113,7 +113,7 @@ export const updateUserDriverStatus = async (req, res) => {
       res.send("Actualización de Driver Status exitoso");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o flagDriver inválido");
@@ -137,7 +137,7 @@ export const updateDriverRating = async (req, res) => {
       res.send("Puntuación de conductor exitosa");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o Llamada inválida");
@@ -162,7 +162,7 @@ export const updateUserRating = async (req, res) => {
       res.send("Puntuación de pasajero exitosa");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o Llamada inválida");
