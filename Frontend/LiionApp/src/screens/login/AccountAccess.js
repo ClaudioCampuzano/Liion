@@ -19,8 +19,10 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 
 import { GlobalContext } from "../../context/Provider";
 
-const AccountAccess = ({ navigation }) => {
-  const [valueEmail, setValueEmail] = useState("ka@me.ha");
+const AccountAccess = ({ route, navigation }) => {
+  const [valueEmail, setValueEmail] = useState(()=>{
+    return (typeof route.params === 'undefined') ?  "jairo@moreno.com" : route.params.email;
+  });
   const [focusEmailInput, setfocusEmailInput] = useState(false);
   const [valuePass, setValuePass] = useState("Jiroto99");
 
@@ -70,7 +72,7 @@ const AccountAccess = ({ navigation }) => {
       setWaitingLogin(true);
       (async () => {
         const res = await loginUser({ email: valueEmail, password: valuePass });
-        console.log(res)
+        //console.log(res)
         if (!res.state) {
           setModalVisible(!res.state);
           setWaitingLogin(false);

@@ -153,7 +153,7 @@ const CreateStepFive = ({ navigation, route }) => {
                     ))}
                   </View>
                   <Text style={styles.tinyTextStyle}>
-                    {route.params.nOfSeats} asientos disponibles
+                    {route.params.nOfSeats} {route.params.nOfSeats === 1 ? 'asiento disponible' : 'asientos disponibles'}
                   </Text>
                 </View>
               </View>
@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
   iconTextInfo: {
     display: "flex",
     flexDirection: "row",
+    marginLeft: wp(1)
   },
   iconTextInfoText: {
     fontFamily: "Gotham-SSm-Medium",

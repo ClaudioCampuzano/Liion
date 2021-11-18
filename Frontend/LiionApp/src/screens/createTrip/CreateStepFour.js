@@ -79,7 +79,7 @@ const CreateStepFour = ({ navigation, route }) => {
               </TouchableOpacity>
             </View>
             <Text style={styles.badDesc}>Dimensiones maximas </Text>
-            <Text style={styles.badDesc}>55x35x25 cm (alto, largo y ancho)</Text>
+            <Text style={styles.badDesc}>55x35x25 cm</Text>
             <Text style={styles.count}>{bagNumber[0]}</Text>
           </View>
           <View>
@@ -107,8 +107,8 @@ const CreateStepFour = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={styles.badDesc}>todo lo que supere </Text>
-            <Text style={styles.badDesc}>las medidas antes mensionadas </Text>
+            <Text style={styles.badDesc}>Todo lo que supere </Text>
+            <Text style={styles.badDesc}>las medidas anteriores </Text>
                         <Text style={styles.count}>{bagNumber[1]}</Text>
           </View>
         </View>

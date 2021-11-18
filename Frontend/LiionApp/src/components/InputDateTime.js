@@ -63,11 +63,6 @@ const InputDateTime = (props) => {
       const currentDate = selectedDate || date;
       setDate(moment(currentDate));
       props.onDataChange(moment(currentDate));
-    } else {
-      console.log("no valido");
-      console.log(date.local().format("DD/MM/YYYY HH:mm"));
-      console.log(defaultDate.current.local().format("DD/MM/YYYY HH:mm"));
-      SetShowLabel(false);
     }
   };
 

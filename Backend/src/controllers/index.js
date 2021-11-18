@@ -2,13 +2,23 @@ import { db, auth, FieldValue } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 
-
 export const register = async (req, res) => {
-  const { name, lastname, run, email, birth, password, isPassenger, isDriver } =
-    req.body;
+  const {
+    name,
+    lastname,
+    run,
+    email,
+    birth,
+    password,
+    gender,
+    isPassenger,
+    isDriver,
+  } = req.body;
+
   if (
     !isEmpty(name) &&
     !isEmpty(lastname) &&
+    !isEmpty(gender) &&
     validateRun(run) &&
     isEmail(email) &&
     isDate(birth) &&
@@ -34,6 +44,7 @@ export const register = async (req, res) => {
           apellido: lastname,
           run: run,
           birth: birth,
+          gender: gender,
           isPassenger: isPassenger,
           isDriver: isDriver,
           DriverData: {},
@@ -74,7 +85,7 @@ export const getUserData = async (req, res) => {
       }
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido");
@@ -102,7 +113,7 @@ export const updateUserDriverStatus = async (req, res) => {
       res.send("Actualización de Driver Status exitoso");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o flagDriver inválido");
@@ -117,15 +128,16 @@ export const updateDriverRating = async (req, res) => {
       const q = await db
         .collection("users")
         .doc(uid)
-        .update( 
-          {"driverData.sRating":FieldValue.increment(rating), "driverData.nRating":FieldValue.increment(1)}
-        );
-        
+        .update({
+          "driverData.sRating": FieldValue.increment(rating),
+          "driverData.nRating": FieldValue.increment(1),
+        });
+
       //console.log(q)
       res.send("Puntuación de conductor exitosa");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o Llamada inválida");
@@ -141,15 +153,16 @@ export const updateUserRating = async (req, res) => {
       const q = await db
         .collection("users")
         .doc(uid)
-        .update( 
-          {"sRating":FieldValue.increment(rating), "nRating":FieldValue.increment(1)}
-        );
-        
+        .update({
+          sRating: FieldValue.increment(rating),
+          nRating: FieldValue.increment(1),
+        });
+
       //console.log(q)
       res.send("Puntuación de pasajero exitosa");
     } catch (e) {
       console.log(e);
-      res.status(403).send("Token UID Inválido2");
+      res.status(403).send("Token UID Inválido");
     }
   } else {
     res.status(403).send("Token UID Inválido o Llamada inválida");
