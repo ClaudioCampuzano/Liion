@@ -42,7 +42,11 @@ const DrawerContent = (props) => {
               </View>
               <TouchableOpacity
                 style={styles.touchablePerfil}
-                onPress={() => userData && !userData.emailVerified && EmailVerification(userData.email)}
+                onPress={() =>
+                  userData &&
+                  !userData.emailVerified &&
+                  EmailVerification(userData.email)
+                }
               >
                 <Text style={styles.texTouchable}>
                   {userData && userData.emailVerified
@@ -65,36 +69,40 @@ const DrawerContent = (props) => {
               props.navigation.navigate("SearchStack");
             }}
           />
-          <DrawerItem
-            style={{ marginBottom: -hp("0.5") }}
-            icon={() => (
-              <Feather
-                name="clipboard"
-                size={hp("3.5")}
-                color={COLORS.TURKEY}
-              />
-            )}
-            label="Registro de Conductor"
-            labelStyle={styles.labelDrawerItem}
-            onPress={() => {
-              props.navigation.navigate("DriverSigninStack");
-            }}
-          />
-          <DrawerItem
-            style={{ marginBottom: -hp("0.5") }}
-            icon={() => (
-              <Ionicons
-                name="ios-car-sport-outline"
-                size={hp("3.5")}
-                color={COLORS.TURKEY}
-              />
-            )}
-            label="Crear viaje"
-            labelStyle={styles.labelDrawerItem}
-            onPress={() => {
-              props.navigation.navigate("CreateNavigator");
-            }}
-          />
+          {userFirestoreData.isDriver === "false" ? (
+            <DrawerItem
+              style={{ marginBottom: -hp("0.5") }}
+              icon={() => (
+                <Feather
+                  name="clipboard"
+                  size={hp("3.5")}
+                  color={COLORS.TURKEY}
+                />
+              )}
+              label="Registro de Conductor"
+              labelStyle={styles.labelDrawerItem}
+              onPress={() => {
+                props.navigation.navigate("DriverSigninStack");
+              }}
+            />
+          ) : (
+            <DrawerItem
+              style={{ marginBottom: -hp("0.5") }}
+              icon={() => (
+                <Ionicons
+                  name="ios-car-sport-outline"
+                  size={hp("3.5")}
+                  color={COLORS.TURKEY}
+                />
+              )}
+              label="Crear viaje"
+              labelStyle={styles.labelDrawerItem}
+              onPress={() => {
+                props.navigation.navigate("CreateNavigator");
+              }}
+            />
+          )}
+
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (

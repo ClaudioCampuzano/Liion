@@ -6,8 +6,11 @@ import TravelConductorTab from "../screens/travel/TravelConductorTab";
 import TravelPasajeroTab from "../screens/travel/TravelPasajeroTab";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
+import { GlobalContext } from "../context/Provider";
 
 const TravelTabNavigator = () => {
+  //const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
+
   const trabelTab = createMaterialTopTabNavigator();
 
   return (
