@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
+import ModalFilter from "../../components/ModalFilter";
 
 const SearchStepTwo = ({ navigation, route }) => {
+  const { addresses, date, time } = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+
   const checkValidator = () => {
     navigation.navigate("SearchStepThree");
   };
@@ -13,13 +17,14 @@ const SearchStepTwo = ({ navigation, route }) => {
   return (
     <Layout>
       <View>
+        <ModalFilter visible={modalVisible} setModalVisible={setModalVisible} />
         <Text>ETAPA DOS</Text>
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
-          title="Ingresar"
+          title="Filtrar"
           styleView={styles.button}
-          onPress={() => checkValidator()}
+          onPress={() => setModalVisible(true)}
         />
       </View>
     </Layout>
