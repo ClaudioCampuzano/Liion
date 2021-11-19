@@ -21,6 +21,7 @@ const InputPicker = (props) => {
     errorText,
     onValueChange,
     data,
+    height,
     ...restOfProps
   } = props;
 
@@ -54,19 +55,25 @@ const InputPicker = (props) => {
 
   return (
     <View style={style}>
-      <View style={[styles.input, { borderColor: colorBorder }]}>
+      <View
+        style={[styles.input, { borderColor: colorBorder}, height && {height: height}]}
+      >
         <SelectDropdown
           data={data}
           defaultButtonText={label}
           {...restOfProps}
-          rowStyle={{ backgroundColor: "white" }}
+          rowStyle={{ backgroundColor: "white", width: style.width }}
           rowTextStyle={{
             fontFamily: "Gotham-SSm-Medium",
             fontSize: hp("1.8%"),
             color: COLORS.LEAD,
             textAlign: "left",
           }}
-          buttonStyle={{ backgroundColor: "white", width: wp(75) }}
+          buttonStyle={{
+            backgroundColor: "white",
+            width: style.width - wp(2.5),
+            borderRadius: 17,
+          }}
           buttonTextStyle={{
             fontFamily: "Gotham-SSm-Medium",
             fontSize: hp("1.8%"),
@@ -112,17 +119,20 @@ const InputPicker = (props) => {
             },
           ]}
         >
-          <Text
-            style={[
-              styles.label,
-              {
-                color,
-              },
-            ]}
-          >
-            {label}
-            {errorText ? "*" : ""}
-          </Text>
+          {showLabel && (
+            <Text
+              style={[
+                styles.label,
+                {
+                  color,
+                  backgroundColor: "transparent",
+                },
+              ]}
+            >
+              {label}
+              {errorText ? "*" : ""}
+            </Text>
+          )}
         </Animated.View>
       </TouchableWithoutFeedback>
       {!!errorText && <Text style={styles.error}>{errorText}</Text>}
