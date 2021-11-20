@@ -16,91 +16,91 @@ import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ModalFilter from "../../components/ModalFilter";
 import InputPicker from "../../components/InputPicker";
+import ResultItemCard from "../../components/ResultItemCard"
 
 const SearchStepTwo = ({ navigation, route }) => {
   const { addresses, date, time } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [resultOrder, setResultOrder] = useState("");
-  const [selectedId, setSelectedId] = useState(null);
 
-  const cnt_viaje = 3;
   const resultData = [
     {
       id: "0",
+      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
       nameConductor: "Luis Araya",
+
+      nRating: 10,
+      sRating: 50,
       price: "5000",
-      asientoDisp: "3",
-      origin: "Badajoz, Las Condes",
-      destiny: "San Fernando, Rancagua",
-      startTime: "11:00",
-      endTime: "12:00",
+      seatsAvaliable: "3",
+      date:'20/11/2021',
+      time: "12:43",
+      duration: "85.7833333",
+      addresses:{
+        origin: "Badajoz, Las Condes", destination: 'San Fernando, Rancagua'
+      }
     },
     {
       id: "1",
+      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
       nameConductor: "Carlos Elgueta",
-      price: "5000",
-      asientoDisp: "3",
-      origin: "Badajoz, Las Condes",
-      destiny: "Villa Alemana, Valparaiso",
-      startTime: "11:00",
-      endTime: "12:00",
+
+      nRating: 14,
+      sRating: 50,
+      price: "3000",
+      seatsAvaliable: "2",
+      date:'20/11/2021',
+      time: "22:43",
+      duration: "10.7833333",
+      addresses:{
+        origin: "Badajoz, Las Condes", destination: 'Villa Alemana, Valparaiso'
+      }
     },
     {
       id: "2",
+      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
       nameConductor: "Claudio Campuzano",
-      price: "5000",
-      asientoDisp: "3",
-      origin: "Badajoz, Las Condes",
-      destiny: "Quilpue, Valparaiso",
-      startTime: "11:00",
-      endTime: "12:00",
+
+      nRating: 28,
+      sRating: 50,
+      price: "2000",
+      seatsAvaliable: "1",
+      date:'20/11/2021',
+      time: "15:43",
+      duration: "35.7833333",
+      addresses:{
+        origin: "Badajoz, Las Condes", destination: 'Quilpue, Valparaiso'
+      }
     },
     {
       id: "3",
+      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
       nameConductor: "Bryan Rosales",
-      price: "5000",
-      asientoDisp: "3",
-      origin: "Badajoz, Las Condes",
-      destiny: "Vallenar, Atacama",
-      startTime: "11:00",
-      endTime: "12:00",
+
+      nRating: 20,
+      sRating: 50,
+      price: "1000",
+      seatsAvaliable: "5",
+      date:'20/11/2022',
+      time: "10:43",
+      duration: "20.7833333",
+      addresses:{
+        origin: "Badajoz, Las Condes", destination: 'Vallenar, Atacama'
+      }
     },
   ];
 
-  function searchCity(myArray) {
+  const searchCity = (myArray) => {
     for (var i = 0; i < myArray.length; i++) {
-      if (myArray[i].type === "locality") {
-        return myArray[i].long_name;
-      }
+      if (myArray[i].type === "locality") return myArray[i].long_name;
     }
-  }
-
-  const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        {
-          padding: 20,
-          marginVertical: 8,
-          marginHorizontal: 16,
-        },
-        backgroundColor,
-      ]}
-    >
-      <Text style={[{ fontSize: 32 }, textColor]}>{item.nameConductor}</Text>
-    </TouchableOpacity>
-  );
+  };
 
   const renderItem = ({ item }) => {
-    const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
-    const color = item.id === selectedId ? "white" : "black";
-
     return (
-      <Item
+      <ResultItemCard
         item={item}
-        onPress={() => setSelectedId(item.id)}
-        backgroundColor={{ backgroundColor }}
-        textColor={{ color }}
+        onPress={() => {console.log(item.id, 'Avista3')}}
       />
     );
   };
@@ -122,7 +122,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       </View>
       <View style={styles.supView}>
         <Text style={styles.numberTravelText}>
-          {cnt_viaje + " viajes\ndisponibles"}
+          {resultData.length + " viajes\ndisponibles"}
         </Text>
         <InputPicker
           style={styles.inputPicker}
@@ -130,7 +130,7 @@ const SearchStepTwo = ({ navigation, route }) => {
           errorText={false}
           onSelect={(selectedItem, index) => setResultOrder(selectedItem)}
           value={resultOrder}
-          data={["Calificación", "Precio"]}
+          data={["Fecha","Calificación", "Precio"]}
           label="Ordenar por"
         />
       </View>
@@ -139,7 +139,6 @@ const SearchStepTwo = ({ navigation, route }) => {
           data={resultData}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          extraData={selectedId}
         />
       </View>
       <View style={styles.buttonView}>
@@ -175,13 +174,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   supView: {
-    height: hp("7%"),
+    height: hp("9%"),
     width: wp(90),
     flexDirection: "row",
     justifyContent: "space-between",
   },
   middleView: {
-    height: hp("67.2%"),
+    height: hp("65.2%"),
     width: wp(90),
   },
   inputPicker: {
@@ -192,7 +191,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: "Gotham-SSm-Bold",
     color: COLORS.LEAD,
-    fontSize: hp(2.1),
+    fontSize: hp(2),
   },
   textAddress: {
     fontFamily: "Gotham-SSm-Book",
