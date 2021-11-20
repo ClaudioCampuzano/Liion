@@ -71,7 +71,7 @@ const MapViewCustom = (props) => {
   };
 
   const ArrowBack = () => {
-    props.onDataChange(true);
+    props.ArrowBack(true);
   };
 
   const overviewRegion = () => {

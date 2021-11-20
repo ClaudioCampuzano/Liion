@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
 
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
@@ -99,7 +99,19 @@ const SearchNavigator = () => {
         name="SearchStepFour"
         component={SearchStepFour}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <SearchStack.Screen
@@ -124,5 +136,10 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
     fontSize: hp("3.5%"),
+  },
+  headerContainerEmpty: {
+    backgroundColor: COLORS.WHITE,
+    height: hp("7%"),
+    elevation: 0,
   },
 });

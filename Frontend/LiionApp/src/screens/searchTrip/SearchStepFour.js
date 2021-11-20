@@ -15,9 +15,9 @@ const SearchStepFour = ({ navigation, route }) => {
       titulo: titulo,
       subTitulo: subTitulo,
       initialRoute: initialRoute
-
     });
   };
+  
   return (
     <Layout>
       <View>

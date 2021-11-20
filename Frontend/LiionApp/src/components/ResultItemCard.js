@@ -19,13 +19,13 @@ const ResultItemCard = ({ item, onPress }) => {
           <View style={{ flex: 0.8 }}>
             <Avatar.Image
               source={{
-                uri: item.photo,
+                uri: item.driverData.photo,
               }}
               size={hp("7")}
             />
           </View>
           <View style={{ flex: 1.6 }}>
-            <Text style={styles.textConductor}>{item.nameConductor}</Text>
+            <Text style={styles.textConductor}>{item.driverData.nameConductor}</Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialIcons
                 name="stars"
@@ -33,18 +33,18 @@ const ResultItemCard = ({ item, onPress }) => {
                 color={COLORS.TURKEY}
               />
               <Text style={styles.labelRankings}>
-                {Math.round((item.sRating / item.nRating) * 10) / 10 +
+                {Math.round((item.driverData.sRating / item.driverData.nRating) * 10) / 10 +
                   "/5 - " +
-                  item.nRating +
+                  item.driverData.nRating +
                   "\nCalificaciones"}
               </Text>
             </View>
           </View>
           <View style={{ flex: 1.4, flexDirection: "row" }}>
             <View>
-              <Text style={styles.textConductor}>{"$" + item.price}</Text>
+              <Text style={styles.textConductor}>{"$" + item.travelData.price}</Text>
               <Text style={[styles.textConductor, { alignSelf: "flex-end" }]}>
-                {item.seatsAvaliable}
+                {item.travelData.seatsAvaliable}
               </Text>
             </View>
             <View style={{ marginLeft: wp(1) }}>
@@ -56,12 +56,12 @@ const ResultItemCard = ({ item, onPress }) => {
 
         <ShowTravel
           style={styles.inputLocation}
-          timeStart={item.time}
-          timeEnd={moment(item.time, "hh:mm")
-            .add(item.duration, "minutes")
+          timeStart={item.travelData.time}
+          timeEnd={moment(item.travelData.time, "hh:mm")
+            .add(item.travelData.duration, "minutes")
             .format("LT")}
-          labelO={item.addresses.origin}
-          labelD={item.addresses.destination}
+          labelO={item.travelData.addresses.origin}
+          labelD={item.travelData.addresses.destination}
           dirTextSize={wp("3%")}
         />
       </View>

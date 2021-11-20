@@ -1,19 +1,31 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
+import MapViewCustom from "../../components/MapViewCustom";
+import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 
-const SearchStepThree = ({ navigation, route }) => {
+const SearchStepThree = ({navigation, route }) => {
+  const {coordinates} = route.params.travelData
+  
   const checkValidator = () => {
     navigation.navigate("SearchStepFour");
   };
   return (
     <Layout>
-      <View>
-        <Text>ETAPA TRES</Text>
-      </View>
+    <KeyboardAvoidingWrapper> 
+    <View style={styles.topPanel}>
+          <MapViewCustom
+            dimensions={{ height: hp("30%"), width: wp("100%") }}
+            coordinates={coordinates}
+            mapDirections={false}
+            showGps={false}
+            ArrowBack={() => navigation.navigate("SearchStepTwo")}
+          />
+        </View>
       <View style={styles.buttonView}>
         <ButtonLiion
           title="Ingresar"
@@ -21,6 +33,7 @@ const SearchStepThree = ({ navigation, route }) => {
           onPress={() => checkValidator()}
         />
       </View>
+      </KeyboardAvoidingWrapper>
     </Layout>
   );
 };
@@ -28,9 +41,12 @@ const SearchStepThree = ({ navigation, route }) => {
 export default SearchStepThree;
 
 const styles = StyleSheet.create({
+  topPanel: {
+    height: hp("30%"),
+    width: wp("100%"),
+  },
   buttonView: {
     flex: 1,
-    height: hp("23%"),
     justifyContent: "flex-end",
     paddingBottom: hp("8%"),
   },

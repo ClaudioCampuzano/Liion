@@ -16,7 +16,7 @@ import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ModalFilter from "../../components/ModalFilter";
 import InputPicker from "../../components/InputPicker";
-import ResultItemCard from "../../components/ResultItemCard"
+import ResultItemCard from "../../components/ResultItemCard";
 
 const SearchStepTwo = ({ navigation, route }) => {
   const { addresses, date, time } = route.params;
@@ -26,67 +26,261 @@ const SearchStepTwo = ({ navigation, route }) => {
   const resultData = [
     {
       id: "0",
-      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
-      nameConductor: "Luis Araya",
+      driverData: {
+        photo:
+          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
+        nameConductor: "Luis Araya",
+        nRating: 10,
+        sRating: 50,
+      },
 
-      nRating: 10,
-      sRating: 50,
-      price: "5000",
-      seatsAvaliable: "3",
-      date:'20/11/2021',
-      time: "12:43",
-      duration: "85.7833333",
-      addresses:{
-        origin: "Badajoz, Las Condes", destination: 'San Fernando, Rancagua'
-      }
+      travelData: {
+        price: "5000",
+        seatsAvaliable: "3",
+        date: "20/11/2021",
+        time: "12:43",
+        duration: "85.7833333",
+        addresses: {
+          origin: "Badajoz, Las Condes",
+          destination: "San Fernando, Rancagua",
+        },
+        coordinates: [
+          {
+            latitude: -33.04526,
+            longitude: -71.40015,
+          },
+          {
+            latitude: -33.04531,
+            longitude: -71.40009,
+          },
+          {
+            latitude: -33.04581,
+            longitude: -71.40012,
+          },
+          {
+            latitude: -33.04582,
+            longitude: -71.40027,
+          },
+          {
+            latitude: -33.04589,
+            longitude: -71.40107,
+          },
+          {
+            latitude: -33.04711,
+            longitude: -71.4012,
+          },
+          {
+            latitude: -33.04741,
+            longitude: -71.40121,
+          },
+          {
+            latitude: -33.04812,
+            longitude: -71.40126,
+          },
+          {
+            latitude: -33.04805,
+            longitude: -71.3999,
+          },
+          {
+            latitude: -33.04919,
+            longitude: -71.39999,
+          },
+        ],
+      },
     },
     {
       id: "1",
-      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
-      nameConductor: "Carlos Elgueta",
+      driverData: {
+        photo:
+          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
+        nameConductor: "Carlos Elgueta",
+        nRating: 14,
+        sRating: 50,
+      },
 
-      nRating: 14,
-      sRating: 50,
-      price: "3000",
-      seatsAvaliable: "2",
-      date:'20/11/2021',
-      time: "22:43",
-      duration: "10.7833333",
-      addresses:{
-        origin: "Badajoz, Las Condes", destination: 'Villa Alemana, Valparaiso'
-      }
+      travelData: {
+        price: "3000",
+        seatsAvaliable: "2",
+        date: "20/11/2021",
+        time: "22:43",
+        duration: "10.7833333",
+        addresses: {
+          origin: "Badajoz, Las Condes",
+          destination: "Villa Alemana, Valparaiso",
+        },
+        coordinates: [
+          {
+            latitude: -33.04526,
+            longitude: -71.40015,
+          },
+          {
+            latitude: -33.04531,
+            longitude: -71.40009,
+          },
+          {
+            latitude: -33.04581,
+            longitude: -71.40012,
+          },
+          {
+            latitude: -33.04582,
+            longitude: -71.40027,
+          },
+          {
+            latitude: -33.04589,
+            longitude: -71.40107,
+          },
+          {
+            latitude: -33.04711,
+            longitude: -71.4012,
+          },
+          {
+            latitude: -33.04741,
+            longitude: -71.40121,
+          },
+          {
+            latitude: -33.04812,
+            longitude: -71.40126,
+          },
+          {
+            latitude: -33.04805,
+            longitude: -71.3999,
+          },
+          {
+            latitude: -33.04919,
+            longitude: -71.39999,
+          },
+        ],
+      },
     },
     {
       id: "2",
-      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
-      nameConductor: "Claudio Campuzano",
 
-      nRating: 28,
-      sRating: 50,
-      price: "2000",
-      seatsAvaliable: "1",
-      date:'20/11/2021',
-      time: "15:43",
-      duration: "35.7833333",
-      addresses:{
-        origin: "Badajoz, Las Condes", destination: 'Quilpue, Valparaiso'
-      }
+      driverData: {
+        photo:
+          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
+        nameConductor: "Claudio Campuzano",
+        nRating: 28,
+        sRating: 50,
+      },
+
+      travelData: {
+        price: "2000",
+        seatsAvaliable: "1",
+        date: "20/11/2021",
+        time: "15:43",
+        duration: "35.7833333",
+        addresses: {
+          origin: "Badajoz, Las Condes",
+          destination: "Quilpue, Valparaiso",
+        },
+        coordinates: [
+          {
+            latitude: -33.04526,
+            longitude: -71.40015,
+          },
+          {
+            latitude: -33.04531,
+            longitude: -71.40009,
+          },
+          {
+            latitude: -33.04581,
+            longitude: -71.40012,
+          },
+          {
+            latitude: -33.04582,
+            longitude: -71.40027,
+          },
+          {
+            latitude: -33.04589,
+            longitude: -71.40107,
+          },
+          {
+            latitude: -33.04711,
+            longitude: -71.4012,
+          },
+          {
+            latitude: -33.04741,
+            longitude: -71.40121,
+          },
+          {
+            latitude: -33.04812,
+            longitude: -71.40126,
+          },
+          {
+            latitude: -33.04805,
+            longitude: -71.3999,
+          },
+          {
+            latitude: -33.04919,
+            longitude: -71.39999,
+          },
+        ],
+      },
     },
     {
       id: "3",
-      photo: 'https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg',
-      nameConductor: "Bryan Rosales",
 
-      nRating: 20,
-      sRating: 50,
-      price: "1000",
-      seatsAvaliable: "5",
-      date:'20/11/2022',
-      time: "10:43",
-      duration: "20.7833333",
-      addresses:{
-        origin: "Badajoz, Las Condes", destination: 'Vallenar, Atacama'
-      }
+      driverData: {
+        photo:
+          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
+        nameConductor: "Bryan Rosales",
+        nRating: 20,
+        sRating: 50,
+      },
+
+      travelData: {
+        price: "1000",
+        seatsAvaliable: "5",
+        date: "20/11/2022",
+        time: "10:43",
+        duration: "20.7833333",
+        addresses: {
+          origin: "Badajoz, Las Condes",
+          destination: "Vallenar, Atacama",
+        },
+        coordinates: [
+          {
+            latitude: -33.04526,
+            longitude: -71.40015,
+          },
+          {
+            latitude: -33.04531,
+            longitude: -71.40009,
+          },
+          {
+            latitude: -33.04581,
+            longitude: -71.40012,
+          },
+          {
+            latitude: -33.04582,
+            longitude: -71.40027,
+          },
+          {
+            latitude: -33.04589,
+            longitude: -71.40107,
+          },
+          {
+            latitude: -33.04711,
+            longitude: -71.4012,
+          },
+          {
+            latitude: -33.04741,
+            longitude: -71.40121,
+          },
+          {
+            latitude: -33.04812,
+            longitude: -71.40126,
+          },
+          {
+            latitude: -33.04805,
+            longitude: -71.3999,
+          },
+          {
+            latitude: -33.04919,
+            longitude: -71.39999,
+          },
+        ],
+      },
     },
   ];
 
@@ -100,7 +294,7 @@ const SearchStepTwo = ({ navigation, route }) => {
     return (
       <ResultItemCard
         item={item}
-        onPress={() => {console.log(item.id, 'Avista3')}}
+        onPress={() => navigation.navigate("SearchStepThree", item)}
       />
     );
   };
@@ -130,7 +324,7 @@ const SearchStepTwo = ({ navigation, route }) => {
           errorText={false}
           onSelect={(selectedItem, index) => setResultOrder(selectedItem)}
           value={resultOrder}
-          data={["Fecha","Calificación", "Precio"]}
+          data={["Fecha", "Calificación", "Precio"]}
           label="Ordenar por"
         />
       </View>
