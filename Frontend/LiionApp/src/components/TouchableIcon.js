@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { COLORS, hp } from "../constants/styleThemes";
 
 const TouchableIcon = (props) => {
@@ -30,6 +30,14 @@ const TouchableIcon = (props) => {
       labelShow = "Aprobación\nautomatica";
       nameIcon = "lightning-bolt";
       break;
+    case "baggage_hand":
+      labelShow = "Equipaje\nde mano";
+      nameIcon = "bag-personal-outline";
+      break;
+    case "baggage_heavy":
+      labelShow = "Maletas";
+      nameIcon = "suitcase-rolling";
+      break;
     default:
       labelShow = "Default";
       nameIcon = "skull-crossbones-outline";
@@ -38,12 +46,21 @@ const TouchableIcon = (props) => {
   return (
     <TouchableWithoutFeedback {...restOfProps}>
       <View style={{ ...styles.viewGeneral, ...style }}>
-        <MaterialCommunityIcons
-          name={nameIcon}
-          size={hp("7")}
-          color={color}
-          style={{ alignSelf: "center" }}
-        />
+        {type != "baggage_heavy" ? (
+          <MaterialCommunityIcons
+            name={nameIcon}
+            size={hp("7")}
+            color={color}
+            style={{ alignSelf: "center" }}
+          />
+        ) : (
+          <FontAwesome5
+            name={nameIcon}
+            size={hp("7")}
+            color={color}
+            style={{ alignSelf: "center" }}
+          />
+        )}
         <Text style={{ ...styles.label, color: color }}>{labelShow}</Text>
       </View>
     </TouchableWithoutFeedback>

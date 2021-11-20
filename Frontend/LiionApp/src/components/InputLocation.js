@@ -34,6 +34,14 @@ const InputLocation = (props) => {
     })();
   }, []);
 
+  const result = address_components =>{
+    var entries = [];
+    for (var i = 0; i < address_components.length; i++) {
+      entries.push({"index": i,"long_name": address_components[i].long_name, "type": address_components[i].types[0]})
+    }
+    return entries
+  }
+
   let color = COLORS.LEAD;
   let labelOrigin = labelO;
   let labelDestination = labelD;
@@ -54,9 +62,9 @@ const InputLocation = (props) => {
           placeholder={labelOrigin}
           onPress={(data, details = null) => {
             setOrigin({
-              vicinity: details.vicinity,
               formatted_address: details.formatted_address,
               location: details.geometry.location,
+              address_components: result(details.address_components)
             });
           }}
           enablePoweredByContainer={false}
@@ -91,9 +99,9 @@ const InputLocation = (props) => {
           placeholder={labelDestination}
           onPress={(data, details = null) => {
             setDestination({
-              vicinity: details.vicinity,
               formatted_address: details.formatted_address,
               location: details.geometry.location,
+              address_components: result(details.address_components)
             });
           }}
           enablePoweredByContainer={false}

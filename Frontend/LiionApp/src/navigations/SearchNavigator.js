@@ -61,7 +61,6 @@ const SearchNavigator = () => {
         component={SearchStepTwo}
         options={({ navigation }) => ({
           headerShown: true,
-          title: "busqueda2",
           headerStyle: styles.headerContainer,
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerText,
@@ -76,6 +75,16 @@ const SearchNavigator = () => {
                 style={{ marginLeft: wp("3%") }}
               />
             </TouchableOpacity>
+          ),
+          headerTitle: (props) => (
+            <Image
+              style={{
+                width: wp("11.8"),
+                height: hp("6.95"),
+                tintColor: COLORS.WHITE,
+              }}
+              source={require("../../assets/images/miniLogo.png")}
+            />
           ),
         })}
       />
