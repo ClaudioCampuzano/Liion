@@ -73,9 +73,9 @@ export default ResultItemCard;
 
 const styles = StyleSheet.create({
   touchable: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    padding: hp(1),
+    marginVertical: hp(1),
+    marginHorizontal: wp(1.5),
     elevation: hp(1),
     borderRadius: hp(1),
     backgroundColor: COLORS.WHITE,
@@ -100,5 +100,7 @@ const styles = StyleSheet.create({
     height: hp("12%"),
     alignSelf: "center",
     marginTop: -1 * wp("2%"),
+    marginBottom: -1 * wp("2%"),
+
   },
 });
