@@ -7,6 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import moment from "moment";
+import "moment/locale/es";
+moment.locale("es");
+
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
@@ -19,17 +23,10 @@ const SearchStepTwo = ({ navigation, route }) => {
   const [resultOrder, setResultOrder] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  /*   const checkValidator = () => {
-    navigation.navigate("SearchStepThree");
-  }; */
-
-  const sourcesCity = "Quilpue";
-  const destinyCity = "Las Condes";
-  const DATE = "4 de diciembre";
   const cnt_viaje = 3;
   const resultData = [
     {
-      id: '0',
+      id: "0",
       nameConductor: "Luis Araya",
       price: "5000",
       asientoDisp: "3",
@@ -39,7 +36,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       endTime: "12:00",
     },
     {
-      id: '1',
+      id: "1",
       nameConductor: "Carlos Elgueta",
       price: "5000",
       asientoDisp: "3",
@@ -49,7 +46,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       endTime: "12:00",
     },
     {
-      id: '2',
+      id: "2",
       nameConductor: "Claudio Campuzano",
       price: "5000",
       asientoDisp: "3",
@@ -59,7 +56,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       endTime: "12:00",
     },
     {
-      id: '3',
+      id: "3",
       nameConductor: "Bryan Rosales",
       price: "5000",
       asientoDisp: "3",
@@ -67,8 +64,16 @@ const SearchStepTwo = ({ navigation, route }) => {
       destiny: "Vallenar, Atacama",
       startTime: "11:00",
       endTime: "12:00",
-    }
+    },
   ];
+
+  function searchCity(myArray) {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].type === "locality") {
+        return myArray[i].long_name;
+      }
+    }
+  }
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
     <TouchableOpacity
@@ -105,9 +110,15 @@ const SearchStepTwo = ({ navigation, route }) => {
       <ModalFilter visible={modalVisible} setModalVisible={setModalVisible} />
       <View style={styles.titleView}>
         <Text style={styles.textAddress}>
-          {sourcesCity + " a " + destinyCity}
+          {searchCity(addresses.origin.address_components) +
+            " a " +
+            searchCity(addresses.destination.address_components)}
         </Text>
-        <Text style={styles.textDate}>{DATE}</Text>
+        <Text style={styles.textDate}>
+          {moment(date, "DD-MM-YYYY").format("LL") +
+            " a las " +
+            moment(time, "hh:mm").format("LT")}
+        </Text>
       </View>
       <View style={styles.supView}>
         <Text style={styles.numberTravelText}>
@@ -158,13 +169,13 @@ const styles = StyleSheet.create({
     paddingBottom: hp("5%"),
   },
   titleView: {
-    height: hp("7%"),
+    height: hp("9%"),
     width: wp(90),
     justifyContent: "flex-end",
     alignItems: "center",
   },
   supView: {
-    height: hp("9%"),
+    height: hp("7%"),
     width: wp(90),
     flexDirection: "row",
     justifyContent: "space-between",
