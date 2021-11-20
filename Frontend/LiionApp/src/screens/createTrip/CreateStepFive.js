@@ -13,32 +13,55 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ShowTravel from "../../components/ShowTravel";
 import { GlobalContext } from "../../context/Provider";
 import moment from "moment";
+import { createTravel } from "../../api/api";
 import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepFive = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
-  //console.log(route.params.time)
-
-  const checkValidator = () => {
+  const { userFirestoreData, uid, userData, accesstoken } =
+    useContext(GlobalContext);
+  const checkValidator = async () => {
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
     const initialRoute = "CreateStepOne";
-    navigation.navigate("SucessScreen", {
-      titulo: titulo,
-      subTitulo: subTitulo,
-      initialRoute: initialRoute,
-    });
+    const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
+      email,
+      phoneNumber,
+      photoURL,
+    }))(userData);
+    const driverDatas = {
+      ...userFirestoreData.driverData,
+      ...userFirestoreData,
+    };
+    delete driverDatas.DriverData;
+    delete driverDatas.driverData;
+    delete driverDatas.isDriver;
+    delete driverDatas.isPassenger;
+    const dataForSend = {
+      atoken: accesstoken,
+      driverUID: uid,
+      driverData: { ...driverDatas },
+      travelData: {
+        status: "open",
+        seatsAval: route.params.nOfSeats,
+        ...route.params,
+      },
+    };
+    const [resflag, resmsg] = await createTravel(dataForSend);
+    if (resflag) {
+      //todo ok pasa
+      console.log("todo ok", resmsg);
+      navigation.navigate("SucessScreen", {
+        titulo: titulo,
+        subTitulo: subTitulo,
+        initialRoute: initialRoute,
+      });
+    } else {
+      //crack porfa agregar un modal con el error pls
+      console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
+    }
   };
-  const vars = useRef({
-    origin: "Rancagua, Region de Ohiggins",
-    destiny: "San Fernando, Region de Ohiggins",
-    nOfSeats: 3,
-    pricerPerSeat: 4000,
-    bags: [1, 0, 1],
-    vehicle: { model: "Tesla Model X", color: "Blanco", patente: "ABCD12" },
-  });
 
   const getSex = () => {
     if (route.params.allGender) {
@@ -153,7 +176,10 @@ const CreateStepFive = ({ navigation, route }) => {
                     ))}
                   </View>
                   <Text style={styles.tinyTextStyle}>
-                    {route.params.nOfSeats} {route.params.nOfSeats === 1 ? 'asiento disponible' : 'asientos disponibles'}
+                    {route.params.nOfSeats}{" "}
+                    {route.params.nOfSeats === 1
+                      ? "asiento disponible"
+                      : "asientos disponibles"}
                   </Text>
                 </View>
               </View>
@@ -349,7 +375,7 @@ const styles = StyleSheet.create({
   iconTextInfo: {
     display: "flex",
     flexDirection: "row",
-    marginLeft: wp(1)
+    marginLeft: wp(1),
   },
   iconTextInfoText: {
     fontFamily: "Gotham-SSm-Medium",
