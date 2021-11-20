@@ -15,9 +15,9 @@ const SearchNavigator = () => {
   const SearchStack = createStackNavigator();
 
   return (
-    <SearchStack.Navigator initialRouteName="SeachStepOne">
+    <SearchStack.Navigator initialRouteName="SearchStepOne">
       <SearchStack.Screen
-        name="SeachStepOne"
+        name="SearchStepOne"
         component={SearchStepOne}
         options={({ navigation }) => ({
           headerShown: true,
@@ -57,7 +57,7 @@ const SearchNavigator = () => {
         })}
       />
       <SearchStack.Screen
-        name="SeachStepTwo"
+        name="SearchStepTwo"
         component={SearchStepTwo}
         options={({ navigation }) => ({
           headerShown: true,

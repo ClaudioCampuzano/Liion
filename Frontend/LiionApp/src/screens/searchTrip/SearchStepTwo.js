@@ -19,7 +19,94 @@ import InputPicker from "../../components/InputPicker";
 import ResultItemCard from "../../components/ResultItemCard";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  const { addresses, date, time } = route.params;
+  console.log(route.params);
+  //const { addresses, date, time } = route.params;
+  const { addresses, date, time } = {
+    addresses: {
+      destination: {
+        address_components: [
+          {
+            index: 0,
+            long_name: "Madame Curie",
+            type: "route",
+          },
+          {
+            index: 1,
+            long_name: "Calama",
+            type: "locality",
+          },
+          {
+            index: 2,
+            long_name: "Calama",
+            type: "administrative_area_level_3",
+          },
+          {
+            index: 3,
+            long_name: "El Loa",
+            type: "administrative_area_level_2",
+          },
+          {
+            index: 4,
+            long_name: "Antofagasta",
+            type: "administrative_area_level_1",
+          },
+          {
+            index: 5,
+            long_name: "Chile",
+            type: "country",
+          },
+        ],
+        formatted_address: "Madame Curie, Calama, Antofagasta, Chile",
+        location: {
+          lat: -22.457467,
+          lng: -68.9298049,
+        },
+      },
+      origin: {
+        address_components: [
+          {
+            index: 0,
+            long_name: "Bajada El Bosque",
+            type: "route",
+          },
+          {
+            index: 1,
+            long_name: "Las Vertientes",
+            type: "locality",
+          },
+          {
+            index: 2,
+            long_name: "San José de Maipo",
+            type: "administrative_area_level_3",
+          },
+          {
+            index: 3,
+            long_name: "Cordillera",
+            type: "administrative_area_level_2",
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            index: 5,
+            long_name: "Chile",
+            type: "country",
+          },
+        ],
+        formatted_address:
+          "Bajada El Bosque, Las Vertientes, San José de Maipo, Región Metropolitana, Chile",
+        location: {
+          lat: -33.588933,
+          lng: -70.4642254,
+        },
+      },
+    },
+    date: "20/11/2021",
+    time: "18:38",
+  };
+
   const [modalVisible, setModalVisible] = useState(false);
   const [resultOrder, setResultOrder] = useState("");
 
