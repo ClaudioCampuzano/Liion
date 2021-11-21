@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState, useContext } from "react";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -17,119 +11,49 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ModalFilter from "../../components/ModalFilter";
 import InputPicker from "../../components/InputPicker";
 import ResultItemCard from "../../components/ResultItemCard";
+import { GlobalContext } from "../../context/Provider";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  console.log(route.params);
-  //const { addresses, date, time } = route.params;
-  const { addresses, date, time } = {
-    addresses: {
-      destination: {
-        address_components: [
-          {
-            index: 0,
-            long_name: "Madame Curie",
-            type: "route",
-          },
-          {
-            index: 1,
-            long_name: "Calama",
-            type: "locality",
-          },
-          {
-            index: 2,
-            long_name: "Calama",
-            type: "administrative_area_level_3",
-          },
-          {
-            index: 3,
-            long_name: "El Loa",
-            type: "administrative_area_level_2",
-          },
-          {
-            index: 4,
-            long_name: "Antofagasta",
-            type: "administrative_area_level_1",
-          },
-          {
-            index: 5,
-            long_name: "Chile",
-            type: "country",
-          },
-        ],
-        formatted_address: "Madame Curie, Calama, Antofagasta, Chile",
-        location: {
-          lat: -22.457467,
-          lng: -68.9298049,
-        },
-      },
-      origin: {
-        address_components: [
-          {
-            index: 0,
-            long_name: "Bajada El Bosque",
-            type: "route",
-          },
-          {
-            index: 1,
-            long_name: "Las Vertientes",
-            type: "locality",
-          },
-          {
-            index: 2,
-            long_name: "San José de Maipo",
-            type: "administrative_area_level_3",
-          },
-          {
-            index: 3,
-            long_name: "Cordillera",
-            type: "administrative_area_level_2",
-          },
-          {
-            index: 4,
-            long_name: "Región Metropolitana",
-            type: "administrative_area_level_1",
-          },
-          {
-            index: 5,
-            long_name: "Chile",
-            type: "country",
-          },
-        ],
-        formatted_address:
-          "Bajada El Bosque, Las Vertientes, San José de Maipo, Región Metropolitana, Chile",
-        location: {
-          lat: -33.588933,
-          lng: -70.4642254,
-        },
-      },
-    },
-    date: "20/11/2021",
-    time: "18:38",
-  };
+  const { userFirestoreData } = useContext(GlobalContext);
 
+  const { addresses, date, time } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [resultOrder, setResultOrder] = useState("");
 
+  const [preferences, setPreferences] = useState({
+    baggage_hand: false,
+    baggage_heavy: false,
+    smoking: false,
+    approvalIns: false,
+    seeAll: true
+  });
+  console.log(preferences)
+
   const resultData = [
     {
-      id: "0",
+      id: "1",
       driverData: {
         photo:
           "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Luis Araya",
-        nRating: 10,
+        nameConductor: "Carlos Elgueta",
+        nRating: 14,
         sRating: 50,
       },
 
       travelData: {
-        price: "5000",
-        seatsAvaliable: "3",
+        onlyMen: "false",
+        onlyWoman: "true",
+        allGender: "false",
+        smoking: "true",
+        approvalIns: "false",
+        price: "3000",
+        seatsAvaliable: "2",
         date: "20/11/2021",
-        time: "12:43",
-        duration: "85.7833333",
+        time: "22:43",
+        duration: "10.7833333",
         addresses: {
           origin: "Badajoz, Las Condes",
-          destination: "San Fernando, Rancagua",
+          destination: "Villa Alemana, Valparaiso",
         },
         coordinates: [
           {
@@ -176,24 +100,29 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
     },
     {
-      id: "1",
+      id: "0",
       driverData: {
         photo:
           "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Carlos Elgueta",
-        nRating: 14,
+        nameConductor: "Luis Araya",
+        nRating: 10,
         sRating: 50,
       },
 
       travelData: {
-        price: "3000",
-        seatsAvaliable: "2",
+        onlyMen: "true",
+        onlyWoman: "false",
+        allGender: "false",
+        smoking: "false",
+        approvalIns: "true",
+        price: "5000",
+        seatsAvaliable: "3",
         date: "20/11/2021",
-        time: "22:43",
-        duration: "10.7833333",
+        time: "12:43",
+        duration: "85.7833333",
         addresses: {
           origin: "Badajoz, Las Condes",
-          destination: "Villa Alemana, Valparaiso",
+          destination: "San Fernando, Rancagua",
         },
         coordinates: [
           {
@@ -251,6 +180,11 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        onlyMen: "false",
+        onlyWoman: "false",
+        allGender: "true",
+        smoking: "false",
+        approvalIns: "true",
         price: "2000",
         seatsAvaliable: "1",
         date: "20/11/2021",
@@ -316,6 +250,11 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        onlyMen: "false",
+        onlyWoman: "true",
+        allGender: "false",
+        smoking: "false",
+        approvalIns: "true",
         price: "1000",
         seatsAvaliable: "5",
         date: "20/11/2022",
@@ -371,6 +310,30 @@ const SearchStepTwo = ({ navigation, route }) => {
     },
   ];
 
+  const sortFilterResult = (myArray, typeOrder, gender) => {
+    const order = myArray.sort((a, b) => {
+      const result =
+        typeOrder === "Precio"
+          ? parseFloat(a.travelData.price) - parseFloat(b.travelData.price)
+          : parseFloat(b.driverData.sRating / b.driverData.nRating) -
+            parseFloat(a.driverData.sRating / a.driverData.nRating);
+      return result;
+    });
+    if (gender === "Hombre")
+      return order.filter((a) => {
+        return (
+          a.travelData.onlyMen === "true" || a.travelData.allGender === "true"
+        );
+      });
+    else if (gender === "Mujer")
+      return order.filter((a) => {
+        return (
+          a.travelData.onlyWoman === "true" || a.travelData.allGender === "true"
+        );
+      });
+    else return order;
+  };
+
   const searchCity = (myArray) => {
     for (var i = 0; i < myArray.length; i++) {
       if (myArray[i].type === "locality") return myArray[i].long_name;
@@ -388,7 +351,11 @@ const SearchStepTwo = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <ModalFilter visible={modalVisible} setModalVisible={setModalVisible} />
+      <ModalFilter
+        visible={modalVisible}
+        setModalVisible={setModalVisible}
+        onChangePreferences={(value) => setPreferences(value)}
+      />
       <View style={styles.titleView}>
         <Text style={styles.textAddress}>
           {searchCity(addresses.origin.address_components) +
@@ -411,13 +378,17 @@ const SearchStepTwo = ({ navigation, route }) => {
           errorText={false}
           onSelect={(selectedItem, index) => setResultOrder(selectedItem)}
           value={resultOrder}
-          data={["Fecha", "Calificación", "Precio"]}
+          data={["Calificación", "Precio"]}
           label="Ordenar por"
         />
       </View>
       <View style={styles.middleView}>
         <FlatList
-          data={resultData}
+          data={sortFilterResult(
+            resultData,
+            resultOrder,
+            userFirestoreData.gender
+          )}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />

@@ -23,7 +23,7 @@ const SearchStepThree = ({navigation, route }) => {
             coordinates={coordinates}
             mapDirections={false}
             showGps={false}
-            ArrowBack={() => navigation.navigate("SearchStepTwo")}
+            ArrowBack={() => navigation.goBack()}
           />
         </View>
       <View style={styles.buttonView}>

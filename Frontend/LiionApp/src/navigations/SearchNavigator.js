@@ -66,7 +66,7 @@ const SearchNavigator = () => {
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("SeachStepOne")}
+              onPress={() => navigation.goBack()}
             >
               <Ionicons
                 name="md-chevron-back"

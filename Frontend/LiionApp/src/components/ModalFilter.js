@@ -11,13 +11,19 @@ import TouchableIcon from "./TouchableIcon";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
-const ModalFilter = ({ visible, children, setModalVisible }) => {
+const ModalFilter = (props) => {
+  const {visible, children, setModalVisible} = props
+
   const [preferences, setPreferences] = useState({
     baggage_hand: false,
     baggage_heavy: false,
     smoking: false,
     approvalIns: false,
+    seeAll: true
   });
+
+  const [showModal, setShowModal] = useState(visible);
+  const scaleValue = useRef(new Animated.Value(0)).current;
 
   const changePreferencesHandler = (field) => {
     let aux = { ...preferences };
@@ -42,8 +48,10 @@ const ModalFilter = ({ visible, children, setModalVisible }) => {
     setPreferences(aux);
   };
 
-  const [showModal, setShowModal] = useState(visible);
-  const scaleValue = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    props.onChangePreferences(preferences);
+  }, [preferences]);
+
   useEffect(() => {
     toggleModal();
   }, [visible]);
@@ -73,8 +81,12 @@ const ModalFilter = ({ visible, children, setModalVisible }) => {
             { transform: [{ scale: scaleValue }] },
           ]}
         >
-          <Text style={styles.text_firstSection}>Equipaje extra permitido:</Text>
-        <Text style={styles.text_firstSectionSub}>{"(Todos tienen derecho a un equipaje\n de mano)"}</Text>
+          <Text style={styles.text_firstSection}>
+            Equipaje extra permitido:
+          </Text>
+          <Text style={styles.text_firstSectionSub}>
+            {"(Todos tienen derecho a un equipaje\n de mano)"}
+          </Text>
           <View style={styles.viewIcon}>
             <TouchableIcon
               value={preferences.baggage_hand}
@@ -170,10 +182,10 @@ const styles = StyleSheet.create({
     color: COLORS.BLACK,
     marginLeft: wp(5),
   },
-  text_firstSectionSub:{
+  text_firstSectionSub: {
     fontSize: hp("1.5%"),
     fontFamily: "Gotham-SSm-Medium",
     color: COLORS.BLACK,
     marginLeft: wp(5),
-  }
+  },
 });
