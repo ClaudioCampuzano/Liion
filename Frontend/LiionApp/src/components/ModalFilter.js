@@ -12,14 +12,16 @@ import TouchableIcon from "./TouchableIcon";
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const ModalFilter = (props) => {
-  const {visible, children, setModalVisible} = props
+  const { visible, gender, setModalVisible } = props;
 
   const [preferences, setPreferences] = useState({
     baggage_hand: false,
     baggage_heavy: false,
     smoking: false,
+    noSmoking: false,
     approvalIns: false,
-    seeAll: true
+    gender: false,
+    seeAll: true,
   });
 
   const [showModal, setShowModal] = useState(visible);
@@ -29,22 +31,72 @@ const ModalFilter = (props) => {
     let aux = { ...preferences };
     switch (field) {
       case "smoking":
-        aux.smoking ? (aux.smoking = false) : (aux.smoking = true);
+        if (aux.smoking) {
+          aux.smoking = false;
+        } else {
+          aux.smoking = true;
+          aux.noSmoking = false;
+          aux.seeAll = false;
+        }
+        break;
+      case "noSmoking":
+        if (aux.noSmoking) {
+          aux.noSmoking = false;
+        } else {
+          aux.noSmoking = true;
+          aux.smoking = false;
+          aux.seeAll = false;
+        }
+        break;
+      case "approvalIns":
+        if (aux.approvalIns) {
+          aux.approvalIns = false;
+        } else {
+          aux.approvalIns = true;
+          aux.seeAll = false;
+        }
         break;
       case "baggage_hand":
-        aux.baggage_hand
-          ? (aux.baggage_hand = false)
-          : (aux.baggage_hand = true);
+        if (aux.baggage_hand) {
+          aux.baggage_hand = false;
+        } else {
+          aux.baggage_hand = true;
+          aux.seeAll = false;
+        }
         break;
       case "baggage_heavy":
-        aux.baggage_heavy
-          ? (aux.baggage_heavy = false)
-          : (aux.baggage_heavy = true);
+        if (aux.baggage_heavy) aux.baggage_heavy = false;
+        else {
+          aux.baggage_heavy = true;
+          aux.seeAll = false;
+        }
+        break;
+      case "gender":
+        if (aux.gender) aux.gender = false;
+        else {
+          aux.gender = true;
+          aux.seeAll = false;
+        }
         break;
       default:
-        aux.approvalIns ? (aux.approvalIns = false) : (aux.approvalIns = true);
+        if (!aux.seeAll) {
+          aux.seeAll = true;
+          aux.smoking = false;
+          aux.noSmoking = false;
+          aux.gender = false;
+          aux.approvalIns = false;
+          aux.baggage_hand = false;
+          aux.baggage_heavy = false;
+        }
         break;
     }
+    !aux.baggage_hand &&
+      !aux.baggage_heavy &&
+      !aux.smoking &&
+      !aux.noSmoking &&
+      !aux.approvalIns &&
+      !aux.gender &&
+      (aux.seeAll = true);
     setPreferences(aux);
   };
 
@@ -93,12 +145,14 @@ const ModalFilter = (props) => {
               type={"baggage_hand"}
               onPress={() => changePreferencesHandler("baggage_hand")}
               style={{}}
+              sizeIcon={7}
             />
             <TouchableIcon
               value={preferences.baggage_heavy}
               type={"baggage_heavy"}
               onPress={() => changePreferencesHandler("baggage_heavy")}
               style={{}}
+              sizeIcon={6}
             />
           </View>
           <Text style={styles.text_firstSection}>Preferencias:</Text>
@@ -108,12 +162,51 @@ const ModalFilter = (props) => {
               type={"smoking"}
               onPress={() => changePreferencesHandler("smoking")}
               style={{}}
+              sizeIcon={6}
             />
+            <TouchableIcon
+              value={preferences.noSmoking}
+              type={"noSmoking"}
+              onPress={() => changePreferencesHandler("noSmoking")}
+              style={{ marginLeft: wp(2) }}
+              sizeIcon={6}
+            />
+          </View>
+
+          <View style={styles.viewIcon}>
+            {gender == "Hombre" ? (
+              <TouchableIcon
+                value={preferences.gender}
+                type={"men"}
+                onPress={() => changePreferencesHandler("gender")}
+                style={{ marginLeft: wp(2) }}
+                sizeIcon={6}
+              />
+            ) : (
+              <TouchableIcon
+                value={preferences.gender}
+                type={"woman"}
+                onPress={() => changePreferencesHandler("gender")}
+                style={{ marginLeft: wp(2) }}
+                sizeIcon={6}
+              />
+            )}
+
             <TouchableIcon
               value={preferences.approvalIns}
               type={"approval"}
               onPress={() => changePreferencesHandler("approvalIns")}
               style={{ marginLeft: wp(2) }}
+              sizeIcon={6}
+            />
+          </View>
+          <View style={styles.viewIcon}>
+            <TouchableIcon
+              value={preferences.seeAll}
+              type={"seeAll"}
+              onPress={() => changePreferencesHandler("seeAll")}
+              style={{}}
+              sizeIcon={6}
             />
           </View>
 

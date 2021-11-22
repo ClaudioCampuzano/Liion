@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import moment from "moment";
@@ -12,24 +12,11 @@ import ModalFilter from "../../components/ModalFilter";
 import InputPicker from "../../components/InputPicker";
 import ResultItemCard from "../../components/ResultItemCard";
 import { GlobalContext } from "../../context/Provider";
+import TouchableIcon from "../../components/TouchableIcon";
 
 const SearchStepTwo = ({ navigation, route }) => {
   const { userFirestoreData } = useContext(GlobalContext);
-
-  const { addresses, date, time } = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [resultOrder, setResultOrder] = useState("");
-
-  const [preferences, setPreferences] = useState({
-    baggage_hand: false,
-    baggage_heavy: false,
-    smoking: false,
-    approvalIns: false,
-    seeAll: true
-  });
-  console.log(preferences)
-
-  const resultData = [
+  const resultDataHard = [
     {
       id: "1",
       driverData: {
@@ -41,6 +28,9 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        bigBags: 0,
+        personalItem: 0,
+
         onlyMen: "false",
         onlyWoman: "true",
         allGender: "false",
@@ -110,11 +100,13 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        bigBags: 0,
+        personalItem: 1,
         onlyMen: "true",
         onlyWoman: "false",
         allGender: "false",
         smoking: "false",
-        approvalIns: "true",
+        approvalIns: "false",
         price: "5000",
         seatsAvaliable: "3",
         date: "20/11/2021",
@@ -180,10 +172,12 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        bigBags: 1,
+        personalItem: 0,
         onlyMen: "false",
         onlyWoman: "false",
         allGender: "true",
-        smoking: "false",
+        smoking: "true",
         approvalIns: "true",
         price: "2000",
         seatsAvaliable: "1",
@@ -250,6 +244,8 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
 
       travelData: {
+        bigBags: 0,
+        personalItem: 0,
         onlyMen: "false",
         onlyWoman: "true",
         allGender: "false",
@@ -309,9 +305,34 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
     },
   ];
+  const { addresses, date, time } = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [resultData, setResultData] = useState([]);
+  const [resultOrder, setResultOrder] = useState("");
+  const [lengthDataReady, setLengthDataReady] = useState(0);
+
+  const [preferences, setPreferences] = useState({
+    baggage_hand: false,
+    baggage_heavy: false,
+    gender: false,
+    smoking: false,
+    noSmoking: false,
+    approvalIns: false,
+    seeAll: true,
+  });
+  useEffect(() => {
+    let listReady = sortFilterResult(
+      resultDataHard,
+      resultOrder,
+      userFirestoreData.gender
+    );
+    setResultData(listReady);
+    setLengthDataReady(listReady.length);
+  }, [preferences, resultOrder]);
 
   const sortFilterResult = (myArray, typeOrder, gender) => {
-    const order = myArray.sort((a, b) => {
+    ///Ordenar por precio o por precio
+    let order = myArray.sort((a, b) => {
       const result =
         typeOrder === "Precio"
           ? parseFloat(a.travelData.price) - parseFloat(b.travelData.price)
@@ -319,19 +340,46 @@ const SearchStepTwo = ({ navigation, route }) => {
             parseFloat(a.driverData.sRating / a.driverData.nRating);
       return result;
     });
+
+    //Filtro de genero
     if (gender === "Hombre")
-      return order.filter((a) => {
-        return (
-          a.travelData.onlyMen === "true" || a.travelData.allGender === "true"
-        );
+      order = order.filter((a) => {
+        return preferences.gender
+          ? a.travelData.onlyMen === "true"
+          : a.travelData.onlyMen === "true" ||
+              a.travelData.allGender === "true";
       });
     else if (gender === "Mujer")
-      return order.filter((a) => {
-        return (
-          a.travelData.onlyWoman === "true" || a.travelData.allGender === "true"
-        );
+      order = order.filter((a) => {
+        return preferences.gender
+          ? a.travelData.onlyWoman === "true"
+          : a.travelData.onlyWoman === "true" ||
+              a.travelData.allGender === "true";
       });
-    else return order;
+
+    if (preferences.noSmoking)
+      order = order.filter((a) => {
+        return a.travelData.smoking === "false";
+      });
+    if (preferences.smoking)
+      order = order.filter((a) => {
+        return a.travelData.smoking === "true";
+      });
+    if (preferences.approvalIns)
+      order = order.filter((a) => {
+        return a.travelData.approvalIns === "true";
+      });
+
+    if (preferences.baggage_hand)
+      order = order.filter((a) => {
+        return a.travelData.personalItem > 0;
+      });
+
+    if (preferences.baggage_heavy)
+      order = order.filter((a) => {
+        return a.travelData.bigBags > 0;
+      });
+    return order;
   };
 
   const searchCity = (myArray) => {
@@ -355,6 +403,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         visible={modalVisible}
         setModalVisible={setModalVisible}
         onChangePreferences={(value) => setPreferences(value)}
+        gender={userFirestoreData.gender}
       />
       <View style={styles.titleView}>
         <Text style={styles.textAddress}>
@@ -382,16 +431,26 @@ const SearchStepTwo = ({ navigation, route }) => {
           label="Ordenar por"
         />
       </View>
-      <View style={styles.middleView}>
-        <FlatList
-          data={sortFilterResult(
-            resultData,
-            resultOrder,
-            userFirestoreData.gender
-          )}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
+      <View
+        style={[
+          styles.middleView,
+          lengthDataReady === 0 && {justifyContent:'center' },
+        ]}
+      >
+        {lengthDataReady > 0 ? (
+          <FlatList
+            data={resultData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <TouchableIcon
+            value={true}
+            type={"sadFace"}
+            style={{}}
+            sizeIcon={7}
+          />
+        )}
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
