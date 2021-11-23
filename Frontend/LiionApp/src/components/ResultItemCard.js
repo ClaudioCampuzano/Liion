@@ -11,10 +11,10 @@ import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
 
-const ResultItemCard = ({ item, onPress }) => {
+const ResultItemCard = ({ item, onPress, style, seatOff }) => {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.touchable}>
+      <View style={[styles.touchable, style]}>
         <View style={{ flex: 1, flexDirection: "row", marginBottom: hp(2) }}>
           <View style={{ flex: 0.8 }}>
             <Avatar.Image
@@ -25,7 +25,9 @@ const ResultItemCard = ({ item, onPress }) => {
             />
           </View>
           <View style={{ flex: 1.6 }}>
-            <Text style={styles.textConductor}>{item.driverData.nameConductor}</Text>
+            <Text style={styles.textConductor}>
+              {item.driverData.nameConductor}
+            </Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialIcons
                 name="stars"
@@ -33,7 +35,10 @@ const ResultItemCard = ({ item, onPress }) => {
                 color={COLORS.TURKEY}
               />
               <Text style={styles.labelRankings}>
-                {Math.round((item.driverData.sRating / item.driverData.nRating) * 10) / 10 +
+                {Math.round(
+                  (item.driverData.sRating / item.driverData.nRating) * 10
+                ) /
+                  10 +
                   "/5 - " +
                   item.driverData.nRating +
                   "\nCalificaciones"}
@@ -42,14 +47,20 @@ const ResultItemCard = ({ item, onPress }) => {
           </View>
           <View style={{ flex: 1.4, flexDirection: "row" }}>
             <View>
-              <Text style={styles.textConductor}>{"$" + item.travelData.price}</Text>
-              <Text style={[styles.textConductor, { alignSelf: "flex-end" }]}>
-                {item.travelData.seatsAvaliable}
+              <Text style={styles.textConductor}>
+                {"$" + item.travelData.price}
               </Text>
+              {!seatOff && (
+                <Text style={[styles.textConductor, { alignSelf: "flex-end" }]}>
+                  {item.travelData.seatsAvaliable}
+                </Text>
+              )}
             </View>
             <View style={{ marginLeft: wp(1) }}>
               <Text style={styles.textLegend}>{"Por\nasiento"}</Text>
-              <Text style={styles.textLegend}>{"Asientos\ndisponibles"}</Text>
+              {!seatOff && (
+                <Text style={styles.textLegend}>{"Asientos\ndisponibles"}</Text>
+              )}
             </View>
           </View>
         </View>
@@ -101,6 +112,5 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: -1 * wp("2%"),
     marginBottom: -1 * wp("2%"),
-
   },
 });

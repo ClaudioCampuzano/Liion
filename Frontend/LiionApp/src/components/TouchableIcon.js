@@ -34,6 +34,14 @@ const TouchableIcon = (props) => {
       labelShow = "Aprobación\nautomatica";
       nameIcon = "lightning-bolt";
       break;
+    case "usb":
+        labelShow = "Carga\nUSB";
+        nameIcon = "usb";
+        break;
+        case "airConditioning":
+        labelShow = "Aire\nacondicionado";
+        nameIcon = "weather-windy";
+        break;
     case "baggage_hand":
       labelShow = "Equipaje\nde mano";
       nameIcon = "bag-personal-outline";

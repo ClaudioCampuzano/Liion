@@ -18,7 +18,7 @@ const SearchStepTwo = ({ navigation, route }) => {
   const { userFirestoreData } = useContext(GlobalContext);
   const resultDataHard = [
     {
-      id: "1",
+      id: 1,
       driverData: {
         photo:
           "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
@@ -31,16 +31,17 @@ const SearchStepTwo = ({ navigation, route }) => {
         bigBags: 0,
         personalItem: 0,
 
-        onlyMen: "false",
-        onlyWoman: "true",
-        allGender: "false",
-        smoking: "true",
-        approvalIns: "false",
-        price: "3000",
-        seatsAvaliable: "2",
+        onlyMen: false,
+        views: 0,
+        onlyWoman: true,
+        allGender: false,
+        smoking: true,
+        approvalIns: false,
+        price: 3000,
+        seatsAvaliable: 2,
         date: "20/11/2021",
         time: "22:43",
-        duration: "10.7833333",
+        duration: 10.7833333,
         addresses: {
           origin: "Badajoz, Las Condes",
           destination: "Villa Alemana, Valparaiso",
@@ -90,28 +91,33 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
     },
     {
-      id: "0",
+      id: 0,
       driverData: {
         photo:
           "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
         nameConductor: "Luis Araya",
         nRating: 10,
         sRating: 50,
+        carcolor: "Gris",
+        typeVehicule: 'SUV',
+        car: "Tesla Model S",
+        plate: "DLJR01"
       },
 
       travelData: {
         bigBags: 0,
         personalItem: 1,
-        onlyMen: "true",
-        onlyWoman: "false",
-        allGender: "false",
-        smoking: "false",
-        approvalIns: "false",
-        price: "5000",
-        seatsAvaliable: "3",
+        onlyMen: false,
+        onlyWoman: false,
+        allGender: true,
+        smoking: false,
+        approvalIns: false,
+        price: 5000,
+        seatsAvaliable: 3,
+        views:0,
         date: "20/11/2021",
         time: "12:43",
-        duration: "85.7833333",
+        duration: 85.7833333,
         addresses: {
           origin: "Badajoz, Las Condes",
           destination: "San Fernando, Rancagua",
@@ -161,7 +167,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
     },
     {
-      id: "2",
+      id: 2,
 
       driverData: {
         photo:
@@ -169,21 +175,28 @@ const SearchStepTwo = ({ navigation, route }) => {
         nameConductor: "Claudio Campuzano",
         nRating: 28,
         sRating: 50,
+        carcolor: "Gris",
+        typeVehicule: 'Sedan',
+        car: "Tesla Model S",
+        plate: "DLJR01",
+        usb: true,
+        airConditioning: true
       },
 
       travelData: {
         bigBags: 1,
         personalItem: 0,
-        onlyMen: "false",
-        onlyWoman: "false",
-        allGender: "true",
-        smoking: "true",
-        approvalIns: "true",
-        price: "2000",
-        seatsAvaliable: "1",
+        views: 5,
+        onlyMen: true,
+        onlyWoman: false,
+        allGender: false,
+        smoking: true,
+        approvalIns: true,
+        price: 2000,
+        seatsAvaliable: 1,
         date: "20/11/2021",
         time: "15:43",
-        duration: "35.7833333",
+        duration: 35.7833333,
         addresses: {
           origin: "Badajoz, Las Condes",
           destination: "Quilpue, Valparaiso",
@@ -233,7 +246,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       },
     },
     {
-      id: "3",
+      id: 3,
 
       driverData: {
         photo:
@@ -241,21 +254,26 @@ const SearchStepTwo = ({ navigation, route }) => {
         nameConductor: "Bryan Rosales",
         nRating: 20,
         sRating: 50,
+        carcolor: "Gris",
+        car: "Tesla Model S",
+        plate: "DLJR01"
       },
 
       travelData: {
         bigBags: 0,
+        views: 9,
+
         personalItem: 0,
-        onlyMen: "false",
-        onlyWoman: "true",
-        allGender: "false",
-        smoking: "false",
-        approvalIns: "true",
-        price: "1000",
-        seatsAvaliable: "5",
+        onlyMen: false,
+        onlyWoman: true,
+        allGender: false,
+        smoking: false,
+        approvalIns: true,
+        price: 1000,
+        seatsAvaliable: 5,
         date: "20/11/2022",
         time: "10:43",
-        duration: "20.7833333",
+        duration: 20.7833333,
         addresses: {
           origin: "Badajoz, Las Condes",
           destination: "Vallenar, Atacama",
@@ -345,29 +363,29 @@ const SearchStepTwo = ({ navigation, route }) => {
     if (gender === "Hombre")
       order = order.filter((a) => {
         return preferences.gender
-          ? a.travelData.onlyMen === "true"
-          : a.travelData.onlyMen === "true" ||
-              a.travelData.allGender === "true";
+          ? a.travelData.onlyMen 
+          : a.travelData.onlyMen ||
+              a.travelData.allGender ;
       });
     else if (gender === "Mujer")
       order = order.filter((a) => {
         return preferences.gender
-          ? a.travelData.onlyWoman === "true"
-          : a.travelData.onlyWoman === "true" ||
-              a.travelData.allGender === "true";
+          ? a.travelData.onlyWoman 
+          : a.travelData.onlyWoman  ||
+              a.travelData.allGender ;
       });
 
     if (preferences.noSmoking)
       order = order.filter((a) => {
-        return a.travelData.smoking === "false";
+        return !a.travelData.smoking ;
       });
     if (preferences.smoking)
       order = order.filter((a) => {
-        return a.travelData.smoking === "true";
+        return a.travelData.smoking ;
       });
     if (preferences.approvalIns)
       order = order.filter((a) => {
-        return a.travelData.approvalIns === "true";
+        return a.travelData.approvalIns ;
       });
 
     if (preferences.baggage_hand)
