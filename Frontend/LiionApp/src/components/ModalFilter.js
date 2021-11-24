@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     width: wp("80%"),
     backgroundColor: COLORS.WHITE,
     paddingVertical: hp("3%"),
-    borderRadius: 52,
+    borderRadius: 25,
     elevation: 20,
   },
   text: {

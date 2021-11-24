@@ -35,13 +35,13 @@ const TouchableIcon = (props) => {
       nameIcon = "lightning-bolt";
       break;
     case "usb":
-        labelShow = "Carga\nUSB";
-        nameIcon = "usb";
-        break;
-        case "airConditioning":
-        labelShow = "Aire\nacondicionado";
-        nameIcon = "weather-windy";
-        break;
+      labelShow = "Carga\nUSB";
+      nameIcon = "usb";
+      break;
+    case "airConditioning":
+      labelShow = "Aire\nacondicionado";
+      nameIcon = "weather-windy";
+      break;
     case "baggage_hand":
       labelShow = "Equipaje\nde mano";
       nameIcon = "bag-personal-outline";
@@ -55,9 +55,13 @@ const TouchableIcon = (props) => {
       nameIcon = "eye-outline";
       break;
     case "sadFace":
-        labelShow = "Sin resultados";
-        nameIcon = "emoticon-sad-outline";
-        break;
+      labelShow = "Nada que mostrar";
+      nameIcon = "emoticon-sad-outline";
+      break;
+    case "noBaggage":
+      labelShow = "Equipaje extra\nno permitido";
+      nameIcon = "bag-personal-off-outline";
+      break;
     default:
       labelShow = "Default";
       nameIcon = "skull-crossbones-outline";

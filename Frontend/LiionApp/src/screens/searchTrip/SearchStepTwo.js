@@ -99,9 +99,9 @@ const SearchStepTwo = ({ navigation, route }) => {
         nRating: 10,
         sRating: 50,
         carcolor: "Gris",
-        typeVehicule: 'SUV',
+        typeVehicule: "SUV",
         car: "Tesla Model S",
-        plate: "DLJR01"
+        plate: "DLJR01",
       },
 
       travelData: {
@@ -114,7 +114,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         approvalIns: false,
         price: 5000,
         seatsAvaliable: 3,
-        views:0,
+        views: 0,
         date: "20/11/2021",
         time: "12:43",
         duration: 85.7833333,
@@ -176,22 +176,26 @@ const SearchStepTwo = ({ navigation, route }) => {
         nRating: 28,
         sRating: 50,
         carcolor: "Gris",
-        typeVehicule: 'Sedan',
+        typeVehicule: "Sedan",
         car: "Tesla Model S",
         plate: "DLJR01",
-        usb: true,
-        airConditioning: true
+        usb: false,
+        airConditioning: false,
+        nPassengerSeats: 5
       },
 
       travelData: {
-        bigBags: 1,
+        bigBags: 0,
         personalItem: 0,
         views: 5,
+        seatsAval: 3,
+        nOfSeats: 5,
+        passengers: { user0: "men", user1: "woman", user2: "all" },
         onlyMen: true,
         onlyWoman: false,
         allGender: false,
         smoking: true,
-        approvalIns: true,
+        approvalIns: false,
         price: 2000,
         seatsAvaliable: 1,
         date: "20/11/2021",
@@ -256,7 +260,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         sRating: 50,
         carcolor: "Gris",
         car: "Tesla Model S",
-        plate: "DLJR01"
+        plate: "DLJR01",
       },
 
       travelData: {
@@ -363,29 +367,27 @@ const SearchStepTwo = ({ navigation, route }) => {
     if (gender === "Hombre")
       order = order.filter((a) => {
         return preferences.gender
-          ? a.travelData.onlyMen 
-          : a.travelData.onlyMen ||
-              a.travelData.allGender ;
+          ? a.travelData.onlyMen
+          : a.travelData.onlyMen || a.travelData.allGender;
       });
     else if (gender === "Mujer")
       order = order.filter((a) => {
         return preferences.gender
-          ? a.travelData.onlyWoman 
-          : a.travelData.onlyWoman  ||
-              a.travelData.allGender ;
+          ? a.travelData.onlyWoman
+          : a.travelData.onlyWoman || a.travelData.allGender;
       });
 
     if (preferences.noSmoking)
       order = order.filter((a) => {
-        return !a.travelData.smoking ;
+        return !a.travelData.smoking;
       });
     if (preferences.smoking)
       order = order.filter((a) => {
-        return a.travelData.smoking ;
+        return a.travelData.smoking;
       });
     if (preferences.approvalIns)
       order = order.filter((a) => {
-        return a.travelData.approvalIns ;
+        return a.travelData.approvalIns;
       });
 
     if (preferences.baggage_hand)
@@ -452,7 +454,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       <View
         style={[
           styles.middleView,
-          lengthDataReady === 0 && {justifyContent:'center' },
+          lengthDataReady === 0 && { justifyContent: "center" },
         ]}
       >
         {lengthDataReady > 0 ? (

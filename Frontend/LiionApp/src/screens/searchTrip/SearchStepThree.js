@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Avatar } from "react-native-paper";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -8,7 +9,6 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import MapViewCustom from "../../components/MapViewCustom";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import ResultItemCard from "../../components/ResultItemCard";
-import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 
 import moment from "moment";
@@ -16,25 +16,23 @@ import "moment/locale/es";
 moment.locale("es");
 
 const SearchStepThree = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
+  const { travelData, driverData } = route.params;
 
   const checkValidator = () => {
-    navigation.navigate("SearchStepFour", route.params);
+    navigation.navigate("SearchStepFour", { travelData, driverData });
   };
 
   const genderComponent = () => {
     let gender;
-    if (route.params.travelData.allGender) gender = "allGender";
-    else if (route.params.travelData.onlyWoman) gender = "woman";
+    if (travelData.allGender) gender = "allGender";
+    else if (travelData.onlyWoman) gender = "woman";
     else gender = "men";
 
     return <TouchableIcon value={true} type={gender} style={{}} sizeIcon={7} />;
   };
   const smokeComponent = () => {
     let smokeType;
-    route.params.travelData.smoking
-      ? (smokeType = "smoking")
-      : (smokeType = "noSmoking");
+    travelData.smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
 
     return (
       <TouchableIcon value={true} type={smokeType} style={{}} sizeIcon={7} />
@@ -51,7 +49,7 @@ const SearchStepThree = ({ navigation, route }) => {
   const packageComponent = (cntBag, type) => {
     if (cntBag > 0)
       return (
-        <View style={{flexDirection:'column'}}>
+        <View style={{ flexDirection: "column" }}>
           <TouchableIcon value={true} type={type} style={{}} sizeIcon={7} />
           {type === "baggage_hand" ? (
             <Text style={styles.subText_view}>{"Maximo\n55x35x25 [cm]"}</Text>
@@ -68,23 +66,23 @@ const SearchStepThree = ({ navigation, route }) => {
         <View style={styles.topPanel}>
           <MapViewCustom
             dimensions={{ height: hp("30%"), width: wp("100%") }}
-            coordinates={route.params.travelData.coordinates}
+            coordinates={travelData.coordinates}
             mapDirections={false}
             showGps={false}
             ArrowBack={() => navigation.goBack()}
           />
         </View>
         <Text style={styles.titleStyle}>
-          {"    " +
-            moment(route.params.travelData.date, "DD-MM-YYYY").format("LL")}
+          {"    " + moment(travelData.date, "DD-MM-YYYY").format("LL")}
         </Text>
         <View style={styles.viewBorder}>
           <ResultItemCard
-            item={route.params}
+            item={{ travelData, driverData }}
             style={{ elevation: hp(0), paddingLeft: wp(5) }}
             seatOff={true}
           />
         </View>
+
         <View style={[styles.viewVehicule, styles.viewBorder]}>
           <Image
             source={require("../../../assets/images/teslaX.png")}
@@ -94,17 +92,38 @@ const SearchStepThree = ({ navigation, route }) => {
             <Text
               style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
             >
-              {" "}   
-
-              {route.params.driverData.typeVehicule}
+              {" "}
+              {driverData.typeVehicule}
             </Text>
-            <Text style={styles.vehicleModelColor}>
-              {route.params.driverData.carcolor}
-            </Text>
+            <Text style={styles.vehicleModelColor}>{driverData.carcolor}</Text>
           </View>
         </View>
-        <View>
-          <Text style={styles.text_titule}>Pasajeros:</Text>
+
+        <Text style={styles.text_titule}>Pasajeros:</Text>
+
+        <View
+          style={[
+            styles.viewBorder,
+            {
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            },
+          ]}
+        >
+          <Avatar.Image
+            source={{
+              uri: driverData.photo,
+            }}
+            style={{marginTop:hp(1), marginBottom:hp(1)}}
+            size={hp("7")}
+          />
+                    <Avatar.Image
+            source={{
+              uri: driverData.photo,
+            }}
+            style={{marginTop:hp(1), marginBottom:hp(1)}}
+            size={hp("7")}
+          />
         </View>
         <View>
           <Text style={styles.text_titule}>Preferencias:</Text>
@@ -115,23 +134,35 @@ const SearchStepThree = ({ navigation, route }) => {
 
           <Text style={styles.text_titule}>Facilidades:</Text>
           <View style={styles.characteristicView}>
-            {facilityComponent(route.params.travelData.approvalIns, "approval")}
-            {facilityComponent(route.params.driverData.usb, "usb")}
-            {facilityComponent(
-              route.params.driverData.airConditioning,
-              "airConditioning"
-            )}
+            {facilityComponent(travelData.approvalIns, "approval")}
+            {facilityComponent(driverData.usb, "usb")}
+            {facilityComponent(driverData.airConditioning, "airConditioning")}
+            {!driverData.airConditioning &&
+              !driverData.usb &&
+              !travelData.approvalIns && (
+                <TouchableIcon
+                  value={true}
+                  type={"sadFace"}
+                  style={{}}
+                  sizeIcon={7}
+                />
+              )}
           </View>
           <Text style={styles.text_titule}>Equipaje extra permitido:</Text>
           <Text style={styles.text_subTitule}>
             {"(Todos tienen derecho a un equipaje\n de mano)"}
           </Text>
           <View style={styles.characteristicView}>
-            {packageComponent(
-              route.params.travelData.personalItem,
-              "baggage_hand"
+            {packageComponent(travelData.personalItem, "baggage_hand")}
+            {packageComponent(travelData.bigBags, "baggage_heavy")}
+            {travelData.personalItem <= 0 && travelData.bigBags <= 0 && (
+              <TouchableIcon
+                value={true}
+                type={"noBaggage"}
+                style={{}}
+                sizeIcon={7}
+              />
             )}
-            {packageComponent(route.params.travelData.bigBags, "baggage_heavy")}
           </View>
         </View>
         <View
@@ -143,7 +174,7 @@ const SearchStepThree = ({ navigation, route }) => {
         >
           <MaterialCommunityIcons name="eye" size={24} color="black" />
           <Text style={styles.text_view}>
-            {"Visto " + route.params.travelData.views + " veces"}
+            {"Visto " + travelData.views + " veces"}
           </Text>
         </View>
 
@@ -169,7 +200,7 @@ const styles = StyleSheet.create({
   buttonView: {
     flex: 1,
     justifyContent: "flex-end",
-    paddingBottom: hp("8%"),
+    paddingBottom: hp("5%"),
   },
   button: {
     width: wp("78.6%"),
@@ -218,6 +249,7 @@ const styles = StyleSheet.create({
     fontFamily: "Gotham-SSm-Bold",
     color: COLORS.BLACK,
     marginLeft: wp(5),
+    marginTop: hp(1),
   },
   text_subTitule: {
     fontSize: hp("1.5%"),
