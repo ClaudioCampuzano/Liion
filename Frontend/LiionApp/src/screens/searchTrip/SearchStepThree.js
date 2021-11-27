@@ -66,35 +66,41 @@ const SearchStepThree = ({ navigation, route }) => {
   ) => {
     var output = [];
 
+    for (let i = 0; i < nSeatAvaliable; i++) {
+      output.push(
+        <Avatar.Image
+          source={require("../../../assets/images/passengerPicture.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
+          }}
+          size={hp("7")}
+        />
+      );
+    }
     for (let i = 0; i < nSeatTravel - nSeatAvaliable; i++) {
       output.push(
         <Avatar.Image
-          source={{
-            uri: driverData.photo,
+          source={require("../../../assets/images/passengerPictureOccupied.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
           }}
-          style={{ marginTop: hp(1), marginBottom: hp(1) }}
           size={hp("7")}
         />
       );
     }
-    for (let i = 0; i <  nSeatAvaliable; i++) {
+    for (let i = 0; i < nSeatOfVehicule - nSeatTravel; i++) {
       output.push(
         <Avatar.Image
-          source={{
-            uri: '../../../assets/images/icon.png',
+          source={require("../../../assets/images/passengerPictureOff.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
           }}
-          style={{ marginTop: hp(1), marginBottom: hp(1) }}
-          size={hp("7")}
-        />
-      );
-    }
-    for (let i = 0; i <  nSeatOfVehicule-nSeatTravel; i++) {
-      output.push(
-        <Avatar.Image
-          source={{
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/No_sign.svg/450px-No_sign.svg.png',
-          }}
-          style={{ marginTop: hp(1), marginBottom: hp(1) }}
           size={hp("7")}
         />
       );
@@ -142,7 +148,7 @@ const SearchStepThree = ({ navigation, route }) => {
           </View>
         </View>
 
-        <Text style={styles.text_titule}>Pasajeros:</Text>
+        <Text style={styles.text_titule}>Estado asientos:</Text>
 
         <View
           style={[

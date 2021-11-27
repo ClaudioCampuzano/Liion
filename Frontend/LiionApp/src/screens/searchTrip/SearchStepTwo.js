@@ -104,10 +104,13 @@ const SearchStepTwo = ({ navigation, route }) => {
         plate: "DLJR01",
         usb: true,
         airConditioning: true,
-        nPassengerSeats: 3
+        nPassengerSeats: 5
       },
 
       travelData: {
+        nOfSeats: 3,
+        seatsAvaliable: 1,
+
         bigBags: 0,
         personalItem: 1,
         onlyMen: false,
@@ -116,7 +119,6 @@ const SearchStepTwo = ({ navigation, route }) => {
         smoking: false,
         approvalIns: false,
         price: 5000,
-        seatsAvaliable: 3,
         views: 0,
         date: "20/11/2021",
         time: "12:43",
@@ -184,7 +186,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         plate: "DLJR01",
         usb: false,
         airConditioning: false,
-        nPassengerSeats: 4
+        nPassengerSeats: 5
       },
 
       travelData: {
@@ -192,7 +194,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         personalItem: 0,
         views: 5,
         nOfSeats: 3,
-        seatsAvaliable: 2,
+        seatsAvaliable: 3,
 
 
         onlyMen: true,
