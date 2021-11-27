@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { COLORS, hp } from "../constants/styleThemes";
 
 const TouchableIcon = (props) => {
-  const { type, value, style, ...restOfProps } = props;
+  const { type, value, style, sizeIcon, ...restOfProps } = props;
 
   let color = value ? COLORS.TURKEY : COLORS.LIGHT_LEAD;
   let labelShow = "";
@@ -26,9 +26,21 @@ const TouchableIcon = (props) => {
       labelShow = "Permitido\nfumar";
       nameIcon = "smoking";
       break;
+    case "noSmoking":
+      labelShow = "No permitido\nfumar";
+      nameIcon = "smoking-off";
+      break;
     case "approval":
       labelShow = "Aprobación\nautomatica";
       nameIcon = "lightning-bolt";
+      break;
+    case "usb":
+      labelShow = "Carga\nUSB";
+      nameIcon = "usb";
+      break;
+    case "airConditioning":
+      labelShow = "Aire\nacondicionado";
+      nameIcon = "weather-windy";
       break;
     case "baggage_hand":
       labelShow = "Equipaje\nde mano";
@@ -37,6 +49,18 @@ const TouchableIcon = (props) => {
     case "baggage_heavy":
       labelShow = "Maletas";
       nameIcon = "suitcase-rolling";
+      break;
+    case "seeAll":
+      labelShow = "Mostrar todos\nlos viajes";
+      nameIcon = "eye-outline";
+      break;
+    case "sadFace":
+      labelShow = "Nada que mostrar";
+      nameIcon = "emoticon-sad-outline";
+      break;
+    case "noBaggage":
+      labelShow = "Equipaje extra\nno permitido";
+      nameIcon = "bag-personal-off-outline";
       break;
     default:
       labelShow = "Default";
@@ -49,14 +73,14 @@ const TouchableIcon = (props) => {
         {type != "baggage_heavy" ? (
           <MaterialCommunityIcons
             name={nameIcon}
-            size={hp("7")}
+            size={hp(sizeIcon)}
             color={color}
             style={{ alignSelf: "center" }}
           />
         ) : (
           <FontAwesome5
             name={nameIcon}
-            size={hp("7")}
+            size={hp(sizeIcon)}
             color={color}
             style={{ alignSelf: "center" }}
           />

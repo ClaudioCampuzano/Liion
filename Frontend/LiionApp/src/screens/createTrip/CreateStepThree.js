@@ -16,8 +16,6 @@ const CreateStepThree = ({ navigation, route }) => {
     approvalIns: false,
   });
 
-
-
   const changePreferencesHandler = (field) => {
     let aux = { ...preferences };
     switch (field) {
@@ -81,18 +79,21 @@ const CreateStepThree = ({ navigation, route }) => {
               type={"allGender"}
               onPress={() => handleGender("allGender")}
               style={{ paddingTop: hp("1.5") }}
+              sizeIcon={7}
             />
             <TouchableIcon
               value={preferences.onlyWoman}
               type={"woman"}
               onPress={() => handleGender("onlyWoman")}
               style={{ paddingTop: hp("1.5") }}
+              sizeIcon={7}
             />
             <TouchableIcon
               value={preferences.onlyMen}
               type={"men"}
               onPress={() => handleGender("onlyMen")}
               style={{ paddingTop: hp("1.5") }}
+              sizeIcon={7}
             />
           </View>
           <Text style={{ ...styles.text_firstSection, paddingTop: hp("2%") }}>
@@ -106,12 +107,14 @@ const CreateStepThree = ({ navigation, route }) => {
               type={"smoking"}
               onPress={() => changePreferencesHandler("smoking")}
               style={{ paddingTop: hp("1.5") }}
+              sizeIcon={7}
             />
             <TouchableIcon
               value={preferences.approvalIns}
               type={"approval"}
               onPress={() => changePreferencesHandler("approvalIns")}
               style={{ paddingTop: hp("1.5") }}
+              sizeIcon={7}
             />
           </View>
         </View>

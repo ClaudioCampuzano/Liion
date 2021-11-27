@@ -94,7 +94,7 @@ const CreateStepTwo = ({ navigation, route }) => {
             coordinates={hardCodedGpsData.current}
             mapDirections={true}
             showGps={false}
-            onDataChange={() => navigation.navigate("CreateStepOne")}
+            ArrowBack={() => navigation.goBack()}
             onDataExtract={(value) => {
               setMapInfo(value);
             }}

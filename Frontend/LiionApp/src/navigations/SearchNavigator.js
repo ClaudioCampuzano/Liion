@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
 
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
@@ -15,9 +15,9 @@ const SearchNavigator = () => {
   const SearchStack = createStackNavigator();
 
   return (
-    <SearchStack.Navigator initialRouteName="SeachStepOne">
+    <SearchStack.Navigator initialRouteName="SearchStepOne">
       <SearchStack.Screen
-        name="SeachStepOne"
+        name="SearchStepOne"
         component={SearchStepOne}
         options={({ navigation }) => ({
           headerShown: true,
@@ -57,7 +57,7 @@ const SearchNavigator = () => {
         })}
       />
       <SearchStack.Screen
-        name="SeachStepTwo"
+        name="SearchStepTwo"
         component={SearchStepTwo}
         options={({ navigation }) => ({
           headerShown: true,
@@ -66,7 +66,7 @@ const SearchNavigator = () => {
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("SeachStepOne")}
+              onPress={() => navigation.goBack()}
             >
               <Ionicons
                 name="md-chevron-back"
@@ -99,7 +99,19 @@ const SearchNavigator = () => {
         name="SearchStepFour"
         component={SearchStepFour}
         options={({ navigation }) => ({
-          headerShown: false,
+          headerShown: true,
+          headerStyle: styles.headerContainerEmpty,
+          headerTitle: "",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="chevron-left"
+                size={hp("5.5")}
+                color={COLORS.TURKEY}
+                style={{ marginLeft: wp("3%") }}
+              />
+            </TouchableOpacity>
+          ),
         })}
       />
       <SearchStack.Screen
@@ -124,5 +136,10 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE,
     fontFamily: "Gotham-SSm-Book",
     fontSize: hp("3.5%"),
+  },
+  headerContainerEmpty: {
+    backgroundColor: COLORS.WHITE,
+    height: hp("7%"),
+    elevation: 0,
   },
 });
