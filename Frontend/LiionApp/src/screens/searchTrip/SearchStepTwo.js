@@ -102,6 +102,9 @@ const SearchStepTwo = ({ navigation, route }) => {
         typeVehicule: "SUV",
         car: "Tesla Model S",
         plate: "DLJR01",
+        usb: true,
+        airConditioning: true,
+        nPassengerSeats: 3
       },
 
       travelData: {
@@ -181,23 +184,23 @@ const SearchStepTwo = ({ navigation, route }) => {
         plate: "DLJR01",
         usb: false,
         airConditioning: false,
-        nPassengerSeats: 5
+        nPassengerSeats: 4
       },
 
       travelData: {
         bigBags: 0,
         personalItem: 0,
         views: 5,
-        seatsAval: 3,
-        nOfSeats: 5,
-        passengers: { user0: "men", user1: "woman", user2: "all" },
+        nOfSeats: 3,
+        seatsAvaliable: 2,
+
+
         onlyMen: true,
         onlyWoman: false,
         allGender: false,
         smoking: true,
         approvalIns: false,
         price: 2000,
-        seatsAvaliable: 1,
         date: "20/11/2021",
         time: "15:43",
         duration: 35.7833333,

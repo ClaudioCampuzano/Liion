@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-paper";
 
@@ -7,7 +7,6 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import MapViewCustom from "../../components/MapViewCustom";
-import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 
@@ -60,9 +59,53 @@ const SearchStepThree = ({ navigation, route }) => {
       );
   };
 
+  const passengerPictureState = (
+    nSeatOfVehicule,
+    nSeatTravel,
+    nSeatAvaliable
+  ) => {
+    var output = [];
+
+    for (let i = 0; i < nSeatTravel - nSeatAvaliable; i++) {
+      output.push(
+        <Avatar.Image
+          source={{
+            uri: driverData.photo,
+          }}
+          style={{ marginTop: hp(1), marginBottom: hp(1) }}
+          size={hp("7")}
+        />
+      );
+    }
+    for (let i = 0; i <  nSeatAvaliable; i++) {
+      output.push(
+        <Avatar.Image
+          source={{
+            uri: '../../../assets/images/icon.png',
+          }}
+          style={{ marginTop: hp(1), marginBottom: hp(1) }}
+          size={hp("7")}
+        />
+      );
+    }
+    for (let i = 0; i <  nSeatOfVehicule-nSeatTravel; i++) {
+      output.push(
+        <Avatar.Image
+          source={{
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/No_sign.svg/450px-No_sign.svg.png',
+          }}
+          style={{ marginTop: hp(1), marginBottom: hp(1) }}
+          size={hp("7")}
+        />
+      );
+    }
+
+    return output;
+  };
+
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
+      <ScrollView showsVerticalScrollIndicator={true}>
         <View style={styles.topPanel}>
           <MapViewCustom
             dimensions={{ height: hp("30%"), width: wp("100%") }}
@@ -110,20 +153,11 @@ const SearchStepThree = ({ navigation, route }) => {
             },
           ]}
         >
-          <Avatar.Image
-            source={{
-              uri: driverData.photo,
-            }}
-            style={{marginTop:hp(1), marginBottom:hp(1)}}
-            size={hp("7")}
-          />
-                    <Avatar.Image
-            source={{
-              uri: driverData.photo,
-            }}
-            style={{marginTop:hp(1), marginBottom:hp(1)}}
-            size={hp("7")}
-          />
+          {passengerPictureState(
+            driverData.nPassengerSeats,
+            travelData.nOfSeats,
+            travelData.seatsAvaliable
+          )}
         </View>
         <View>
           <Text style={styles.text_titule}>Preferencias:</Text>
@@ -185,7 +219,7 @@ const SearchStepThree = ({ navigation, route }) => {
             onPress={() => checkValidator()}
           />
         </View>
-      </KeyboardAvoidingWrapper>
+      </ScrollView>
     </Layout>
   );
 };
