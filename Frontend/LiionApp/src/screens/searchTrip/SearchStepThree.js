@@ -101,7 +101,7 @@ const SearchStepThree = ({ navigation, route }) => {
             marginBottom: hp(1),
             backgroundColor: "white",
           }}
-          size={hp("7")}
+          size={hp("7.1")}
         />
       );
     }
