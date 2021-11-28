@@ -10,8 +10,20 @@ import TouchableIcon from "../../components/TouchableIcon";
 
 const SearchStepFour = ({ navigation, route }) => {
   const { travelData, driverData } = route.params;
-  const [valueGender, setValueGender] = useState("");
-  const [errorGenero, setErrorGenero] = useState(null);
+
+  const [orderValues, setOrderValues] = useState({
+    valuePickUp: "",
+    valueDescent: "",
+    valuePay: "",
+    handBaggage: false,
+    maletaBaggage: false,
+  });
+
+  const [errorValues, setErrorValues] = useState({
+    errorPay: null,
+    errorPickUp: null,
+    errorDescent: null,
+  });
 
   const checkValidator = () => {
     const titulo = "¡Solicitud de reserva realizada!";
@@ -23,6 +35,14 @@ const SearchStepFour = ({ navigation, route }) => {
       subTitulo: subTitulo,
       initialRoute: initialRoute,
     });
+  };
+
+  const changeValuesHandler = (field, value) => {
+    setOrderValues({ ...orderValues, [field]: value });
+  };
+
+  const changeErrorHandler = (field, value) => {
+    setErrorValues({ ...errorValues, [field]: value });
   };
 
   return (
@@ -40,17 +60,21 @@ const SearchStepFour = ({ navigation, route }) => {
             />
             <InputPicker
               style={styles.input}
-              errorText={errorGenero}
-              onSelect={(selectedItem, index) => setValueGender(selectedItem)}
-              value={valueGender}
+              errorText={errorValues.errorPickUp}
+              onSelect={(selectedItem, index) =>
+                changeValuesHandler("valuePickUp", selectedItem)
+              }
+              value={orderValues.valuePickUp}
               data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
               label="Lugar de recogida"
             />
             <InputPicker
               style={styles.input}
-              errorText={errorGenero}
-              onSelect={(selectedItem, index) => setValueGender(selectedItem)}
-              value={valueGender}
+              errorText={errorValues.errorDescent}
+              onSelect={(selectedItem, index) =>
+                changeValuesHandler("valueDescent", selectedItem)
+              }
+              value={orderValues.valueDescent}
               data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
               label="Lugar de bajada"
             />
@@ -62,26 +86,35 @@ const SearchStepFour = ({ navigation, route }) => {
                 style={{ flexDirection: "row", justifyContent: "space-evenly" }}
               >
                 <TouchableIcon
-                  /*               value={preferences.approvalIns}
-                   */ type={"baggage_hand"}
-                  /*               onPress={() => changePreferencesHandler("approvalIns")}
-                   */ style={{ paddingTop: hp("1.5") }}
-                  sizeIcon={7}
+                  value={orderValues.handBaggage}
+                  type={"baggage_hand"}
+                  onPress={() =>
+                    changeValuesHandler("handBaggage", !orderValues.handBaggage)
+                  }
+                  style={{ paddingTop: hp("1.5") }}
+                  sizeIcon={6}
                 />
                 <TouchableIcon
-                  /*               value={preferences.approvalIns}
-                   */ type={"baggage_heavy"}
-                  /*               onPress={() => changePreferencesHandler("approvalIns")}
-                   */ style={{ paddingTop: hp("1.5") }}
-                  sizeIcon={7}
+                  value={orderValues.maletaBaggage}
+                  type={"baggage_heavy"}
+                  onPress={() =>
+                    changeValuesHandler(
+                      "maletaBaggage",
+                      !orderValues.maletaBaggage
+                    )
+                  }
+                  style={{ paddingTop: hp("1.5") }}
+                  sizeIcon={6}
                 />
               </View>
             </View>
             <InputPicker
               style={styles.inputPay}
-              errorText={errorGenero}
-              onSelect={(selectedItem, index) => setValueGender(selectedItem)}
-              value={valueGender}
+              errorText={errorValues.errorPay}
+              onSelect={(selectedItem, index) =>
+                changeValuesHandler('valuePay', selectedItem)
+              }
+              value={orderValues.valuePay}
               data={["Credito", "Debito"]}
               label="Medio de pago"
             />
