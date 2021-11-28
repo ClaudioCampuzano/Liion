@@ -65,10 +65,12 @@ const SearchStepThree = ({ navigation, route }) => {
     nSeatAvaliable
   ) => {
     var output = [];
+    var cnt = 0;
 
     for (let i = 0; i < nSeatAvaliable; i++) {
       output.push(
         <Avatar.Image
+          key={cnt}
           source={require("../../../assets/images/passengerPicture.png")}
           style={{
             marginTop: hp(1),
@@ -78,10 +80,12 @@ const SearchStepThree = ({ navigation, route }) => {
           size={hp("7")}
         />
       );
+      cnt += 1;
     }
     for (let i = 0; i < nSeatTravel - nSeatAvaliable; i++) {
       output.push(
         <Avatar.Image
+          key={cnt}
           source={require("../../../assets/images/passengerPictureOccupied.png")}
           style={{
             marginTop: hp(1),
@@ -91,10 +95,12 @@ const SearchStepThree = ({ navigation, route }) => {
           size={hp("7")}
         />
       );
+      cnt += 1;
     }
     for (let i = 0; i < nSeatOfVehicule - nSeatTravel; i++) {
       output.push(
         <Avatar.Image
+          key={cnt}
           source={require("../../../assets/images/passengerPictureOff.png")}
           style={{
             marginTop: hp(1),
@@ -104,6 +110,7 @@ const SearchStepThree = ({ navigation, route }) => {
           size={hp("7.1")}
         />
       );
+      cnt += 1;
     }
 
     return output;
@@ -220,7 +227,7 @@ const SearchStepThree = ({ navigation, route }) => {
 
         <View style={styles.buttonView}>
           <ButtonLiion
-            title="Solicitar reserva"
+            title="Iniciar proceso de reserva"
             styleView={styles.button}
             onPress={() => checkValidator()}
           />
