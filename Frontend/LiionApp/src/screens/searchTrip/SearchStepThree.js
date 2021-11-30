@@ -18,7 +18,7 @@ const SearchStepThree = ({ navigation, route }) => {
   const { travelData, driverData } = route.params;
 
   const checkValidator = () => {
-    navigation.navigate("SearchStepFour", { travelData, driverData });
+    navigation.navigate("SearchStepFour", route.params);
   };
 
   const genderComponent = () => {

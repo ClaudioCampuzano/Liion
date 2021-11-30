@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
+import { orderByDistance } from "geolib";
+import { reverseGeocodeAsync } from "expo-location";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -9,7 +11,7 @@ import InputPicker from "../../components/InputPicker";
 import TouchableIcon from "../../components/TouchableIcon";
 
 const SearchStepFour = ({ navigation, route }) => {
-  const { travelData, driverData } = route.params;
+  const { addresses, travelData, driverData } = route.params;
 
   const [orderValues, setOrderValues] = useState({
     valuePickUp: "",
@@ -25,6 +27,56 @@ const SearchStepFour = ({ navigation, route }) => {
     errorDescent: null,
   });
 
+  const [pickersLabel, setPickersLabel] = useState({
+    pickUp: [],
+    putDown: []
+  })
+
+  const [pickersCoord, setPickersCoord] = useState({});
+
+ 
+  useEffect(() => {
+    (async () => {
+      var origin = {
+        latitude: addresses.origin.location.lat,
+        longitude: addresses.origin.location.lng,
+      };
+      var destination = {
+        latitude: addresses.destination.location.lat,
+        longitude: addresses.origin.location.lng,
+      };
+      var originList = orderByDistance(origin, travelData.coordinates).slice(0,3);
+      var destinationList = orderByDistance(destination,travelData.coordinates).slice(0, 3);
+      setPickersCoord({pickUp: originList, putDown: destinationList})
+      var aux = { ...pickersLabel };
+      aux.pickUp = await getReverseGeocode(originList)
+      aux.putDown = await getReverseGeocode(destinationList)
+
+      setPickersLabel(aux)
+    })();
+  }, []);
+
+  const getReverseGeocode = async(arrayOfObjCoord) => {
+    var labels = []
+    for (let i=0; i< arrayOfObjCoord.length; i++){
+      var address = await reverseGeocodeAsync(arrayOfObjCoord[i]);
+      labels.push(address[0].street+' '+address[0].name+', '+ address[0].city)
+    }
+    return labels
+  }
+
+  const changeValuesHandler = (field, value) => {
+    setOrderValues({ ...orderValues, [field]: value });
+  };
+
+  const changeErrorHandler = (field, value) => {
+    setErrorValues({ ...errorValues, [field]: value });
+  };
+
+  useEffect(() => {
+    orderByDistance;
+  }, []);
+
   const checkValidator = () => {
     const titulo = "¡Solicitud de reserva realizada!";
     const subTitulo =
@@ -35,14 +87,6 @@ const SearchStepFour = ({ navigation, route }) => {
       subTitulo: subTitulo,
       initialRoute: initialRoute,
     });
-  };
-
-  const changeValuesHandler = (field, value) => {
-    setOrderValues({ ...orderValues, [field]: value });
-  };
-
-  const changeErrorHandler = (field, value) => {
-    setErrorValues({ ...errorValues, [field]: value });
   };
 
   return (
@@ -65,7 +109,7 @@ const SearchStepFour = ({ navigation, route }) => {
                 changeValuesHandler("valuePickUp", selectedItem)
               }
               value={orderValues.valuePickUp}
-              data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
+              data={pickersLabel.pickUp}
               label="Lugar de recogida"
             />
             <InputPicker
@@ -75,7 +119,7 @@ const SearchStepFour = ({ navigation, route }) => {
                 changeValuesHandler("valueDescent", selectedItem)
               }
               value={orderValues.valueDescent}
-              data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
+              data={pickersLabel.putDown}
               label="Lugar de bajada"
             />
             <View style={styles.viewBaggage}>
@@ -112,7 +156,7 @@ const SearchStepFour = ({ navigation, route }) => {
               style={styles.inputPay}
               errorText={errorValues.errorPay}
               onSelect={(selectedItem, index) =>
-                changeValuesHandler('valuePay', selectedItem)
+                changeValuesHandler("valuePay", selectedItem)
               }
               value={orderValues.valuePay}
               data={["Credito", "Debito"]}
