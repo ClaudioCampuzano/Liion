@@ -417,7 +417,7 @@ const SearchStepTwo = ({ navigation, route }) => {
     return (
       <ResultItemCard
         item={item}
-        onPress={() => navigation.navigate("SearchStepThree", item)}
+        onPress={() => navigation.navigate("SearchStepThree", {...item, addresses})}
       />
     );
   };
