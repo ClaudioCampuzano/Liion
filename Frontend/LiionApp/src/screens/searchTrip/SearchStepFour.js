@@ -21,30 +21,29 @@ const SearchStepFour = ({ navigation, route }) => {
     maletaBaggage: false,
   });
 
-
   const [errorValues, setErrorValues] = useState({
     errorPay: null,
     errorPickUp: null,
     errorDescent: null,
   });
 
-  const [valuePickUp, SetValuePickUp] = useState("")
-  const [valueDescent, SetValueDescent] = useState("")
+  const [valuePickUp, SetValuePickUp] = useState("");
+  const [valueDescent, SetValueDescent] = useState("");
 
   const [pickersLabel, setPickersLabel] = useState({
     pickUp: [],
-    putDown: []
-  })
+    putDown: [],
+  });
 
   const [pickersCoord, setPickersCoord] = useState({
     pickUp: [],
-    putDown: []
+    putDown: [],
   });
 
   const changeValuesHandler = (field, value) => {
     setOrderValues({ ...orderValues, [field]: value });
   };
- 
+
   useEffect(() => {
     (async () => {
       var origin = {
@@ -55,48 +54,60 @@ const SearchStepFour = ({ navigation, route }) => {
         latitude: addresses.destination.location.lat,
         longitude: addresses.origin.location.lng,
       };
-      var originSort = orderByDistance(origin, travelData.coordinates).slice(0,4);
-      var destinationSort = orderByDistance(destination,travelData.coordinates).slice(0,4);
+      var originSort = orderByDistance(origin, travelData.coordinates).slice(
+        0,
+        4
+      );
+      var destinationSort = orderByDistance(
+        destination,
+        travelData.coordinates
+      ).slice(0, 4);
 
       var aux = { ...pickersLabel };
-      aux.pickUp  = await getReverseGeocode(originSort)
-      aux.putDown = await getReverseGeocode(destinationSort)
-      setPickersLabel(aux)
+      aux.pickUp = await getReverseGeocode(originSort);
+      aux.putDown = await getReverseGeocode(destinationSort);
+      setPickersLabel(aux);
 
       var aux_ = { ...pickersCoord };
-      aux_.pickUp = originSort
-      aux_.putDown = destinationSort
-      setPickersCoord(aux_)
+      aux_.pickUp = originSort;
+      aux_.putDown = destinationSort;
+      setPickersCoord(aux_);
     })();
   }, []);
 
-  const getReverseGeocode = async(arrayOfObjCoord) => {
-    var labels = []
-    for (let i=0; i< arrayOfObjCoord.length; i++){
+  const getReverseGeocode = async (arrayOfObjCoord) => {
+    var labels = [];
+    for (let i = 0; i < arrayOfObjCoord.length; i++) {
       var address = await reverseGeocodeAsync(arrayOfObjCoord[i]);
-      var nameAdrress = address[0].street+' '+address[0].name+', '+ address[0].city
-      labels.push(nameAdrress)
+      var nameAdrress =
+        address[0].street + " " + address[0].name + ", " + address[0].city;
+      labels.push(nameAdrress);
     }
-    return labels
-  }
+    return labels;
+  };
   useEffect(() => {
-    var aux = {...errorValues}
+    var aux = { ...errorValues };
     if (orderValues.valuePay != "") aux.errorPay = null;
     if (valuePickUp != "") aux.errorPickUp = null;
     if (valueDescent != "") aux.errorDescent = null;
-    setErrorValues(aux)
+    setErrorValues(aux);
   }, [orderValues.valuePay, valuePickUp, valueDescent]);
 
-
   const checkValidator = () => {
-    var aux = {...errorValues}
-    orderValues.valuePay == "" ?  aux.errorPay='Falta tu medio de pago' : aux.errorPay = null
-    valuePickUp == "" ? aux.errorPickUp='Falta tu subida' : aux.errorPickUp = null
-    valueDescent == "" ? aux.errorDescent='Falta tu bajada' : aux.errorDescent= null
-    setErrorValues(aux)
+    var aux = { ...errorValues };
+    orderValues.valuePay == ""
+      ? (aux.errorPay = "Falta tu medio de pago")
+      : (aux.errorPay = null);
+    valuePickUp == ""
+      ? (aux.errorPickUp = "Falta tu subida")
+      : (aux.errorPickUp = null);
+    valueDescent == ""
+      ? (aux.errorDescent = "Falta tu bajada")
+      : (aux.errorDescent = null);
+    setErrorValues(aux);
 
-    if (valuePickUp != "" && valueDescent != "" && orderValues.valuePay != ""){
-       const titulo = "¡Solicitud de reserva realizada!";
+    if (valuePickUp != "" && valueDescent != "" && orderValues.valuePay != "") {
+      const titulo = "¡Solicitud de reserva realizada!";
       const subTitulo =
         "Tu solicitud de reserva fue\ngenerada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes en el\nhome.";
       const initialRoute = "SearchStepOne";
@@ -107,11 +118,10 @@ const SearchStepFour = ({ navigation, route }) => {
       });
     }
   };
-  
 
   return (
     <Layout>
-      <ScrollView>
+      <ScrollView >
         <View>
           <Text style={styles.titleStyle}>
             Confirmación de solicitud de reserva
@@ -125,10 +135,10 @@ const SearchStepFour = ({ navigation, route }) => {
             <InputPicker
               style={styles.input}
               errorText={errorValues.errorPickUp}
-              onSelect={(selectedItem, index) =>
-                {SetValuePickUp(selectedItem)
-                changeValuesHandler('valuePickUp',pickersCoord.pickUp[index])}
-              }
+              onSelect={(selectedItem, index) => {
+                SetValuePickUp(selectedItem);
+                changeValuesHandler("valuePickUp", pickersCoord.pickUp[index]);
+              }}
               value={valuePickUp}
               data={pickersLabel.pickUp}
               label="Lugar de recogida"
@@ -136,45 +146,59 @@ const SearchStepFour = ({ navigation, route }) => {
             <InputPicker
               style={styles.input}
               errorText={errorValues.errorDescent}
-              onSelect={(selectedItem, index) =>
-                {SetValueDescent(selectedItem)
-                  changeValuesHandler('valueDescent',pickersCoord.putDown[index])
-                }
-              }
+              onSelect={(selectedItem, index) => {
+                SetValueDescent(selectedItem);
+                changeValuesHandler(
+                  "valueDescent",
+                  pickersCoord.putDown[index]
+                );
+              }}
               value={valueDescent}
               data={pickersLabel.putDown}
               label="Lugar de bajada"
             />
-            <View style={styles.viewBaggage}>
-              <Text style={styles.labelBaggage}>
-                {"Seleccione su equipaje extra"}
-              </Text>
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-evenly" }}
-              >
-                <TouchableIcon
-                  value={orderValues.handBaggage}
-                  type={"baggage_hand"}
-                  onPress={() =>
-                    changeValuesHandler("handBaggage", !orderValues.handBaggage)
-                  }
-                  style={{ paddingTop: hp("1.5") }}
-                  sizeIcon={6}
-                />
-                <TouchableIcon
-                  value={orderValues.maletaBaggage}
-                  type={"baggage_heavy"}
-                  onPress={() =>
-                    changeValuesHandler(
-                      "maletaBaggage",
-                      !orderValues.maletaBaggage
-                    )
-                  }
-                  style={{ paddingTop: hp("1.5") }}
-                  sizeIcon={6}
-                />
+            {(travelData.bigBags != 0 || travelData.personalItem != 0) && (
+              <View style={styles.viewBaggage}>
+                <Text style={styles.labelBaggage}>
+                  {"Seleccione su equipaje extra"}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  {travelData.personalItem != 0 && (
+                    <TouchableIcon
+                      value={orderValues.handBaggage}
+                      type={"baggage_hand"}
+                      onPress={() =>
+                        changeValuesHandler(
+                          "handBaggage",
+                          !orderValues.handBaggage
+                        )
+                      }
+                      style={{ paddingTop: hp("1.5") }}
+                      sizeIcon={6}
+                    />
+                  )}
+                  {travelData.bigBags != 0 && (
+                    <TouchableIcon
+                      value={orderValues.maletaBaggage}
+                      type={"baggage_heavy"}
+                      onPress={() =>
+                        changeValuesHandler(
+                          "maletaBaggage",
+                          !orderValues.maletaBaggage
+                        )
+                      }
+                      style={{ paddingTop: hp("1.5") }}
+                      sizeIcon={6}
+                    />
+                  )}
+                </View>
               </View>
-            </View>
+            )}
             <InputPicker
               style={styles.inputPay}
               errorText={errorValues.errorPay}
@@ -187,7 +211,7 @@ const SearchStepFour = ({ navigation, route }) => {
             />
           </View>
         </View>
-        <View style={styles.buttonView}>
+        <View style={[styles.buttonView, (travelData.bigBags === 0 && travelData.personalItem === 0) && {  paddingTop: hp("8%")}]}>
           <ButtonLiion
             title="Confirmar solicitud"
             styleView={styles.button}
@@ -195,6 +219,7 @@ const SearchStepFour = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+
     </Layout>
   );
 };
@@ -204,7 +229,6 @@ export default SearchStepFour;
 const styles = StyleSheet.create({
   buttonView: {
     flex: 1,
-    justifyContent: "flex-end",
     paddingTop: hp("2%"),
     paddingBottom: hp("2%"),
   },
