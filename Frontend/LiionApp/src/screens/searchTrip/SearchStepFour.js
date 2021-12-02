@@ -14,12 +14,13 @@ const SearchStepFour = ({ navigation, route }) => {
   const { addresses, travelData, driverData } = route.params;
 
   const [orderValues, setOrderValues] = useState({
-    valuePickUp: "",
-    valueDescent: "",
+    valuePickUp: {},
+    valueDescent: {},
     valuePay: "",
     handBaggage: false,
     maletaBaggage: false,
   });
+
 
   const [errorValues, setErrorValues] = useState({
     errorPay: null,
@@ -27,13 +28,22 @@ const SearchStepFour = ({ navigation, route }) => {
     errorDescent: null,
   });
 
+  const [valuePickUp, SetValuePickUp] = useState("")
+  const [valueDescent, SetValueDescent] = useState("")
+
   const [pickersLabel, setPickersLabel] = useState({
     pickUp: [],
     putDown: []
   })
 
-  const [pickersCoord, setPickersCoord] = useState({});
+  const [pickersCoord, setPickersCoord] = useState({
+    pickUp: [],
+    putDown: []
+  });
 
+  const changeValuesHandler = (field, value) => {
+    setOrderValues({ ...orderValues, [field]: value });
+  };
  
   useEffect(() => {
     (async () => {
@@ -45,14 +55,18 @@ const SearchStepFour = ({ navigation, route }) => {
         latitude: addresses.destination.location.lat,
         longitude: addresses.origin.location.lng,
       };
-      var originList = orderByDistance(origin, travelData.coordinates).slice(0,3);
-      var destinationList = orderByDistance(destination,travelData.coordinates).slice(0, 3);
-      setPickersCoord({pickUp: originList, putDown: destinationList})
-      var aux = { ...pickersLabel };
-      aux.pickUp = await getReverseGeocode(originList)
-      aux.putDown = await getReverseGeocode(destinationList)
+      var originSort = orderByDistance(origin, travelData.coordinates).slice(0,4);
+      var destinationSort = orderByDistance(destination,travelData.coordinates).slice(0,4);
 
+      var aux = { ...pickersLabel };
+      aux.pickUp  = await getReverseGeocode(originSort)
+      aux.putDown = await getReverseGeocode(destinationSort)
       setPickersLabel(aux)
+
+      var aux_ = { ...pickersCoord };
+      aux_.pickUp = originSort
+      aux_.putDown = destinationSort
+      setPickersCoord(aux_)
     })();
   }, []);
 
@@ -60,34 +74,40 @@ const SearchStepFour = ({ navigation, route }) => {
     var labels = []
     for (let i=0; i< arrayOfObjCoord.length; i++){
       var address = await reverseGeocodeAsync(arrayOfObjCoord[i]);
-      labels.push(address[0].street+' '+address[0].name+', '+ address[0].city)
+      var nameAdrress = address[0].street+' '+address[0].name+', '+ address[0].city
+      labels.push(nameAdrress)
     }
     return labels
   }
-
-  const changeValuesHandler = (field, value) => {
-    setOrderValues({ ...orderValues, [field]: value });
-  };
-
-  const changeErrorHandler = (field, value) => {
-    setErrorValues({ ...errorValues, [field]: value });
-  };
-
   useEffect(() => {
-    orderByDistance;
-  }, []);
+    var aux = {...errorValues}
+    if (orderValues.valuePay != "") aux.errorPay = null;
+    if (valuePickUp != "") aux.errorPickUp = null;
+    if (valueDescent != "") aux.errorDescent = null;
+    setErrorValues(aux)
+  }, [orderValues.valuePay, valuePickUp, valueDescent]);
+
 
   const checkValidator = () => {
-    const titulo = "¡Solicitud de reserva realizada!";
-    const subTitulo =
-      "Tu solicitud de reserva fue\ngenerada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes en el\nhome.";
-    const initialRoute = "SearchStepOne";
-    navigation.navigate("SucessScreen", {
-      titulo: titulo,
-      subTitulo: subTitulo,
-      initialRoute: initialRoute,
-    });
+    var aux = {...errorValues}
+    orderValues.valuePay == "" ?  aux.errorPay='Falta tu medio de pago' : aux.errorPay = null
+    valuePickUp == "" ? aux.errorPickUp='Falta tu subida' : aux.errorPickUp = null
+    valueDescent == "" ? aux.errorDescent='Falta tu bajada' : aux.errorDescent= null
+    setErrorValues(aux)
+
+    if (valuePickUp != "" && valueDescent != "" && orderValues.valuePay != ""){
+       const titulo = "¡Solicitud de reserva realizada!";
+      const subTitulo =
+        "Tu solicitud de reserva fue\ngenerada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes en el\nhome.";
+      const initialRoute = "SearchStepOne";
+      navigation.navigate("SucessScreen", {
+        titulo: titulo,
+        subTitulo: subTitulo,
+        initialRoute: initialRoute,
+      });
+    }
   };
+  
 
   return (
     <Layout>
@@ -106,9 +126,10 @@ const SearchStepFour = ({ navigation, route }) => {
               style={styles.input}
               errorText={errorValues.errorPickUp}
               onSelect={(selectedItem, index) =>
-                changeValuesHandler("valuePickUp", selectedItem)
+                {SetValuePickUp(selectedItem)
+                changeValuesHandler('valuePickUp',pickersCoord.pickUp[index])}
               }
-              value={orderValues.valuePickUp}
+              value={valuePickUp}
               data={pickersLabel.pickUp}
               label="Lugar de recogida"
             />
@@ -116,9 +137,11 @@ const SearchStepFour = ({ navigation, route }) => {
               style={styles.input}
               errorText={errorValues.errorDescent}
               onSelect={(selectedItem, index) =>
-                changeValuesHandler("valueDescent", selectedItem)
+                {SetValueDescent(selectedItem)
+                  changeValuesHandler('valueDescent',pickersCoord.putDown[index])
+                }
               }
-              value={orderValues.valueDescent}
+              value={valueDescent}
               data={pickersLabel.putDown}
               label="Lugar de bajada"
             />
