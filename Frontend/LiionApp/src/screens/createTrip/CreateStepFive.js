@@ -14,12 +14,15 @@ import ShowTravel from "../../components/ShowTravel";
 import { GlobalContext } from "../../context/Provider";
 import moment from "moment";
 import { createTravel } from "../../api/api";
+import ModalPopUp from "../../components/ModalPopUp";
 import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepFive = ({ navigation, route }) => {
   const { userFirestoreData, uid, userData, accesstoken } =
     useContext(GlobalContext);
+    const [modalVisible, setModalVisible] = useState(false);
+    //const dataForRoutingTwo = useRef();
   const checkValidator = async () => {
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
@@ -46,6 +49,7 @@ const CreateStepFive = ({ navigation, route }) => {
         status: "open",
         seatsAval: route.params.nOfSeats,
         ...route.params,
+        seen:0,
       },
     };
     const [resflag, resmsg] = await createTravel(dataForSend);
@@ -58,10 +62,18 @@ const CreateStepFive = ({ navigation, route }) => {
         initialRoute: initialRoute,
       });
     } else {
-      //crack porfa agregar un modal con el error pls
-      console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
+      //dataForRoutingTwo.current = dataForSend
+      setModalVisible(true)
+      //console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
     }
   };
+
+  const modalHandler = () => {
+    //alfinal no fue nesesario
+    //console.log(dataForRoutingTwo.current)
+    navigation.navigate("CreateStepOne")
+    setModalVisible(false)
+  }
 
 
   const getSex = () => {
@@ -103,6 +115,13 @@ const CreateStepFive = ({ navigation, route }) => {
 
   return (
     <Layout>
+      <ModalPopUp
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+              customFunction={modalHandler}
+            >
+             Parece que ya tienes un viaje en ese intervalo de tiempo
+            </ModalPopUp>
       <View style={styles.container}>
         <View style={styles.contentFive}>
           <View style={styles.titleContainer}>

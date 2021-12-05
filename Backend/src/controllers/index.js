@@ -172,6 +172,9 @@ export const updateUserRating = async (req, res) => {
 };
 
 export const createTravel = async (req, res) => {
+  //testing modal only
+  //res.status(403).send("Error");
+  
   const travelsTimes = [];
   const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
     driverUID,
@@ -225,4 +228,5 @@ export const createTravel = async (req, res) => {
     console.log(e);
     res.status(403).send("Error");
   }
+
 };

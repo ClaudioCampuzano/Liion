@@ -10,7 +10,7 @@ import {
 
 import {COLORS,  hp, wp} from "../constants/styleThemes"
 
-const ModalPopUp = ({ visible, children, setModalVisible }) => {
+const ModalPopUp = ({ visible, children, setModalVisible, customFunction }) => {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -33,6 +33,16 @@ const ModalPopUp = ({ visible, children, setModalVisible }) => {
       }).start();
     }
   };
+
+  const proceedFunction = () =>{
+    if (customFunction){
+      customFunction()
+    }
+    else{
+      setModalVisible(false)
+    }
+  }
+
   return (
     <Modal transparent={true} visible={showModal}>
       <View style={styles.modalBackGround}>
@@ -45,7 +55,7 @@ const ModalPopUp = ({ visible, children, setModalVisible }) => {
           <Text style={styles.text}>{children}</Text>
           <TouchableOpacity
             style={{ alignItems: "center" }}
-            onPress={() => setModalVisible(false)}
+            onPress={() => proceedFunction()}
           >
             <View style={styles.button}>
               <Text style={styles.text2}>Aceptar</Text>
