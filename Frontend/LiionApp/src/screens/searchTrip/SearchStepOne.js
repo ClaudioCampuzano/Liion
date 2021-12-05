@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
+import TabDownButton from "../../components/TabDownButton";
 
 import { hp, wp } from "../../constants/styleThemes";
 
@@ -46,7 +47,7 @@ const SearchStepOne = ({ navigation }) => {
     <Layout>
       <View
         style={{
-          height: hp("78%"),
+          height: hp("68%"),
           flexDirection: "column",
         }}
       >
@@ -96,6 +97,11 @@ const SearchStepOne = ({ navigation }) => {
           styleView={styles.button}
           onPress={() => checkValidator()}
         />
+                <TabDownButton
+          style={{ margin: 0 }}
+          type={"search"}
+          sizeIcon={8}
+        />
       </View>
     </Layout>
   );
@@ -106,9 +112,10 @@ export default SearchStepOne;
 const styles = StyleSheet.create({
   buttonView: {
     flex: 1,
-    height: hp("15%"),
+    height: hp("25%"),
+    width: wp(100),
     justifyContent: "flex-end",
-    paddingBottom: hp("8%"),
+    paddingBottom: hp("1%"),
   },
   button: {
     width: wp("78.6%"),

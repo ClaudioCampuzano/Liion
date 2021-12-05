@@ -5,6 +5,7 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import InputLocation from "../../components/InputLocation";
 import InputDateTime from "../../components/InputDateTime";
+import TabDownButton from "../../components/TabDownButton";
 
 import { hp, wp } from "../../constants/styleThemes";
 
@@ -15,38 +16,38 @@ const CreateStepOne = ({ navigation }) => {
     time: null,
   });
 
-  const [errorDate, SetErrorDate] = useState(null)
-  const [errorTime, SetErrorTime] = useState(null)
-  const [errorAddresses, SetErrorAddresses] = useState(null)
+  const [errorDate, SetErrorDate] = useState(null);
+  const [errorTime, SetErrorTime] = useState(null);
+  const [errorAddresses, SetErrorAddresses] = useState(null);
   const [focusInputLocation, setfocusInputLocation] = useState(false);
 
   const changeValuesHandler = (field, value) => {
     setSearchValues({ ...createValues, [field]: value });
   };
-  
-  useEffect(()=>{
-    SetErrorAddresses(null)
-    setfocusInputLocation(false)
-  },[focusInputLocation]);
 
   useEffect(() => {
-    if (createValues.date) SetErrorDate(null)
-    if (createValues.time) SetErrorTime(null)
-    if (createValues.addresses) SetErrorAddresses(null)
+    SetErrorAddresses(null);
+    setfocusInputLocation(false);
+  }, [focusInputLocation]);
+
+  useEffect(() => {
+    if (createValues.date) SetErrorDate(null);
+    if (createValues.time) SetErrorTime(null);
+    if (createValues.addresses) SetErrorAddresses(null);
   }, [createValues]);
 
   const checkValidator = () => {
-    if (!createValues.date) SetErrorDate('Falta la fecha')
-    if (!createValues.time) SetErrorTime('Falta la hora')
-    if (!createValues.addresses) SetErrorAddresses('Falta las direcciones')
+    if (!createValues.date) SetErrorDate("Falta la fecha");
+    if (!createValues.time) SetErrorTime("Falta la hora");
+    if (!createValues.addresses) SetErrorAddresses("Falta las direcciones");
     if (createValues.addresses && createValues.date && createValues.time)
-      navigation.navigate("CreateStepTwo", {createValues});
+      navigation.navigate("CreateStepTwo", { createValues });
   };
   return (
     <Layout>
       <View
         style={{
-          height: hp("78%"),
+          height: hp("68%"),
           flexDirection: "column",
         }}
       >
@@ -64,7 +65,7 @@ const CreateStepOne = ({ navigation }) => {
             mode="date"
             label="Fecha de viaje"
             maximum="-180"
-            minimum="-1"
+            minimum="-2"
           />
           <InputDateTime
             style={styles.inputDateTimeRight}
@@ -90,11 +91,16 @@ const CreateStepOne = ({ navigation }) => {
           }}
         />
       </View>
-      <View style={styles.buttonView}>
+      <View style={[styles.buttonView]}>
         <ButtonLiion
           title="Crear"
           styleView={styles.button}
           onPress={() => checkValidator()}
+        />
+        <TabDownButton
+          style={{ margin: 0 }}
+          type={"create"}
+          sizeIcon={8}
         />
       </View>
     </Layout>
@@ -106,9 +112,10 @@ export default CreateStepOne;
 const styles = StyleSheet.create({
   buttonView: {
     flex: 1,
-    height: hp("15%"),
+    height: hp("25%"),
+    width: wp(100),
     justifyContent: "flex-end",
-    paddingBottom: hp("8%"),
+    paddingBottom: hp("1%"),
   },
   button: {
     width: wp("78.6%"),
