@@ -8,31 +8,29 @@ import Layout from "../../components/Layout";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validate, format, clean } from "../../utils/utils";
 import InputDateTime from "../../components/InputDateTime";
+import InputPicker from "../../components/InputPicker";
 
 import moment from "moment";
 import "moment/locale/es";
 
-import {Picker} from '@react-native-picker/picker';
-
-
 const RegisterStepOne = ({ navigation }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
-
-
 
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
   const [valueFecha, setValueFecha] = useState(moment());
+  const [valueGender, setValueGender] = useState("");
 
   const [errorNombre, setErrorNombre] = useState(null);
   const [errorApellido, setErrorApellido] = useState(null);
   const [errorRun, setErrorRun] = useState(null);
   const [errorFecha, setErrorFecha] = useState(null);
+  const [errorGenero, setErrorGenero] = useState(null);
 
   useEffect(() => {
     if (valueNombre != "") setErrorNombre(null);
     if (valueApellido != "") setErrorApellido(null);
+    if (valueGender != "") setErrorGenero(null);
     if (valueRun != "") {
       setValueRun(format(valueRun));
       !validate(clean(valueRun))
@@ -41,7 +39,7 @@ const RegisterStepOne = ({ navigation }) => {
     }
     if (!(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")))
       setErrorFecha(null);
-  }, [valueNombre, valueApellido, valueRun, valueFecha]);
+  }, [valueNombre, valueApellido, valueRun, valueFecha, valueGender]);
 
   const checkValidator = () => {
     if (valueNombre == "") setErrorNombre("Falta tu nombre");
@@ -55,19 +53,23 @@ const RegisterStepOne = ({ navigation }) => {
     if (valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
       setErrorFecha("Falta tu fecha de nacimiento");
     else setErrorFecha(null);
+    if (valueGender == "") setErrorGenero("Falta que indiques tu genero")
+    else setErrorGenero(null)
 
     if (
       valueNombre != "" &&
       valueApellido != "" &&
       valueRun != "" &&
       validate(clean(valueRun)) &&
-      !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
+      !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) &&
+      valueGender != ""
     ) {
       const dataToStep2 = {
         name: valueNombre,
         lastname: valueApellido,
         run: valueRun,
         dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
+        gender: valueGender
       };
       navigation.navigate("RegisterStepTwo", dataToStep2);
     }
@@ -125,23 +127,16 @@ const RegisterStepOne = ({ navigation }) => {
               maximum="6574"
               minimum="33238"
             />
-            {/*             <InputLiion
+            <InputPicker
               style={styles.input}
+              errorText={errorGenero}
+              onSelect={(selectedItem, index) =>
+                setValueGender(selectedItem)
+              }
+              value={valueGender}
+              data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
               label="Genero"
-              errorText={errorRun}
-              keyboardType="default"
-              value={valueRun}
-              secureTextEntry={false}
-              onChangeText={(text) => setValueRun(text)}
-            /> */}
-<Picker
-  selectedValue={selectedLanguage}
-  onValueChange={(itemValue, itemIndex) =>
-    setSelectedLanguage(itemValue)
-  }>
-  <Picker.Item label="Java" value="java" />
-  <Picker.Item label="JavaScript" value="js" />
-</Picker>
+            />
           </ScrollView>
         </View>
         <View style={styles.buttonView}>

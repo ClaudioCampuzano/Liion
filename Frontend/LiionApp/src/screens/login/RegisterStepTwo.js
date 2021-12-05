@@ -16,7 +16,7 @@ import ModalPopUp from "../../components/ModalPopUp";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validateEmail, validatePassword } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
-import { RegisterBackend } from "../../api/api";
+import { registerBackend } from "../../api/api";
 
 const RegisterStepTwo = ({ route, navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
@@ -34,7 +34,7 @@ const RegisterStepTwo = ({ route, navigation }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const { isKeyboardVisible } = useKeyboard();
-  const { name, lastname, run, dateBirth } = route.params;
+  const { name, lastname, run, dateBirth, gender } = route.params;
 
   const [waitingRegister, setWaitingRegister] = useState(false);
 
@@ -93,18 +93,19 @@ const RegisterStepTwo = ({ route, navigation }) => {
     ) {
       setWaitingRegister(true);
       (async function () {
-        const [resval, resmsg] = await RegisterBackend({
+        const [resval, resmsg] = await registerBackend({
           name: name,
           lastname: lastname,
           run: run,
           email: valueEmail,
           password: valuePass,
           birth: dateBirth,
+          gender: gender,
           isPassenger: "true",
           isDriver: "false",
         });
         if (resval)
-          navigation.navigate("AccountAccess")
+          navigation.navigate("AccountAccess",{email: valueEmail})
         else {
           setModalVisible(true);
           setWaitingRegister(false);

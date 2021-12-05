@@ -1,9 +1,9 @@
 import axios from "axios";
-import firebase from 'firebase/compat/app';
-import {BACKEND_URL} from '@env';
+import firebase from "firebase/compat/app";
+import { BACKEND_URL } from "@env";
 
 const client = axios.create({
-  baseURL: "http://"+BACKEND_URL+":3000",
+  baseURL: "http://" + BACKEND_URL + ":3000",
   timeout: 2000,
 });
 
@@ -45,7 +45,7 @@ export const unProtectedRoute = async () => {
   }
 };
 
-export const RegisterBackend = async (payload) => {
+export const registerBackend = async (payload) => {
   const payloadStr = JSON.stringify(payload);
   try {
     const res = await client({
@@ -90,6 +90,22 @@ export const updateDriverStatus = async (flag, payload) => {
     const res = await client({
       method: "post",
       url: "/updateusersdriverstatus",
+      headers: { "Content-Type": "application/json" },
+      data: dataSend,
+    });
+    return [true, res.data];
+  } catch (e) {
+    //console.log(e.response.data)
+    return [false, e.response.data];
+  }
+};
+
+export const createTravel = async (dataTravel) => {
+  try {
+    const dataSend = JSON.stringify(dataTravel);
+    const res = await client({
+      method: "post",
+      url: "/createtravel",
       headers: { "Content-Type": "application/json" },
       data: dataSend,
     });
