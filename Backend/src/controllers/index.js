@@ -16,6 +16,8 @@ export const register = async (req, res) => {
     isDriver,
   } = req.body;
 
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
+
   if (
     !isEmpty(name) &&
     !isEmpty(lastname) &&
@@ -24,7 +26,7 @@ export const register = async (req, res) => {
     isEmail(email) &&
     isDate(birth) &&
     isLength(password, { min: 8 }) &&
-    isAlphanumeric(password, "es-ES") &&
+    passwordRegex.test(password) &&
     isPassenger &&
     isDriver
   ) {

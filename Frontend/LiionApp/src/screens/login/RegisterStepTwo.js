@@ -119,11 +119,11 @@ const RegisterStepTwo = ({ route, navigation }) => {
     }
   };
 
-  const modalHandler = () =>
-    {navigation.navigate("AccountAccess", { email: valueEmail })
+  const modalHandler = () => {
+    navigation.navigate("AccountAccess", { email: valueEmail });
     setModalVisible(false);
   };
-    
+
   return (
     <Layout>
       {waitingRegister ? (
