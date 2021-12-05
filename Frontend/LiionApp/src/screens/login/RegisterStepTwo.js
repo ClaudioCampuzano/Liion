@@ -33,6 +33,8 @@ const RegisterStepTwo = ({ route, navigation }) => {
     useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalError, setModalError] = useState(false);
+
   const { isKeyboardVisible } = useKeyboard();
   const { name, lastname, run, dateBirth, gender } = route.params;
 
@@ -104,9 +106,12 @@ const RegisterStepTwo = ({ route, navigation }) => {
           isPassenger: "true",
           isDriver: "false",
         });
-        if (resval)
-          navigation.navigate("AccountAccess",{email: valueEmail})
-        else {
+        if (resval) {
+          setModalError(false);
+          setModalVisible(true);
+          setWaitingRegister(false);
+        } else {
+          setModalError(true);
           setModalVisible(true);
           setWaitingRegister(false);
         }
@@ -114,6 +119,11 @@ const RegisterStepTwo = ({ route, navigation }) => {
     }
   };
 
+  const modalHandler = () =>
+    {navigation.navigate("AccountAccess", { email: valueEmail })
+    setModalVisible(false);
+  };
+    
   return (
     <Layout>
       {waitingRegister ? (
@@ -127,12 +137,22 @@ const RegisterStepTwo = ({ route, navigation }) => {
               height: hp("78%"),
             }}
           >
-            <ModalPopUp
-              visible={modalVisible}
-              setModalVisible={setModalVisible}
-            >
-              Errores en el registro, consulte con el administrador
-            </ModalPopUp>
+            {modalError ? (
+              <ModalPopUp
+                visible={modalVisible}
+                setModalVisible={setModalVisible}
+              >
+                Errores en el registro, consulte con el administrador
+              </ModalPopUp>
+            ) : (
+              <ModalPopUp
+                visible={modalVisible}
+                setModalVisible={setModalVisible}
+                customFunction={modalHandler}
+              >
+                Registro exitoso, ahora puedes ingresar tus credenciales
+              </ModalPopUp>
+            )}
             <Text style={styles.text_titulo}>Correo electronico </Text>
             <Text style={styles.text_subTitulo}>
               Aquí te enviaremos los recibos e informaciónes sobre tus viajes
