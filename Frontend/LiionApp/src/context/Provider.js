@@ -98,7 +98,8 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const getState = async () => {
+  const getState =  () => {
+    //console.log(data)
     const data = authDispatch({ type: GET_WHOLE_STATE });
     return data;
   };

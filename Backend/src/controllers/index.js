@@ -1,6 +1,7 @@
 import { db, auth, FieldValue } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
+import moment from "moment";
 
 export const register = async (req, res) => {
   const {
@@ -100,6 +101,7 @@ export const updateUserDriverStatus = async (req, res) => {
       const driverData = {
         car: "Tesla Model S",
         carcolor: "Gris",
+        carSeats:4,
         plate: "DLJR01",
         url: "https://cdn.folhape.com.br/upload/dn_arquivo/2021/06/tesla-model-s-2_1.png",
         sRating: 0,
@@ -167,4 +169,64 @@ export const updateUserRating = async (req, res) => {
   } else {
     res.status(403).send("Token UID Inválido o Llamada inválida");
   }
+};
+
+export const createTravel = async (req, res) => {
+  //testing modal only
+  //res.status(403).send("Error");
+  
+  const travelsTimes = [];
+  const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
+    driverUID,
+    driverData,
+    travelData,
+  }))(req.body);
+  //console.log(usefullTravelData)
+  try {
+    //console.log(usefullTravelData.driverUID)
+    const docRef = db.collection("travels");
+    const traveldoc = await docRef
+      .where("driverUID", "==", usefullTravelData.driverUID)
+      .get();
+    traveldoc.forEach((x) => {
+      //travelsTimes.push([x.data().travelData.date, x.data().travelData.time, x.data().travelData.duration])
+      travelsTimes.push([
+        moment(
+          x.data().travelData.date + " " + x.data().travelData.time,
+          "DD/MM/YYYY HH:mm"
+        ),
+        x.data().travelData.duration,
+      ]);
+    });
+    //console.log(travelsTimes)
+    let problems = false;
+    let currentTimeTravelObject = moment(
+      usefullTravelData.travelData.date +
+        " " +
+        usefullTravelData.travelData.time,
+      "DD/MM/YYYY HH:mm"
+    );
+    let nextTimeTravelObject = currentTimeTravelObject.clone();
+    nextTimeTravelObject.add(usefullTravelData.travelData.duration, "minutes");
+    travelsTimes.forEach((x) => {
+      let momentObej1 = x[0].clone();
+      momentObej1.add(x[1], "minutes");
+      if (
+        currentTimeTravelObject.isBetween(x[0], momentObej1) ||
+        nextTimeTravelObject.isBetween(x[0], momentObej1)
+      ) {
+        problems = true;
+      }
+    });
+    if (problems)
+      res.status(403).send("Ya tienes un viaje en ese rango de tiempo");
+    else {
+      const firestoreRes = await docRef.add(usefullTravelData);
+      res.send("Viaje Creado exitosamente");
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(403).send("Error");
+  }
+
 };

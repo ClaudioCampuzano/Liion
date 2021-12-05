@@ -13,41 +13,76 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ShowTravel from "../../components/ShowTravel";
 import { GlobalContext } from "../../context/Provider";
 import moment from "moment";
+import { createTravel } from "../../api/api";
+import ModalPopUp from "../../components/ModalPopUp";
 import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepFive = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
-  //console.log(route.params.time)
-
-  const checkValidator = () => {
+  const { userFirestoreData, uid, userData, accesstoken } =
+    useContext(GlobalContext);
+    const [modalVisible, setModalVisible] = useState(false);
+    //const dataForRoutingTwo = useRef();
+  const checkValidator = async () => {
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
     const initialRoute = "CreateStepOne";
-    navigation.navigate("SucessScreen", {
-      titulo: titulo,
-      subTitulo: subTitulo,
-      initialRoute: initialRoute,
-    });
+    const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
+      email,
+      phoneNumber,
+      photoURL,
+    }))(userData);
+    const driverDatas = {
+      ...userFirestoreData.driverData,
+      ...userFirestoreData,
+    };
+    delete driverDatas.DriverData;
+    delete driverDatas.driverData;
+    delete driverDatas.isDriver;
+    delete driverDatas.isPassenger;
+    const dataForSend = {
+      atoken: accesstoken,
+      driverUID: uid,
+      driverData: { ...driverDatas },
+      travelData: {
+        status: "open",
+        seatsAval: route.params.nOfSeats,
+        ...route.params,
+        seen:0,
+      },
+    };
+    const [resflag, resmsg] = await createTravel(dataForSend);
+    if (resflag) {
+      //todo ok pasa
+      console.log("todo ok", resmsg);
+      navigation.navigate("SucessScreen", {
+        titulo: titulo,
+        subTitulo: subTitulo,
+        initialRoute: initialRoute,
+      });
+    } else {
+      //dataForRoutingTwo.current = dataForSend
+      setModalVisible(true)
+      //console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
+    }
   };
-  const vars = useRef({
-    origin: "Rancagua, Region de Ohiggins",
-    destiny: "San Fernando, Region de Ohiggins",
-    nOfSeats: 3,
-    pricerPerSeat: 4000,
-    bags: [1, 0, 1],
-    vehicle: { model: "Tesla Model X", color: "Blanco", patente: "ABCD12" },
-  });
+
+  const modalHandler = () => {
+    //alfinal no fue nesesario
+    //console.log(dataForRoutingTwo.current)
+    navigation.navigate("CreateStepOne")
+    setModalVisible(false)
+  }
+
 
   const getSex = () => {
     if (route.params.allGender) {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Todo Género</Text>
           <MaterialCommunityIcons
             name={"gender-male-female"}
-            size={hp("2")}
+            size={hp("7")}
             color={COLORS.TURKEY}
             style={{ alignSelf: "center" }}
           />
@@ -56,7 +91,6 @@ const CreateStepFive = ({ navigation, route }) => {
     } else if (route.params.onlyWoman) {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Solo Mujeres</Text>
           <MaterialCommunityIcons
             name={"gender-female"}
             size={hp("2")}
@@ -68,7 +102,6 @@ const CreateStepFive = ({ navigation, route }) => {
     } else {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Solo Hombres</Text>
           <MaterialCommunityIcons
             name={"gender-male"}
             size={hp("2")}
@@ -82,6 +115,13 @@ const CreateStepFive = ({ navigation, route }) => {
 
   return (
     <Layout>
+      <ModalPopUp
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+              customFunction={modalHandler}
+            >
+             Parece que ya tienes un viaje en ese intervalo de tiempo
+            </ModalPopUp>
       <View style={styles.container}>
         <View style={styles.contentFive}>
           <View style={styles.titleContainer}>
@@ -119,15 +159,29 @@ const CreateStepFive = ({ navigation, route }) => {
                 {userFirestoreData.driverData.carcolor}
               </Text>
             </View>
-            <View style={{ marginLeft: wp("3") }}>
+            <View style={{ display:"flex",flexDirection:"row",marginLeft: wp("3") }}>
               {getSex()}
               {route.params.approvalIns ? (
-                <Text style={styles.iconTextInfoText}> Admisión Rápida</Text>
+                <View style={styles.iconTextInfo}>
+                <MaterialCommunityIcons
+                  name={"lightning-bolt"}
+                  size={hp("7")}
+                  color={COLORS.TURKEY}
+                  style={{ alignSelf: "center" }}
+                />
+              </View>
               ) : (
                 <></>
               )}
               {route.params.smoking ? (
-                <Text style={styles.iconTextInfoText}> Permitido Fumar</Text>
+                <View style={styles.iconTextInfo}>
+                  <MaterialCommunityIcons
+                    name={"smoking"}
+                    size={hp("7")}
+                    color={COLORS.TURKEY}
+                    style={{ alignSelf: "center" }}
+                  />
+                </View>
               ) : (
                 <></>
               )}
@@ -153,7 +207,10 @@ const CreateStepFive = ({ navigation, route }) => {
                     ))}
                   </View>
                   <Text style={styles.tinyTextStyle}>
-                    {route.params.nOfSeats} {route.params.nOfSeats === 1 ? 'asiento disponible' : 'asientos disponibles'}
+                    {route.params.nOfSeats}{" "}
+                    {route.params.nOfSeats === 1
+                      ? "asiento disponible"
+                      : "asientos disponibles"}
                   </Text>
                 </View>
               </View>
@@ -349,7 +406,7 @@ const styles = StyleSheet.create({
   iconTextInfo: {
     display: "flex",
     flexDirection: "row",
-    marginLeft: wp(1)
+    marginLeft: wp(1),
   },
   iconTextInfoText: {
     fontFamily: "Gotham-SSm-Medium",

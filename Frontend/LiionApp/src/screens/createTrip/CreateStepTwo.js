@@ -20,6 +20,12 @@ import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
+  const { userFirestoreData } = useContext(GlobalContext);
+ 
+  //console.log(route.params.createValues);
+  //1
+  //console.log('render ', typeof mapInfo === 'undefined')
+
   const hardCodedGpsData = useRef([
     {
       latitude: route.params.createValues.addresses.origin.location.lat,
@@ -159,7 +165,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                   totalHeight={hp("7%")}
                   totalWidth={wp("22%")}
                   minValue={0}
-                  maxValue={10}
+                  maxValue={userFirestoreData.driverData.carSeats}
                   borderColor={COLORS.BORDER_COLOR}
                 />
               </View>
