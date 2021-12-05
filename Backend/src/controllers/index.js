@@ -89,6 +89,7 @@ export const updateUserDriverStatus = async (req, res) => {
       const driverData = {
         car: "Tesla Model S",
         carcolor: "Gris",
+        carSeats:4,
         plate: "DLJR01",
         url: "https://cdn.folhape.com.br/upload/dn_arquivo/2021/06/tesla-model-s-2_1.png",
         sRating: 0,

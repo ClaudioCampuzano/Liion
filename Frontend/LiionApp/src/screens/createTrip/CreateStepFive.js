@@ -31,23 +31,15 @@ const CreateStepFive = ({ navigation, route }) => {
       initialRoute: initialRoute,
     });
   };
-  const vars = useRef({
-    origin: "Rancagua, Region de Ohiggins",
-    destiny: "San Fernando, Region de Ohiggins",
-    nOfSeats: 3,
-    pricerPerSeat: 4000,
-    bags: [1, 0, 1],
-    vehicle: { model: "Tesla Model X", color: "Blanco", patente: "ABCD12" },
-  });
+
 
   const getSex = () => {
     if (route.params.allGender) {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Todo Género</Text>
           <MaterialCommunityIcons
             name={"gender-male-female"}
-            size={hp("2")}
+            size={hp("7")}
             color={COLORS.TURKEY}
             style={{ alignSelf: "center" }}
           />
@@ -56,7 +48,6 @@ const CreateStepFive = ({ navigation, route }) => {
     } else if (route.params.onlyWoman) {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Solo Mujeres</Text>
           <MaterialCommunityIcons
             name={"gender-female"}
             size={hp("2")}
@@ -68,7 +59,6 @@ const CreateStepFive = ({ navigation, route }) => {
     } else {
       return (
         <View style={styles.iconTextInfo}>
-          <Text style={styles.iconTextInfoText}>Solo Hombres</Text>
           <MaterialCommunityIcons
             name={"gender-male"}
             size={hp("2")}
@@ -119,15 +109,29 @@ const CreateStepFive = ({ navigation, route }) => {
                 {userFirestoreData.driverData.carcolor}
               </Text>
             </View>
-            <View style={{ marginLeft: wp("3") }}>
+            <View style={{ display:"flex",flexDirection:"row",marginLeft: wp("3") }}>
               {getSex()}
               {route.params.approvalIns ? (
-                <Text style={styles.iconTextInfoText}> Admisión Rápida</Text>
+                <View style={styles.iconTextInfo}>
+                <MaterialCommunityIcons
+                  name={"lightning-bolt"}
+                  size={hp("7")}
+                  color={COLORS.TURKEY}
+                  style={{ alignSelf: "center" }}
+                />
+              </View>
               ) : (
                 <></>
               )}
               {route.params.smoking ? (
-                <Text style={styles.iconTextInfoText}> Permitido Fumar</Text>
+                <View style={styles.iconTextInfo}>
+                  <MaterialCommunityIcons
+                    name={"smoking"}
+                    size={hp("7")}
+                    color={COLORS.TURKEY}
+                    style={{ alignSelf: "center" }}
+                  />
+                </View>
               ) : (
                 <></>
               )}
