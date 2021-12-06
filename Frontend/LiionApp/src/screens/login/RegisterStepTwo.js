@@ -103,8 +103,8 @@ const RegisterStepTwo = ({ route, navigation }) => {
           password: valuePass,
           birth: dateBirth,
           gender: gender,
-          isPassenger: "true",
-          isDriver: "false",
+          isPassenger: true,
+          isDriver: false,
         });
         if (resval) {
           setModalError(false);

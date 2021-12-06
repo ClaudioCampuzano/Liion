@@ -17,7 +17,7 @@ export const register = async (req, res) => {
   } = req.body;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
+ console.log(req.body)
   if (
     !isEmpty(name) &&
     !isEmpty(lastname) &&
@@ -28,7 +28,7 @@ export const register = async (req, res) => {
     isLength(password, { min: 8 }) &&
     passwordRegex.test(password) &&
     isPassenger &&
-    isDriver
+    !isDriver
   ) {
     try {
       const fireRes = await auth.createUser({
@@ -50,7 +50,7 @@ export const register = async (req, res) => {
           gender: gender,
           isPassenger: isPassenger,
           isDriver: isDriver,
-          DriverData: {},
+          driverData: {},
           sRating: 0,
           nRating: 0,
         });
@@ -105,7 +105,7 @@ export const updateUserDriverStatus = async (req, res) => {
         carcolor: "Gris",
         carSeats:4,
         plate: "DLJR01",
-        url: "https://cdn.folhape.com.br/upload/dn_arquivo/2021/06/tesla-model-s-2_1.png",
+        url: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
         sRating: 0,
         nRating: 0,
       };

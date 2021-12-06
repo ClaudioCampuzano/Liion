@@ -7,6 +7,9 @@ import {
   MaterialCommunityIcons,
   FontAwesome5,
 } from "@expo/vector-icons";
+
+import LottieView from "lottie-react-native";
+
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
@@ -21,9 +24,11 @@ moment.locale("es");
 const CreateStepFive = ({ navigation, route }) => {
   const { userFirestoreData, uid, userData, accesstoken } =
     useContext(GlobalContext);
-    const [modalVisible, setModalVisible] = useState(false);
-    //const dataForRoutingTwo = useRef();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [waitingLogin, setWaitingLogin] = useState(false);
+
   const checkValidator = async () => {
+    setWaitingLogin(true);
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
@@ -49,7 +54,7 @@ const CreateStepFive = ({ navigation, route }) => {
         status: "open",
         seatsAval: route.params.nOfSeats,
         ...route.params,
-        seen:0,
+        seen: 0,
       },
     };
     const [resflag, resmsg] = await createTravel(dataForSend);
@@ -63,18 +68,18 @@ const CreateStepFive = ({ navigation, route }) => {
       });
     } else {
       //dataForRoutingTwo.current = dataForSend
-      setModalVisible(true)
+      setModalVisible(true);
       //console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
     }
+    setWaitingLogin(false);
   };
 
   const modalHandler = () => {
     //alfinal no fue nesesario
     //console.log(dataForRoutingTwo.current)
-    navigation.navigate("CreateStepOne")
-    setModalVisible(false)
-  }
-
+    navigation.navigate("CreateStepOne");
+    setModalVisible(false);
+  };
 
   const getSex = () => {
     if (route.params.allGender) {
@@ -93,7 +98,7 @@ const CreateStepFive = ({ navigation, route }) => {
         <View style={styles.iconTextInfo}>
           <MaterialCommunityIcons
             name={"gender-female"}
-            size={hp("2")}
+            size={hp("7")}
             color={COLORS.TURKEY}
             style={{ alignSelf: "center" }}
           />
@@ -104,7 +109,7 @@ const CreateStepFive = ({ navigation, route }) => {
         <View style={styles.iconTextInfo}>
           <MaterialCommunityIcons
             name={"gender-male"}
-            size={hp("2")}
+            size={hp("7")}
             color={COLORS.TURKEY}
             style={{ alignSelf: "center" }}
           />
@@ -115,148 +120,166 @@ const CreateStepFive = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <ModalPopUp
-              visible={modalVisible}
-              setModalVisible={setModalVisible}
-              customFunction={modalHandler}
-            >
-             Parece que ya tienes un viaje en ese intervalo de tiempo
-            </ModalPopUp>
-      <View style={styles.container}>
-        <View style={styles.contentFive}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleStyle}>
-              Confirmación de creacion de viaje
-            </Text>
-          </View>
-          <View style={styles.routeContainer}>
-            <Text style={styles.rutaStyle}>Ruta</Text>
-            <ShowTravel
-              style={styles.inputLocation}
-              timeStart={route.params.time}
-              timeEnd={moment(route.params.time, "hh:mm")
-                .add(route.params.duration, "minutes")
-                .format("LT")}
-              labelO={route.params.addresses.origin.formatted_address}
-              labelD={route.params.addresses.destination.formatted_address}
-              dirTextSize={wp("2.5%")}
-            />
-          </View>
-          <View style={styles.vehicleContainer}>
-            <Image
-              source={require("../../../assets/images/teslaX.png")}
-              style={styles.teslaImage}
-            />
-            <View>
-              <Text style={styles.vehicleModelTitle}>
-                {" "}
-                {userFirestoreData.driverData.car}
-              </Text>
-              <Text style={styles.vehicleModelColor}>
-                {userFirestoreData.driverData.plate}
-              </Text>
-              <Text style={styles.vehicleModelColor}>
-                {userFirestoreData.driverData.carcolor}
-              </Text>
-            </View>
-            <View style={{ display:"flex",flexDirection:"row",marginLeft: wp("3") }}>
-              {getSex()}
-              {route.params.approvalIns ? (
-                <View style={styles.iconTextInfo}>
-                <MaterialCommunityIcons
-                  name={"lightning-bolt"}
-                  size={hp("7")}
-                  color={COLORS.TURKEY}
-                  style={{ alignSelf: "center" }}
-                />
-              </View>
-              ) : (
-                <></>
-              )}
-              {route.params.smoking ? (
-                <View style={styles.iconTextInfo}>
-                  <MaterialCommunityIcons
-                    name={"smoking"}
-                    size={hp("7")}
-                    color={COLORS.TURKEY}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              ) : (
-                <></>
-              )}
-            </View>
-          </View>
-          <View style={styles.priceContainer}>
-            <View style={styles.steering}>
-              <View style={styles.iconContainer}>
-                <MaterialCommunityIcons
-                  name="steering"
-                  size={hp("8")}
-                  color={COLORS.TURKEY}
-                />
-                <View style={styles.tinyiconText}>
-                  <View style={styles.tinyIcons}>
-                    {[...Array(route.params.nOfSeats)].map((value, index) => (
-                      <Ionicons
-                        key={index}
-                        name="person-circle-outline"
-                        size={hp("3")}
-                        color={COLORS.TURKEY}
-                      />
-                    ))}
-                  </View>
-                  <Text style={styles.tinyTextStyle}>
-                    {route.params.nOfSeats}{" "}
-                    {route.params.nOfSeats === 1
-                      ? "asiento disponible"
-                      : "asientos disponibles"}
-                  </Text>
-                </View>
-              </View>
-              <Text style={styles.prideDesc}>Precio por asiento</Text>
-            </View>
-            <Text style={styles.price}>$ {route.params.price}</Text>
-          </View>
-          <View style={styles.bagsContainer}>
-            <Text style={styles.equipajePermStyle}>
-              Equipaje extra permitido
-            </Text>
-            <View style={styles.bagIcons}>
-              <View style={styles.bagIconText}>
-                <MaterialCommunityIcons
-                  name="bag-personal-outline"
-                  size={hp("7")}
-                  color={COLORS.TURKEY}
-                />
-                <Text style={styles.bagIconTinyText}>Equipaje de mano </Text>
-                <Text style={styles.bagIconTinyText}>
-                  {route.params.personalItem}
-                </Text>
-              </View>
-
-              <View style={styles.bagIconText}>
-                <FontAwesome5
-                  name="suitcase-rolling"
-                  size={hp("7")}
-                  color={COLORS.TURKEY}
-                />
-                <Text style={styles.bagIconTinyText}>Maleta de viaje</Text>
-                <Text style={styles.bagIconTinyText}>
-                  {route.params.bigBags}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Confirmar viaje"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
+      {waitingLogin ? (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <LottieView
+            source={require("../../../assets/76600-loader.json")}
+            style={{ width: 100, height: 100 }}
+            autoPlay
           />
         </View>
-      </View>
+      ) : (
+        <>
+          <ModalPopUp
+            visible={modalVisible}
+            setModalVisible={setModalVisible}
+            customFunction={modalHandler}
+          >
+            Parece que ya tienes un viaje en ese intervalo de tiempo
+          </ModalPopUp>
+          <View style={styles.container}>
+            <View style={styles.contentFive}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.titleStyle}>
+                  Confirmación de creacion de viaje
+                </Text>
+              </View>
+              <View style={styles.routeContainer}>
+                <Text style={styles.rutaStyle}>Ruta</Text>
+                <ShowTravel
+                  style={styles.inputLocation}
+                  timeStart={route.params.time}
+                  timeEnd={moment(route.params.time, "hh:mm")
+                    .add(route.params.duration, "minutes")
+                    .format("LT")}
+                  labelO={route.params.addresses.origin.formatted_address}
+                  labelD={route.params.addresses.destination.formatted_address}
+                  dirTextSize={wp("2.5%")}
+                />
+              </View>
+              <View style={styles.vehicleContainer}>
+                <Image
+                  source={{ uri: userFirestoreData.driverData.url }}
+                  style={styles.teslaImage}
+                />
+                <View>
+                  <Text style={styles.vehicleModelTitle}>
+                    {" "}
+                    {userFirestoreData.driverData.car}
+                  </Text>
+                  <Text style={styles.vehicleModelColor}>
+                    {userFirestoreData.driverData.plate}
+                  </Text>
+                  <Text style={styles.vehicleModelColor}>
+                    {userFirestoreData.driverData.carcolor}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginLeft: wp("3"),
+                  }}
+                >
+                  {getSex()}
+                  {route.params.approvalIns && (
+                    <View style={styles.iconTextInfo}>
+                      <MaterialCommunityIcons
+                        name={"lightning-bolt"}
+                        size={hp("7")}
+                        color={COLORS.TURKEY}
+                        style={{ alignSelf: "center" }}
+                      />
+                    </View>
+                  )}
+                  {route.params.smoking && (
+                    <View style={styles.iconTextInfo}>
+                      <MaterialCommunityIcons
+                        name={"smoking"}
+                        size={hp("7")}
+                        color={COLORS.TURKEY}
+                        style={{ alignSelf: "center" }}
+                      />
+                    </View>
+                  )}
+                </View>
+              </View>
+              <View style={styles.priceContainer}>
+                <View style={styles.steering}>
+                  <View style={styles.iconContainer}>
+                    <MaterialCommunityIcons
+                      name="steering"
+                      size={hp("8")}
+                      color={COLORS.TURKEY}
+                    />
+                    <View style={styles.tinyiconText}>
+                      <View style={styles.tinyIcons}>
+                        {[...Array(route.params.nOfSeats)].map(
+                          (value, index) => (
+                            <Ionicons
+                              key={index}
+                              name="person-circle-outline"
+                              size={hp("3")}
+                              color={COLORS.TURKEY}
+                            />
+                          )
+                        )}
+                      </View>
+                      <Text style={styles.tinyTextStyle}>
+                        {route.params.nOfSeats}{" "}
+                        {route.params.nOfSeats === 1
+                          ? "asiento disponible"
+                          : "asientos disponibles"}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={styles.prideDesc}>Precio por asiento</Text>
+                </View>
+                <Text style={styles.price}>$ {route.params.price}</Text>
+              </View>
+              <View style={styles.bagsContainer}>
+                <Text style={styles.equipajePermStyle}>
+                  Equipaje extra permitido
+                </Text>
+                <View style={styles.bagIcons}>
+                  <View style={styles.bagIconText}>
+                    <MaterialCommunityIcons
+                      name="bag-personal-outline"
+                      size={hp("7")}
+                      color={COLORS.TURKEY}
+                    />
+                    <Text style={styles.bagIconTinyText}>
+                      Equipaje de mano{" "}
+                    </Text>
+                    <Text style={styles.bagIconTinyText}>
+                      {route.params.personalItem}
+                    </Text>
+                  </View>
+
+                  <View style={styles.bagIconText}>
+                    <FontAwesome5
+                      name="suitcase-rolling"
+                      size={hp("7")}
+                      color={COLORS.TURKEY}
+                    />
+                    <Text style={styles.bagIconTinyText}>Maleta de viaje</Text>
+                    <Text style={styles.bagIconTinyText}>
+                      {route.params.bigBags}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={styles.buttonView}>
+              <ButtonLiion
+                title="Confirmar viaje"
+                styleView={styles.button}
+                onPress={() => checkValidator()}
+              />
+            </View>
+          </View>
+        </>
+      )}
     </Layout>
   );
 };

@@ -70,7 +70,7 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-      {!(userFirestoreData.isDriver === "false") && 
+      {userFirestoreData.isDriver && 
         <TouchableWithoutFeedback
           disabled={stateCreate}
           onPress={() => navigation.navigate("CreateNavigator")}
@@ -83,7 +83,7 @@ const TabDownButton = (props) => {
               color={colorCreate}
             />
             <Text style={{ ...styles.label, color: colorCreate }}>
-              {"Crear Viajes"}
+              {"Crear Viaje"}
             </Text>
           </View>
         </TouchableWithoutFeedback>

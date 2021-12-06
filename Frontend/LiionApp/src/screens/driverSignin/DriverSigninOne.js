@@ -25,19 +25,17 @@ import ButtonLiionDisable from "../../components/ButtonLiionDisable";
 import DriverFiles from "../../components/DriverFiles";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 
+import { updateDriverStatus } from "../../api/api";
+
+
 const DriverSignupOne = () => {
   const {
     reLoadUserInfo,
-    isLoggedIn,
     loadUserFirestoreData,
-    userData,
     uid,
     userFirestoreData,
     getState2,
     accesstoken,
-    isLoadedDATA,
-    updateDriverApicall,
-    updateReloadTrigger,
     reloadTrigger,
   } = useContext(GlobalContext);
   //programar en ingles, sin embargo estos son nombres Chilenos que no sabia traducir
@@ -101,20 +99,15 @@ const DriverSignupOne = () => {
   useEffect(() => {
     let isDriver = userFirestoreData.isDriver;
     let document = [...files];
-    //console.log(isDriver, typeof isDriver === 'string' || isDriver instanceof String)
-    ///console.log(isDriver, isDriver === "true", isDriver === true)
-    console.log(ready, checkDriverVar(ready));
+
     if (checkDriverVar(isDriver)) {
       document.forEach((x) => (x.state = true));
       setFiles(document);
-    } //else {
-    //document.forEach((x) => (x.state = false));
-    //setFiles(document);
-    //}
+    }
   }, [getState2]);
 
   const updateDriverHandle = async (flag) => {
-    let [status, res] = await updateDriverApicall(flag, {
+    let [status, res] = await updateDriverStatus(flag, {
       uid: uid,
       atoken: accesstoken,
     });
@@ -128,9 +121,6 @@ const DriverSignupOne = () => {
       const reload = await reLoadUserInfo(user);
       const loadfirestore = await loadUserFirestoreData(user);
       setLocalLoad(true);
-      if (reload && loadfirestore) {
-        console.log("datos cargados exitosamente load & reload");
-      }
     })();
   }, [localTrigger]);
 

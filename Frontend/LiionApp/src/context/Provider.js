@@ -112,11 +112,7 @@ const GlobalProvider = ({ children }) => {
     });
   };
 
-  const updateDriverApicall = async (flag, payload) => {
-    const [result, res] = await updateDriverStatus(flag, payload);
-    //console.log(result, res)
-    return [result, res];
-  };
+  
   const updateReloadTrigger = (actualTrigger) => {
     authDispatch({
       type: TRIGGER_RELOAD,
@@ -136,7 +132,6 @@ const GlobalProvider = ({ children }) => {
         isLoadedDATA: state.isLoadedDATA,
         reloadTrigger: state.reloadTrigger,
         updateReloadTrigger,
-        updateDriverApicall,
         setIsLoadedDATA,
         getState,
         loginUser,

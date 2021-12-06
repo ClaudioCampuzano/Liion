@@ -75,7 +75,6 @@ export const retrieveUserDataFromApi = async (user) => {
       headers: { "Content-Type": "application/json" },
       data: data,
     });
-
     return [true, res.data];
   } catch (e) {
     return [false, e];

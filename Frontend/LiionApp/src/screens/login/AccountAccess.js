@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 
 import Layout from "../../components/Layout";
@@ -19,9 +18,13 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 
 import { GlobalContext } from "../../context/Provider";
 
+import LottieView from "lottie-react-native";
+
 const AccountAccess = ({ route, navigation }) => {
-  const [valueEmail, setValueEmail] = useState(()=>{
-    return (typeof route.params === 'undefined') ?  "claudio.campuzano.b@gmail.com" : route.params.email;
+  const [valueEmail, setValueEmail] = useState(() => {
+    return typeof route.params === "undefined"
+      ? "claudio.campuzano.b@gmail.com"
+      : route.params.email;
   });
   const [focusEmailInput, setfocusEmailInput] = useState(false);
   const [valuePass, setValuePass] = useState("Jiroto99");
@@ -34,7 +37,7 @@ const AccountAccess = ({ route, navigation }) => {
 
   const { isKeyboardVisible } = useKeyboard();
 
-  const { loginUser } = useContext(GlobalContext);  
+  const { loginUser } = useContext(GlobalContext);
 
   useEffect(() => {
     if (valueEmail != "") setErrorEmail(null);
@@ -81,12 +84,15 @@ const AccountAccess = ({ route, navigation }) => {
     }
   };
 
-
   return (
     <Layout>
       {waitingLogin ? (
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" color={COLORS.TURKEY} />
+          <LottieView
+            source={require("../../../assets/76600-loader.json")}
+            style={{ width: 100, height: 100 }}
+            autoPlay
+          />
         </View>
       ) : (
         <KeyboardAvoidingWrapper>
