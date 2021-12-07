@@ -10,7 +10,7 @@ import { GlobalContext } from "./context/Provider";
 
 import { loadFonts } from "./constants/styleThemes";
 
-import LottieView from "lottie-react-native";
+import Loading from "./components/Loading";
 
 
 const Index = (props) => {
@@ -81,13 +81,7 @@ const Index = (props) => {
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <LottieView
-            source={require("../assets/76600-loader.json")}
-            style={{ width: 100, height: 100 }}
-            autoPlay
-          />
-        </View>
+        <Loading/>
       )}
     </>
   );
