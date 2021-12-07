@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { StackActions } from "@react-navigation/native";
+//import { StackActions } from "@react-navigation/native";
 
 import Layout from "../components/Layout";
 import ButtonLiion from "../components/ButtonLiion";
@@ -9,7 +9,7 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const SucessScreen = ({ navigation, route }) => {
   //console.log(route.params.createValues)
-  const { titulo, subTitulo, initialRoute } = route.params;
+  const { titulo, subTitulo, finalTabRoute } = route.params;
 
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
@@ -20,9 +20,14 @@ const SucessScreen = ({ navigation, route }) => {
   }, [navigation]);
 
   const checkValidator = () => {
-    navigation.dispatch(StackActions.popToTop());
+    //navigation.dispatch(StackActions.popToTop());
 
-    navigation.navigate("MyTravelNavigator");
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: finalTabRoute,
+      },
+    });
   };
   return (
     <Layout>

@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -18,7 +13,7 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 
 import { GlobalContext } from "../../context/Provider";
 
-import LottieView from "lottie-react-native";
+import Loading from "../../components/Loading";
 
 const AccountAccess = ({ route, navigation }) => {
   const [valueEmail, setValueEmail] = useState(() => {
@@ -75,7 +70,6 @@ const AccountAccess = ({ route, navigation }) => {
       setWaitingLogin(true);
       (async () => {
         const res = await loginUser({ email: valueEmail, password: valuePass });
-        //console.log(res)
         if (!res.state) {
           setModalVisible(!res.state);
           setWaitingLogin(false);
@@ -87,13 +81,7 @@ const AccountAccess = ({ route, navigation }) => {
   return (
     <Layout>
       {waitingLogin ? (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <LottieView
-            source={require("../../../assets/76600-loader.json")}
-            style={{ width: 100, height: 100 }}
-            autoPlay
-          />
-        </View>
+        <Loading />
       ) : (
         <KeyboardAvoidingWrapper>
           <View

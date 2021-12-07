@@ -17,6 +17,7 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validateEmail, validatePassword } from "../../utils/utils";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { registerBackend } from "../../api/api";
+import Loading from "../../components/Loading";
 
 const RegisterStepTwo = ({ route, navigation }) => {
   const [valueEmail, setValueEmail] = useState("");
@@ -127,9 +128,7 @@ const RegisterStepTwo = ({ route, navigation }) => {
   return (
     <Layout>
       {waitingRegister ? (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" color={COLORS.TURKEY} />
-        </View>
+        <Loading />
       ) : (
         <KeyboardAvoidingWrapper>
           <View

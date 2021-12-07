@@ -13,9 +13,12 @@ import InputPicker from "../../components/InputPicker";
 import ResultItemCard from "../../components/ResultItemCard";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
+import Loading from "../../components/Loading";
 
 const SearchStepTwo = ({ navigation, route }) => {
   const { userFirestoreData } = useContext(GlobalContext);
+  const [waitingLogin, setWaitingLogin] = useState(false);
+
   const resultDataHard = [
     {
       id: 1,
@@ -104,7 +107,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         plate: "DLJR01",
         usb: true,
         airConditioning: true,
-        nPassengerSeats: 5
+        nPassengerSeats: 5,
       },
 
       travelData: {
@@ -186,7 +189,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         plate: "DLJR01",
         usb: false,
         airConditioning: false,
-        nPassengerSeats: 5
+        nPassengerSeats: 5,
       },
 
       travelData: {
@@ -195,7 +198,6 @@ const SearchStepTwo = ({ navigation, route }) => {
         views: 5,
         nOfSeats: 3,
         seatsAvaliable: 3,
-
 
         onlyMen: true,
         onlyWoman: false,
@@ -417,73 +419,81 @@ const SearchStepTwo = ({ navigation, route }) => {
     return (
       <ResultItemCard
         item={item}
-        onPress={() => navigation.navigate("SearchStepThree", {...item, addresses})}
+        onPress={() =>
+          navigation.navigate("SearchStepThree", { ...item, addresses })
+        }
       />
     );
   };
 
   return (
     <Layout>
-      <ModalFilter
-        visible={modalVisible}
-        setModalVisible={setModalVisible}
-        onChangePreferences={(value) => setPreferences(value)}
-        gender={userFirestoreData.gender}
-      />
-      <View style={styles.titleView}>
-        <Text style={styles.textAddress}>
-          {searchCity(addresses.origin.address_components) +
-            " a " +
-            searchCity(addresses.destination.address_components)}
-        </Text>
-        <Text style={styles.textDate}>
-          {moment(date, "DD-MM-YYYY").format("LL") +
-            " a las " +
-            moment(time, "hh:mm").format("LT")}
-        </Text>
-      </View>
-      <View style={styles.supView}>
-        <Text style={styles.numberTravelText}>
-          {resultData.length + " viajes\ndisponibles"}
-        </Text>
-        <InputPicker
-          style={styles.inputPicker}
-          height={hp(6.2)}
-          errorText={false}
-          onSelect={(selectedItem, index) => setResultOrder(selectedItem)}
-          value={resultOrder}
-          data={["Calificación", "Precio"]}
-          label="Ordenar por"
-        />
-      </View>
-      <View
-        style={[
-          styles.middleView,
-          lengthDataReady === 0 && { justifyContent: "center" },
-        ]}
-      >
-        {lengthDataReady > 0 ? (
-          <FlatList
-            data={resultData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+      {waitingLogin ? (
+        <Loading />
+      ) : (
+        <>
+          <ModalFilter
+            visible={modalVisible}
+            setModalVisible={setModalVisible}
+            onChangePreferences={(value) => setPreferences(value)}
+            gender={userFirestoreData.gender}
           />
-        ) : (
-          <TouchableIcon
-            value={true}
-            type={"sadFace"}
-            style={{}}
-            sizeIcon={7}
-          />
-        )}
-      </View>
-      <View style={styles.buttonView}>
-        <ButtonLiion
-          title="Filtrar"
-          styleView={styles.button}
-          onPress={() => setModalVisible(true)}
-        />
-      </View>
+          <View style={styles.titleView}>
+            <Text style={styles.textAddress}>
+              {searchCity(addresses.origin.address_components) +
+                " a " +
+                searchCity(addresses.destination.address_components)}
+            </Text>
+            <Text style={styles.textDate}>
+              {moment(date, "DD-MM-YYYY").format("LL") +
+                " a las " +
+                moment(time, "hh:mm").format("LT")}
+            </Text>
+          </View>
+          <View style={styles.supView}>
+            <Text style={styles.numberTravelText}>
+              {resultData.length + " viajes\ndisponibles"}
+            </Text>
+            <InputPicker
+              style={styles.inputPicker}
+              height={hp(6.2)}
+              errorText={false}
+              onSelect={(selectedItem, index) => setResultOrder(selectedItem)}
+              value={resultOrder}
+              data={["Calificación", "Precio"]}
+              label="Ordenar por"
+            />
+          </View>
+          <View
+            style={[
+              styles.middleView,
+              lengthDataReady === 0 && { justifyContent: "center" },
+            ]}
+          >
+            {lengthDataReady > 0 ? (
+              <FlatList
+                data={resultData}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+              />
+            ) : (
+              <TouchableIcon
+                value={true}
+                type={"sadFace"}
+                style={{}}
+                sizeIcon={7}
+              />
+            )}
+          </View>
+          <View style={styles.buttonView}>
+            <ButtonLiion
+              title="Filtrar"
+              styleView={styles.button}
+              onPress={() => setModalVisible(true)}
+            />
+          </View>
+        </>
+      )}
     </Layout>
   );
 };

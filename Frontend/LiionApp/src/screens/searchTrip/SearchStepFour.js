@@ -110,11 +110,11 @@ const SearchStepFour = ({ navigation, route }) => {
       const titulo = "¡Solicitud de reserva realizada!";
       const subTitulo =
         "Tu solicitud de reserva fue\ngenerada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes en el\nhome.";
-      const initialRoute = "SearchStepOne";
+      const finalTabRoute = "TravelPasajeroTab";
       navigation.navigate("SucessScreen", {
         titulo: titulo,
         subTitulo: subTitulo,
-        initialRoute: initialRoute,
+        finalTabRoute: finalTabRoute,
       });
     }
   };

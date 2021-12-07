@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
@@ -9,13 +9,12 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 import { GlobalContext } from "../context/Provider";
 
 const TravelTabNavigator = () => {
-  //const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
+  const { userFirestoreData } = useContext(GlobalContext);
 
   const trabelTab = createMaterialTopTabNavigator();
 
   return (
     <trabelTab.Navigator
-      initialRouteName="TravelPasajeroTab"
       screenOptions={{
         tabBarInactiveTintColor: COLORS.LIGHT_LEAD,
         tabBarActiveTintColor: COLORS.TURKEY,
@@ -23,21 +22,23 @@ const TravelTabNavigator = () => {
         tabBarIndicatorStyle: { backgroundColor: COLORS.TURKEY },
       }}
     >
+      {userFirestoreData.isDriver && (
+        <trabelTab.Screen
+          name="TravelConductorTab"
+          component={TravelConductorTab}
+          options={({ navigation }) => ({
+            headerShown: false,
+            tabBarLabel: "Conductor",
+            tabBarLabelStyle: styles.labelTab,
+          })}
+        />
+      )}
       <trabelTab.Screen
         name="TravelPasajeroTab"
         component={TravelPasajeroTab}
         options={({ navigation }) => ({
           headerShown: false,
           tabBarLabel: "Pasajero",
-          tabBarLabelStyle: styles.labelTab,
-        })}
-      />
-      <trabelTab.Screen
-        name="TravelConductorTab"
-        component={TravelConductorTab}
-        options={({ navigation }) => ({
-          headerShown: false,
-          tabBarLabel: "Conductor",
           tabBarLabelStyle: styles.labelTab,
         })}
       />

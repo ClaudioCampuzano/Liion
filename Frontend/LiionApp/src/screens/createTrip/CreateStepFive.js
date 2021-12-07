@@ -1,14 +1,12 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import {
   Ionicons,
-  MaterialIcons,
-  Feather,
   MaterialCommunityIcons,
   FontAwesome5,
 } from "@expo/vector-icons";
 
-import LottieView from "lottie-react-native";
+import Loading from "../../components/Loading";
 
 import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
@@ -32,7 +30,7 @@ const CreateStepFive = ({ navigation, route }) => {
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
-    const initialRoute = "CreateStepOne";
+    const finalTabRoute = "TravelConductorTab";
     const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
       email,
       phoneNumber,
@@ -60,11 +58,11 @@ const CreateStepFive = ({ navigation, route }) => {
     const [resflag, resmsg] = await createTravel(dataForSend);
     if (resflag) {
       //todo ok pasa
-      console.log("todo ok", resmsg);
+      console.log(resmsg);
       navigation.navigate("SucessScreen", {
         titulo: titulo,
         subTitulo: subTitulo,
-        initialRoute: initialRoute,
+        finalTabRoute: finalTabRoute,
       });
     } else {
       //dataForRoutingTwo.current = dataForSend
@@ -121,13 +119,7 @@ const CreateStepFive = ({ navigation, route }) => {
   return (
     <Layout>
       {waitingLogin ? (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <LottieView
-            source={require("../../../assets/76600-loader.json")}
-            style={{ width: 100, height: 100 }}
-            autoPlay
-          />
-        </View>
+        <Loading />
       ) : (
         <>
           <ModalPopUp

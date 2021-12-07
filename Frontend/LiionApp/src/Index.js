@@ -10,6 +10,9 @@ import { GlobalContext } from "./context/Provider";
 
 import { loadFonts } from "./constants/styleThemes";
 
+import LottieView from "lottie-react-native";
+
+
 const Index = (props) => {
   const {
     reLoadUserInfo,
@@ -79,18 +82,11 @@ const Index = (props) => {
         </NavigationContainer>
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <Image
-            source={{
-              uri: "https://media.tenor.com/images/39d6060576a516f1dd437eafccafbdb1/tenor.gif",
-            }}
-            style={{
-              height: 400,
-              width: 400,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+          <LottieView
+            source={require("../assets/76600-loader.json")}
+            style={{ width: 100, height: 100 }}
+            autoPlay
           />
-          {/* <ActivityIndicator size="large" color={COLORS.TURKEY} /> */}
         </View>
       )}
     </>
