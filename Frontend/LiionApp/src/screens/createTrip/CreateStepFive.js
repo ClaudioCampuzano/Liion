@@ -32,7 +32,7 @@ const CreateStepFive = ({ navigation, route }) => {
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
     const finalTabRoute = "TravelConductorTab";
 
-/*     const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
+    /*     const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
       email,
       phoneNumber,
       photoURL,
@@ -45,11 +45,11 @@ const CreateStepFive = ({ navigation, route }) => {
     delete driverDatas.driverData;
     delete driverDatas.isDriver;
     delete driverDatas.isPassenger; */
+    //driverData: { ...driverDatas },
 
     const dataForSend = {
       atoken: accesstoken,
       driverUID: uid,
-      //driverData: { ...driverDatas },
       status: "open",
       nSeatsAvailable: route.params.nSeatsOffered,
       ...route.params,
@@ -57,18 +57,18 @@ const CreateStepFive = ({ navigation, route }) => {
     };
 
     const [resflag, resmsg] = await createTravel(dataForSend);
-    console.log(resflag)
-/*      if (resflag) {
-       navigation.navigate("SucessScreen", {
+    console.log(resflag);
+    if (resflag) {
+      navigation.navigate("SucessScreen", {
         titulo: titulo,
         subTitulo: subTitulo,
         finalTabRoute: finalTabRoute,
-      }); 
+      });
     } else {
       //dataForRoutingTwo.current = dataForSend
       setModalVisible(true);
-    }  */
-    setWaitingLogin(false);  
+    }
+    setWaitingLogin(false);
   };
 
   const modalHandler = () => {
