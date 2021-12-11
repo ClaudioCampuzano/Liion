@@ -152,7 +152,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                 />
               </Text>
               <Text style={styles.textColor}>
-                Los demás conductores en trayectos similares cobran ${numberWithSep(totalMoney)*1.5}
+                Los demás conductores en trayectos similares cobran ${numberWithSep(totalMoney*2)}
               </Text>
             </View>
           </View>
