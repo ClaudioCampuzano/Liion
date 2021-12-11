@@ -173,18 +173,16 @@ export const updateUserRating = async (req, res) => {
 };
 
 export const createTravel = async (req, res) => {
-  //testing modal only
-  //res.status(403).send("Error");
-
   const travelsTimes = [];
-  const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
+  var usefullTravelData = req.body;
+  delete usefullTravelData.atoken;
+  /* const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
     driverUID,
     driverData,
     travelData,
-  }))(req.body);
+  }))(req.body);*/
   //console.log(usefullTravelData)
   try {
-    //console.log(usefullTravelData.driverUID)
     const docRef = db.collection("travels");
     const traveldoc = await docRef
       .where("driverUID", "==", usefullTravelData.driverUID)
@@ -192,33 +190,29 @@ export const createTravel = async (req, res) => {
     traveldoc.forEach((x) => {
       //travelsTimes.push([x.data().travelData.date, x.data().travelData.time, x.data().travelData.duration])
       travelsTimes.push([
-        moment(
-          x.data().travelData.date + " " + x.data().travelData.time,
-          "DD/MM/YYYY HH:mm"
-        ),
-        x.data().travelData.duration,
+        moment(x.data().date + " " + x.data().startTime, "DD/MM/YYYY HH:mm"),
+        x.data().durationMinutes,
       ]);
     });
-    //console.log(travelsTimes)
     let problems = false;
     let currentTimeTravelObject = moment(
-      usefullTravelData.travelData.date +
-        " " +
-        usefullTravelData.travelData.time,
+      usefullTravelData.date + " " + usefullTravelData.startTime,
       "DD/MM/YYYY HH:mm"
     );
+
     let nextTimeTravelObject = currentTimeTravelObject.clone();
-    nextTimeTravelObject.add(usefullTravelData.travelData.duration, "minutes");
+    nextTimeTravelObject.add(usefullTravelData.durationMinutes, "minutes");
     travelsTimes.forEach((x) => {
       let momentObej1 = x[0].clone();
       momentObej1.add(x[1], "minutes");
       if (
         currentTimeTravelObject.isBetween(x[0], momentObej1) ||
-        nextTimeTravelObject.isBetween(x[0], momentObej1)
-      ) {
+        nextTimeTravelObject.isBetween(x[0], momentObej1) ||
+        currentTimeTravelObject.isSame(x[0])
+      )
         problems = true;
-      }
     });
+
     if (problems)
       res.status(403).send("Ya tienes un viaje en ese rango de tiempo");
     else {
@@ -232,10 +226,24 @@ export const createTravel = async (req, res) => {
 };
 
 export const getTravels = async (req, res) => {
+  const { token, values } = req.params;
 
-  const {addresses, date,time} = req.body
+  const searchParams = JSON.parse(values);
+  searchParams.date = searchParams.date.replaceAll("-", "/");
+  console.log(searchParams.date);
+  try {
+    const docRef = db.collection("travels");
+    const snapshot = await docRef
+      .where("travelData", "==", searchParams.date)
+      .get();
+    if (snapshot.empty) {
+      console.log("No matching documents.");
+    } else console.log(snapshot);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
 
-  //
   const resultDataHard = [
     {
       id: 1,
@@ -554,7 +562,5 @@ export const getTravels = async (req, res) => {
 
   const requiredParameters = JSON.stringify(resultDataHard);
 
-
   res.send(requiredParameters);
-
-}
+};

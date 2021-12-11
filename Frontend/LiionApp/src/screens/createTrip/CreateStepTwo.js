@@ -21,19 +21,20 @@ moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
   const { userFirestoreData } = useContext(GlobalContext);
- 
+  
+
   //console.log(route.params.createValues);
   //1
   //console.log('render ', typeof mapInfo === 'undefined')
 
   const hardCodedGpsData = useRef([
     {
-      latitude: route.params.createValues.addresses.origin.location.lat,
-      longitude: route.params.createValues.addresses.origin.location.lng,
+      latitude: route.params.originDetails.location.lat,
+      longitude: route.params.originDetails.location.lng,
     },
     {
-      latitude: route.params.createValues.addresses.destination.location.lat,
-      longitude: route.params.createValues.addresses.destination.location.lng,
+      latitude: route.params.destinationDetails.location.lat,
+      longitude: route.params.destinationDetails.location.lng,
     },
   ]);
 
@@ -77,15 +78,22 @@ const CreateStepTwo = ({ navigation, route }) => {
   //}, [mapInfo])
 
   const ButtonGo = () => {
-    if (price > 0 && nOfSeats > 0)
+    if (price > 0 && nOfSeats > 0) {
+      mapInfo['routeCoordinates'] = mapInfo['coordinates'];
+      mapInfo['distanceMetter'] = mapInfo['distance'];
+      mapInfo['durationMinutes'] = mapInfo['duration'];
+      delete mapInfo.coordinates
+      delete mapInfo.duration
+      delete mapInfo.distance
+
       navigation.navigate("CreateStepThree", {
-        nOfSeats: nOfSeats,
-        price: price,
-        totalMoney: totalMoney,
-        ...route.params.createValues,
+        nSeatsOffered: nOfSeats,
+        costPerSeat: price,
+        totalTravelCost: totalMoney,
+        ...route.params,
         ...mapInfo,
       });
-    else {
+    } else {
       if (price < 1) setErrorPrice(" ");
       if (nOfSeats < 1) setErrornSeat(COLORS.WARN_RED);
     }
@@ -110,7 +118,7 @@ const CreateStepTwo = ({ navigation, route }) => {
           <View style={styles.InfoView}>
             <Text style={styles.titleStyle}>
               {"    " +
-                moment(route.params.createValues.date, "DD-MM-YYYY").format(
+                moment(route.params.date, "DD-MM-YYYY").format(
                   "LL"
                 )}
             </Text>
@@ -119,18 +127,17 @@ const CreateStepTwo = ({ navigation, route }) => {
               <ShowTravel
                 style={styles.inputLocation}
                 timeStart={moment(
-                  route.params.createValues.time,
+                  route.params.startTime,
                   "hh:mm"
                 ).format("LT")}
-                timeEnd={moment(route.params.createValues.time, "hh:mm")
+                timeEnd={moment(route.params.startTime, "hh:mm")
                   .add(mapInfo.duration, "minutes")
                   .format("LT")}
                 labelO={
-                  route.params.createValues.addresses.origin.formatted_address
+                  route.params.originDetails.formatted_address
                 }
                 labelD={
-                  route.params.createValues.addresses.destination
-                    .formatted_address
+                  route.params.destinationDetails.formatted_address
                 }
                 dirTextSize={wp("2.5%")}
               />
@@ -145,7 +152,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                 />
               </Text>
               <Text style={styles.textColor}>
-                Los demás conductores en trayectos similares cobran 25.000
+                Los demás conductores en trayectos similares cobran ${numberWithSep(totalMoney)*1.5}
               </Text>
             </View>
           </View>

@@ -22,7 +22,7 @@ router.post("/updateUserRating", checkIsAuth, updateUserRating)
 router.post("/createTravel",checkIsAuth, createTravel);
 
 router.post("/getUserData", checkIsAuth, getUserData);
-router.post("/getTravels", getTravels);
+router.get("/getTravels/:token/:values", getTravels);
 
 
 export default router;
