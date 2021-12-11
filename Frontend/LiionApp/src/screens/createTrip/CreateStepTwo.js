@@ -14,6 +14,7 @@ import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import MapViewCustom from "../../components/MapViewCustom";
 
 import { numberWithSep } from "../../utils/utils";
+import Loading from "../../components/Loading";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -21,11 +22,7 @@ moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
   const { userFirestoreData } = useContext(GlobalContext);
-  
-
-  //console.log(route.params.createValues);
-  //1
-  //console.log('render ', typeof mapInfo === 'undefined')
+  const [loading, setLoading] = useState(true);
 
   const hardCodedGpsData = useRef([
     {
@@ -60,6 +57,7 @@ const CreateStepTwo = ({ navigation, route }) => {
     //Supuestamente aqui se hace el calculo del precio, que incluye valor de la bencina ocupada + peajes
     //Simularemos, que el costo de los peajes es 0, que la bencina esta a 900 el L, y que el auto rinde 15 km/L
     setTotalMoney(Math.round((mapInfo.distance / 15) * 900));
+    setLoading(false);
   }, [mapInfo]);
 
   const NumberFormatter = (str) => {
@@ -79,12 +77,12 @@ const CreateStepTwo = ({ navigation, route }) => {
 
   const ButtonGo = () => {
     if (price > 0 && nOfSeats > 0) {
-      mapInfo['routeCoordinates'] = mapInfo['coordinates'];
-      mapInfo['distanceMetter'] = mapInfo['distance'];
-      mapInfo['durationMinutes'] = mapInfo['duration'];
-      delete mapInfo.coordinates
-      delete mapInfo.duration
-      delete mapInfo.distance
+      mapInfo["routeCoordinates"] = mapInfo["coordinates"];
+      mapInfo["distanceMetter"] = mapInfo["distance"];
+      mapInfo["durationMinutes"] = mapInfo["duration"];
+      delete mapInfo.coordinates;
+      delete mapInfo.duration;
+      delete mapInfo.distance;
 
       navigation.navigate("CreateStepThree", {
         nSeatsOffered: nOfSeats,
@@ -101,106 +99,103 @@ const CreateStepTwo = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
-        <View style={styles.topPanel}>
-          <MapViewCustom
-            dimensions={{ height: hp("55%"), width: wp("100%") }}
-            coordinates={hardCodedGpsData.current}
-            mapDirections={true}
-            showGps={false}
-            ArrowBack={() => navigation.goBack()}
-            onDataExtract={(value) => {
-              setMapInfo(value);
-            }}
-          />
-        </View>
-        <View style={styles.bottomPanel}>
-          <View style={styles.InfoView}>
-            <Text style={styles.titleStyle}>
-              {"    " +
-                moment(route.params.date, "DD-MM-YYYY").format(
-                  "LL"
-                )}
-            </Text>
-
-            <View style={styles.bar2}>
-              <ShowTravel
-                style={styles.inputLocation}
-                timeStart={moment(
-                  route.params.startTime,
-                  "hh:mm"
-                ).format("LT")}
-                timeEnd={moment(route.params.startTime, "hh:mm")
-                  .add(mapInfo.duration, "minutes")
-                  .format("LT")}
-                labelO={
-                  route.params.originDetails.formatted_address
-                }
-                labelD={
-                  route.params.destinationDetails.formatted_address
-                }
-                dirTextSize={wp("2.5%")}
-              />
-            </View>
-            <View style={styles.textStyle}>
-              <Text style={styles.textColor}>
-                Costo total del viaje ${numberWithSep(totalMoney)}
-                <Ionicons
-                  name="alert-circle-outline"
-                  size={wp("4.5")}
-                  color={COLORS.WARN_YELLOW}
-                />
-              </Text>
-              <Text style={styles.textColor}>
-                Los demás conductores en trayectos similares cobran ${numberWithSep(totalMoney*2)}
-              </Text>
-            </View>
+      {loading ? (
+        <Loading />
+      ) : (
+        <KeyboardAvoidingWrapper>
+          <View style={styles.topPanel}>
+            <MapViewCustom
+              dimensions={{ height: hp("55%"), width: wp("100%") }}
+              coordinates={hardCodedGpsData.current}
+              mapDirections={true}
+              showGps={false}
+              ArrowBack={() => navigation.goBack()}
+              onDataExtract={(value) => {
+                setMapInfo(value);
+              }}
+            />
           </View>
-          <View style={styles.middleSection}>
-            <View style={{ paddingBottom: wp("1%") }}>
+          <View style={styles.bottomPanel}>
+            <View style={styles.InfoView}>
+              <Text style={styles.titleStyle}>
+                {"    " + moment(route.params.date, "DD-MM-YYYY").format("LL")}
+              </Text>
+
+              <View style={styles.bar2}>
+                <ShowTravel
+                  style={styles.inputLocation}
+                  timeStart={moment(route.params.startTime, "hh:mm").format(
+                    "LT"
+                  )}
+                  timeEnd={moment(route.params.startTime, "hh:mm")
+                    .add(mapInfo.duration, "minutes")
+                    .format("LT")}
+                  labelO={route.params.originDetails.formatted_address}
+                  labelD={route.params.destinationDetails.formatted_address}
+                  dirTextSize={wp("2.5%")}
+                />
+              </View>
+              <View style={styles.textStyle}>
+                <Text style={styles.textColor}>
+                  Costo total del viaje ${numberWithSep(totalMoney)}
+                  <Ionicons
+                    name="alert-circle-outline"
+                    size={wp("4.5")}
+                    color={COLORS.WARN_YELLOW}
+                  />
+                </Text>
+                <Text style={styles.textColor}>
+                  Los demás conductores en trayectos similares cobran $
+                  {numberWithSep(totalMoney * 2)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.middleSection}>
+              <View style={{ paddingBottom: wp("1%") }}>
+                <View>
+                  <Text style={styles.textNSeats}>N° de asientos</Text>
+                  <NumericInput
+                    value={nOfSeats}
+                    onChange={(n) => setnOfSeats(n)}
+                    rounded
+                    type="plus-minus"
+                    textColor="#26547C"
+                    iconStyle={{ color: COLORS.WHITE }}
+                    rightButtonBackgroundColor={errornSeat}
+                    leftButtonBackgroundColor={errornSeat}
+                    totalHeight={hp("7%")}
+                    totalWidth={wp("22%")}
+                    minValue={0}
+                    maxValue={userFirestoreData.driverData.carSeats}
+                    borderColor={COLORS.BORDER_COLOR}
+                  />
+                </View>
+              </View>
               <View>
-                <Text style={styles.textNSeats}>N° de asientos</Text>
-                <NumericInput
-                  value={nOfSeats}
-                  onChange={(n) => setnOfSeats(n)}
-                  rounded
-                  type="plus-minus"
-                  textColor="#26547C"
-                  iconStyle={{ color: COLORS.WHITE }}
-                  rightButtonBackgroundColor={errornSeat}
-                  leftButtonBackgroundColor={errornSeat}
-                  totalHeight={hp("7%")}
-                  totalWidth={wp("22%")}
-                  minValue={0}
-                  maxValue={userFirestoreData.driverData.carSeats}
-                  borderColor={COLORS.BORDER_COLOR}
+                <Text style={styles.textPSeats}>Valor por asiento</Text>
+                <InputLiion
+                  style={styles.input}
+                  label=""
+                  errorText={errorPrice}
+                  value={price.toString()}
+                  secureTextEntry={false}
+                  onBlur={() => setfocusPriceInput(false)}
+                  onFocus={() => setfocusPriceInput(true)}
+                  onChangeText={(price) => NumberFormatter(price)}
+                  keyboardType="numeric"
                 />
               </View>
             </View>
-            <View>
-              <Text style={styles.textPSeats}>Valor por asiento</Text>
-              <InputLiion
-                style={styles.input}
-                label=""
-                errorText={errorPrice}
-                value={price.toString()}
-                secureTextEntry={false}
-                onBlur={() => setfocusPriceInput(false)}
-                onFocus={() => setfocusPriceInput(true)}
-                onChangeText={(price) => NumberFormatter(price)}
-                keyboardType="numeric"
+            <View style={styles.buttonView}>
+              <ButtonLiion
+                title="Siguiente"
+                styleView={styles.button}
+                onPress={() => ButtonGo()}
               />
             </View>
           </View>
-          <View style={styles.buttonView}>
-            <ButtonLiion
-              title="Siguiente"
-              styleView={styles.button}
-              onPress={() => ButtonGo()}
-            />
-          </View>
-        </View>
-      </KeyboardAvoidingWrapper>
+        </KeyboardAvoidingWrapper>
+      )}
     </Layout>
   );
 };

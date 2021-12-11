@@ -181,7 +181,6 @@ export const createTravel = async (req, res) => {
     driverData,
     travelData,
   }))(req.body);*/
-  //console.log(usefullTravelData)
   try {
     const docRef = db.collection("travels");
     const traveldoc = await docRef
@@ -226,25 +225,389 @@ export const createTravel = async (req, res) => {
 };
 
 export const getTravels = async (req, res) => {
-  const { token, values } = req.params;
+  const { values } = req.params;
+  const resultDataHard = [];
 
   const searchParams = JSON.parse(values);
   searchParams.date = searchParams.date.replaceAll("-", "/");
-  console.log(searchParams.date);
   try {
     const docRef = db.collection("travels");
     const snapshot = await docRef
-      .where("travelData", "==", searchParams.date)
+      .where("date", "==", searchParams.date)
+      .where("localityDestination", "==", searchParams.localityDestination)
+      .where("localityOrigin", "==", searchParams.localityOrigin)
+      .where("driverUID", "!=", searchParams.uid)
       .get();
-    if (snapshot.empty) {
-      console.log("No matching documents.");
-    } else console.log(snapshot);
+
+    if (!snapshot.empty)
+      for (const doc of snapshot.docs) {
+        var driverRef = await db
+          .collection("users")
+          .doc(doc.data().driverUID)
+          .get();
+
+        driverRef.exists &&
+          resultDataHard.push({
+            id: doc.id,
+            costPerSeat: doc.data().costPerSeat,
+            extraBaggage: doc.data().extraBaggage,
+            approvalIns: doc.data().approvalIns,
+            smoking: doc.data().smoking,
+            onlyWoman: doc.data().onlyWoman,
+            allGender: doc.data().allGender,
+            onlyWoman: doc.data().onlyWoman,
+            nSeatsAvailable: doc.data().nSeatsAvailable,
+            date: doc.data().date,
+            startTime: doc.data().startTime,
+            destinationDetails: doc.data().destinationDetails,
+            originDetails: doc.data().originDetails,
+            durationMinutes: doc.data().durationMinutes,
+            nameDriver: driverRef.data().name + " " + driverRef.data().apellido,
+            carPhoto: driverRef.data().driverData.url,
+            nRating: driverRef.data().nRating,
+            sRating: driverRef.data().sRating,
+          });
+      }
+
+    const requiredParameters = JSON.stringify(resultDataHard);
+    res.send(requiredParameters);
   } catch (e) {
     console.log(e);
     res.status(500).send("Error");
   }
+};
 
+export const getT = async (req, res) => {
   const resultDataHard = [
+    {
+      id: "nTP7r8TPnbJf0evDy02z",
+      costPerSeat: 1500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 0,
+      sRating: 0,
+    },
+    {
+      id: "nTP7r8TPnbJf0evDy02z",
+      costPerSeat: 500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 0,
+      sRating: 0,
+    },
+    {
+      id: "nTP7r8TPnbJf0evDy02z",
+      costPerSeat: 500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 0,
+      sRating: 0,
+    },
+  ];
+  /*  const resultDataHard = [
     {
       id: 1,
       driverData: {
@@ -558,7 +921,7 @@ export const getTravels = async (req, res) => {
         ],
       },
     },
-  ];
+  ]; */
 
   const requiredParameters = JSON.stringify(resultDataHard);
 

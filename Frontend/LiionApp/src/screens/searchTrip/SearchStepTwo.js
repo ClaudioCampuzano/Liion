@@ -18,33 +18,348 @@ import { getTravels } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  const { userFirestoreData, accesstoken } = useContext(GlobalContext);
+  const { userFirestoreData, uid, accesstoken } = useContext(GlobalContext);
   const { addresses, date, time } = route.params;
-  const [waitingLogin, setWaitingLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  var resultDataHard = [];
+  const resultDataHard = [
+    {
+      id: "0",
+      costPerSeat: 1500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 0,
+      sRating: 0,
+      durationMinutes: 50,
+    },
+    {
+      durationMinutes: 50,
+      id: "1",
+      costPerSeat: 500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 0,
+      sRating: 0,
+    },
+    {
+      durationMinutes: 50,
+      id: 2,
+      costPerSeat: 500,
+      extraBaggage: {
+        personalItem: 0,
+        bigBags: 0,
+      },
+      approvalIns: true,
+      smoking: false,
+      onlyWoman: false,
+      allGender: true,
+      nSeatsAvailable: 1,
+      date: "20/12/2021",
+      startTime: "12:40",
+      destinationDetails: {
+        location: {
+          lat: -33.5778402,
+          lng: -70.66882609999999,
+        },
+        address_components: [
+          {
+            long_name: "Madrid",
+            index: 0,
+            type: "route",
+          },
+          {
+            index: 1,
+            type: "locality",
+            long_name: "El Bosque",
+          },
+          {
+            type: "administrative_area_level_3",
+            long_name: "El Bosque",
+            index: 2,
+          },
+          {
+            type: "administrative_area_level_2",
+            long_name: "Santiago",
+            index: 3,
+          },
+          {
+            index: 4,
+            long_name: "Región Metropolitana",
+            type: "administrative_area_level_1",
+          },
+          {
+            type: "country",
+            index: 5,
+            long_name: "Chile",
+          },
+        ],
+        formatted_address: "Madrid, El Bosque, Región Metropolitana, Chile",
+      },
+      originDetails: {
+        location: {
+          lng: -70.5732463,
+          lat: -33.4072425,
+        },
+        formatted_address:
+          "Badajoz 130, Of. 1101, Las Condes, Región Metropolitana, Chile",
+        address_components: [
+          {
+            index: 0,
+            type: "subpremise",
+            long_name: "Of. 1101",
+          },
+          {
+            long_name: "130",
+            type: "street_number",
+            index: 1,
+          },
+          {
+            long_name: "Badajoz",
+            type: "route",
+            index: 2,
+          },
+          {
+            index: 3,
+            type: "locality",
+            long_name: "Las Condes",
+          },
+          {
+            long_name: "Las Condes",
+            type: "administrative_area_level_3",
+            index: 4,
+          },
+          {
+            index: 5,
+            long_name: "Santiago",
+            type: "administrative_area_level_2",
+          },
+          {
+            type: "administrative_area_level_1",
+            long_name: "Región Metropolitana",
+            index: 6,
+          },
+          {
+            long_name: "Chile",
+            type: "country",
+            index: 7,
+          },
+        ],
+      },
+      nameDriver: "Claudio Campuzano",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      nRating: 1,
+      sRating: 120,
+    },
+  ];
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalError, setModalError] = useState(false);
   const [resultData, setResultData] = useState([]);
   const [resultOrder, setResultOrder] = useState("");
   const [lengthDataReady, setLengthDataReady] = useState(0);
-
-  useEffect(() => {
-    (async function () {
-      var dataRequest = {
-        atoken: accesstoken,
-        addresses: addresses,
-        date: date,
-        time: time,
-      };
-
-      const [resFlag, resMsg] = await getTravels(dataRequest);
-      resFlag ? resultDataHard = resMsg : setModalError(true);
-      setWaitingLogin(false);
-    })();
-  }, []);
-
   const [preferences, setPreferences] = useState({
     baggage_hand: false,
     baggage_heavy: false,
@@ -54,6 +369,26 @@ const SearchStepTwo = ({ navigation, route }) => {
     approvalIns: false,
     seeAll: true,
   });
+  /*   useEffect(() => {
+    (async function () {
+      var dataRequest = {
+        atoken: accesstoken,
+        uid: uid,
+        localityDestination: searchCity(
+          addresses.destination.address_components
+        ),
+        localityOrigin: searchCity(addresses.origin.address_components),
+        date: date,
+        time: time,
+      };
+
+      const [resFlag, resMsg] = await getTravels(dataRequest);
+      console.log(resMsg);
+      resFlag ? setResultOrder(resMsg) : setModalError(true);
+      setLoading(false);
+    })();
+  }, []); */
+
   useEffect(() => {
     let listReady = sortFilterResult(
       resultDataHard,
@@ -69,47 +404,43 @@ const SearchStepTwo = ({ navigation, route }) => {
     let order = myArray.sort((a, b) => {
       const result =
         typeOrder === "Precio"
-          ? parseFloat(a.travelData.price) - parseFloat(b.travelData.price)
-          : parseFloat(b.driverData.sRating / b.driverData.nRating) -
-            parseFloat(a.driverData.sRating / a.driverData.nRating);
+          ? parseFloat(a.costPerSeat) - parseFloat(b.costPerSeat)
+          : parseFloat(b.sRating / b.nRating) -
+            parseFloat(a.sRating / a.nRating);
       return result;
     });
 
     //Filtro de genero
     if (gender === "Hombre")
       order = order.filter((a) => {
-        return preferences.gender
-          ? a.travelData.onlyMen
-          : a.travelData.onlyMen || a.travelData.allGender;
+        return preferences.gender ? a.onlyMen : a.onlyMen || a.allGender;
       });
     else if (gender === "Mujer")
       order = order.filter((a) => {
-        return preferences.gender
-          ? a.travelData.onlyWoman
-          : a.travelData.onlyWoman || a.travelData.allGender;
+        return preferences.gender ? a.onlyWoman : a.onlyWoman || a.allGender;
       });
 
     if (preferences.noSmoking)
       order = order.filter((a) => {
-        return !a.travelData.smoking;
+        return !a.smoking;
       });
     if (preferences.smoking)
       order = order.filter((a) => {
-        return a.travelData.smoking;
+        return a.smoking;
       });
     if (preferences.approvalIns)
       order = order.filter((a) => {
-        return a.travelData.approvalIns;
+        return a.approvalIns;
       });
 
     if (preferences.baggage_hand)
       order = order.filter((a) => {
-        return a.travelData.personalItem > 0;
+        return a.extraBaggage.personalItem > 0;
       });
 
     if (preferences.baggage_heavy)
       order = order.filter((a) => {
-        return a.travelData.bigBags > 0;
+        return a.extraBaggage.bigBags > 0;
       });
     return order;
   };
@@ -138,7 +469,7 @@ const SearchStepTwo = ({ navigation, route }) => {
 
   return (
     <Layout>
-      {waitingLogin ? (
+      {loading ? (
         <Loading />
       ) : (
         <>
@@ -148,13 +479,13 @@ const SearchStepTwo = ({ navigation, route }) => {
             onChangePreferences={(value) => setPreferences(value)}
             gender={userFirestoreData.gender}
           />
-            <ModalPopUp
-              visible={modalError}
-              setModalVisible={setModalError}
-              customFunction={modalHandler}
-            >
-              Error al intentar recuperar datos, intente en otro momento
-            </ModalPopUp>
+          <ModalPopUp
+            visible={modalError}
+            setModalVisible={setModalError}
+            customFunction={modalHandler}
+          >
+            Error al intentar recuperar datos, intente en otro momento
+          </ModalPopUp>
           <View style={styles.titleView}>
             <Text style={styles.textAddress}>
               {searchCity(addresses.origin.address_components) +
@@ -163,7 +494,7 @@ const SearchStepTwo = ({ navigation, route }) => {
             </Text>
             <Text style={styles.textDate}>
               {moment(date, "DD-MM-YYYY").format("LL") +
-                " a las " +
+                " desde las " +
                 moment(time, "hh:mm").format("LT")}
             </Text>
           </View>

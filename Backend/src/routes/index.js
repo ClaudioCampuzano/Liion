@@ -6,7 +6,8 @@ import {
   updateUserDriverStatus,
   updateDriverRating,
   updateUserRating,
-  createTravel
+  createTravel,
+  getT
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -19,10 +20,12 @@ router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 router.post("/updateDriverRating",checkIsAuth,updateDriverRating)
 router.post("/updateUserRating", checkIsAuth, updateUserRating)
 
-router.post("/createTravel",checkIsAuth, createTravel);
+router.post("/createTravel", createTravel);
 
 router.post("/getUserData", checkIsAuth, getUserData);
-router.get("/getTravels/:token/:values", getTravels);
+router.get("/getTravels/:values", getTravels);
+router.get("/getT", getT);
+
 
 
 export default router;
