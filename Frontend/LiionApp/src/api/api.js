@@ -80,10 +80,11 @@ export const createTravel = async (dataTravel) => {
 export const getTravels = async (searchParameters) => {
   try {
     const requiredParameters = JSON.stringify(searchParameters);
-    
+    //console.log(requiredParameters)
     const res = await client({
       method: "get",
-      url: "/getT",
+      url: "/getTravels",
+      params : requiredParameters,
     });
     return [true, res.data];
   } catch (e) {

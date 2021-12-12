@@ -23,7 +23,7 @@ router.post("/updateUserRating", checkIsAuth, updateUserRating)
 router.post("/createTravel", createTravel);
 
 router.post("/getUserData", checkIsAuth, getUserData);
-router.get("/getTravels/:values", getTravels);
+router.get("/getTravels", getTravels);
 router.get("/getT", getT);
 
 
