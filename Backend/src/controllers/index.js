@@ -261,8 +261,8 @@ export const getTravels = async (req, res) => {
             durationMinutes: doc.data().durationMinutes,
             nameDriver: driverRef.data().name + " " + driverRef.data().apellido,
             driverPhoto: driverRef.data().photo,
-            nRating: driverRef.data().nRating,
-            sRating: driverRef.data().sRating,
+            nRating: driverRef.data().driverData.nRating,
+            sRating: driverRef.data().driverData.sRating,
           });
       }
     const requiredParameters = JSON.stringify(resultDataHard);
@@ -277,9 +277,18 @@ export const getDetailsOfTravel = async (req, res) => {
   var travelId = req.params.travelId;
   try {
     var travelRef = await db.collection("travels").doc(travelId).get();
+    var driverRef = await db.collection("users").doc(travelRef.data().driverUID).get();
+
     const objSend = {
       seen: travelRef.data().seen,
-      //routeCoordinates: travelRef.data().routeCoordinates,
+      routeCoordinates: travelRef.data().routeCoordinates,
+      nSeatsOffered : travelRef.data().nSeatsOffered,
+      usb: driverRef.data().driverData.usb,
+      airConditioning: driverRef.data().driverData.airConditioning,
+      carSeats: driverRef.data().driverData.carSeats,
+      carColor: driverRef.data().driverData.carColor,
+      typeVehicule: driverRef.data().driverData.typeVehicule,
+      carPhoto: driverRef.data().driverData.carPhoto
     };
     const requiredParameters = JSON.stringify(objSend);
     res.send(requiredParameters);

@@ -37,12 +37,10 @@ const SearchStepThree = ({ navigation, route }) => {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(dataFromApi);
-  }, [dataFromApi]);
 
   const checkValidator = () => {
-    navigation.navigate("SearchStepFour", route.params);
+    const addresses = route.params.addresses;
+    navigation.navigate("SearchStepFour", {...dataFromApi,addresses});
   };
 
   const genderComponent = () => {
@@ -145,11 +143,7 @@ const SearchStepThree = ({ navigation, route }) => {
       {loading ? (
         <Loading />
       ) : (
-        <View>
-          <Text>listo</Text>
-        </View>
-      )}
-      {/* <ScrollView showsVerticalScrollIndicator={true}>
+        <ScrollView showsVerticalScrollIndicator={true}>
           <View style={styles.topPanel}>
             <MapViewCustom
               dimensions={{ height: hp("30%"), width: wp("100%") }}
@@ -164,7 +158,7 @@ const SearchStepThree = ({ navigation, route }) => {
           </Text>
           <View style={styles.viewBorder}>
             <ResultItemCard
-              item={{ travelData, driverData }}
+              item={dataFromApi}
               style={{ elevation: hp(0), paddingLeft: wp(5) }}
               seatOff={true}
             />
@@ -172,7 +166,9 @@ const SearchStepThree = ({ navigation, route }) => {
 
           <View style={[styles.viewVehicule, styles.viewBorder]}>
             <Image
-              source={require("../../../assets/images/teslaX.png")}
+              source={{
+                uri: dataFromApi.carPhoto,
+              }}
               style={styles.teslaImage}
             />
             <View>
@@ -180,10 +176,10 @@ const SearchStepThree = ({ navigation, route }) => {
                 style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
               >
                 {" "}
-                {driverData.typeVehicule}
+                {dataFromApi.typeVehicule}
               </Text>
               <Text style={styles.vehicleModelColor}>
-                {driverData.carcolor}
+                {dataFromApi.carColor}
               </Text>
             </View>
           </View>
@@ -216,7 +212,10 @@ const SearchStepThree = ({ navigation, route }) => {
             <View style={styles.characteristicView}>
               {facilityComponent(dataFromApi.approvalIns, "approval")}
               {facilityComponent(dataFromApi.usb, "usb")}
-              {facilityComponent(dataFromApi.airConditioning, "airConditioning")}
+              {facilityComponent(
+                dataFromApi.airConditioning,
+                "airConditioning"
+              )}
               {!dataFromApi.airConditioning &&
                 !dataFromApi.usb &&
                 !dataFromApi.approvalIns && (
@@ -233,16 +232,23 @@ const SearchStepThree = ({ navigation, route }) => {
               {"(Todos tienen derecho a un equipaje\n de mano)"}
             </Text>
             <View style={styles.characteristicView}>
-              {packageComponent(dataFromApi.extraBaggage.personalItem, "baggage_hand")}
-              {packageComponent(dataFromApi.extraBaggage.bigBags, "baggage_heavy")}
-              {dataFromApi.extraBaggage.personalItem <= 0 && dataFromApi.extraBaggage.bigBags <= 0 && (
-                <TouchableIcon
-                  value={true}
-                  type={"noBaggage"}
-                  style={{}}
-                  sizeIcon={7}
-                />
+              {packageComponent(
+                dataFromApi.extraBaggage.personalItem,
+                "baggage_hand"
               )}
+              {packageComponent(
+                dataFromApi.extraBaggage.bigBags,
+                "baggage_heavy"
+              )}
+              {dataFromApi.extraBaggage.personalItem <= 0 &&
+                dataFromApi.extraBaggage.bigBags <= 0 && (
+                  <TouchableIcon
+                    value={true}
+                    type={"noBaggage"}
+                    style={{}}
+                    sizeIcon={7}
+                  />
+                )}
             </View>
           </View>
           <View
@@ -265,7 +271,8 @@ const SearchStepThree = ({ navigation, route }) => {
               onPress={() => checkValidator()}
             />
           </View>
-        </ScrollView> */}
+        </ScrollView>
+      )}
     </Layout>
   );
 };
