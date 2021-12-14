@@ -19,7 +19,7 @@ const ResultItemCard = ({ item, onPress, style, seatOff }) => {
           <View style={{ flex: 0.8 }}>
             <Avatar.Image
               source={{
-                uri: item.carPhoto,
+                uri: item.driverPhoto,
               }}
               size={hp("7")}
             />

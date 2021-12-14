@@ -22,8 +22,6 @@ const SearchStepTwo = ({ navigation, route }) => {
   const { addresses, date, time } = route.params;
   const [loading, setLoading] = useState(true);
 
-  //var resultDataHard = [];
-
   const [modalVisible, setModalVisible] = useState(false);
   const [modalError, setModalError] = useState(false);
   const [resultData, setResultData] = useState([]);
@@ -38,6 +36,7 @@ const SearchStepTwo = ({ navigation, route }) => {
     approvalIns: false,
     seeAll: true,
   });
+
   const [dataFromApi,setDataFromApi] = useState([]);
   useEffect(() => {
     (async function () {

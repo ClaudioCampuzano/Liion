@@ -10,7 +10,7 @@ import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
-import { getCoordinatesTravel } from "../../api/api";
+import { getDetailsOfTravel, UpdateSeenTravel } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
@@ -25,11 +25,13 @@ const SearchStepThree = ({ navigation, route }) => {
 
   useEffect(() => {
     (async function () {
-      const [resFlag, resMsg] = await getCoordinatesTravel(route.params.id);
+      const [resFlag, resMsg] = await getDetailsOfTravel(route.params.id);
       if (resFlag) {
-        var objAux = route.params;
-        objAux['routeCoordinates'] = resMsg;
-        setDataFromApi(objAux);
+        const dataForSend = {
+          travelId: route.params.id,
+        };
+        const [resFlag_put, resMsg_put] = await UpdateSeenTravel(dataForSend);
+        setDataFromApi({ ...route.params, ...resMsg });
       } else setModalError(true);
       setLoading(false);
     })();
@@ -37,7 +39,6 @@ const SearchStepThree = ({ navigation, route }) => {
 
   useEffect(() => {
     console.log(dataFromApi);
-    console.log(loading)
   }, [dataFromApi]);
 
   const checkValidator = () => {
@@ -46,15 +47,15 @@ const SearchStepThree = ({ navigation, route }) => {
 
   const genderComponent = () => {
     let gender;
-    if (allGender) gender = "allGender";
-    else if (onlyWoman) gender = "woman";
+    if (dataFromApi.allGender) gender = "allGender";
+    else if (dataFromApi.onlyWoman) gender = "woman";
     else gender = "men";
 
     return <TouchableIcon value={true} type={gender} style={{}} sizeIcon={7} />;
   };
   const smokeComponent = () => {
     let smokeType;
-    smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
+    dataFromApi.smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
 
     return (
       <TouchableIcon value={true} type={smokeType} style={{}} sizeIcon={7} />
@@ -152,14 +153,14 @@ const SearchStepThree = ({ navigation, route }) => {
           <View style={styles.topPanel}>
             <MapViewCustom
               dimensions={{ height: hp("30%"), width: wp("100%") }}
-              coordinates={travelData.coordinates}
+              coordinates={dataFromApi.routeCoordinates}
               mapDirections={false}
               showGps={false}
               ArrowBack={() => navigation.goBack()}
             />
           </View>
           <Text style={styles.titleStyle}>
-            {"    " + moment(date, "DD-MM-YYYY").format("LL")}
+            {"    " + moment(dataFromApi.date, "DD-MM-YYYY").format("LL")}
           </Text>
           <View style={styles.viewBorder}>
             <ResultItemCard
@@ -199,9 +200,9 @@ const SearchStepThree = ({ navigation, route }) => {
             ]}
           >
             {passengerPictureState(
-              driverData.nPassengerSeats,
-              travelData.nOfSeats,
-              travelData.seatsAvaliable
+              dataFromApi.carSeats,
+              dataFromApi.nSeatsOffered,
+              dataFromApi.nSeatsAvailable
             )}
           </View>
           <View>
@@ -213,12 +214,12 @@ const SearchStepThree = ({ navigation, route }) => {
 
             <Text style={styles.text_titule}>Facilidades:</Text>
             <View style={styles.characteristicView}>
-              {facilityComponent(travelData.approvalIns, "approval")}
-              {facilityComponent(driverData.usb, "usb")}
-              {facilityComponent(driverData.airConditioning, "airConditioning")}
-              {!driverData.airConditioning &&
-                !driverData.usb &&
-                !travelData.approvalIns && (
+              {facilityComponent(dataFromApi.approvalIns, "approval")}
+              {facilityComponent(dataFromApi.usb, "usb")}
+              {facilityComponent(dataFromApi.airConditioning, "airConditioning")}
+              {!dataFromApi.airConditioning &&
+                !dataFromApi.usb &&
+                !dataFromApi.approvalIns && (
                   <TouchableIcon
                     value={true}
                     type={"sadFace"}
@@ -232,9 +233,9 @@ const SearchStepThree = ({ navigation, route }) => {
               {"(Todos tienen derecho a un equipaje\n de mano)"}
             </Text>
             <View style={styles.characteristicView}>
-              {packageComponent(travelData.personalItem, "baggage_hand")}
-              {packageComponent(travelData.bigBags, "baggage_heavy")}
-              {travelData.personalItem <= 0 && travelData.bigBags <= 0 && (
+              {packageComponent(dataFromApi.extraBaggage.personalItem, "baggage_hand")}
+              {packageComponent(dataFromApi.extraBaggage.bigBags, "baggage_heavy")}
+              {dataFromApi.extraBaggage.personalItem <= 0 && dataFromApi.extraBaggage.bigBags <= 0 && (
                 <TouchableIcon
                   value={true}
                   type={"noBaggage"}
@@ -253,7 +254,7 @@ const SearchStepThree = ({ navigation, route }) => {
           >
             <MaterialCommunityIcons name="eye" size={24} color="black" />
             <Text style={styles.text_view}>
-              {"Visto " + travelData.views + " veces"}
+              {"Visto " + dataFromApi.seen + " veces"}
             </Text>
           </View>
 

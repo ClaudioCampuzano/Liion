@@ -260,7 +260,7 @@ export const getTravels = async (req, res) => {
             originDetails: doc.data().originDetails,
             durationMinutes: doc.data().durationMinutes,
             nameDriver: driverRef.data().name + " " + driverRef.data().apellido,
-            carPhoto: driverRef.data().driverData.url,
+            driverPhoto: driverRef.data().photo,
             nRating: driverRef.data().nRating,
             sRating: driverRef.data().sRating,
           });
@@ -273,13 +273,15 @@ export const getTravels = async (req, res) => {
   }
 };
 
-export const getCoordinatesTravel = async (req, res) => {
+export const getDetailsOfTravel = async (req, res) => {
   var travelId = req.params.travelId;
   try {
     var travelRef = await db.collection("travels").doc(travelId).get();
-    const requiredParameters = JSON.stringify(
-      travelRef.data().routeCoordinates
-    );
+    const objSend = {
+      seen: travelRef.data().seen,
+      //routeCoordinates: travelRef.data().routeCoordinates,
+    };
+    const requiredParameters = JSON.stringify(objSend);
     res.send(requiredParameters);
   } catch (e) {
     console.log(e);
@@ -288,15 +290,13 @@ export const getCoordinatesTravel = async (req, res) => {
 };
 
 export const UpdateSeenTravel = async (req, res) => {
-  const { travelId } = req.body;
-  console.log(travelId);
+  var { travelId } = req.body;
   try {
     const travelRef = db.collection("travels").doc(travelId);
     const response = await travelRef.update({
       seen: FieldValue.increment(1),
     });
-    //travelRef.update({ seen: db.FieldValue.increment(1) });
-    res.send("ok");
+    res.json({ sucess: true });
   } catch (e) {
     console.log(e);
     res.status(500).send("Error");

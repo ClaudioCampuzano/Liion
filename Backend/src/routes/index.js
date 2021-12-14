@@ -7,7 +7,7 @@ import {
   updateDriverRating,
   updateUserRating,
   createTravel,
-  getCoordinatesTravel,
+  getDetailsOfTravel,
   UpdateSeenTravel
 } from "../controllers/index";
 
@@ -26,7 +26,7 @@ router.post("/createTravel", createTravel);
 router.post("/getUserData", checkIsAuth, getUserData);
 
 router.get("/getTravels", getTravels);
-router.get("/getCoordinatesTravel/:travelId", getCoordinatesTravel);
+router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
 router.put("/UpdateSeenTravel",UpdateSeenTravel)
 
 

@@ -83,7 +83,7 @@ export const getTravels = async (searchParameters) => {
     const res = await client({
       method: "get",
       url: "/getTravels",
-      params : requiredParameters,
+      params: requiredParameters,
     });
     return [true, res.data];
   } catch (e) {
@@ -91,12 +91,12 @@ export const getTravels = async (searchParameters) => {
   }
 };
 
-export const getCoordinatesTravel = async (travelId) => {
+export const getDetailsOfTravel = async (travelId) => {
   try {
     //const requiredParameters = JSON.stringify(searchParameters);
     const res = await client({
       method: "get",
-      url: `/getCoordinatesTravel/${travelId}`,
+      url: `/getDetailsOfTravel/${travelId}`,
     });
     return [true, res.data];
   } catch (e) {
@@ -104,13 +104,14 @@ export const getCoordinatesTravel = async (travelId) => {
   }
 };
 
-export const UpdateSeenTravel = async (searchParameters) => {
+export const UpdateSeenTravel = async (travelId) => {
   try {
-    const requiredParameters = JSON.stringify(searchParameters);
+    const requiredParameters = JSON.stringify( travelId );
     const res = await client({
       method: "put",
       url: "/UpdateSeenTravel",
-      params : requiredParameters,
+      headers: { "Content-Type": "application/json" },
+      data: requiredParameters,
     });
     return [true, res.data];
   } catch (e) {
