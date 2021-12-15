@@ -4,17 +4,8 @@ import { validateRun } from "../middleware/validations";
 import moment from "moment";
 
 export const register = async (req, res) => {
-  const {
-    name,
-    lastname,
-    run,
-    email,
-    birth,
-    password,
-    gender,
-    isPassenger,
-    isDriver,
-  } = req.body;
+  const { name, lastname, run, email, birth, password, gender, isDriver, photo } =
+    req.body;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   if (
@@ -26,8 +17,8 @@ export const register = async (req, res) => {
     isDate(birth) &&
     isLength(password, { min: 8 }) &&
     passwordRegex.test(password) &&
-    isPassenger &&
-    !isDriver
+    !isDriver &&
+    !isEmpty(photo)
   ) {
     try {
       const fireRes = await auth.createUser({
@@ -47,11 +38,11 @@ export const register = async (req, res) => {
           run: run,
           birth: birth,
           gender: gender,
-          isPassenger: isPassenger,
           isDriver: isDriver,
           driverData: {},
           sRating: 0,
           nRating: 0,
+          photo: photo
         });
         res.json({ message: "Successful Registration" });
       } catch (e) {
@@ -95,19 +86,10 @@ export const getUserData = async (req, res) => {
 };
 
 export const updateUserDriverStatus = async (req, res) => {
-  let uid = req.body.uid;
-  let flagDriver = req.body.flagDriver;
+  const { uid, flagDriver, driverData } = req.body;
+
   if (uid && flagDriver) {
     try {
-      const driverData = {
-        car: "Tesla Model S",
-        carcolor: "Gris",
-        carSeats: 4,
-        plate: "DLJR01",
-        url: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
-        sRating: 0,
-        nRating: 0,
-      };
       const q = await db
         .collection("users")
         .doc(uid)
@@ -277,18 +259,21 @@ export const getDetailsOfTravel = async (req, res) => {
   var travelId = req.params.travelId;
   try {
     var travelRef = await db.collection("travels").doc(travelId).get();
-    var driverRef = await db.collection("users").doc(travelRef.data().driverUID).get();
+    var driverRef = await db
+      .collection("users")
+      .doc(travelRef.data().driverUID)
+      .get();
 
     const objSend = {
       seen: travelRef.data().seen,
       routeCoordinates: travelRef.data().routeCoordinates,
-      nSeatsOffered : travelRef.data().nSeatsOffered,
+      nSeatsOffered: travelRef.data().nSeatsOffered,
       usb: driverRef.data().driverData.usb,
       airConditioning: driverRef.data().driverData.airConditioning,
       carSeats: driverRef.data().driverData.carSeats,
       carColor: driverRef.data().driverData.carColor,
       typeVehicule: driverRef.data().driverData.typeVehicule,
-      carPhoto: driverRef.data().driverData.carPhoto
+      carPhoto: driverRef.data().driverData.carPhoto,
     };
     const requiredParameters = JSON.stringify(objSend);
     res.send(requiredParameters);
@@ -311,3 +296,12 @@ export const UpdateSeenTravel = async (req, res) => {
     res.status(500).send("Error");
   }
 };
+
+export async function registerPassengerRequest(req, res) {
+  try {
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}

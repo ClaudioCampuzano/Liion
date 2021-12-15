@@ -24,7 +24,7 @@ const DrawerContent = (props) => {
           <View style={styles.viewUserInfo}>
             <Avatar.Image
               source={{
-                uri: "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
+                uri: userFirestoreData.photo,
               }}
               size={hp("12")}
             />
@@ -38,7 +38,14 @@ const DrawerContent = (props) => {
                   size={hp("2.5")}
                   color={COLORS.TURKEY}
                 />
-                <Text style={styles.labelRankings}>4.6/5</Text>
+                <Text style={styles.labelRankings}>
+                  {userFirestoreData.nRating == 0
+                    ? 0
+                    : Math.round(
+                        userFirestoreData.sRating / userFirestoreData.nRating
+                      )}
+                  {"/5 - " + userFirestoreData.nRating + " Calificaciones"}
+                </Text>
               </View>
               <TouchableOpacity
                 style={styles.touchablePerfil}

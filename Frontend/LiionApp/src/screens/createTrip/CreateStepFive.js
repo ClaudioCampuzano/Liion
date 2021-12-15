@@ -43,8 +43,7 @@ const CreateStepFive = ({ navigation, route }) => {
     };
     delete driverDatas.DriverData;
     delete driverDatas.driverData;
-    delete driverDatas.isDriver;
-    delete driverDatas.isPassenger; */
+    delete driverDatas.isDriver;*/
     //driverData: { ...driverDatas },
 
     const dataForSend = {
@@ -54,6 +53,7 @@ const CreateStepFive = ({ navigation, route }) => {
       nSeatsAvailable: route.params.nSeatsOffered,
       ...route.params,
       seen: 0,
+      requestingPassengers: []
     };
 
     const [resflag, resmsg] = await createTravel(dataForSend);

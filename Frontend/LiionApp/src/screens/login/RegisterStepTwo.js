@@ -104,8 +104,9 @@ const RegisterStepTwo = ({ route, navigation }) => {
           password: valuePass,
           birth: dateBirth,
           gender: gender,
-          isPassenger: true,
           isDriver: false,
+          photo:
+            "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
         });
         if (resval) {
           setModalError(false);

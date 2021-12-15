@@ -106,10 +106,25 @@ export const getDetailsOfTravel = async (travelId) => {
 
 export const UpdateSeenTravel = async (travelId) => {
   try {
-    const requiredParameters = JSON.stringify( travelId );
+    const requiredParameters = JSON.stringify(travelId);
     const res = await client({
-      method: "put",
+      method: "patch",
       url: "/UpdateSeenTravel",
+      headers: { "Content-Type": "application/json" },
+      data: requiredParameters,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const registerPassengerRequest = async (payload) => {
+  try {
+    const requiredParameters = JSON.stringify(payload);
+    const res = await client({
+      method: "post",
+      url: "/registerPassengerRequest",
       headers: { "Content-Type": "application/json" },
       data: requiredParameters,
     });

@@ -8,7 +8,8 @@ import {
   updateUserRating,
   createTravel,
   getDetailsOfTravel,
-  UpdateSeenTravel
+  UpdateSeenTravel,
+  registerPassengerRequest
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -27,7 +28,8 @@ router.post("/getUserData", checkIsAuth, getUserData);
 
 router.get("/getTravels", getTravels);
 router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
-router.put("/UpdateSeenTravel",UpdateSeenTravel)
+router.patch("/UpdateSeenTravel",UpdateSeenTravel)
+router.post("/registerPassengerRequest", registerPassengerRequest);
 
 
 export default router;

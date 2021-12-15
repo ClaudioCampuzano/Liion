@@ -11,7 +11,7 @@ import InputPicker from "../../components/InputPicker";
 import TouchableIcon from "../../components/TouchableIcon";
 
 const SearchStepFour = ({ navigation, route }) => {
-  const { addresses, travelData, driverData } = route.params;
+  const dataTravel = route.params;
 
   const [orderValues, setOrderValues] = useState({
     valuePickUp: {},
@@ -47,20 +47,20 @@ const SearchStepFour = ({ navigation, route }) => {
   useEffect(() => {
     (async () => {
       var origin = {
-        latitude: addresses.origin.location.lat,
-        longitude: addresses.origin.location.lng,
+        latitude: dataTravel.addresses.origin.location.lat,
+        longitude: dataTravel.addresses.origin.location.lng,
       };
       var destination = {
-        latitude: addresses.destination.location.lat,
-        longitude: addresses.origin.location.lng,
+        latitude: dataTravel.addresses.destination.location.lat,
+        longitude: dataTravel.addresses.origin.location.lng,
       };
-      var originSort = orderByDistance(origin, travelData.coordinates).slice(
-        0,
-        4
-      );
+      var originSort = orderByDistance(
+        origin,
+        dataTravel.routeCoordinates
+      ).slice(0, 4);
       var destinationSort = orderByDistance(
         destination,
-        travelData.coordinates
+        dataTravel.routeCoordinates
       ).slice(0, 4);
 
       var aux = { ...pickersLabel };
@@ -121,14 +121,14 @@ const SearchStepFour = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <ScrollView >
+      <ScrollView>
         <View>
           <Text style={styles.titleStyle}>
             Confirmación de solicitud de reserva
           </Text>
           <View style={{ paddingTop: hp(2) }}>
             <ResultItemCard
-              item={{ travelData, driverData }}
+              item={dataTravel}
               style={{ paddingLeft: wp(5) }}
               seatOff={true}
             />
@@ -157,7 +157,8 @@ const SearchStepFour = ({ navigation, route }) => {
               data={pickersLabel.putDown}
               label="Lugar de bajada"
             />
-            {(travelData.bigBags != 0 || travelData.personalItem != 0) && (
+            {(dataTravel.extraBaggage.bigBags != 0 ||
+              dataTravel.extraBaggage.personalItem != 0) && (
               <View style={styles.viewBaggage}>
                 <Text style={styles.labelBaggage}>
                   {"Seleccione su equipaje extra"}
@@ -168,7 +169,7 @@ const SearchStepFour = ({ navigation, route }) => {
                     justifyContent: "space-evenly",
                   }}
                 >
-                  {travelData.personalItem != 0 && (
+                  {dataTravel.extraBaggage.personalItem != 0 && (
                     <TouchableIcon
                       value={orderValues.handBaggage}
                       type={"baggage_hand"}
@@ -182,7 +183,7 @@ const SearchStepFour = ({ navigation, route }) => {
                       sizeIcon={6}
                     />
                   )}
-                  {travelData.bigBags != 0 && (
+                  {dataTravel.extraBaggage.bigBags != 0 && (
                     <TouchableIcon
                       value={orderValues.maletaBaggage}
                       type={"baggage_heavy"}
@@ -211,7 +212,15 @@ const SearchStepFour = ({ navigation, route }) => {
             />
           </View>
         </View>
-        <View style={[styles.buttonView, (travelData.bigBags === 0 && travelData.personalItem === 0) && {  paddingTop: hp("8%")}]}>
+        <View
+          style={[
+            styles.buttonView,
+            dataTravel.extraBaggage.bigBags === 0 &&
+              dataTravel.extraBaggage.personalItem === 0 && {
+                paddingTop: hp("8%"),
+              },
+          ]}
+        >
           <ButtonLiion
             title="Confirmar solicitud"
             styleView={styles.button}
@@ -219,7 +228,6 @@ const SearchStepFour = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
-
     </Layout>
   );
 };
