@@ -27,18 +27,6 @@
     },
     "web": {
       "favicon": "./assets/images/icon.png"
-    },
-    "extra": {
-      "firebase": {
-        "apiKey": "AIzaSyAq09yewM1372uclnRerOqr9JUwdLKjUzA",
-        "authDomain": "liion-carpoolapp.firebaseapp.com",
-        "databaseURL": "https://liion-c9560.firebaseio.com",
-        "projectId": "liion-carpoolapp",
-        "storageBucket": "liion-carpoolapp.appspot.com",
-        "messagingSenderId": "782175399853",
-        "appId": "1:782175399853:web:b8e469e83bca8ff667fb24",
-        "measurementId": "G-FTNGK0X2FT"
-      }
     }
   }
 }

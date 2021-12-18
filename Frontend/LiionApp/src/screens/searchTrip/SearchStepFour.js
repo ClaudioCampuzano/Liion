@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { orderByDistance } from "geolib";
 import { reverseGeocodeAsync } from "expo-location";
@@ -9,9 +9,20 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ResultItemCard from "../../components/ResultItemCard";
 import InputPicker from "../../components/InputPicker";
 import TouchableIcon from "../../components/TouchableIcon";
+import Loading from "../../components/Loading";
+import ModalPopUp from "../../components/ModalPopUp";
+import { registerPassengerRequest } from "../../api/api";
+import { GlobalContext } from "../../context/Provider";
 
 const SearchStepFour = ({ navigation, route }) => {
   const dataTravel = route.params;
+  const { uid, userFirestoreData } = useContext(GlobalContext);
+
+  const [msgError, setMsgError] = useState(
+    "Error al intentar registrar solicitud, intente en otro momento"
+  );
+  const [modalError, setModalError] = useState(false);
+  const [waitingLogin, setWaitingLogin] = useState(false);
 
   const [orderValues, setOrderValues] = useState({
     valuePickUp: {},
@@ -93,7 +104,8 @@ const SearchStepFour = ({ navigation, route }) => {
     setErrorValues(aux);
   }, [orderValues.valuePay, valuePickUp, valueDescent]);
 
-  const checkValidator = () => {
+  const checkValidator = async () => {
+    setWaitingLogin(true);
     var aux = { ...errorValues };
     orderValues.valuePay == ""
       ? (aux.errorPay = "Falta tu medio de pago")
@@ -111,123 +123,163 @@ const SearchStepFour = ({ navigation, route }) => {
       const subTitulo =
         "Tu solicitud de reserva fue\ngenerada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes en el\nhome.";
       const finalTabRoute = "TravelPasajeroTab";
-      navigation.navigate("SucessScreen", {
-        titulo: titulo,
-        subTitulo: subTitulo,
-        finalTabRoute: finalTabRoute,
-      });
+
+      const dataForSend = {
+        travelId: dataTravel.id,
+        passengerUID: uid,
+        extraBaggage: {
+          bigBags: orderValues.maletaBaggage,
+          personalItem: orderValues.handBaggage,
+        },
+        pickUp: orderValues.valuePickUp,
+        dropOff: orderValues.valueDescent,
+        payMode: orderValues.valuePay,
+      };
+
+      const [resflag, resmsg] = await registerPassengerRequest(dataForSend);
+      if (resflag) {
+        /* 
+        navigation.navigate("SucessScreen", {
+          titulo: titulo,
+          subTitulo: subTitulo,
+          finalTabRoute: finalTabRoute,
+        }); */
+      } else {
+        setMsgError(resmsg.error);
+        setModalError(true);
+      }
     }
+    setWaitingLogin(false);
+  };
+
+  const modalHandler = () => {
+    navigation.navigate("SearchStepOne");
+    setModalError(false);
   };
 
   return (
     <Layout>
-      <ScrollView>
-        <View>
-          <Text style={styles.titleStyle}>
-            Confirmación de solicitud de reserva
-          </Text>
-          <View style={{ paddingTop: hp(2) }}>
-            <ResultItemCard
-              item={dataTravel}
-              style={{ paddingLeft: wp(5) }}
-              seatOff={true}
-            />
-            <InputPicker
-              style={styles.input}
-              errorText={errorValues.errorPickUp}
-              onSelect={(selectedItem, index) => {
-                SetValuePickUp(selectedItem);
-                changeValuesHandler("valuePickUp", pickersCoord.pickUp[index]);
-              }}
-              value={valuePickUp}
-              data={pickersLabel.pickUp}
-              label="Lugar de recogida"
-            />
-            <InputPicker
-              style={styles.input}
-              errorText={errorValues.errorDescent}
-              onSelect={(selectedItem, index) => {
-                SetValueDescent(selectedItem);
-                changeValuesHandler(
-                  "valueDescent",
-                  pickersCoord.putDown[index]
-                );
-              }}
-              value={valueDescent}
-              data={pickersLabel.putDown}
-              label="Lugar de bajada"
-            />
-            {(dataTravel.extraBaggage.bigBags != 0 ||
-              dataTravel.extraBaggage.personalItem != 0) && (
-              <View style={styles.viewBaggage}>
-                <Text style={styles.labelBaggage}>
-                  {"Seleccione su equipaje extra"}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  {dataTravel.extraBaggage.personalItem != 0 && (
-                    <TouchableIcon
-                      value={orderValues.handBaggage}
-                      type={"baggage_hand"}
-                      onPress={() =>
-                        changeValuesHandler(
-                          "handBaggage",
-                          !orderValues.handBaggage
-                        )
-                      }
-                      style={{ paddingTop: hp("1.5") }}
-                      sizeIcon={6}
-                    />
-                  )}
-                  {dataTravel.extraBaggage.bigBags != 0 && (
-                    <TouchableIcon
-                      value={orderValues.maletaBaggage}
-                      type={"baggage_heavy"}
-                      onPress={() =>
-                        changeValuesHandler(
-                          "maletaBaggage",
-                          !orderValues.maletaBaggage
-                        )
-                      }
-                      style={{ paddingTop: hp("1.5") }}
-                      sizeIcon={6}
-                    />
-                  )}
+      {waitingLogin ? (
+        <Loading />
+      ) : (
+        <ScrollView>
+          <View>
+            <ModalPopUp
+              visible={modalError}
+              setModalVisible={setModalError}
+              customFunction={modalHandler}
+            >
+              {msgError}
+            </ModalPopUp>
+            <Text style={styles.titleStyle}>
+              Confirmación de solicitud de reserva
+            </Text>
+            <View style={{ paddingTop: hp(2) }}>
+              <ResultItemCard
+                item={dataTravel}
+                style={{ paddingLeft: wp(5) }}
+                seatOff={true}
+              />
+              <InputPicker
+                style={styles.input}
+                errorText={errorValues.errorPickUp}
+                onSelect={(selectedItem, index) => {
+                  SetValuePickUp(selectedItem);
+                  changeValuesHandler(
+                    "valuePickUp",
+                    pickersCoord.pickUp[index]
+                  );
+                }}
+                value={valuePickUp}
+                data={pickersLabel.pickUp}
+                label="Lugar de recogida"
+              />
+              <InputPicker
+                style={styles.input}
+                errorText={errorValues.errorDescent}
+                onSelect={(selectedItem, index) => {
+                  SetValueDescent(selectedItem);
+                  changeValuesHandler(
+                    "valueDescent",
+                    pickersCoord.putDown[index]
+                  );
+                }}
+                value={valueDescent}
+                data={pickersLabel.putDown}
+                label="Lugar de bajada"
+              />
+              {(dataTravel.extraBaggage.bigBags != 0 ||
+                dataTravel.extraBaggage.personalItem != 0) && (
+                <View style={styles.viewBaggage}>
+                  <Text style={styles.labelBaggage}>
+                    {"Seleccione su equipaje extra"}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    {dataTravel.extraBaggage.personalItem != 0 && (
+                      <TouchableIcon
+                        value={orderValues.handBaggage}
+                        type={"baggage_hand"}
+                        onPress={() =>
+                          changeValuesHandler(
+                            "handBaggage",
+                            !orderValues.handBaggage
+                          )
+                        }
+                        style={{ paddingTop: hp("1.5") }}
+                        sizeIcon={6}
+                      />
+                    )}
+                    {dataTravel.extraBaggage.bigBags != 0 && (
+                      <TouchableIcon
+                        value={orderValues.maletaBaggage}
+                        type={"baggage_heavy"}
+                        onPress={() =>
+                          changeValuesHandler(
+                            "maletaBaggage",
+                            !orderValues.maletaBaggage
+                          )
+                        }
+                        style={{ paddingTop: hp("1.5") }}
+                        sizeIcon={6}
+                      />
+                    )}
+                  </View>
                 </View>
-              </View>
-            )}
-            <InputPicker
-              style={styles.inputPay}
-              errorText={errorValues.errorPay}
-              onSelect={(selectedItem, index) =>
-                changeValuesHandler("valuePay", selectedItem)
-              }
-              value={orderValues.valuePay}
-              data={["Credito", "Debito"]}
-              label="Medio de pago"
+              )}
+              <InputPicker
+                style={styles.inputPay}
+                errorText={errorValues.errorPay}
+                onSelect={(selectedItem, index) =>
+                  changeValuesHandler("valuePay", selectedItem)
+                }
+                value={orderValues.valuePay}
+                data={["Credito", "Debito"]}
+                label="Medio de pago"
+              />
+            </View>
+          </View>
+          <View
+            style={[
+              styles.buttonView,
+              dataTravel.extraBaggage.bigBags === 0 &&
+                dataTravel.extraBaggage.personalItem === 0 && {
+                  paddingTop: hp("8%"),
+                },
+            ]}
+          >
+            <ButtonLiion
+              title="Confirmar solicitud"
+              styleView={styles.button}
+              onPress={() => checkValidator()}
             />
           </View>
-        </View>
-        <View
-          style={[
-            styles.buttonView,
-            dataTravel.extraBaggage.bigBags === 0 &&
-              dataTravel.extraBaggage.personalItem === 0 && {
-                paddingTop: hp("8%"),
-              },
-          ]}
-        >
-          <ButtonLiion
-            title="Confirmar solicitud"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </Layout>
   );
 };

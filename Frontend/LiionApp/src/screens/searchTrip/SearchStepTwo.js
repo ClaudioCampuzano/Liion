@@ -49,6 +49,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         localityOrigin: searchCity(addresses.origin.address_components),
         date: date,
         time: time,
+        genderApplicant: userFirestoreData.gender
       };
 
       const [resFlag, resMsg] = await getTravels(dataRequest);

@@ -37,10 +37,9 @@ const SearchStepThree = ({ navigation, route }) => {
     })();
   }, []);
 
-
   const checkValidator = () => {
     const addresses = route.params.addresses;
-    navigation.navigate("SearchStepFour", {...dataFromApi,addresses});
+    navigation.navigate("SearchStepFour", { ...dataFromApi, addresses });
   };
 
   const genderComponent = () => {
@@ -144,6 +143,12 @@ const SearchStepThree = ({ navigation, route }) => {
         <Loading />
       ) : (
         <ScrollView showsVerticalScrollIndicator={true}>
+          <ModalPopUp
+            visible={modalError}
+            setModalVisible={setModalError}
+          >
+            Error al intentar recuperar datos, intente en otro momento
+          </ModalPopUp>
           <View style={styles.topPanel}>
             <MapViewCustom
               dimensions={{ height: hp("30%"), width: wp("100%") }}

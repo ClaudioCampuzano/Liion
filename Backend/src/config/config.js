@@ -1,14 +1,12 @@
 import * as admin from "firebase-admin";
-import serviceAccount from "./liion-carpoolapp-firebase-adminsdk.json";
+import dotenv from "dotenv";
 
+dotenv.config();
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(JSON.parse(process.env.API_KEY)),
 });
 
 export const db = admin.firestore();
 export const auth = admin.auth();
-export const {FieldValue} = require('@google-cloud/firestore');
-//original
-//const {Firestore, FieldValue} = require('@google-cloud/firestore');
-
+export const { FieldValue } = require("@google-cloud/firestore");

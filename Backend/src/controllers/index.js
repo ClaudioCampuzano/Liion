@@ -4,8 +4,17 @@ import { validateRun } from "../middleware/validations";
 import moment from "moment";
 
 export const register = async (req, res) => {
-  const { name, lastname, run, email, birth, password, gender, isDriver, photo } =
-    req.body;
+  const {
+    name,
+    lastname,
+    run,
+    email,
+    birth,
+    password,
+    gender,
+    isDriver,
+    photo,
+  } = req.body;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
   if (
@@ -42,7 +51,7 @@ export const register = async (req, res) => {
           driverData: {},
           sRating: 0,
           nRating: 0,
-          photo: photo
+          photo: photo,
         });
         res.json({ message: "Successful Registration" });
       } catch (e) {
@@ -210,12 +219,38 @@ export const getTravels = async (req, res) => {
   const resultDataHard = [];
   const searchParams = JSON.parse(req.query["0"]);
   try {
+    var men, woman, allGender;
+    switch (searchParams.genderApplicant) {
+      case "Otro":
+        men = false;
+        woman = false;
+        allGender = true;
+        break;
+      case "Mujer":
+        men = false;
+        woman = true;
+        allGender = true;
+        break;
+      case "Hombre":
+        men = true;
+        woman = false;
+        allGender = true;
+        break;
+      default:
+        men = true;
+        woman = true;
+        allGender = true;
+    }
     const docRef = db.collection("travels");
     const snapshot = await docRef
+      .where("nSeatsAvailable", ">", 0)
       .where("date", "==", searchParams.date)
       .where("localityDestination", "==", searchParams.localityDestination)
       .where("localityOrigin", "==", searchParams.localityOrigin)
-      .where("driverUID", "!=", searchParams.uid)
+      .where("status", "==", "open")
+      .where("onlyMen", "==", men)
+      .where("onlyWoman", "==", woman)
+      .where("allGender", "==", allGender)
       .get();
 
     if (!snapshot.empty)
@@ -226,6 +261,7 @@ export const getTravels = async (req, res) => {
           .get();
 
         driverRef.exists &&
+          doc.data().driverUID != searchParams.uid &&
           resultDataHard.push({
             id: doc.id,
             costPerSeat: doc.data().costPerSeat,
@@ -298,7 +334,63 @@ export const UpdateSeenTravel = async (req, res) => {
 };
 
 export async function registerPassengerRequest(req, res) {
+  const { travelId, passengerUID, extraBaggage, pickUp, dropOff, payMode } =
+    req.body;
   try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const requestRef = db.collection("requestTravel");
+
+    const travelObj = (await travelRef.get()).data();
+
+    //Se comprueba si es posible agregar equipaje al viaje
+    var bigBags = 0;
+    var personalItem = 0;
+    if (
+      (extraBaggage.bigBags && travelObj.extraBaggage.bigBags == 0) ||
+      (extraBaggage.personalItem && travelObj.extraBaggage.personalItem == 0)
+    ) {
+      res
+        .status(403)
+        .json({ sucess: false, error: "Equipaje extra no disponible" });
+      return;
+    }
+    if (extraBaggage.bigBags) bigBags = -1;
+    if (extraBaggage.personalItem) personalItem = -1;
+
+    //Se comprueba que no tiene ya una solicitud para ese viaje
+    for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
+      console.log(travelObj.requestingPassengers[i])
+      var requestObj = (await requestRef
+        .doc(travelObj.requestingPassengers[i])
+        .get()).data();
+      console.log(requestObj.passengerUID, passengerUID)
+      if (requestObj.passengerUID === passengerUID) {
+        res
+          .status(403)
+          .json({ sucess: false, error: "Ya tienes una solicitud en este viaje" });
+        return;
+      }
+    }
+
+    //Se comprueba que el viaje no le calze en el horario de otro viaje
+
+    //las solicitudes de viaje pueden estar, accepted, refused, o pending
+    //En esta mpv todas se registran como accepted
+    const requestRes = await requestRef.add({
+      passengerUID: passengerUID,
+      extraBaggage: extraBaggage,
+      pickUp: pickUp,
+      dropOff: dropOff,
+      payMode: payMode,
+      travelId: travelId,
+      status: "accepted",
+    });
+    const travelRes = await travelRef.update({
+      requestingPassengers: FieldValue.arrayUnion(requestRes.id),
+      "extraBaggage.bigBags": FieldValue.increment(bigBags),
+      "extraBaggage.personalItem": FieldValue.increment(personalItem),
+      nSeatsAvailable: FieldValue.increment(-1),
+    });
     res.json({ sucess: true });
   } catch (e) {
     console.log(e);

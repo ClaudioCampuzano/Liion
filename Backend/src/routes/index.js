@@ -9,18 +9,18 @@ import {
   createTravel,
   getDetailsOfTravel,
   UpdateSeenTravel,
-  registerPassengerRequest
+  registerPassengerRequest,
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
 
-const router = Router({caseSensitive: true});
+const router = Router({ caseSensitive: true });
 router.use("/protected", checkIsAuth);
 router.post("/register", register);
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
-router.post("/updateDriverRating",checkIsAuth,updateDriverRating)
-router.post("/updateUserRating", checkIsAuth, updateUserRating)
+router.post("/updateDriverRating", checkIsAuth, updateDriverRating);
+router.post("/updateUserRating", checkIsAuth, updateUserRating);
 
 router.post("/createTravel", createTravel);
 
@@ -28,8 +28,7 @@ router.post("/getUserData", checkIsAuth, getUserData);
 
 router.get("/getTravels", getTravels);
 router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
-router.patch("/UpdateSeenTravel",UpdateSeenTravel)
+router.patch("/UpdateSeenTravel", UpdateSeenTravel);
 router.post("/registerPassengerRequest", registerPassengerRequest);
-
 
 export default router;

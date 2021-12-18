@@ -14,7 +14,6 @@ import moment from "moment";
 import "moment/locale/es";
 
 const RegisterStepOne = ({ navigation }) => {
-
   const [valueNombre, setValueNombre] = useState("");
   const [valueApellido, setValueApellido] = useState("");
   const [valueRun, setValueRun] = useState("");
@@ -53,8 +52,8 @@ const RegisterStepOne = ({ navigation }) => {
     if (valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD"))
       setErrorFecha("Falta tu fecha de nacimiento");
     else setErrorFecha(null);
-    if (valueGender == "") setErrorGenero("Falta que indiques tu genero")
-    else setErrorGenero(null)
+    if (valueGender == "") setErrorGenero("Falta que indiques tu genero");
+    else setErrorGenero(null);
 
     if (
       valueNombre != "" &&
@@ -69,7 +68,7 @@ const RegisterStepOne = ({ navigation }) => {
         lastname: valueApellido,
         run: valueRun,
         dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
-        gender: valueGender
+        gender: valueGender,
       };
       navigation.navigate("RegisterStepTwo", dataToStep2);
     }
@@ -130,9 +129,11 @@ const RegisterStepOne = ({ navigation }) => {
             <InputPicker
               style={styles.input}
               errorText={errorGenero}
-              onSelect={(selectedItem, index) =>
-                setValueGender(selectedItem)
-              }
+              onSelect={(selectedItem, index) => {
+                var item = selectedItem;
+                if (selectedItem == "Ninguno de los anteriores") item = "Otro";
+                setValueGender(item);
+              }}
               value={valueGender}
               data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
               label="Genero"

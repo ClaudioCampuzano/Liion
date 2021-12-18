@@ -57,7 +57,6 @@ const CreateStepFive = ({ navigation, route }) => {
     };
 
     const [resflag, resmsg] = await createTravel(dataForSend);
-    console.log(resflag);
     if (resflag) {
       navigation.navigate("SucessScreen", {
         titulo: titulo,
