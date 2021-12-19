@@ -138,12 +138,11 @@ const SearchStepFour = ({ navigation, route }) => {
 
       const [resflag, resmsg] = await registerPassengerRequest(dataForSend);
       if (resflag) {
-        /* 
         navigation.navigate("SucessScreen", {
           titulo: titulo,
           subTitulo: subTitulo,
           finalTabRoute: finalTabRoute,
-        }); */
+        });
       } else {
         setMsgError(resmsg.error);
         setModalError(true);

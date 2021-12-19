@@ -242,6 +242,8 @@ export const getTravels = async (req, res) => {
         allGender = true;
     }
     const docRef = db.collection("travels");
+    const requestRef = db.collection("requestTravel");
+
     const snapshot = await docRef
       .where("nSeatsAvailable", ">", 0)
       .where("date", "==", searchParams.date)
@@ -255,33 +257,47 @@ export const getTravels = async (req, res) => {
 
     if (!snapshot.empty)
       for (const doc of snapshot.docs) {
-        var driverRef = await db
-          .collection("users")
-          .doc(doc.data().driverUID)
-          .get();
+        var userInTravel = false;
+        for (var i = 0; i < doc.data().requestingPassengers.length; i++) {
+          var requestObj = (
+            await requestRef.doc(doc.data().requestingPassengers[i]).get()
+          ).data();
+          if (requestObj.passengerUID === searchParams.uid) {
+            userInTravel = true;
+            break;
+          }
+        }
 
-        driverRef.exists &&
-          doc.data().driverUID != searchParams.uid &&
-          resultDataHard.push({
-            id: doc.id,
-            costPerSeat: doc.data().costPerSeat,
-            extraBaggage: doc.data().extraBaggage,
-            approvalIns: doc.data().approvalIns,
-            smoking: doc.data().smoking,
-            onlyWoman: doc.data().onlyWoman,
-            allGender: doc.data().allGender,
-            onlyWoman: doc.data().onlyWoman,
-            nSeatsAvailable: doc.data().nSeatsAvailable,
-            date: doc.data().date,
-            startTime: doc.data().startTime,
-            destinationDetails: doc.data().destinationDetails,
-            originDetails: doc.data().originDetails,
-            durationMinutes: doc.data().durationMinutes,
-            nameDriver: driverRef.data().name + " " + driverRef.data().apellido,
-            driverPhoto: driverRef.data().photo,
-            nRating: driverRef.data().driverData.nRating,
-            sRating: driverRef.data().driverData.sRating,
-          });
+        if (!userInTravel) {
+          var driverRef = await db
+            .collection("users")
+            .doc(doc.data().driverUID)
+            .get();
+
+          driverRef.exists &&
+            doc.data().driverUID != searchParams.uid &&
+            resultDataHard.push({
+              id: doc.id,
+              costPerSeat: doc.data().costPerSeat,
+              extraBaggage: doc.data().extraBaggage,
+              approvalIns: doc.data().approvalIns,
+              smoking: doc.data().smoking,
+              onlyWoman: doc.data().onlyWoman,
+              allGender: doc.data().allGender,
+              onlyWoman: doc.data().onlyWoman,
+              nSeatsAvailable: doc.data().nSeatsAvailable,
+              date: doc.data().date,
+              startTime: doc.data().startTime,
+              destinationDetails: doc.data().destinationDetails,
+              originDetails: doc.data().originDetails,
+              durationMinutes: doc.data().durationMinutes,
+              nameDriver:
+                driverRef.data().name + " " + driverRef.data().apellido,
+              driverPhoto: driverRef.data().photo,
+              nRating: driverRef.data().driverData.nRating,
+              sRating: driverRef.data().driverData.sRating,
+            });
+        }
       }
     const requiredParameters = JSON.stringify(resultDataHard);
     res.send(requiredParameters);
@@ -359,15 +375,14 @@ export async function registerPassengerRequest(req, res) {
 
     //Se comprueba que no tiene ya una solicitud para ese viaje
     for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
-      console.log(travelObj.requestingPassengers[i])
-      var requestObj = (await requestRef
-        .doc(travelObj.requestingPassengers[i])
-        .get()).data();
-      console.log(requestObj.passengerUID, passengerUID)
+      var requestObj = (
+        await requestRef.doc(travelObj.requestingPassengers[i]).get()
+      ).data();
       if (requestObj.passengerUID === passengerUID) {
-        res
-          .status(403)
-          .json({ sucess: false, error: "Ya tienes una solicitud en este viaje" });
+        res.status(403).json({
+          sucess: false,
+          error: "Ya tienes una solicitud en este viaje",
+        });
         return;
       }
     }
