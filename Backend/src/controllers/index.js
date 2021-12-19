@@ -255,6 +255,8 @@ export const getTravels = async (req, res) => {
       .where("allGender", "==", allGender)
       .get();
 
+    const initialSearchTime = moment(searchParams.time, "HH:mm");
+
     if (!snapshot.empty)
       for (const doc of snapshot.docs) {
         var userInTravel = false;
@@ -268,36 +270,39 @@ export const getTravels = async (req, res) => {
           }
         }
 
-        if (!userInTravel) {
-          var driverRef = await db
-            .collection("users")
-            .doc(doc.data().driverUID)
-            .get();
+        if (
+          moment(doc.data().startTime, "HH:mm").isSameOrAfter(initialSearchTime)
+        )
+          if (!userInTravel) {
+            var driverRef = await db
+              .collection("users")
+              .doc(doc.data().driverUID)
+              .get();
 
-          driverRef.exists &&
-            doc.data().driverUID != searchParams.uid &&
-            resultDataHard.push({
-              id: doc.id,
-              costPerSeat: doc.data().costPerSeat,
-              extraBaggage: doc.data().extraBaggage,
-              approvalIns: doc.data().approvalIns,
-              smoking: doc.data().smoking,
-              onlyWoman: doc.data().onlyWoman,
-              allGender: doc.data().allGender,
-              onlyWoman: doc.data().onlyWoman,
-              nSeatsAvailable: doc.data().nSeatsAvailable,
-              date: doc.data().date,
-              startTime: doc.data().startTime,
-              destinationDetails: doc.data().destinationDetails,
-              originDetails: doc.data().originDetails,
-              durationMinutes: doc.data().durationMinutes,
-              nameDriver:
-                driverRef.data().name + " " + driverRef.data().apellido,
-              driverPhoto: driverRef.data().photo,
-              nRating: driverRef.data().driverData.nRating,
-              sRating: driverRef.data().driverData.sRating,
-            });
-        }
+            driverRef.exists &&
+              doc.data().driverUID != searchParams.uid &&
+              resultDataHard.push({
+                id: doc.id,
+                costPerSeat: doc.data().costPerSeat,
+                extraBaggage: doc.data().extraBaggage,
+                approvalIns: doc.data().approvalIns,
+                smoking: doc.data().smoking,
+                onlyWoman: doc.data().onlyWoman,
+                allGender: doc.data().allGender,
+                onlyWoman: doc.data().onlyWoman,
+                nSeatsAvailable: doc.data().nSeatsAvailable,
+                date: doc.data().date,
+                startTime: doc.data().startTime,
+                destinationDetails: doc.data().destinationDetails,
+                originDetails: doc.data().originDetails,
+                durationMinutes: doc.data().durationMinutes,
+                nameDriver:
+                  driverRef.data().name + " " + driverRef.data().apellido,
+                driverPhoto: driverRef.data().photo,
+                nRating: driverRef.data().driverData.nRating,
+                sRating: driverRef.data().driverData.sRating,
+              });
+          }
       }
     const requiredParameters = JSON.stringify(resultDataHard);
     res.send(requiredParameters);

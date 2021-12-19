@@ -74,7 +74,7 @@ const SearchStepOne = ({ navigation }) => {
             }}
             errorText={errorTime}
             mode="time"
-            label="Hora de llegada"
+            label="Hora de partida"
             maximum="-180"
             minimum="-1"
           />
