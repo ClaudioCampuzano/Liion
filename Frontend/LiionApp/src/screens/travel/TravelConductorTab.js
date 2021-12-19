@@ -12,7 +12,7 @@ import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelConductorTab = () => {
-  const { uid } = useContext(GlobalContext);
+  const { uid, userFirestoreData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
@@ -34,10 +34,9 @@ const TravelConductorTab = () => {
   const renderItem = ({ item }) => {
     return (
       <TravelResultsCard
-        item={item}
+        item={{ ...item, carSeats: userFirestoreData.driverData.carSeats }}
         driverOn={true}
-
-/*         onPress={() =>
+        /*         onPress={() =>
           navigation.navigate("SearchStepThree", { ...item, addresses })
         } */
       />
@@ -65,13 +64,12 @@ const TravelConductorTab = () => {
             ]}
           >
             {dataFromApi.length > 0 ? (
-              <></>
-            ) : (
-              /*               <FlatList
+              <FlatList
                 data={dataFromApi}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-              /> */
+              />
+            ) : (
               <TouchableIcon
                 value={true}
                 type={"sadFace"}

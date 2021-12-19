@@ -12,7 +12,7 @@ import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = () => {
-  const { uid } = useContext(GlobalContext);
+  const { uid, userFirestoreData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
   const [modalError, setModalError] = useState(false);

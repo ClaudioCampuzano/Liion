@@ -219,28 +219,11 @@ export const getTravels = async (req, res) => {
   const resultDataHard = [];
   const searchParams = JSON.parse(req.query["0"]);
   try {
-    var men, woman, allGender;
-    switch (searchParams.genderApplicant) {
-      case "Otro":
-        men = false;
-        woman = false;
-        allGender = true;
-        break;
-      case "Mujer":
-        men = false;
-        woman = true;
-        allGender = true;
-        break;
-      case "Hombre":
-        men = true;
-        woman = false;
-        allGender = true;
-        break;
-      default:
-        men = true;
-        woman = true;
-        allGender = true;
-    }
+    var fieldGender = ["allGender"];
+    if (searchParams.genderApplicant === "Hombre") fieldGender.push("onlyMen");
+    else if (searchParams.genderApplicant === "Mujer")
+      fieldGender.push("onlyWoman");
+
     const docRef = db.collection("travels");
     const requestRef = db.collection("requestTravel");
 
@@ -250,13 +233,10 @@ export const getTravels = async (req, res) => {
       .where("localityDestination", "==", searchParams.localityDestination)
       .where("localityOrigin", "==", searchParams.localityOrigin)
       .where("status", "==", "open")
-      .where("onlyMen", "==", men)
-      .where("onlyWoman", "==", woman)
-      .where("allGender", "==", allGender)
+      .where("genderPreference", "in", fieldGender)
       .get();
 
     const initialSearchTime = moment(searchParams.time, "HH:mm");
-
     if (!snapshot.empty)
       for (const doc of snapshot.docs) {
         var userInTravel = false;
@@ -287,9 +267,7 @@ export const getTravels = async (req, res) => {
                 extraBaggage: doc.data().extraBaggage,
                 approvalIns: doc.data().approvalIns,
                 smoking: doc.data().smoking,
-                onlyWoman: doc.data().onlyWoman,
-                allGender: doc.data().allGender,
-                onlyWoman: doc.data().onlyWoman,
+                genderPreference: doc.data().genderPreference,
                 nSeatsAvailable: doc.data().nSeatsAvailable,
                 date: doc.data().date,
                 startTime: doc.data().startTime,

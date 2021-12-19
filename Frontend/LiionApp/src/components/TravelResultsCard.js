@@ -6,12 +6,14 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 import ShowTravel from "./ShowTravel";
+import { FontAwesome } from "@expo/vector-icons";
 
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
 
 const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
+
   var colorBar, textBar;
   if (driverOn)
     switch (item.status) {
@@ -55,6 +57,60 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
     }
   }
 
+  const passengerPictureState = (item) => {
+    const { carSeats, nSeatsOffered, nSeatsAvailable } = item;
+    var output = [];
+    var cnt = 0;
+
+    for (let i = 0; i < nSeatsAvailable; i++) {
+      output.push(
+        <Avatar.Image
+          key={cnt}
+          source={require("../../assets/images/passengerPicture.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
+          }}
+          size={hp("4")}
+        />
+      );
+      cnt += 1;
+    }
+    for (let i = 0; i < nSeatsOffered - nSeatsAvailable; i++) {
+      output.push(
+        <Avatar.Image
+          key={cnt}
+          source={require("../../assets/images/passengerPictureOccupied.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
+          }}
+          size={hp("4")}
+        />
+      );
+      cnt += 1;
+    }
+    for (let i = 0; i < carSeats - nSeatsOffered; i++) {
+      output.push(
+        <Avatar.Image
+          key={cnt}
+          source={require("../../assets/images/passengerPictureOff.png")}
+          style={{
+            marginTop: hp(1),
+            marginBottom: hp(1),
+            backgroundColor: "white",
+          }}
+          size={hp("4")}
+        />
+      );
+      cnt += 1;
+    }
+
+    return output;
+  };
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={[styles.touchable, style]}>
@@ -66,32 +122,55 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
           }}
         >
           <View style={{ marginLeft: wp(4) }}>
-            <Avatar.Image
-              source={{
-                uri: item.driverPhoto,
-              }}
-              size={hp("7")}
-            />
-          </View>
-          <View style={{ marginLeft: wp(3) }}>
-            <Text style={styles.textConductor}>{item.nameDriver}</Text>
-            <View style={{ flexDirection: "row" }}>
-              <MaterialIcons
-                name="stars"
-                size={hp("2.5")}
+            {driverOn ? (
+              <FontAwesome
+                name="drivers-license-o"
+                size={hp("7")}
                 color={COLORS.TURKEY}
               />
-              <Text style={styles.labelRankings}>
-                {item.nRating == 0
-                  ? 0
-                  : Math.round(item.sRating / item.nRating)}
-                {"/5 - " + item.nRating + " Calificaciones"}
+            ) : (
+              <Avatar.Image
+                source={{
+                  uri: item.driverPhoto,
+                }}
+                size={hp("7")}
+              />
+            )}
+          </View>
+          <View style={{ marginLeft: wp(3) }}>
+            {driverOn ? (
+              <Text style={styles.textDate}>
+                {moment(item.date, "DD-MM-YYYY").format("LL")}
               </Text>
+            ) : (
+              <Text style={styles.textConductor}>{item.nameDriver}</Text>
+            )}
+
+            <View style={{ flexDirection: "row" }}>
+              {driverOn ? (
+                passengerPictureState(item)
+              ) : (
+                <>
+                  <MaterialIcons
+                    name="stars"
+                    size={hp("2.5")}
+                    color={COLORS.TURKEY}
+                  />
+                  <Text style={styles.labelRankings}>
+                    {item.nRating == 0
+                      ? 0
+                      : Math.round(item.sRating / item.nRating)}
+                    {"/5 - " + item.nRating + " Calificaciones"}
+                  </Text>
+                </>
+              )}
             </View>
 
-            <Text style={styles.textDate}>
-              {moment(item.date, "DD-MM-YYYY").format("LL")}
-            </Text>
+            {!driverOn && (
+              <Text style={styles.textDate}>
+                {moment(item.date, "DD-MM-YYYY").format("LL")}
+              </Text>
+            )}
           </View>
         </View>
 

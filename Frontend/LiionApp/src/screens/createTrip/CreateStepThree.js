@@ -60,7 +60,15 @@ const CreateStepThree = ({ navigation, route }) => {
   };
 
   const checkValidator = () => {
-    navigation.navigate("CreateStepFour", { ...route.params, ...preferences });
+    var dataAddTravel = {
+      smoking: preferences.smoking,
+      approvalIns: preferences.approvalIns,
+      genderPreference: "allGender",
+    };
+    if (preferences.onlyWoman) dataAddTravel.genderPreference = "onlyWoman";
+    else if (preferences.onlyMen) dataAddTravel.genderPreference = "onlyMen";
+
+    navigation.navigate("CreateStepFour", { ...route.params, ...dataAddTravel });
   };
   return (
     <Layout>
@@ -83,14 +91,14 @@ const CreateStepThree = ({ navigation, route }) => {
             />
             <TouchableIcon
               value={preferences.onlyWoman}
-              type={"woman"}
+              type={"onlyWoman"}
               onPress={() => handleGender("onlyWoman")}
               style={{ paddingTop: hp("1.5") }}
               sizeIcon={7}
             />
             <TouchableIcon
               value={preferences.onlyMen}
-              type={"men"}
+              type={"onlyMen"}
               onPress={() => handleGender("onlyMen")}
               style={{ paddingTop: hp("1.5") }}
               sizeIcon={7}
