@@ -358,14 +358,14 @@ export async function registerPassengerRequest(req, res) {
   const { travelId, passengerUID, extraBaggage, pickUp, dropOff, payMode } =
     req.body;
   try {
-    const travelRef = db.collection("travels").doc(travelId);
+    const travelRef = db.collection("travels");
     const requestRef = db.collection("requestTravel");
 
-    const travelObj = (await travelRef.get()).data();
+    var bigBags = extraBaggage.bigBags ? -1 : 0;
+    var personalItem = extraBaggage.personalItem ? -1 : 0;
 
     //Se comprueba si es posible agregar equipaje al viaje
-    var bigBags = 0;
-    var personalItem = 0;
+    const travelObj = (await travelRef.doc(travelId).get()).data();
     if (
       (extraBaggage.bigBags && travelObj.extraBaggage.bigBags == 0) ||
       (extraBaggage.personalItem && travelObj.extraBaggage.personalItem == 0)
@@ -375,8 +375,6 @@ export async function registerPassengerRequest(req, res) {
         .json({ sucess: false, error: "Equipaje extra no disponible" });
       return;
     }
-    if (extraBaggage.bigBags) bigBags = -1;
-    if (extraBaggage.personalItem) personalItem = -1;
 
     //Se comprueba que no tiene ya una solicitud para ese viaje
     for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
@@ -392,9 +390,58 @@ export async function registerPassengerRequest(req, res) {
       }
     }
 
-    //Se comprueba que el viaje no le calze en el horario de otro viaje
+    //Se comprueba que queden asientos disponibles
+    if (travelObj.nSeatsAvailable <= 0) {
+      res.status(403).json({
+        sucess: false,
+        error: "Se acabaron los asientos disponibles",
+      });
+      return;
+    }
 
-    //las solicitudes de viaje pueden estar, accepted, refused, o pending
+    //Se comprueba que el viaje no le calze en el horario de otro viaje ya inscrito
+    const requestPassenger = await requestRef
+      .where("passengerUID", "==", passengerUID)
+      .where("status", "==", "accepted")
+      .get();
+
+    if (!requestPassenger.empty)
+      for (const doc of requestPassenger.docs) {
+        var travelsPassenger = await travelRef
+          .where("requestingPassengers", "array-contains", doc.id)
+          .where("status", "in", ["open", "ongoing"])
+          .get();
+        for (const docT of travelsPassenger.docs) {
+          var timeTravel = moment(
+            docT.data().date + " " + docT.data().startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+          var nextTimeTravel = timeTravel.clone();
+          nextTimeTravel.add(docT.data().durationMinutes, "minutes");
+
+          var timeTravelCreate = moment(
+            travelObj.date + " " + travelObj.startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+
+          var nextTimeTravelCreate = timeTravelCreate.clone();
+          nextTimeTravelCreate.add(travelObj.durationMinutes, "minutes");
+
+          if (
+            timeTravelCreate.isBetween(timeTravel, nextTimeTravel) ||
+            nextTimeTravelCreate.isBetween(timeTravel, nextTimeTravel) ||
+            timeTravelCreate.isSame(timeTravel)
+          ) {
+            res.status(403).json({
+              sucess: false,
+              error: "Ya tiene un viaje en este horario",
+            });
+            return;
+          }
+        }
+      }
+
+    //las solicitudes de viaje pueden estar, accepted, refused, pending
     //En esta mpv todas se registran como accepted
     const requestRes = await requestRef.add({
       passengerUID: passengerUID,
@@ -405,7 +452,7 @@ export async function registerPassengerRequest(req, res) {
       travelId: travelId,
       status: "accepted",
     });
-    const travelRes = await travelRef.update({
+    const travelRes = await travelRef.doc(travelId).update({
       requestingPassengers: FieldValue.arrayUnion(requestRes.id),
       "extraBaggage.bigBags": FieldValue.increment(bigBags),
       "extraBaggage.personalItem": FieldValue.increment(personalItem),
