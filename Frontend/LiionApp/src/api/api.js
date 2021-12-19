@@ -93,7 +93,6 @@ export const getTravels = async (searchParameters) => {
 
 export const getDetailsOfTravel = async (travelId) => {
   try {
-    //const requiredParameters = JSON.stringify(searchParameters);
     const res = await client({
       method: "get",
       url: `/getDetailsOfTravel/${travelId}`,
@@ -127,6 +126,30 @@ export const registerPassengerRequest = async (payload) => {
       url: "/registerPassengerRequest",
       headers: { "Content-Type": "application/json" },
       data: requiredParameters,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const getTravelsPassenger = async (userUID) => {
+  try {
+    const res = await client({
+      method: "get",
+      url: `/getTravelsPassenger/${userUID}`,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const getTravelsDriver = async (userUID) => {
+  try {
+    const res = await client({
+      method: "get",
+      url: `/getTravelsDriver/${userUID}`,
     });
     return [true, res.data];
   } catch (e) {
