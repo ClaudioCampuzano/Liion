@@ -219,28 +219,11 @@ export const getTravels = async (req, res) => {
   const resultDataHard = [];
   const searchParams = JSON.parse(req.query["0"]);
   try {
-    var men, woman, allGender;
-    switch (searchParams.genderApplicant) {
-      case "Otro":
-        men = false;
-        woman = false;
-        allGender = true;
-        break;
-      case "Mujer":
-        men = false;
-        woman = true;
-        allGender = true;
-        break;
-      case "Hombre":
-        men = true;
-        woman = false;
-        allGender = true;
-        break;
-      default:
-        men = true;
-        woman = true;
-        allGender = true;
-    }
+    var fieldGender = ["allGender"];
+    if (searchParams.genderApplicant === "Hombre") fieldGender.push("onlyMen");
+    else if (searchParams.genderApplicant === "Mujer")
+      fieldGender.push("onlyWoman");
+
     const docRef = db.collection("travels");
     const requestRef = db.collection("requestTravel");
 
@@ -250,13 +233,10 @@ export const getTravels = async (req, res) => {
       .where("localityDestination", "==", searchParams.localityDestination)
       .where("localityOrigin", "==", searchParams.localityOrigin)
       .where("status", "==", "open")
-      .where("onlyMen", "==", men)
-      .where("onlyWoman", "==", woman)
-      .where("allGender", "==", allGender)
+      .where("genderPreference", "in", fieldGender)
       .get();
 
     const initialSearchTime = moment(searchParams.time, "HH:mm");
-
     if (!snapshot.empty)
       for (const doc of snapshot.docs) {
         var userInTravel = false;
@@ -287,9 +267,7 @@ export const getTravels = async (req, res) => {
                 extraBaggage: doc.data().extraBaggage,
                 approvalIns: doc.data().approvalIns,
                 smoking: doc.data().smoking,
-                onlyWoman: doc.data().onlyWoman,
-                allGender: doc.data().allGender,
-                onlyWoman: doc.data().onlyWoman,
+                genderPreference: doc.data().genderPreference,
                 nSeatsAvailable: doc.data().nSeatsAvailable,
                 date: doc.data().date,
                 startTime: doc.data().startTime,
@@ -459,6 +437,86 @@ export async function registerPassengerRequest(req, res) {
       nSeatsAvailable: FieldValue.increment(-1),
     });
     res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}
+
+export async function getTravelsPassenger(req, res) {
+  var passengerUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var requestRef = await db
+      .collection("requestTravel")
+      .where("passengerUID", "==", passengerUID)
+      .get();
+
+    if (!requestRef.empty)
+      for (const doc of requestRef.docs) {
+        var travelData = await db
+          .collection("travels")
+          .doc(doc.data().travelId)
+          .get();
+
+        if (travelData.exists) {
+          var driverRef = await db
+            .collection("users")
+            .doc(travelData.data().driverUID)
+            .get();
+
+          driverRef.exists &&
+            resultData.push({
+              id: travelData.id,
+              date: travelData.data().date,
+              startTime: travelData.data().startTime,
+              destinationDetails: travelData.data().destinationDetails,
+              originDetails: travelData.data().originDetails,
+              durationMinutes: travelData.data().durationMinutes,
+              nameDriver:
+                driverRef.data().name + " " + driverRef.data().apellido,
+              driverPhoto: driverRef.data().photo,
+              nRating: driverRef.data().driverData.nRating,
+              sRating: driverRef.data().driverData.sRating,
+              status: travelData.data().status,
+              statusRequest: doc.data().status,
+            });
+        }
+      }
+    const requiredParameters = JSON.stringify(resultData);
+    res.send(requiredParameters);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}
+
+export async function getTravelsDriver(req, res) {
+  var driverUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var travelRef = await db
+      .collection("travels")
+      .where("driverUID", "==", driverUID)
+      .get();
+
+    if (!travelRef.empty)
+      for (const doc of travelRef.docs) {
+        resultData.push({
+          id: doc.id,
+          date: doc.data().date,
+          startTime: doc.data().startTime,
+          destinationDetails: doc.data().destinationDetails,
+          originDetails: doc.data().originDetails,
+          durationMinutes: doc.data().durationMinutes,
+          status: doc.data().status,
+          nSeatsAvailable: doc.data().nSeatsAvailable,
+          nSeatsOffered: doc.data().nSeatsOffered,
+        });
+      }
+
+    const requiredParameters = JSON.stringify(resultData);
+    res.send(requiredParameters);
   } catch (e) {
     console.log(e);
     res.status(500).send("Error");

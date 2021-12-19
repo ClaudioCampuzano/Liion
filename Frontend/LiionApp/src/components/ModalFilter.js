@@ -177,7 +177,7 @@ const ModalFilter = (props) => {
             {gender == "Hombre" ? (
               <TouchableIcon
                 value={preferences.gender}
-                type={"men"}
+                type={"onlyMen"}
                 onPress={() => changePreferencesHandler("gender")}
                 style={{ marginLeft: wp(2) }}
                 sizeIcon={6}
@@ -185,7 +185,7 @@ const ModalFilter = (props) => {
             ) : (
               <TouchableIcon
                 value={preferences.gender}
-                type={"woman"}
+                type={"onlyWoman"}
                 onPress={() => changePreferencesHandler("gender")}
                 style={{ marginLeft: wp(2) }}
                 sizeIcon={6}

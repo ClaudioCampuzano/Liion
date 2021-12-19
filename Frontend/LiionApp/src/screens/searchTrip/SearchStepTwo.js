@@ -37,7 +37,7 @@ const SearchStepTwo = ({ navigation, route }) => {
     seeAll: true,
   });
 
-  const [dataFromApi,setDataFromApi] = useState([]);
+  const [dataFromApi, setDataFromApi] = useState([]);
   useEffect(() => {
     (async function () {
       var dataRequest = {
@@ -49,7 +49,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         localityOrigin: searchCity(addresses.origin.address_components),
         date: date,
         time: time,
-        genderApplicant: userFirestoreData.gender
+        genderApplicant: userFirestoreData.gender,
       };
 
       const [resFlag, resMsg] = await getTravels(dataRequest);
@@ -68,7 +68,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       setResultData(listReady);
       setLengthDataReady(listReady.length);
     }
-  }, [dataFromApi,preferences, resultOrder]);
+  }, [dataFromApi, preferences, resultOrder]);
 
   const sortFilterResult = (myArray, typeOrder, gender) => {
     ///Ordenar por precio o por precio
@@ -84,11 +84,17 @@ const SearchStepTwo = ({ navigation, route }) => {
     //Filtro de genero
     if (gender === "Hombre")
       order = order.filter((a) => {
-        return preferences.gender ? a.onlyMen : a.onlyMen || a.allGender;
+        return preferences.gender
+          ? a.genderPreference === "onlyMen"
+          : a.genderPreference === "onlyMen" ||
+              a.genderPreference === "allGender";
       });
     else if (gender === "Mujer")
       order = order.filter((a) => {
-        return preferences.gender ? a.onlyWoman : a.onlyWoman || a.allGender;
+        return preferences.gender
+          ? a.genderPreference === "onlyWoman"
+          : a.genderPreference === "onlyWoman" ||
+              a.genderPreference === "allGender";
       });
 
     if (preferences.noSmoking)

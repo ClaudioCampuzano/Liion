@@ -78,7 +78,7 @@ const CreateStepFive = ({ navigation, route }) => {
   };
 
   const getSex = () => {
-    if (route.params.allGender) {
+    if (route.params.genderPreference === 'allGender') {
       return (
         <View style={styles.iconTextInfo}>
           <MaterialCommunityIcons
@@ -89,7 +89,7 @@ const CreateStepFive = ({ navigation, route }) => {
           />
         </View>
       );
-    } else if (route.params.onlyWoman) {
+    } else if (route.params.genderPreference === 'onlyWoman') {
       return (
         <View style={styles.iconTextInfo}>
           <MaterialCommunityIcons
@@ -149,7 +149,7 @@ const CreateStepFive = ({ navigation, route }) => {
               </View>
               <View style={styles.vehicleContainer}>
                 <Image
-                  source={{ uri: userFirestoreData.driverData.url }}
+                  source={{ uri: userFirestoreData.driverData.carPhoto }}
                   style={styles.teslaImage}
                 />
                 <View>

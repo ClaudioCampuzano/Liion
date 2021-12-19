@@ -10,11 +10,11 @@ const TouchableIcon = (props) => {
   let labelShow = "";
   let nameIcon = "";
   switch (type) {
-    case "men":
+    case "onlyMen":
       labelShow = "Solo\nhombres";
       nameIcon = "gender-male";
       break;
-    case "woman":
+    case "onlyWoman":
       labelShow = "Solo\nmujeres";
       nameIcon = "gender-female";
       break;

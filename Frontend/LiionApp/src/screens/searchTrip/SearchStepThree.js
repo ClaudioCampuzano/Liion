@@ -42,14 +42,6 @@ const SearchStepThree = ({ navigation, route }) => {
     navigation.navigate("SearchStepFour", { ...dataFromApi, addresses });
   };
 
-  const genderComponent = () => {
-    let gender;
-    if (dataFromApi.allGender) gender = "allGender";
-    else if (dataFromApi.onlyWoman) gender = "woman";
-    else gender = "men";
-
-    return <TouchableIcon value={true} type={gender} style={{}} sizeIcon={7} />;
-  };
   const smokeComponent = () => {
     let smokeType;
     dataFromApi.smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
@@ -143,10 +135,7 @@ const SearchStepThree = ({ navigation, route }) => {
         <Loading />
       ) : (
         <ScrollView showsVerticalScrollIndicator={true}>
-          <ModalPopUp
-            visible={modalError}
-            setModalVisible={setModalError}
-          >
+          <ModalPopUp visible={modalError} setModalVisible={setModalError}>
             Error al intentar recuperar datos, intente en otro momento
           </ModalPopUp>
           <View style={styles.topPanel}>
@@ -209,7 +198,12 @@ const SearchStepThree = ({ navigation, route }) => {
           <View>
             <Text style={styles.text_titule}>Preferencias:</Text>
             <View style={styles.characteristicView}>
-              {genderComponent()}
+              <TouchableIcon
+                value={true}
+                type={dataFromApi.genderPreference}
+                style={{}}
+                sizeIcon={7}
+              />
               {smokeComponent()}
             </View>
 
