@@ -31,7 +31,8 @@ const CreateStepFive = ({ navigation, route }) => {
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
     const finalTabRoute = "TravelConductorTab";
-    const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
+
+    /*     const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
       email,
       phoneNumber,
       photoURL,
@@ -42,23 +43,21 @@ const CreateStepFive = ({ navigation, route }) => {
     };
     delete driverDatas.DriverData;
     delete driverDatas.driverData;
-    delete driverDatas.isDriver;
-    delete driverDatas.isPassenger;
+    delete driverDatas.isDriver;*/
+    //driverData: { ...driverDatas },
+
     const dataForSend = {
       atoken: accesstoken,
       driverUID: uid,
-      driverData: { ...driverDatas },
-      travelData: {
-        status: "open",
-        seatsAval: route.params.nOfSeats,
-        ...route.params,
-        seen: 0,
-      },
+      status: "open",
+      nSeatsAvailable: route.params.nSeatsOffered,
+      ...route.params,
+      seen: 0,
+      requestingPassengers: []
     };
+
     const [resflag, resmsg] = await createTravel(dataForSend);
     if (resflag) {
-      //todo ok pasa
-      console.log(resmsg);
       navigation.navigate("SucessScreen", {
         titulo: titulo,
         subTitulo: subTitulo,
@@ -67,7 +66,6 @@ const CreateStepFive = ({ navigation, route }) => {
     } else {
       //dataForRoutingTwo.current = dataForSend
       setModalVisible(true);
-      //console.log("Ya tienes un viaje en ese intervalo de tiempo", resmsg);
     }
     setWaitingLogin(false);
   };
@@ -140,12 +138,12 @@ const CreateStepFive = ({ navigation, route }) => {
                 <Text style={styles.rutaStyle}>Ruta</Text>
                 <ShowTravel
                   style={styles.inputLocation}
-                  timeStart={route.params.time}
-                  timeEnd={moment(route.params.time, "hh:mm")
-                    .add(route.params.duration, "minutes")
+                  timeStart={route.params.startTime}
+                  timeEnd={moment(route.params.startTime, "hh:mm")
+                    .add(route.params.durationMinutes, "minutes")
                     .format("LT")}
-                  labelO={route.params.addresses.origin.formatted_address}
-                  labelD={route.params.addresses.destination.formatted_address}
+                  labelO={route.params.originDetails.formatted_address}
+                  labelD={route.params.destinationDetails.formatted_address}
                   dirTextSize={wp("2.5%")}
                 />
               </View>
@@ -206,7 +204,7 @@ const CreateStepFive = ({ navigation, route }) => {
                     />
                     <View style={styles.tinyiconText}>
                       <View style={styles.tinyIcons}>
-                        {[...Array(route.params.nOfSeats)].map(
+                        {[...Array(route.params.nSeatsOffered)].map(
                           (value, index) => (
                             <Ionicons
                               key={index}
@@ -218,8 +216,8 @@ const CreateStepFive = ({ navigation, route }) => {
                         )}
                       </View>
                       <Text style={styles.tinyTextStyle}>
-                        {route.params.nOfSeats}{" "}
-                        {route.params.nOfSeats === 1
+                        {route.params.nSeatsOffered}{" "}
+                        {route.params.nSeatsOffered === 1
                           ? "asiento disponible"
                           : "asientos disponibles"}
                       </Text>
@@ -227,7 +225,7 @@ const CreateStepFive = ({ navigation, route }) => {
                   </View>
                   <Text style={styles.prideDesc}>Precio por asiento</Text>
                 </View>
-                <Text style={styles.price}>$ {route.params.price}</Text>
+                <Text style={styles.price}>$ {route.params.costPerSeat}</Text>
               </View>
               <View style={styles.bagsContainer}>
                 <Text style={styles.equipajePermStyle}>
@@ -244,7 +242,7 @@ const CreateStepFive = ({ navigation, route }) => {
                       Equipaje de mano{" "}
                     </Text>
                     <Text style={styles.bagIconTinyText}>
-                      {route.params.personalItem}
+                      {route.params.extraBaggage.personalItem}
                     </Text>
                   </View>
 
@@ -256,7 +254,7 @@ const CreateStepFive = ({ navigation, route }) => {
                     />
                     <Text style={styles.bagIconTinyText}>Maleta de viaje</Text>
                     <Text style={styles.bagIconTinyText}>
-                      {route.params.bigBags}
+                      {route.params.extraBaggage.bigBags}
                     </Text>
                   </View>
                 </View>

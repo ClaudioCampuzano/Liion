@@ -13,10 +13,11 @@ import {
 } from "@expo/vector-icons";
 
 const CreateStepFour = ({ navigation, route }) => {
-  //console.log(route.params)
-
   const checkValidator = () => {
-    navigation.navigate("CreateStepFive", { ...route.params, personalItem:bagNumber[0], bigBags:bagNumber[1]});
+    navigation.navigate("CreateStepFive", {
+      ...route.params,
+      extraBaggage: { personalItem: bagNumber[0], bigBags: bagNumber[1] },
+    });
   };
   const sideIconSize = hp("5%");
   const mainIconSize = hp("9.5%");
@@ -54,7 +55,9 @@ const CreateStepFour = ({ navigation, route }) => {
 
         <View style={styles.iconsSection}>
           <View>
-          <Text style={styles.badTitle}>Equipaje de mano o articulo personal </Text>
+            <Text style={styles.badTitle}>
+              Equipaje de mano o articulo personal{" "}
+            </Text>
             <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => changeBagNumber(-1, 0)}>
                 <Feather
@@ -83,7 +86,7 @@ const CreateStepFour = ({ navigation, route }) => {
             <Text style={styles.count}>{bagNumber[0]}</Text>
           </View>
           <View>
-          <Text style={styles.badTitle}>Maletas de viaje </Text>
+            <Text style={styles.badTitle}>Maletas de viaje </Text>
             <View style={styles.iconRow}>
               <TouchableOpacity onPress={() => changeBagNumber(-1, 1)}>
                 <Feather
@@ -109,7 +112,7 @@ const CreateStepFour = ({ navigation, route }) => {
             </View>
             <Text style={styles.badDesc}>Todo lo que supere </Text>
             <Text style={styles.badDesc}>las medidas anteriores </Text>
-                        <Text style={styles.count}>{bagNumber[1]}</Text>
+            <Text style={styles.count}>{bagNumber[1]}</Text>
           </View>
         </View>
       </View>
@@ -180,14 +183,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: COLORS.BLACK,
   },
-  badDesc:{
+  badDesc: {
     fontFamily: "Gotham-SSm-Medium",
     fontSize: wp("3%"),
     paddingTop: hp("0%"),
     textAlign: "center",
     color: COLORS.TURKEY,
   },
-  badTitle:{
+  badTitle: {
     fontFamily: "Gotham-SSm-Bold",
     fontSize: wp("3.5%"),
     marginBottom: hp("1.5%"),

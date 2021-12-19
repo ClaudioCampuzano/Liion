@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-paper";
@@ -9,29 +9,50 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
+import Loading from "../../components/Loading";
+import { getDetailsOfTravel, UpdateSeenTravel } from "../../api/api";
+import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
 
 const SearchStepThree = ({ navigation, route }) => {
-  const { travelData, driverData } = route.params;
+  const [loading, setLoading] = useState(true);
+  const [modalError, setModalError] = useState(false);
+
+  const [dataFromApi, setDataFromApi] = useState({});
+
+  useEffect(() => {
+    (async function () {
+      const [resFlag, resMsg] = await getDetailsOfTravel(route.params.id);
+      if (resFlag) {
+        const dataForSend = {
+          travelId: route.params.id,
+        };
+        const [resFlag_put, resMsg_put] = await UpdateSeenTravel(dataForSend);
+        setDataFromApi({ ...route.params, ...resMsg });
+      } else setModalError(true);
+      setLoading(false);
+    })();
+  }, []);
 
   const checkValidator = () => {
-    navigation.navigate("SearchStepFour", route.params);
+    const addresses = route.params.addresses;
+    navigation.navigate("SearchStepFour", { ...dataFromApi, addresses });
   };
 
   const genderComponent = () => {
     let gender;
-    if (travelData.allGender) gender = "allGender";
-    else if (travelData.onlyWoman) gender = "woman";
+    if (dataFromApi.allGender) gender = "allGender";
+    else if (dataFromApi.onlyWoman) gender = "woman";
     else gender = "men";
 
     return <TouchableIcon value={true} type={gender} style={{}} sizeIcon={7} />;
   };
   const smokeComponent = () => {
     let smokeType;
-    travelData.smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
+    dataFromApi.smoking ? (smokeType = "smoking") : (smokeType = "noSmoking");
 
     return (
       <TouchableIcon value={true} type={smokeType} style={{}} sizeIcon={7} />
@@ -118,121 +139,145 @@ const SearchStepThree = ({ navigation, route }) => {
 
   return (
     <Layout>
-      <ScrollView showsVerticalScrollIndicator={true}>
-        <View style={styles.topPanel}>
-          <MapViewCustom
-            dimensions={{ height: hp("30%"), width: wp("100%") }}
-            coordinates={travelData.coordinates}
-            mapDirections={false}
-            showGps={false}
-            ArrowBack={() => navigation.goBack()}
-          />
-        </View>
-        <Text style={styles.titleStyle}>
-          {"    " + moment(travelData.date, "DD-MM-YYYY").format("LL")}
-        </Text>
-        <View style={styles.viewBorder}>
-          <ResultItemCard
-            item={{ travelData, driverData }}
-            style={{ elevation: hp(0), paddingLeft: wp(5) }}
-            seatOff={true}
-          />
-        </View>
-
-        <View style={[styles.viewVehicule, styles.viewBorder]}>
-          <Image
-            source={require("../../../assets/images/teslaX.png")}
-            style={styles.teslaImage}
-          />
-          <View>
-            <Text
-              style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
-            >
-              {" "}
-              {driverData.typeVehicule}
-            </Text>
-            <Text style={styles.vehicleModelColor}>{driverData.carcolor}</Text>
+      {loading ? (
+        <Loading />
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={true}>
+          <ModalPopUp
+            visible={modalError}
+            setModalVisible={setModalError}
+          >
+            Error al intentar recuperar datos, intente en otro momento
+          </ModalPopUp>
+          <View style={styles.topPanel}>
+            <MapViewCustom
+              dimensions={{ height: hp("30%"), width: wp("100%") }}
+              coordinates={dataFromApi.routeCoordinates}
+              mapDirections={false}
+              showGps={false}
+              ArrowBack={() => navigation.goBack()}
+            />
           </View>
-        </View>
-
-        <Text style={styles.text_titule}>Estado asientos:</Text>
-
-        <View
-          style={[
-            styles.viewBorder,
-            {
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            },
-          ]}
-        >
-          {passengerPictureState(
-            driverData.nPassengerSeats,
-            travelData.nOfSeats,
-            travelData.seatsAvaliable
-          )}
-        </View>
-        <View>
-          <Text style={styles.text_titule}>Preferencias:</Text>
-          <View style={styles.characteristicView}>
-            {genderComponent()}
-            {smokeComponent()}
-          </View>
-
-          <Text style={styles.text_titule}>Facilidades:</Text>
-          <View style={styles.characteristicView}>
-            {facilityComponent(travelData.approvalIns, "approval")}
-            {facilityComponent(driverData.usb, "usb")}
-            {facilityComponent(driverData.airConditioning, "airConditioning")}
-            {!driverData.airConditioning &&
-              !driverData.usb &&
-              !travelData.approvalIns && (
-                <TouchableIcon
-                  value={true}
-                  type={"sadFace"}
-                  style={{}}
-                  sizeIcon={7}
-                />
-              )}
-          </View>
-          <Text style={styles.text_titule}>Equipaje extra permitido:</Text>
-          <Text style={styles.text_subTitule}>
-            {"(Todos tienen derecho a un equipaje\n de mano)"}
+          <Text style={styles.titleStyle}>
+            {"    " + moment(dataFromApi.date, "DD-MM-YYYY").format("LL")}
           </Text>
-          <View style={styles.characteristicView}>
-            {packageComponent(travelData.personalItem, "baggage_hand")}
-            {packageComponent(travelData.bigBags, "baggage_heavy")}
-            {travelData.personalItem <= 0 && travelData.bigBags <= 0 && (
-              <TouchableIcon
-                value={true}
-                type={"noBaggage"}
-                style={{}}
-                sizeIcon={7}
-              />
+          <View style={styles.viewBorder}>
+            <ResultItemCard
+              item={dataFromApi}
+              style={{ elevation: hp(0), paddingLeft: wp(5) }}
+              seatOff={true}
+            />
+          </View>
+
+          <View style={[styles.viewVehicule, styles.viewBorder]}>
+            <Image
+              source={{
+                uri: dataFromApi.carPhoto,
+              }}
+              style={styles.teslaImage}
+            />
+            <View>
+              <Text
+                style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
+              >
+                {" "}
+                {dataFromApi.typeVehicule}
+              </Text>
+              <Text style={styles.vehicleModelColor}>
+                {dataFromApi.carColor}
+              </Text>
+            </View>
+          </View>
+
+          <Text style={styles.text_titule}>Estado asientos:</Text>
+
+          <View
+            style={[
+              styles.viewBorder,
+              {
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+              },
+            ]}
+          >
+            {passengerPictureState(
+              dataFromApi.carSeats,
+              dataFromApi.nSeatsOffered,
+              dataFromApi.nSeatsAvailable
             )}
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            paddingBottom: hp(2),
-          }}
-        >
-          <MaterialCommunityIcons name="eye" size={24} color="black" />
-          <Text style={styles.text_view}>
-            {"Visto " + travelData.views + " veces"}
-          </Text>
-        </View>
+          <View>
+            <Text style={styles.text_titule}>Preferencias:</Text>
+            <View style={styles.characteristicView}>
+              {genderComponent()}
+              {smokeComponent()}
+            </View>
 
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Iniciar proceso de reserva"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
-      </ScrollView>
+            <Text style={styles.text_titule}>Facilidades:</Text>
+            <View style={styles.characteristicView}>
+              {facilityComponent(dataFromApi.approvalIns, "approval")}
+              {facilityComponent(dataFromApi.usb, "usb")}
+              {facilityComponent(
+                dataFromApi.airConditioning,
+                "airConditioning"
+              )}
+              {!dataFromApi.airConditioning &&
+                !dataFromApi.usb &&
+                !dataFromApi.approvalIns && (
+                  <TouchableIcon
+                    value={true}
+                    type={"sadFace"}
+                    style={{}}
+                    sizeIcon={7}
+                  />
+                )}
+            </View>
+            <Text style={styles.text_titule}>Equipaje extra permitido:</Text>
+            <Text style={styles.text_subTitule}>
+              {"(Todos tienen derecho a un equipaje\n de mano)"}
+            </Text>
+            <View style={styles.characteristicView}>
+              {packageComponent(
+                dataFromApi.extraBaggage.personalItem,
+                "baggage_hand"
+              )}
+              {packageComponent(
+                dataFromApi.extraBaggage.bigBags,
+                "baggage_heavy"
+              )}
+              {dataFromApi.extraBaggage.personalItem <= 0 &&
+                dataFromApi.extraBaggage.bigBags <= 0 && (
+                  <TouchableIcon
+                    value={true}
+                    type={"noBaggage"}
+                    style={{}}
+                    sizeIcon={7}
+                  />
+                )}
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              paddingBottom: hp(2),
+            }}
+          >
+            <MaterialCommunityIcons name="eye" size={24} color="black" />
+            <Text style={styles.text_view}>
+              {"Visto " + dataFromApi.seen + " veces"}
+            </Text>
+          </View>
+
+          <View style={styles.buttonView}>
+            <ButtonLiion
+              title="Iniciar proceso de reserva"
+              styleView={styles.button}
+              onPress={() => checkValidator()}
+            />
+          </View>
+        </ScrollView>
+      )}
     </Layout>
   );
 };

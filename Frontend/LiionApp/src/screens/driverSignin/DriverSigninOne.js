@@ -27,7 +27,6 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 
 import { updateDriverStatus } from "../../api/api";
 
-
 const DriverSignupOne = () => {
   const {
     reLoadUserInfo,
@@ -107,9 +106,24 @@ const DriverSignupOne = () => {
   }, [getState2]);
 
   const updateDriverHandle = async (flag) => {
+    const driverData = {
+      car: "Tesla Model S",
+      plate: "DLJR01",
+      carPhoto:
+        "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
+      sRating: 0,
+      nRating: 0,
+      usb: true,
+      airConditioning: false,
+      carSeats: 4,
+      carColor: "Azul",
+      typeVehicule: "SUV",
+    };
+
     let [status, res] = await updateDriverStatus(flag, {
       uid: uid,
       atoken: accesstoken,
+      driverData: driverData
     });
     setLocalTrigger(!reloadTrigger);
   };

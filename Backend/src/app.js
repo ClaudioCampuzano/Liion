@@ -7,6 +7,9 @@ import index from "./routes/index"
 
 const app = express();
 
+
+//app.set('case sensitive routing', true);
+
 app.set("port", 3000);
 //Para que aplicacion puedan conectarse al servidor
 app.use(cors());

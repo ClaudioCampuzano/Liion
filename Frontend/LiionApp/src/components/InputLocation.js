@@ -5,9 +5,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import PlaceRow from "./PlaceRow";
 
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Constants from "expo-constants";
-
 import * as Location from "expo-location";
+
+import { apiKey } from "@env";
 
 const InputLocation = (props) => {
   const { style, labelO, labelD, errorText, onFocus, ...restOfProps } = props;
@@ -34,13 +34,17 @@ const InputLocation = (props) => {
     })();
   }, []);
 
-  const result = address_components =>{
+  const result = (address_components) => {
     var entries = [];
     for (var i = 0; i < address_components.length; i++) {
-      entries.push({"index": i,"long_name": address_components[i].long_name, "type": address_components[i].types[0]})
+      entries.push({
+        index: i,
+        long_name: address_components[i].long_name,
+        type: address_components[i].types[0],
+      });
     }
-    return entries
-  }
+    return entries;
+  };
 
   let color = COLORS.LEAD;
   let labelOrigin = labelO;
@@ -64,7 +68,7 @@ const InputLocation = (props) => {
             setOrigin({
               formatted_address: details.formatted_address,
               location: details.geometry.location,
-              address_components: result(details.address_components)
+              address_components: result(details.address_components),
             });
           }}
           enablePoweredByContainer={false}
@@ -87,7 +91,7 @@ const InputLocation = (props) => {
           fetchDetails
           minLength={4}
           query={{
-            key: Constants.manifest.extra.firebase.apiKey,
+            key: apiKey,
             language: "es",
             components: "country:cl",
             radius: "5",
@@ -101,7 +105,7 @@ const InputLocation = (props) => {
             setDestination({
               formatted_address: details.formatted_address,
               location: details.geometry.location,
-              address_components: result(details.address_components)
+              address_components: result(details.address_components),
             });
           }}
           enablePoweredByContainer={false}
@@ -123,7 +127,7 @@ const InputLocation = (props) => {
           minLength={4}
           fetchDetails
           query={{
-            key: Constants.manifest.extra.firebase.apiKey,
+            key: apiKey,
             language: "es",
             components: "country:cl",
           }}

@@ -12,8 +12,8 @@ export const register = async (req, res) => {
     birth,
     password,
     gender,
-    isPassenger,
     isDriver,
+    photo,
   } = req.body;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -26,8 +26,8 @@ export const register = async (req, res) => {
     isDate(birth) &&
     isLength(password, { min: 8 }) &&
     passwordRegex.test(password) &&
-    isPassenger &&
-    !isDriver
+    !isDriver &&
+    !isEmpty(photo)
   ) {
     try {
       const fireRes = await auth.createUser({
@@ -47,11 +47,11 @@ export const register = async (req, res) => {
           run: run,
           birth: birth,
           gender: gender,
-          isPassenger: isPassenger,
           isDriver: isDriver,
           driverData: {},
           sRating: 0,
           nRating: 0,
+          photo: photo,
         });
         res.json({ message: "Successful Registration" });
       } catch (e) {
@@ -95,19 +95,10 @@ export const getUserData = async (req, res) => {
 };
 
 export const updateUserDriverStatus = async (req, res) => {
-  let uid = req.body.uid;
-  let flagDriver = req.body.flagDriver;
+  const { uid, flagDriver, driverData } = req.body;
+
   if (uid && flagDriver) {
     try {
-      const driverData = {
-        car: "Tesla Model S",
-        carcolor: "Gris",
-        carSeats:4,
-        plate: "DLJR01",
-        url: "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/compositor-1623493959.jpg?crop=0.628xw:0.628xh;0.190xw,0.222xh&resize=980:*",
-        sRating: 0,
-        nRating: 0,
-      };
       const q = await db
         .collection("users")
         .doc(uid)
@@ -173,18 +164,15 @@ export const updateUserRating = async (req, res) => {
 };
 
 export const createTravel = async (req, res) => {
-  //testing modal only
-  //res.status(403).send("Error");
-  
   const travelsTimes = [];
-  const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
+  var usefullTravelData = req.body;
+  delete usefullTravelData.atoken;
+  /* const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
     driverUID,
     driverData,
     travelData,
-  }))(req.body);
-  //console.log(usefullTravelData)
+  }))(req.body);*/
   try {
-    //console.log(usefullTravelData.driverUID)
     const docRef = db.collection("travels");
     const traveldoc = await docRef
       .where("driverUID", "==", usefullTravelData.driverUID)
@@ -192,33 +180,29 @@ export const createTravel = async (req, res) => {
     traveldoc.forEach((x) => {
       //travelsTimes.push([x.data().travelData.date, x.data().travelData.time, x.data().travelData.duration])
       travelsTimes.push([
-        moment(
-          x.data().travelData.date + " " + x.data().travelData.time,
-          "DD/MM/YYYY HH:mm"
-        ),
-        x.data().travelData.duration,
+        moment(x.data().date + " " + x.data().startTime, "DD/MM/YYYY HH:mm"),
+        x.data().durationMinutes,
       ]);
     });
-    //console.log(travelsTimes)
     let problems = false;
     let currentTimeTravelObject = moment(
-      usefullTravelData.travelData.date +
-        " " +
-        usefullTravelData.travelData.time,
+      usefullTravelData.date + " " + usefullTravelData.startTime,
       "DD/MM/YYYY HH:mm"
     );
+
     let nextTimeTravelObject = currentTimeTravelObject.clone();
-    nextTimeTravelObject.add(usefullTravelData.travelData.duration, "minutes");
+    nextTimeTravelObject.add(usefullTravelData.durationMinutes, "minutes");
     travelsTimes.forEach((x) => {
       let momentObej1 = x[0].clone();
       momentObej1.add(x[1], "minutes");
       if (
         currentTimeTravelObject.isBetween(x[0], momentObej1) ||
-        nextTimeTravelObject.isBetween(x[0], momentObej1)
-      ) {
+        nextTimeTravelObject.isBetween(x[0], momentObej1) ||
+        currentTimeTravelObject.isSame(x[0])
+      )
         problems = true;
-      }
     });
+
     if (problems)
       res.status(403).send("Ya tienes un viaje en ese rango de tiempo");
     else {
@@ -229,5 +213,254 @@ export const createTravel = async (req, res) => {
     console.log(e);
     res.status(403).send("Error");
   }
-
 };
+
+export const getTravels = async (req, res) => {
+  const resultDataHard = [];
+  const searchParams = JSON.parse(req.query["0"]);
+  try {
+    var men, woman, allGender;
+    switch (searchParams.genderApplicant) {
+      case "Otro":
+        men = false;
+        woman = false;
+        allGender = true;
+        break;
+      case "Mujer":
+        men = false;
+        woman = true;
+        allGender = true;
+        break;
+      case "Hombre":
+        men = true;
+        woman = false;
+        allGender = true;
+        break;
+      default:
+        men = true;
+        woman = true;
+        allGender = true;
+    }
+    const docRef = db.collection("travels");
+    const requestRef = db.collection("requestTravel");
+
+    const snapshot = await docRef
+      .where("nSeatsAvailable", ">", 0)
+      .where("date", "==", searchParams.date)
+      .where("localityDestination", "==", searchParams.localityDestination)
+      .where("localityOrigin", "==", searchParams.localityOrigin)
+      .where("status", "==", "open")
+      .where("onlyMen", "==", men)
+      .where("onlyWoman", "==", woman)
+      .where("allGender", "==", allGender)
+      .get();
+
+    const initialSearchTime = moment(searchParams.time, "HH:mm");
+
+    if (!snapshot.empty)
+      for (const doc of snapshot.docs) {
+        var userInTravel = false;
+        for (var i = 0; i < doc.data().requestingPassengers.length; i++) {
+          var requestObj = (
+            await requestRef.doc(doc.data().requestingPassengers[i]).get()
+          ).data();
+          if (requestObj.passengerUID === searchParams.uid) {
+            userInTravel = true;
+            break;
+          }
+        }
+
+        if (
+          moment(doc.data().startTime, "HH:mm").isSameOrAfter(initialSearchTime)
+        )
+          if (!userInTravel) {
+            var driverRef = await db
+              .collection("users")
+              .doc(doc.data().driverUID)
+              .get();
+
+            driverRef.exists &&
+              doc.data().driverUID != searchParams.uid &&
+              resultDataHard.push({
+                id: doc.id,
+                costPerSeat: doc.data().costPerSeat,
+                extraBaggage: doc.data().extraBaggage,
+                approvalIns: doc.data().approvalIns,
+                smoking: doc.data().smoking,
+                onlyWoman: doc.data().onlyWoman,
+                allGender: doc.data().allGender,
+                onlyWoman: doc.data().onlyWoman,
+                nSeatsAvailable: doc.data().nSeatsAvailable,
+                date: doc.data().date,
+                startTime: doc.data().startTime,
+                destinationDetails: doc.data().destinationDetails,
+                originDetails: doc.data().originDetails,
+                durationMinutes: doc.data().durationMinutes,
+                nameDriver:
+                  driverRef.data().name + " " + driverRef.data().apellido,
+                driverPhoto: driverRef.data().photo,
+                nRating: driverRef.data().driverData.nRating,
+                sRating: driverRef.data().driverData.sRating,
+              });
+          }
+      }
+    const requiredParameters = JSON.stringify(resultDataHard);
+    res.send(requiredParameters);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+};
+
+export const getDetailsOfTravel = async (req, res) => {
+  var travelId = req.params.travelId;
+  try {
+    var travelRef = await db.collection("travels").doc(travelId).get();
+    var driverRef = await db
+      .collection("users")
+      .doc(travelRef.data().driverUID)
+      .get();
+
+    const objSend = {
+      seen: travelRef.data().seen,
+      routeCoordinates: travelRef.data().routeCoordinates,
+      nSeatsOffered: travelRef.data().nSeatsOffered,
+      usb: driverRef.data().driverData.usb,
+      airConditioning: driverRef.data().driverData.airConditioning,
+      carSeats: driverRef.data().driverData.carSeats,
+      carColor: driverRef.data().driverData.carColor,
+      typeVehicule: driverRef.data().driverData.typeVehicule,
+      carPhoto: driverRef.data().driverData.carPhoto,
+    };
+    const requiredParameters = JSON.stringify(objSend);
+    res.send(requiredParameters);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+};
+
+export const UpdateSeenTravel = async (req, res) => {
+  var { travelId } = req.body;
+  try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const response = await travelRef.update({
+      seen: FieldValue.increment(1),
+    });
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+};
+
+export async function registerPassengerRequest(req, res) {
+  const { travelId, passengerUID, extraBaggage, pickUp, dropOff, payMode } =
+    req.body;
+  try {
+    const travelRef = db.collection("travels");
+    const requestRef = db.collection("requestTravel");
+
+    var bigBags = extraBaggage.bigBags ? -1 : 0;
+    var personalItem = extraBaggage.personalItem ? -1 : 0;
+
+    //Se comprueba si es posible agregar equipaje al viaje
+    const travelObj = (await travelRef.doc(travelId).get()).data();
+    if (
+      (extraBaggage.bigBags && travelObj.extraBaggage.bigBags == 0) ||
+      (extraBaggage.personalItem && travelObj.extraBaggage.personalItem == 0)
+    ) {
+      res
+        .status(403)
+        .json({ sucess: false, error: "Equipaje extra no disponible" });
+      return;
+    }
+
+    //Se comprueba que no tiene ya una solicitud para ese viaje
+    for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
+      var requestObj = (
+        await requestRef.doc(travelObj.requestingPassengers[i]).get()
+      ).data();
+      if (requestObj.passengerUID === passengerUID) {
+        res.status(403).json({
+          sucess: false,
+          error: "Ya tienes una solicitud en este viaje",
+        });
+        return;
+      }
+    }
+
+    //Se comprueba que queden asientos disponibles
+    if (travelObj.nSeatsAvailable <= 0) {
+      res.status(403).json({
+        sucess: false,
+        error: "Se acabaron los asientos disponibles",
+      });
+      return;
+    }
+
+    //Se comprueba que el viaje no le calze en el horario de otro viaje ya inscrito
+    const requestPassenger = await requestRef
+      .where("passengerUID", "==", passengerUID)
+      .where("status", "==", "accepted")
+      .get();
+
+    if (!requestPassenger.empty)
+      for (const doc of requestPassenger.docs) {
+        var travelsPassenger = await travelRef
+          .where("requestingPassengers", "array-contains", doc.id)
+          .where("status", "in", ["open", "ongoing"])
+          .get();
+        for (const docT of travelsPassenger.docs) {
+          var timeTravel = moment(
+            docT.data().date + " " + docT.data().startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+          var nextTimeTravel = timeTravel.clone();
+          nextTimeTravel.add(docT.data().durationMinutes, "minutes");
+
+          var timeTravelCreate = moment(
+            travelObj.date + " " + travelObj.startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+
+          var nextTimeTravelCreate = timeTravelCreate.clone();
+          nextTimeTravelCreate.add(travelObj.durationMinutes, "minutes");
+
+          if (
+            timeTravelCreate.isBetween(timeTravel, nextTimeTravel) ||
+            nextTimeTravelCreate.isBetween(timeTravel, nextTimeTravel) ||
+            timeTravelCreate.isSame(timeTravel)
+          ) {
+            res.status(403).json({
+              sucess: false,
+              error: "Ya tiene un viaje en este horario",
+            });
+            return;
+          }
+        }
+      }
+
+    //las solicitudes de viaje pueden estar, accepted, refused, pending
+    //En esta mpv todas se registran como accepted
+    const requestRes = await requestRef.add({
+      passengerUID: passengerUID,
+      extraBaggage: extraBaggage,
+      pickUp: pickUp,
+      dropOff: dropOff,
+      payMode: payMode,
+      travelId: travelId,
+      status: "accepted",
+    });
+    const travelRes = await travelRef.doc(travelId).update({
+      requestingPassengers: FieldValue.arrayUnion(requestRes.id),
+      "extraBaggage.bigBags": FieldValue.increment(bigBags),
+      "extraBaggage.personalItem": FieldValue.increment(personalItem),
+      nSeatsAvailable: FieldValue.increment(-1),
+    });
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}

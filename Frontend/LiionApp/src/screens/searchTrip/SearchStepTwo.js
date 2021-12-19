@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import moment from "moment";
@@ -14,332 +14,19 @@ import ResultItemCard from "../../components/ResultItemCard";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
+import { getTravels } from "../../api/api";
+import ModalPopUp from "../../components/ModalPopUp";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
-  const [waitingLogin, setWaitingLogin] = useState(false);
-
-  const resultDataHard = [
-    {
-      id: 1,
-      driverData: {
-        photo:
-          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Carlos Elgueta",
-        nRating: 14,
-        sRating: 50,
-      },
-
-      travelData: {
-        bigBags: 0,
-        personalItem: 0,
-
-        onlyMen: false,
-        views: 0,
-        onlyWoman: true,
-        allGender: false,
-        smoking: true,
-        approvalIns: false,
-        price: 3000,
-        seatsAvaliable: 2,
-        date: "20/11/2021",
-        time: "22:43",
-        duration: 10.7833333,
-        addresses: {
-          origin: "Badajoz, Las Condes",
-          destination: "Villa Alemana, Valparaiso",
-        },
-        coordinates: [
-          {
-            latitude: -33.04526,
-            longitude: -71.40015,
-          },
-          {
-            latitude: -33.04531,
-            longitude: -71.40009,
-          },
-          {
-            latitude: -33.04581,
-            longitude: -71.40012,
-          },
-          {
-            latitude: -33.04582,
-            longitude: -71.40027,
-          },
-          {
-            latitude: -33.04589,
-            longitude: -71.40107,
-          },
-          {
-            latitude: -33.04711,
-            longitude: -71.4012,
-          },
-          {
-            latitude: -33.04741,
-            longitude: -71.40121,
-          },
-          {
-            latitude: -33.04812,
-            longitude: -71.40126,
-          },
-          {
-            latitude: -33.04805,
-            longitude: -71.3999,
-          },
-          {
-            latitude: -33.04919,
-            longitude: -71.39999,
-          },
-        ],
-      },
-    },
-    {
-      id: 0,
-      driverData: {
-        photo:
-          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Luis Araya",
-        nRating: 10,
-        sRating: 50,
-        carcolor: "Gris",
-        typeVehicule: "SUV",
-        car: "Tesla Model S",
-        plate: "DLJR01",
-        usb: true,
-        airConditioning: true,
-        nPassengerSeats: 5,
-      },
-
-      travelData: {
-        nOfSeats: 3,
-        seatsAvaliable: 1,
-
-        bigBags: 0,
-        personalItem: 1,
-        onlyMen: false,
-        onlyWoman: false,
-        allGender: true,
-        smoking: false,
-        approvalIns: false,
-        price: 5000,
-        views: 0,
-        date: "20/11/2021",
-        time: "12:43",
-        duration: 85.7833333,
-        addresses: {
-          origin: "Badajoz, Las Condes",
-          destination: "San Fernando, Rancagua",
-        },
-        coordinates: [
-          {
-            latitude: -33.04526,
-            longitude: -71.40015,
-          },
-          {
-            latitude: -33.04531,
-            longitude: -71.40009,
-          },
-          {
-            latitude: -33.04581,
-            longitude: -71.40012,
-          },
-          {
-            latitude: -33.04582,
-            longitude: -71.40027,
-          },
-          {
-            latitude: -33.04589,
-            longitude: -71.40107,
-          },
-          {
-            latitude: -33.04711,
-            longitude: -71.4012,
-          },
-          {
-            latitude: -33.04741,
-            longitude: -71.40121,
-          },
-          {
-            latitude: -33.04812,
-            longitude: -71.40126,
-          },
-          {
-            latitude: -33.04805,
-            longitude: -71.3999,
-          },
-          {
-            latitude: -33.04919,
-            longitude: -71.39999,
-          },
-        ],
-      },
-    },
-    {
-      id: 2,
-
-      driverData: {
-        photo:
-          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Claudio Campuzano",
-        nRating: 28,
-        sRating: 50,
-        carcolor: "Gris",
-        typeVehicule: "Sedan",
-        car: "Tesla Model S",
-        plate: "DLJR01",
-        usb: false,
-        airConditioning: false,
-        nPassengerSeats: 5,
-      },
-
-      travelData: {
-        bigBags: 0,
-        personalItem: 0,
-        views: 5,
-        nOfSeats: 3,
-        seatsAvaliable: 3,
-
-        onlyMen: true,
-        onlyWoman: false,
-        allGender: false,
-        smoking: true,
-        approvalIns: false,
-        price: 2000,
-        date: "20/11/2021",
-        time: "15:43",
-        duration: 35.7833333,
-        addresses: {
-          origin: "Badajoz, Las Condes",
-          destination: "Quilpue, Valparaiso",
-        },
-        coordinates: [
-          {
-            latitude: -33.04526,
-            longitude: -71.40015,
-          },
-          {
-            latitude: -33.04531,
-            longitude: -71.40009,
-          },
-          {
-            latitude: -33.04581,
-            longitude: -71.40012,
-          },
-          {
-            latitude: -33.04582,
-            longitude: -71.40027,
-          },
-          {
-            latitude: -33.04589,
-            longitude: -71.40107,
-          },
-          {
-            latitude: -33.04711,
-            longitude: -71.4012,
-          },
-          {
-            latitude: -33.04741,
-            longitude: -71.40121,
-          },
-          {
-            latitude: -33.04812,
-            longitude: -71.40126,
-          },
-          {
-            latitude: -33.04805,
-            longitude: -71.3999,
-          },
-          {
-            latitude: -33.04919,
-            longitude: -71.39999,
-          },
-        ],
-      },
-    },
-    {
-      id: 3,
-
-      driverData: {
-        photo:
-          "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-        nameConductor: "Bryan Rosales",
-        nRating: 20,
-        sRating: 50,
-        carcolor: "Gris",
-        car: "Tesla Model S",
-        plate: "DLJR01",
-      },
-
-      travelData: {
-        bigBags: 0,
-        views: 9,
-
-        personalItem: 0,
-        onlyMen: false,
-        onlyWoman: true,
-        allGender: false,
-        smoking: false,
-        approvalIns: true,
-        price: 1000,
-        seatsAvaliable: 5,
-        date: "20/11/2022",
-        time: "10:43",
-        duration: 20.7833333,
-        addresses: {
-          origin: "Badajoz, Las Condes",
-          destination: "Vallenar, Atacama",
-        },
-        coordinates: [
-          {
-            latitude: -33.04526,
-            longitude: -71.40015,
-          },
-          {
-            latitude: -33.04531,
-            longitude: -71.40009,
-          },
-          {
-            latitude: -33.04581,
-            longitude: -71.40012,
-          },
-          {
-            latitude: -33.04582,
-            longitude: -71.40027,
-          },
-          {
-            latitude: -33.04589,
-            longitude: -71.40107,
-          },
-          {
-            latitude: -33.04711,
-            longitude: -71.4012,
-          },
-          {
-            latitude: -33.04741,
-            longitude: -71.40121,
-          },
-          {
-            latitude: -33.04812,
-            longitude: -71.40126,
-          },
-          {
-            latitude: -33.04805,
-            longitude: -71.3999,
-          },
-          {
-            latitude: -33.04919,
-            longitude: -71.39999,
-          },
-        ],
-      },
-    },
-  ];
+  const { userFirestoreData, uid, accesstoken } = useContext(GlobalContext);
   const { addresses, date, time } = route.params;
+  const [loading, setLoading] = useState(true);
+
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalError, setModalError] = useState(false);
   const [resultData, setResultData] = useState([]);
   const [resultOrder, setResultOrder] = useState("");
   const [lengthDataReady, setLengthDataReady] = useState(0);
-
   const [preferences, setPreferences] = useState({
     baggage_hand: false,
     baggage_heavy: false,
@@ -349,62 +36,82 @@ const SearchStepTwo = ({ navigation, route }) => {
     approvalIns: false,
     seeAll: true,
   });
+
+  const [dataFromApi,setDataFromApi] = useState([]);
   useEffect(() => {
-    let listReady = sortFilterResult(
-      resultDataHard,
-      resultOrder,
-      userFirestoreData.gender
-    );
-    setResultData(listReady);
-    setLengthDataReady(listReady.length);
-  }, [preferences, resultOrder]);
+    (async function () {
+      var dataRequest = {
+        //atoken: accesstoken,
+        uid: uid,
+        localityDestination: searchCity(
+          addresses.destination.address_components
+        ),
+        localityOrigin: searchCity(addresses.origin.address_components),
+        date: date,
+        time: time,
+        genderApplicant: userFirestoreData.gender
+      };
+
+      const [resFlag, resMsg] = await getTravels(dataRequest);
+      resFlag ? setDataFromApi(resMsg) : setModalError(true);
+      setLoading(false);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (dataFromApi.length > 0) {
+      let listReady = sortFilterResult(
+        dataFromApi,
+        resultOrder,
+        userFirestoreData.gender
+      );
+      setResultData(listReady);
+      setLengthDataReady(listReady.length);
+    }
+  }, [dataFromApi,preferences, resultOrder]);
 
   const sortFilterResult = (myArray, typeOrder, gender) => {
     ///Ordenar por precio o por precio
     let order = myArray.sort((a, b) => {
       const result =
         typeOrder === "Precio"
-          ? parseFloat(a.travelData.price) - parseFloat(b.travelData.price)
-          : parseFloat(b.driverData.sRating / b.driverData.nRating) -
-            parseFloat(a.driverData.sRating / a.driverData.nRating);
+          ? parseFloat(a.costPerSeat) - parseFloat(b.costPerSeat)
+          : parseFloat(b.sRating / b.nRating) -
+            parseFloat(a.sRating / a.nRating);
       return result;
     });
 
     //Filtro de genero
     if (gender === "Hombre")
       order = order.filter((a) => {
-        return preferences.gender
-          ? a.travelData.onlyMen
-          : a.travelData.onlyMen || a.travelData.allGender;
+        return preferences.gender ? a.onlyMen : a.onlyMen || a.allGender;
       });
     else if (gender === "Mujer")
       order = order.filter((a) => {
-        return preferences.gender
-          ? a.travelData.onlyWoman
-          : a.travelData.onlyWoman || a.travelData.allGender;
+        return preferences.gender ? a.onlyWoman : a.onlyWoman || a.allGender;
       });
 
     if (preferences.noSmoking)
       order = order.filter((a) => {
-        return !a.travelData.smoking;
+        return !a.smoking;
       });
     if (preferences.smoking)
       order = order.filter((a) => {
-        return a.travelData.smoking;
+        return a.smoking;
       });
     if (preferences.approvalIns)
       order = order.filter((a) => {
-        return a.travelData.approvalIns;
+        return a.approvalIns;
       });
 
     if (preferences.baggage_hand)
       order = order.filter((a) => {
-        return a.travelData.personalItem > 0;
+        return a.extraBaggage.personalItem > 0;
       });
 
     if (preferences.baggage_heavy)
       order = order.filter((a) => {
-        return a.travelData.bigBags > 0;
+        return a.extraBaggage.bigBags > 0;
       });
     return order;
   };
@@ -426,9 +133,14 @@ const SearchStepTwo = ({ navigation, route }) => {
     );
   };
 
+  const modalHandler = () => {
+    navigation.goBack();
+    setModalVisible(false);
+  };
+
   return (
     <Layout>
-      {waitingLogin ? (
+      {loading ? (
         <Loading />
       ) : (
         <>
@@ -438,6 +150,13 @@ const SearchStepTwo = ({ navigation, route }) => {
             onChangePreferences={(value) => setPreferences(value)}
             gender={userFirestoreData.gender}
           />
+          <ModalPopUp
+            visible={modalError}
+            setModalVisible={setModalError}
+            customFunction={modalHandler}
+          >
+            Error al intentar recuperar datos, intente en otro momento
+          </ModalPopUp>
           <View style={styles.titleView}>
             <Text style={styles.textAddress}>
               {searchCity(addresses.origin.address_components) +
@@ -446,7 +165,7 @@ const SearchStepTwo = ({ navigation, route }) => {
             </Text>
             <Text style={styles.textDate}>
               {moment(date, "DD-MM-YYYY").format("LL") +
-                " a las " +
+                " desde las " +
                 moment(time, "hh:mm").format("LT")}
             </Text>
           </View>

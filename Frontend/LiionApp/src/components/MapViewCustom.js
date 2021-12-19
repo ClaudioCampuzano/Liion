@@ -3,11 +3,12 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import Constants from "expo-constants";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
+
+import { apiKey } from "@env";
 
 const MapViewCustom = (props) => {
   const { dimensions, coordinates, mapDirections, showGps, ...restOfProps } =
@@ -131,7 +132,7 @@ const MapViewCustom = (props) => {
                   coordinates.length > 2 ? coordinates.slice(1, -1) : undefined
                 }
                 destination={coordinates[coordinates.length - 1]}
-                apikey={Constants.manifest.extra.firebase.apiKey} // insert your API Key here
+                apikey={apiKey} // insert your API Key here
                 strokeWidth={5}
                 strokeColor={COLORS.TURKEY_CLEAR}
                 language={"es"}

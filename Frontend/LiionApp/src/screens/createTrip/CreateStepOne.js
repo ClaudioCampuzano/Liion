@@ -13,7 +13,7 @@ const CreateStepOne = ({ navigation }) => {
   const [createValues, setSearchValues] = useState({
     addresses: null,
     date: null,
-    time: null,
+    startTime: null,
   });
 
   const [errorDate, SetErrorDate] = useState(null);
@@ -32,16 +32,33 @@ const CreateStepOne = ({ navigation }) => {
 
   useEffect(() => {
     if (createValues.date) SetErrorDate(null);
-    if (createValues.time) SetErrorTime(null);
+    if (createValues.startTime) SetErrorTime(null);
     if (createValues.addresses) SetErrorAddresses(null);
   }, [createValues]);
 
+  const searchCity = (myArray) => {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].type === "locality") return myArray[i].long_name;
+    }
+  };
+
   const checkValidator = () => {
     if (!createValues.date) SetErrorDate("Falta la fecha");
-    if (!createValues.time) SetErrorTime("Falta la hora");
+    if (!createValues.startTime) SetErrorTime("Falta la hora");
     if (!createValues.addresses) SetErrorAddresses("Falta las direcciones");
-    if (createValues.addresses && createValues.date && createValues.time)
-      navigation.navigate("CreateStepTwo", { createValues });
+    if (createValues.addresses && createValues.date && createValues.startTime)
+      navigation.navigate("CreateStepTwo", {
+        originDetails:createValues.addresses.origin,
+        destinationDetails:createValues.addresses.destination,
+        date: createValues.date,
+        startTime: createValues.startTime,
+        localityOrigin: searchCity(
+          createValues.addresses.origin.address_components
+        ),
+        localityDestination: searchCity(
+          createValues.addresses.destination.address_components
+        ),
+      });
   };
   return (
     <Layout>
@@ -70,7 +87,7 @@ const CreateStepOne = ({ navigation }) => {
           <InputDateTime
             style={styles.inputDateTimeRight}
             onDataChange={(value) => {
-              changeValuesHandler("time", value.local().format("HH:mm"));
+              changeValuesHandler("startTime", value.local().format("HH:mm"));
             }}
             errorText={errorTime}
             mode="time"
@@ -97,11 +114,7 @@ const CreateStepOne = ({ navigation }) => {
           styleView={styles.button}
           onPress={() => checkValidator()}
         />
-        <TabDownButton
-          style={{ margin: 0 }}
-          type={"create"}
-          sizeIcon={8}
-        />
+        <TabDownButton style={{ margin: 0 }} type={"create"} sizeIcon={8} />
       </View>
     </Layout>
   );
