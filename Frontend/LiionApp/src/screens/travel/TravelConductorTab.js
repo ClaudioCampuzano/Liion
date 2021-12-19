@@ -9,6 +9,7 @@ import ModalPopUp from "../../components/ModalPopUp";
 import Loading from "../../components/Loading";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
+import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelConductorTab = () => {
   const { uid } = useContext(GlobalContext);
@@ -28,6 +29,19 @@ const TravelConductorTab = () => {
   const modalHandler = () => {
     navigation.goBack();
     setModalVisible(false);
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <TravelResultsCard
+        item={item}
+        driverOn={true}
+
+/*         onPress={() =>
+          navigation.navigate("SearchStepThree", { ...item, addresses })
+        } */
+      />
+    );
   };
 
   return (
@@ -54,7 +68,7 @@ const TravelConductorTab = () => {
               <></>
             ) : (
               /*               <FlatList
-                data={resultData}
+                data={dataFromApi}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
               /> */

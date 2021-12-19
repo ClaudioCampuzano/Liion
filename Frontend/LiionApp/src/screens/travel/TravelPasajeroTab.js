@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import Layout from "../../components/Layout";
 import TabDownButton from "../../components/TabDownButton";
@@ -9,6 +9,7 @@ import ModalPopUp from "../../components/ModalPopUp";
 import Loading from "../../components/Loading";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
+import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = () => {
   const { uid } = useContext(GlobalContext);
@@ -28,6 +29,18 @@ const TravelPasajeroTab = () => {
   const modalHandler = () => {
     navigation.goBack();
     setModalVisible(false);
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <TravelResultsCard
+        item={item}
+        driverOn={false}
+        /*         onPress={() =>
+          navigation.navigate("SearchStepThree", { ...item, addresses })
+        } */
+      />
+    );
   };
 
   return (
@@ -51,12 +64,11 @@ const TravelPasajeroTab = () => {
             ]}
           >
             {dataFromApi.length > 0 ? (
-              <></>
-/*               <FlatList
-                data={resultData}
+              <FlatList
+                data={dataFromApi}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-              /> */
+              />
             ) : (
               <TouchableIcon
                 value={true}
@@ -66,7 +78,6 @@ const TravelPasajeroTab = () => {
               />
             )}
           </View>
-
 
           <View style={styles.buttonView}>
             <TabDownButton

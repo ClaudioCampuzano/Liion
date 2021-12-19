@@ -501,6 +501,7 @@ export async function getTravelsPassenger(req, res) {
               nRating: driverRef.data().driverData.nRating,
               sRating: driverRef.data().driverData.sRating,
               status: travelData.data().status,
+              statusRequest: doc.data().status,
             });
         }
       }
