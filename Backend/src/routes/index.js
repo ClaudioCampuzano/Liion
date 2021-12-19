@@ -10,6 +10,8 @@ import {
   getDetailsOfTravel,
   UpdateSeenTravel,
   registerPassengerRequest,
+  getTravelsPassenger,
+  getTravelsDriver,
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -26,9 +28,14 @@ router.post("/createTravel", createTravel);
 
 router.post("/getUserData", checkIsAuth, getUserData);
 
+//Metodos implicados en la busqueda de viajes
 router.get("/getTravels", getTravels);
 router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
 router.patch("/UpdateSeenTravel", UpdateSeenTravel);
 router.post("/registerPassengerRequest", registerPassengerRequest);
+
+//Metodos implicados en el listado de viajes de pasajero y conductor
+router.get("/getTravelsPassenger/:userUID", getTravelsPassenger);
+router.get("/getTravelsDriver/:userUID", getTravelsDriver);
 
 export default router;

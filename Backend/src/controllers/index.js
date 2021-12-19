@@ -464,3 +464,82 @@ export async function registerPassengerRequest(req, res) {
     res.status(500).send("Error");
   }
 }
+
+export async function getTravelsPassenger(req, res) {
+  var passengerUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var requestRef = await db
+      .collection("requestTravel")
+      .where("passengerUID", "==", passengerUID)
+      .get();
+
+    if (!requestRef.empty)
+      for (const doc of requestRef.docs) {
+        var travelData = await db
+          .collection("travels")
+          .doc(doc.data().travelId)
+          .get();
+
+        if (travelData.exists) {
+          var driverRef = await db
+            .collection("users")
+            .doc(travelData.data().driverUID)
+            .get();
+
+          driverRef.exists &&
+            resultData.push({
+              id: travelData.id,
+              date: travelData.data().date,
+              startTime: travelData.data().startTime,
+              destinationDetails: travelData.data().destinationDetails,
+              originDetails: travelData.data().originDetails,
+              durationMinutes: travelData.data().durationMinutes,
+              nameDriver:
+                driverRef.data().name + " " + driverRef.data().apellido,
+              driverPhoto: driverRef.data().photo,
+              nRating: driverRef.data().driverData.nRating,
+              sRating: driverRef.data().driverData.sRating,
+              status: travelData.data().status,
+            });
+        }
+      }
+    const requiredParameters = JSON.stringify(resultData);
+    res.send(requiredParameters);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}
+
+export async function getTravelsDriver(req, res) {
+  var driverUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var travelRef = await db
+      .collection("travels")
+      .where("driverUID", "==", driverUID)
+      .get();
+
+    if (!travelRef.empty)
+      for (const doc of travelRef.docs) {
+        resultData.push({
+          id: doc.id,
+          date: doc.data().date,
+          startTime: doc.data().startTime,
+          destinationDetails: doc.data().destinationDetails,
+          originDetails: doc.data().originDetails,
+          durationMinutes: doc.data().durationMinutes,
+          status: doc.data().status,
+          nSeatsAvailable: doc.data().nSeatsAvailable,
+          nSeatsOffered: doc.data().nSeatsOffered,
+        });
+      }
+
+    const requiredParameters = JSON.stringify(resultData);
+    res.send(requiredParameters);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
+}
