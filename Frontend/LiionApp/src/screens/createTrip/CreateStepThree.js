@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import Layout from "../../components/Layout";
@@ -6,8 +6,10 @@ import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import TouchableIcon from "../../components/TouchableIcon";
 import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
+import { GlobalContext } from "../../context/Provider";
 
 const CreateStepThree = ({ navigation, route }) => {
+  const { userFirestoreData } = useContext(GlobalContext);
   const [preferences, setPreferences] = useState({
     allGender: true,
     onlyWoman: false,
@@ -68,7 +70,10 @@ const CreateStepThree = ({ navigation, route }) => {
     if (preferences.onlyWoman) dataAddTravel.genderPreference = "onlyWoman";
     else if (preferences.onlyMen) dataAddTravel.genderPreference = "onlyMen";
 
-    navigation.navigate("CreateStepFour", { ...route.params, ...dataAddTravel });
+    navigation.navigate("CreateStepFour", {
+      ...route.params,
+      ...dataAddTravel,
+    });
   };
   return (
     <Layout>
@@ -89,20 +94,24 @@ const CreateStepThree = ({ navigation, route }) => {
               style={{ paddingTop: hp("1.5") }}
               sizeIcon={7}
             />
-            <TouchableIcon
-              value={preferences.onlyWoman}
-              type={"onlyWoman"}
-              onPress={() => handleGender("onlyWoman")}
-              style={{ paddingTop: hp("1.5") }}
-              sizeIcon={7}
-            />
-            <TouchableIcon
-              value={preferences.onlyMen}
-              type={"onlyMen"}
-              onPress={() => handleGender("onlyMen")}
-              style={{ paddingTop: hp("1.5") }}
-              sizeIcon={7}
-            />
+            {userFirestoreData.gender === "Mujer" && (
+              <TouchableIcon
+                value={preferences.onlyWoman}
+                type={"onlyWoman"}
+                onPress={() => handleGender("onlyWoman")}
+                style={{ paddingTop: hp("1.5") }}
+                sizeIcon={7}
+              />
+            )}
+            {userFirestoreData.gender === "Hombre" && (
+              <TouchableIcon
+                value={preferences.onlyMen}
+                type={"onlyMen"}
+                onPress={() => handleGender("onlyMen")}
+                style={{ paddingTop: hp("1.5") }}
+                sizeIcon={7}
+              />
+            )}
           </View>
           <Text style={{ ...styles.text_firstSection, paddingTop: hp("2%") }}>
             Otros:

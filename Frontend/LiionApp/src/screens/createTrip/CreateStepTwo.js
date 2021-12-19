@@ -165,7 +165,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                     leftButtonBackgroundColor={errornSeat}
                     totalHeight={hp("7%")}
                     totalWidth={wp("22%")}
-                    minValue={0}
+                    minValue={1}
                     maxValue={userFirestoreData.driverData.carSeats}
                     borderColor={COLORS.BORDER_COLOR}
                   />
