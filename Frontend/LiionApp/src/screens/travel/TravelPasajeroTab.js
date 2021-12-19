@@ -8,6 +8,7 @@ import { getTravelsPassenger } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 import Loading from "../../components/Loading";
 import { GlobalContext } from "../../context/Provider";
+import TouchableIcon from "../../components/TouchableIcon";
 
 const TravelPasajeroTab = () => {
   const { uid } = useContext(GlobalContext);
@@ -24,20 +25,49 @@ const TravelPasajeroTab = () => {
     })();
   }, []);
 
+  const modalHandler = () => {
+    navigation.goBack();
+    setModalVisible(false);
+  };
+
   return (
     <Layout>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <View
-            style={{
-              height: hp("68%"),
-              flexDirection: "column",
-            }}
+          <ModalPopUp
+            visible={modalError}
+            setModalVisible={setModalError}
+            customFunction={modalHandler}
           >
-            <Text>{dataFromApi.length}</Text>
+            Error al intentar recuperar datos, intente en otro momento
+          </ModalPopUp>
+
+          <View
+            style={[
+              styles.middleView,
+              dataFromApi.length === 0 && { justifyContent: "center" },
+            ]}
+          >
+            {dataFromApi.length > 0 ? (
+              <></>
+/*               <FlatList
+                data={resultData}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+              /> */
+            ) : (
+              <TouchableIcon
+                value={true}
+                type={"sadFace"}
+                style={{}}
+                sizeIcon={7}
+              />
+            )}
           </View>
+
+
           <View style={styles.buttonView}>
             <TabDownButton
               style={{ margin: 0 }}
@@ -60,5 +90,9 @@ const styles = StyleSheet.create({
     width: wp(100),
     justifyContent: "flex-end",
     paddingBottom: hp("1%"),
+  },
+  middleView: {
+    height: hp("65.2%"),
+    width: wp(90),
   },
 });
