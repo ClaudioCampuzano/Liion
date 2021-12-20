@@ -35,11 +35,11 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         textBar = "Reserva aceptada";
         break;
       case "refused":
-        colorBar = COLORS.GRAY;
+        colorBar = COLORS.WARN_YELLOW;
         textBar = "Reserva rechazada";
         break;
       case "pending":
-        colorBar = COLORS.WARN_YELLOW;
+        colorBar = COLORS.GRAY;
         textBar = "Reserva pendiente";
         break;
       default:
