@@ -430,11 +430,17 @@ export async function registerPassengerRequest(req, res) {
       travelId: travelId,
       status: "accepted",
     });
+
+    //Como todos los viajes son aceptados automaticamente
+    //Verificamos la cantidad de asientos disponibles, para cerrar el viaje
+    var updateStatus = travelObj.nSeatsAvailable === 1 ? "closed" : "open";
+
     const travelRes = await travelRef.doc(travelId).update({
       requestingPassengers: FieldValue.arrayUnion(requestRes.id),
       "extraBaggage.bigBags": FieldValue.increment(bigBags),
       "extraBaggage.personalItem": FieldValue.increment(personalItem),
       nSeatsAvailable: FieldValue.increment(-1),
+      status: updateStatus,
     });
     res.json({ sucess: true });
   } catch (e) {

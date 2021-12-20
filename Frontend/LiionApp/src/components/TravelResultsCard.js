@@ -13,7 +13,6 @@ import "moment/locale/es";
 moment.locale("es");
 
 const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
-
   var colorBar, textBar;
   if (driverOn)
     switch (item.status) {
@@ -21,13 +20,9 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         colorBar = COLORS.TURKEY;
         textBar = "Abierto";
         break;
-      case "ongoing":
-        colorBar = COLORS.WARN_RED;
-        textBar = "En curso";
-        break;
-      case "finished":
-        colorBar = COLORS.GRAY;
-        textBar = "Finalizado";
+      case "closed":
+        colorBar = COLORS.WARN_YELLOW;
+        textBar = "Cerrado";
         break;
       default:
         colorBar = COLORS.WHITE;
@@ -51,10 +46,13 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         colorBar = COLORS.WHITE;
         textBar = "default";
     }
-    if (item.status === "ongoing") {
-      colorBar = COLORS.WARN_RED;
-      textBar = "En curso";
-    }
+  }
+  if (item.status === "ongoing") {
+    colorBar = COLORS.WARN_RED;
+    textBar = "En curso";
+  } else if (item.status === "finished") {
+    colorBar = COLORS.GRAY;
+    textBar = "Finalizado";
   }
 
   const passengerPictureState = (item) => {
