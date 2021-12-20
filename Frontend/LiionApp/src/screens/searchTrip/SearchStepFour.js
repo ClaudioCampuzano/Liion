@@ -16,7 +16,7 @@ import { GlobalContext } from "../../context/Provider";
 
 const SearchStepFour = ({ navigation, route }) => {
   const dataTravel = route.params;
-  const { uid, userFirestoreData } = useContext(GlobalContext);
+  const { uid, userData } = useContext(GlobalContext);
 
   const [msgError, setMsgError] = useState(
     "Error al intentar registrar solicitud, intente en otro momento"

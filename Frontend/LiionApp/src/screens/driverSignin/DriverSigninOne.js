@@ -32,7 +32,7 @@ const DriverSignupOne = () => {
     reLoadUserInfo,
     loadUserFirestoreData,
     uid,
-    userFirestoreData,
+    userData,
     getState2,
     accesstoken,
     reloadTrigger,
@@ -96,7 +96,7 @@ const DriverSignupOne = () => {
   }, [files]);
 
   useEffect(() => {
-    let isDriver = userFirestoreData.isDriver;
+    let isDriver = userData.isDriver;
     let document = [...files];
 
     if (checkDriverVar(isDriver)) {
@@ -163,7 +163,7 @@ const DriverSignupOne = () => {
               />
             ))}
           </View>
-          {!checkDriverVar(userFirestoreData.isDriver) ? (
+          {!checkDriverVar(userData.isDriver) ? (
             <View style={[styles.buttonView]}>
               <ButtonLiionDisable
                 colordisable={defineColor(ready)}

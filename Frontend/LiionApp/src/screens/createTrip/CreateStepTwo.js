@@ -21,7 +21,7 @@ import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepTwo = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
+  const { userData } = useContext(GlobalContext);
   const [loading, setLoading] = useState(true);
 
   const hardCodedGpsData = useRef([
@@ -166,7 +166,7 @@ const CreateStepTwo = ({ navigation, route }) => {
                     totalHeight={hp("7%")}
                     totalWidth={wp("22%")}
                     minValue={1}
-                    maxValue={userFirestoreData.driverData.carSeats}
+                    maxValue={userData.driverData.carSeats}
                     borderColor={COLORS.BORDER_COLOR}
                   />
                 </View>

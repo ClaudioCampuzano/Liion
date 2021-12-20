@@ -20,7 +20,7 @@ import "moment/locale/es";
 moment.locale("es");
 
 const CreateStepFive = ({ navigation, route }) => {
-  const { userFirestoreData, uid, userData, accesstoken } =
+  const { userData, uid, accesstoken } =
     useContext(GlobalContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [waitingLogin, setWaitingLogin] = useState(false);
@@ -38,8 +38,8 @@ const CreateStepFive = ({ navigation, route }) => {
       photoURL,
     }))(userData);
     const driverDatas = {
-      ...userFirestoreData.driverData,
-      ...userFirestoreData,
+      ...userData.driverData,
+      ...userData,
     };
     delete driverDatas.DriverData;
     delete driverDatas.driverData;
@@ -149,19 +149,19 @@ const CreateStepFive = ({ navigation, route }) => {
               </View>
               <View style={styles.vehicleContainer}>
                 <Image
-                  source={{ uri: userFirestoreData.driverData.carPhoto }}
+                  source={{ uri: userData.driverData.carPhoto }}
                   style={styles.teslaImage}
                 />
                 <View>
                   <Text style={styles.vehicleModelTitle}>
                     {" "}
-                    {userFirestoreData.driverData.car}
+                    {userData.driverData.car}
                   </Text>
                   <Text style={styles.vehicleModelColor}>
-                    {userFirestoreData.driverData.plate}
+                    {userData.driverData.plate}
                   </Text>
                   <Text style={styles.vehicleModelColor}>
-                    {userFirestoreData.driverData.carcolor}
+                    {userData.driverData.carcolor}
                   </Text>
                 </View>
                 <View

@@ -16,12 +16,11 @@ export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
   const initialState = {
+    uid: "",
+    accesstoken: "",
+    userData: {},
     isLoggedIn: false,
     isLoadedDATA: false,
-    userData: {},
-    uid: "",
-    userFirestoreData: {},
-    accesstoken: "",
     reloadTrigger: false,
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
@@ -32,11 +31,9 @@ const GlobalProvider = ({ children }) => {
 
       if (res.hasOwnProperty("user")) {
         const profile = {
-          email: res.user.email,
           emailVerified: res.user.emailVerified,
-          lastLoginAt: res.user.lastLoginAt,
-          phoneNumber: res.user.phoneNumber,
-          photoURL: res.user.photoURL,
+          lastLoginAt: res.user.metadata.lastLoginAt,
+          createdAt: res.user.metadata.createdAt          
         };
         const uid = res.user.uid;
         authDispatch({
@@ -62,11 +59,9 @@ const GlobalProvider = ({ children }) => {
   const reLoadUserInfo = async (payload) => {
     try {
       const profile = {
-        email: payload.email,
         emailVerified: payload.emailVerified,
-        lastLoginAt: payload.lastLoginAt,
-        phoneNumber: payload.phoneNumber,
-        photoURL: payload.photoURL,
+        lastLoginAt: payload.metadata.lastLoginAt,
+        createdAt: payload.metadata.createdAt
       };
       const uid = payload.uid;
       const atoken = await payload.getIdToken(true);
@@ -99,13 +94,11 @@ const GlobalProvider = ({ children }) => {
   };
 
   const getState =  () => {
-    //console.log(data)
     const data = authDispatch({ type: GET_WHOLE_STATE });
     return data;
   };
 
   const setIsLoadedDATA = async (load) => {
-    //console.log(load)
     authDispatch({
       type: SET_IS_LOADED,
       payload: load,
@@ -123,10 +116,9 @@ const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        userData: state.userData,
         uid: state.uid,
         isLoggedIn: state.isLoggedIn,
-        userFirestoreData: state.userFirestoreData,
+        userData: state.userData,
         getState2: state,
         accesstoken: state.accesstoken,
         isLoadedDATA: state.isLoadedDATA,

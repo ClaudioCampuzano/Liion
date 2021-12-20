@@ -1,9 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
-import { ActivityIndicator, View, Image } from "react-native";
 
-import { COLORS } from "./constants/styleThemes";
 import AuthNavigator from "./navigations/AuthNavigator";
 import DrawerNavigator from "./navigations/DrawerNavigator";
 import { GlobalContext } from "./context/Provider";
@@ -12,7 +10,6 @@ import { loadFonts } from "./constants/styleThemes";
 
 import Loading from "./components/Loading";
 
-
 const Index = (props) => {
   const {
     reLoadUserInfo,
@@ -20,6 +17,7 @@ const Index = (props) => {
     loadUserFirestoreData,
     isLoadedDATA,
     setIsLoadedDATA,
+    userData,
   } = useContext(GlobalContext);
 
   const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
@@ -35,8 +33,8 @@ const Index = (props) => {
         setUser(firebaseUser);
         setIsAuthenticated(true);
         const fetchData = async () => {
-          const reload = await reLoadUserInfo(user);
           const loadfirestore = await loadUserFirestoreData(user);
+          const reload = await reLoadUserInfo(user);
           reload && loadfirestore && setIsLoadedDATA(true);
         };
         fetchData();
@@ -51,28 +49,13 @@ const Index = (props) => {
   useEffect(() => {
     if (user && !isLoggedIn) {
       const fetchData = async () => {
-        const reload = await reLoadUserInfo(user);
         const loadfirestore = await loadUserFirestoreData(user);
+        const reload = await reLoadUserInfo(user);
         reload && loadfirestore && setIsLoadedDATA(true);
       };
       fetchData();
     }
   }, [user]);
-
-  /*      useEffect(() => {
-    (async () => {
-      setIsLoaded(false);
-      const reload = await reLoadUserInfo(user);
-      const loadfirestore = await loadUserFirestoreData(user);
-      setIsLoadedDATA(true);
-      setIsLoaded(true);
-      if (reload && loadfirestore) {
-        console.log("datos cargados exitosamente load & reload");
-      }
-    })();
-  }, [reloadTrigger]);  */
-
-  //console.log(user,isLoaded,fontsLoaded,isLoadedDATA,isAuthenticated, isLoggedIn)
 
   return (
     <>
@@ -81,7 +64,7 @@ const Index = (props) => {
           {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
-        <Loading/>
+        <Loading />
       )}
     </>
   );

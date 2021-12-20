@@ -9,7 +9,7 @@ import KeyboardAvoidingWrapper from "../../components/KeyboardAvoidingWrapper";
 import { GlobalContext } from "../../context/Provider";
 
 const CreateStepThree = ({ navigation, route }) => {
-  const { userFirestoreData } = useContext(GlobalContext);
+  const { userData } = useContext(GlobalContext);
   const [preferences, setPreferences] = useState({
     allGender: true,
     onlyWoman: false,
@@ -94,7 +94,7 @@ const CreateStepThree = ({ navigation, route }) => {
               style={{ paddingTop: hp("1.5") }}
               sizeIcon={7}
             />
-            {userFirestoreData.gender === "Mujer" && (
+            {userData.gender === "Mujer" && (
               <TouchableIcon
                 value={preferences.onlyWoman}
                 type={"onlyWoman"}
@@ -103,7 +103,7 @@ const CreateStepThree = ({ navigation, route }) => {
                 sizeIcon={7}
               />
             )}
-            {userFirestoreData.gender === "Hombre" && (
+            {userData.gender === "Hombre" && (
               <TouchableIcon
                 value={preferences.onlyMen}
                 type={"onlyMen"}

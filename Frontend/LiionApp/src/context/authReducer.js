@@ -15,7 +15,7 @@ const authReducer = (state, action) => {
       return {
         ...state,
         isLoggedIn: true,
-        userData: payload.profile,
+        userData: {...state.userData, ...payload.profile},
         uid: payload.uid,
         accesstoken: payload.atoken,
       };
@@ -23,13 +23,13 @@ const authReducer = (state, action) => {
       return {
         ...state,
         isLoggedIn: false,
-        userData: null,
+        userData: {},
         uid: "",
       };
     case LOAD_FIRESTORE_DATA:
       return {
         ...state,
-        userFirestoreData: payload,
+        userData: {...state.userData, ...payload},
       };
     case GET_WHOLE_STATE:
       return state;

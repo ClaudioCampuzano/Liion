@@ -9,7 +9,7 @@ import { GlobalContext } from "../context/Provider";
 
 const TabDownButton = (props) => {
   const { type, style, sizeIcon, ...restOfProps } = props;
-  const { userFirestoreData } = useContext(GlobalContext);
+  const { userData } = useContext(GlobalContext);
   const navigation = useNavigation();
 
   var colorSearch = COLORS.LIGHT_LEAD;
@@ -70,7 +70,7 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-      {userFirestoreData.isDriver && 
+      {userData.isDriver && 
         <TouchableWithoutFeedback
           disabled={stateCreate}
           onPress={() => navigation.navigate("CreateNavigator")}

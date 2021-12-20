@@ -15,7 +15,7 @@ import { GlobalContext } from "../../context/Provider";
 import { EmailVerification } from "../../firebase/Auth";
 
 const DrawerContent = (props) => {
-  const { logoutUser, userData, userFirestoreData } = useContext(GlobalContext);
+  const { logoutUser, userData } = useContext(GlobalContext);
 
   return (
     <View style={{ flex: 1 }}>
@@ -24,13 +24,13 @@ const DrawerContent = (props) => {
           <View style={styles.viewUserInfo}>
             <Avatar.Image
               source={{
-                uri: userFirestoreData.photo,
+                uri: userData.photo,
               }}
               size={hp("12")}
             />
             <View style={styles.viewLabelName}>
               <Title style={styles.labelName}>
-                {userFirestoreData.name + " " + userFirestoreData.apellido}
+                {userData.name + " " + userData.apellido}
               </Title>
               <View style={{ flexDirection: "row" }}>
                 <MaterialIcons
@@ -39,12 +39,12 @@ const DrawerContent = (props) => {
                   color={COLORS.TURKEY}
                 />
                 <Text style={styles.labelRankings}>
-                  {userFirestoreData.nRating == 0
+                  {userData.nRating == 0
                     ? 0
                     : Math.round(
-                        userFirestoreData.sRating / userFirestoreData.nRating
+                        userData.sRating / userData.nRating
                       )}
-                  {"/5 - " + userFirestoreData.nRating + " Calificaciones"}
+                  {"/5 - " + userData.nRating + " Calificaciones"}
                 </Text>
               </View>
               <TouchableOpacity
@@ -76,7 +76,7 @@ const DrawerContent = (props) => {
               props.navigation.navigate("SearchStack");
             }}
           />
-          {userFirestoreData.isDriver ? (
+          {userData.isDriver ? (
             <DrawerItem
               style={{ marginBottom: -hp("0.5") }}
               icon={() => (

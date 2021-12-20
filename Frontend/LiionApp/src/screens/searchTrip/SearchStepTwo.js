@@ -18,7 +18,7 @@ import { getTravels } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  const { userFirestoreData, uid, accesstoken } = useContext(GlobalContext);
+  const { userData, uid, accesstoken } = useContext(GlobalContext);
   const { addresses, date, time } = route.params;
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +49,7 @@ const SearchStepTwo = ({ navigation, route }) => {
         localityOrigin: searchCity(addresses.origin.address_components),
         date: date,
         time: time,
-        genderApplicant: userFirestoreData.gender,
+        genderApplicant: userData.gender,
       };
 
       const [resFlag, resMsg] = await getTravels(dataRequest);
@@ -63,7 +63,7 @@ const SearchStepTwo = ({ navigation, route }) => {
       let listReady = sortFilterResult(
         dataFromApi,
         resultOrder,
-        userFirestoreData.gender
+        userData.gender
       );
       setResultData(listReady);
       setLengthDataReady(listReady.length);
@@ -154,7 +154,7 @@ const SearchStepTwo = ({ navigation, route }) => {
             visible={modalVisible}
             setModalVisible={setModalVisible}
             onChangePreferences={(value) => setPreferences(value)}
-            gender={userFirestoreData.gender}
+            gender={userData.gender}
           />
           <ModalPopUp
             visible={modalError}

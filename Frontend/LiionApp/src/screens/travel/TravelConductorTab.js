@@ -12,7 +12,7 @@ import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelConductorTab = () => {
-  const { uid, userFirestoreData } = useContext(GlobalContext);
+  const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
@@ -34,7 +34,7 @@ const TravelConductorTab = () => {
   const renderItem = ({ item }) => {
     return (
       <TravelResultsCard
-        item={{ ...item, carSeats: userFirestoreData.driverData.carSeats }}
+        item={{ ...item, carSeats: userData.driverData.carSeats }}
         driverOn={true}
         /*         onPress={() =>
           navigation.navigate("SearchStepThree", { ...item, addresses })

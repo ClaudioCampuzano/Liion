@@ -9,7 +9,7 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 import { GlobalContext } from "../context/Provider";
 
 const TravelTabNavigator = () => {
-  const { userFirestoreData } = useContext(GlobalContext);
+  const { userData } = useContext(GlobalContext);
 
   const trabelTab = createMaterialTopTabNavigator();
 
@@ -22,7 +22,7 @@ const TravelTabNavigator = () => {
         tabBarIndicatorStyle: { backgroundColor: COLORS.TURKEY },
       }}
     >
-      {userFirestoreData.isDriver && (
+      {userData && userData.isDriver && (
         <trabelTab.Screen
           name="TravelConductorTab"
           component={TravelConductorTab}
