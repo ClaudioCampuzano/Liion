@@ -27,7 +27,7 @@ const loadFonts = () => {
     "Gotham-SSm-Book": require("../../assets/fonts/GothamSSm-Book.ttf"),
     "Gotham-SSm-Medium": require("../../assets/fonts/GothamSSm-Medium.ttf"),
   });
-  return {fontsLoaded}
+  return fontsLoaded
 }
 
 export { COLORS, hp, wp, loadFonts };

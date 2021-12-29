@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -11,57 +11,36 @@ import { loadFonts } from "./constants/styleThemes";
 import Loading from "./components/Loading";
 
 const Index = (props) => {
-  const {
-    reLoadUserInfo,
-    isLoggedIn,
-    loadUserFirestoreData,
-    isLoadedDATA,
-    setIsLoadedDATA,
-    userData,
-  } = useContext(GlobalContext);
+  const { isLoggedIn, loadUserFirestoreData, isLoadedData } =
+    useContext(GlobalContext);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(isLoggedIn);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [userStateLoaded, setUserStateLoaded] = useState(false);
+  const [user, setUser] = useState({});
 
   const fontsLoaded = loadFonts();
 
-  const [user, setUser] = useState(null);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        setIsAuthenticated(true);
-        const fetchData = async () => {
-          const loadfirestore = await loadUserFirestoreData(user);
-          const reload = await reLoadUserInfo(user);
-          reload && loadfirestore && setIsLoadedDATA(true);
-        };
-        fetchData();
-      } else {
-        setIsAuthenticated(false);
-      }
-      setIsLoaded(true);
+      setUser(firebaseUser);
+      setUserStateLoaded(true);
     });
-    return () => unsubscribe();
-  }, [isLoggedIn]);
+
+    return () => unsubscribe;
+  }, []);
 
   useEffect(() => {
-    if (user && !isLoggedIn) {
-      const fetchData = async () => {
-        const loadfirestore = await loadUserFirestoreData(user);
-        const reload = await reLoadUserInfo(user);
-        reload && loadfirestore && setIsLoadedDATA(true);
-      };
-      fetchData();
-    }
+    (async function loadInfo() {
+      if (user) {
+        const loadFirestore = await loadUserFirestoreData(user);
+      }
+    })();
   }, [user]);
 
   return (
     <>
-      {isLoaded && fontsLoaded && (!user || isLoadedDATA) ? (
+      {fontsLoaded && userStateLoaded && (!user || isLoadedData) ? (
         <NavigationContainer>
-          {isAuthenticated ? <DrawerNavigator /> : <AuthNavigator />}
+          {isLoadedData ? <DrawerNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       ) : (
         <Loading />

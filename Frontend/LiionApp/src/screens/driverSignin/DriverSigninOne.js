@@ -29,7 +29,6 @@ import { updateDriverStatus } from "../../api/api";
 
 const DriverSignupOne = () => {
   const {
-    reLoadUserInfo,
     loadUserFirestoreData,
     uid,
     userData,
@@ -132,7 +131,6 @@ const DriverSignupOne = () => {
   useEffect(() => {
     (async () => {
       setLocalLoad(false);
-      const reload = await reLoadUserInfo(user);
       const loadfirestore = await loadUserFirestoreData(user);
       setLocalLoad(true);
     })();

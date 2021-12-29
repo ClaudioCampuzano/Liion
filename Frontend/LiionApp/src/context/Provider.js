@@ -20,7 +20,7 @@ const GlobalProvider = ({ children }) => {
     accesstoken: "",
     userData: {},
     isLoggedIn: false,
-    isLoadedDATA: false,
+    isLoadedData: false,
     reloadTrigger: false,
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
@@ -33,12 +33,14 @@ const GlobalProvider = ({ children }) => {
         const profile = {
           emailVerified: res.user.emailVerified,
           lastLoginAt: res.user.metadata.lastLoginAt,
-          createdAt: res.user.metadata.createdAt          
+          createdAt: res.user.metadata.createdAt,
         };
         const uid = res.user.uid;
+        const atoken = await res.user.getIdToken(true);
+
         authDispatch({
           type: LOGIN_SUCCESS,
-          payload: { profile: profile, uid: uid },
+          payload: { profile: profile, uid: uid, atoken: atoken },
         });
       } else throw res;
       return { state: true };
@@ -61,7 +63,7 @@ const GlobalProvider = ({ children }) => {
       const profile = {
         emailVerified: payload.emailVerified,
         lastLoginAt: payload.metadata.lastLoginAt,
-        createdAt: payload.metadata.createdAt
+        createdAt: payload.metadata.createdAt,
       };
       const uid = payload.uid;
       const atoken = await payload.getIdToken(true);
@@ -76,36 +78,47 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const loadUserFirestoreData = async (user) => {
-    const [flag, res] = await retrieveUserDataFromApi(user);
-    //console.log(res)
-    if (flag) {
-      //update estado
-      authDispatch({
-        type: LOAD_FIRESTORE_DATA,
-        payload: res,
-      });
-      return true;
-    } else {
-      //console.log(res);
+  const loadUserFirestoreData = async (payload) => {
+    try {
+      const [flag, res] = await retrieveUserDataFromApi(payload);
+      const profile = {
+        emailVerified: payload.emailVerified,
+        lastLoginAt: payload.metadata.lastLoginAt,
+        createdAt: payload.metadata.createdAt,
+      };
+      const uid = payload.uid;
+      const atoken = await payload.getIdToken(true);
+      if (flag) {
+        authDispatch({
+          type: LOAD_FIRESTORE_DATA,
+          payload: {
+            firestoreData: { ...res, ...profile },
+            uid: uid,
+            atoken: atoken,
+            isLoadedData: true,
+          },
+        });
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
       return false;
-      //nada, error no pudo actualizar datos
     }
   };
 
-  const getState =  () => {
+  const getState = () => {
     const data = authDispatch({ type: GET_WHOLE_STATE });
     return data;
   };
 
-  const setIsLoadedDATA = async (load) => {
+  const setIsLoadedData = async (load) => {
     authDispatch({
       type: SET_IS_LOADED,
       payload: load,
     });
   };
 
-  
   const updateReloadTrigger = (actualTrigger) => {
     authDispatch({
       type: TRIGGER_RELOAD,
@@ -121,10 +134,10 @@ const GlobalProvider = ({ children }) => {
         userData: state.userData,
         getState2: state,
         accesstoken: state.accesstoken,
-        isLoadedDATA: state.isLoadedDATA,
+        isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
         updateReloadTrigger,
-        setIsLoadedDATA,
+        setIsLoadedData,
         getState,
         loginUser,
         logoutUser,
