@@ -11,14 +11,14 @@ import { loadFonts } from "./constants/styleThemes";
 import Loading from "./components/Loading";
 
 const Index = (props) => {
-  const { isLoggedIn, loadUserFirestoreData, isLoadedData } =
-    useContext(GlobalContext);
+  const { loadUserFirestoreData, isLoadedData } = useContext(GlobalContext);
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   const fontsLoaded = loadFonts();
 
+  // Check user state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), (firebaseUser) => {
       setUser(firebaseUser);
@@ -28,6 +28,7 @@ const Index = (props) => {
     return () => unsubscribe;
   }, []);
 
+  // Only user change and exists load firestoreData
   useEffect(() => {
     (async function loadInfo() {
       if (user) {
@@ -36,6 +37,7 @@ const Index = (props) => {
     })();
   }, [user]);
 
+  // If fonts, userState are loaded, and if user exists, firestoreData load
   return (
     <>
       {fontsLoaded && userStateLoaded && (!user || isLoadedData) ? (

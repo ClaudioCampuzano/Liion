@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { retrieveUserDataFromApi, updateDriverStatus } from "../api/api";
+import { retrieveUserDataFromApi } from "../api/api";
 
 import authReducer from "./authReducer";
 import {
@@ -8,7 +8,6 @@ import {
   LOGIN_SUCCESS,
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
-  SET_IS_LOADED,
   TRIGGER_RELOAD,
 } from "./types";
 
@@ -19,7 +18,6 @@ const GlobalProvider = ({ children }) => {
     uid: "",
     accesstoken: "",
     userData: {},
-    isLoggedIn: false,
     isLoadedData: false,
     reloadTrigger: false,
   };
@@ -29,7 +27,7 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await fireLogin(payload);
 
-      if (res.hasOwnProperty("user")) {
+      if (res.hasOwnProperty("user")) {    
         const profile = {
           emailVerified: res.user.emailVerified,
           lastLoginAt: res.user.metadata.lastLoginAt,
@@ -58,26 +56,6 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const reLoadUserInfo = async (payload) => {
-    try {
-      const profile = {
-        emailVerified: payload.emailVerified,
-        lastLoginAt: payload.metadata.lastLoginAt,
-        createdAt: payload.metadata.createdAt,
-      };
-      const uid = payload.uid;
-      const atoken = await payload.getIdToken(true);
-
-      authDispatch({
-        type: LOGIN_SUCCESS,
-        payload: { profile: profile, uid: uid, atoken: atoken },
-      });
-      return true;
-    } catch (err) {
-      return false;
-    }
-  };
-
   const loadUserFirestoreData = async (payload) => {
     try {
       const [flag, res] = await retrieveUserDataFromApi(payload);
@@ -95,7 +73,6 @@ const GlobalProvider = ({ children }) => {
             firestoreData: { ...res, ...profile },
             uid: uid,
             atoken: atoken,
-            isLoadedData: true,
           },
         });
         return true;
@@ -112,13 +89,6 @@ const GlobalProvider = ({ children }) => {
     return data;
   };
 
-  const setIsLoadedData = async (load) => {
-    authDispatch({
-      type: SET_IS_LOADED,
-      payload: load,
-    });
-  };
-
   const updateReloadTrigger = (actualTrigger) => {
     authDispatch({
       type: TRIGGER_RELOAD,
@@ -130,18 +100,15 @@ const GlobalProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         uid: state.uid,
-        isLoggedIn: state.isLoggedIn,
         userData: state.userData,
         getState2: state,
         accesstoken: state.accesstoken,
         isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
         updateReloadTrigger,
-        setIsLoadedData,
         getState,
         loginUser,
         logoutUser,
-        reLoadUserInfo,
         loadUserFirestoreData,
       }}
     >
