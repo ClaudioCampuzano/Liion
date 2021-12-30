@@ -10,7 +10,11 @@ import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
-import { getDetailsOfTravel, deleteDriverTravel } from "../../api/api";
+import {
+  getDetailsOfTravel,
+  deleteDriverTravel,
+  updateStateTravel,
+} from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
@@ -38,26 +42,25 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
 
   const startTravel = async () => {
     setLoading(true);
-    console.log("iniciar viaje");
-    /*     const dataForSend = {
-      travelId: dataFromApi.id,
-      requestId: dataFromApi.requestId,
+    const dataForSend = {
+      travelId: route.params.id,
+      state: "ongoing",
     };
-    const [resFlag, resmsg] = await deletePassengerRequest(dataForSend);
+    const [resFlag, resmsg] = await updateStateTravel(dataForSend);
+
     setMsgModal(resmsg.res);
-    setModalState(true); */
+    setModalState(true);
     setLoading(false);
   };
 
   const cancelTravel = async () => {
     setLoading(true);
-    console.log("cancelar viaje");
     const dataForSend = {
       travelId: dataFromApi.id,
     };
     const [resFlag, resmsg] = await deleteDriverTravel(dataForSend);
     setMsgModal(resmsg.res);
-    setModalState(true); 
+    setModalState(true);
     setLoading(false);
   };
 

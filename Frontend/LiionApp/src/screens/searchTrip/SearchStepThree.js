@@ -10,7 +10,7 @@ import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
-import { getDetailsOfTravel, UpdateSeenTravel } from "../../api/api";
+import { getDetailsOfTravel, updateSeenTravel } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
@@ -30,7 +30,7 @@ const SearchStepThree = ({ navigation, route }) => {
         const dataForSend = {
           travelId: route.params.id,
         };
-        const [resFlag_put, resMsg_put] = await UpdateSeenTravel(dataForSend);
+        const [resFlag_put, resMsg_put] = await updateSeenTravel(dataForSend);
         setDataFromApi({ ...route.params, ...resMsg });
       } else setModalError(true);
       setLoading(false);

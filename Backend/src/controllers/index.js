@@ -318,7 +318,7 @@ export const getDetailsOfTravel = async (req, res) => {
   }
 };
 
-export const UpdateSeenTravel = async (req, res) => {
+export const updateSeenTravel = async (req, res) => {
   var { travelId } = req.body;
   try {
     const travelRef = db.collection("travels").doc(travelId);
@@ -471,7 +471,12 @@ export async function getTravelsPassenger(req, res) {
             travelData.data().date + " " + travelData.data().startTime,
             "DD/MM/YYYY HH:mm"
           );
-          if (currentTimeTravel.add(12, "hours").isSameOrAfter(moment())) {
+          if (
+            currentTimeTravel
+              .add(travelData.data().durationMinutes, "minutes")
+              .add(6, "hours")
+              .isSameOrAfter(moment())
+          ) {
             var driverRef = await db
               .collection("users")
               .doc(travelData.data().driverUID)
@@ -527,7 +532,12 @@ export async function getTravelsDriver(req, res) {
           doc.data().date + " " + doc.data().startTime,
           "DD/MM/YYYY HH:mm"
         );
-        if (currentTimeTravel.add(12, "hours").isSameOrAfter(moment())) {
+        if (
+          currentTimeTravel
+            .add(doc.data().durationMinutes, "minutes")
+            .add(6, "hours")
+            .isSameOrAfter(moment())
+        ) {
           resultData.push({
             id: doc.id,
             date: doc.data().date,
@@ -627,6 +637,64 @@ export async function deleteDriverTravel(req, res) {
         sucess: false,
         res: "Su viaje ya es imposible cancelarlo",
       });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}
+
+export async function updateStateTravel(req, res) {
+  const { travelId, state } = req.body;
+  try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelObj = (await travelRef.get()).data();
+
+    // No se pueden iniciar viajes antes  de 15 minutos del mismo
+
+    switch (state) {
+      case "ongoing":
+        var currentTimeTravel = moment(
+          travelObj.date + " " + travelObj.startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+
+        if (
+          currentTimeTravel.isBetween(
+            moment().subtract(15, "minutes"),
+            moment().add(15, "minutes")
+          )
+        ) {
+          const travelUpdate = await travelRef.update({
+            status: state,
+          });
+          res.json({ sucess: true, res: "Viaje iniciado" });
+        } else
+          res.status(403).json({
+            sucess: false,
+            res: "Imposible iniciar viaje",
+          });
+
+        break;
+      case "finished":
+        if (travelObj.status === "ongoing") {
+          const travelUpdate = await travelRef.update({
+            status: state,
+          });
+          res.json({ sucess: true, res: "Viaje finalizado" });
+        } else
+          res.status(403).json({
+            sucess: false,
+            res: "Imposible finalizar sin haberlo iniciado",
+          });
+        break;
+      default:
+        res.status(403).json({
+          sucess: false,
+          res: "Estado no valido",
+        });
     }
   } catch (e) {
     res.status(500).json({

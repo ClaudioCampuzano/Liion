@@ -103,12 +103,27 @@ export const getDetailsOfTravel = async (travelId) => {
   }
 };
 
-export const UpdateSeenTravel = async (travelId) => {
+export const updateSeenTravel = async (travelId) => {
   try {
     const requiredParameters = JSON.stringify(travelId);
     const res = await client({
       method: "patch",
-      url: "/UpdateSeenTravel",
+      url: "/updateSeenTravel",
+      headers: { "Content-Type": "application/json" },
+      data: requiredParameters,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const updateStateTravel = async (data) => {
+  try {
+    const requiredParameters = JSON.stringify(data);
+    const res = await client({
+      method: "patch",
+      url: "/updateStateTravel",
       headers: { "Content-Type": "application/json" },
       data: requiredParameters,
     });
