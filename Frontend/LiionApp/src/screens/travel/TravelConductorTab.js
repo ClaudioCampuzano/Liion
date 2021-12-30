@@ -11,7 +11,9 @@ import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
-const TravelConductorTab = ({ navigation }) => {
+const TravelConductorTab = ({ navigation, route }) => {
+  var reloadData = route.params ? route.params : false;
+
   const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ const TravelConductorTab = ({ navigation }) => {
       resFlag ? setDataFromApi(resMsg) : setModalError(true);
       setLoading(false);
     })();
-  }, []);
+  }, [reloadData]);
 
   const modalHandler = () => {
     navigation.goBack();
@@ -42,6 +44,7 @@ const TravelConductorTab = ({ navigation }) => {
             ...userData.driverData,
             nameDriver: userData.name + " " + userData.apellido,
             driverPhoto: userData.photo,
+            reload: reloadData,
           });
         }}
       />

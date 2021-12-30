@@ -512,7 +512,7 @@ export async function getTravelsDriver(req, res) {
     var travelRef = await db
       .collection("travels")
       .where("driverUID", "==", driverUID)
-      .where("status", "not-in", ['finished','canceled'])
+      .where("status", "not-in", ["finished", "aborted"])
       .get();
 
     if (!travelRef.empty)
@@ -570,7 +570,7 @@ export async function deletePassengerRequest(req, res) {
       });
 
       const requestUpdate = await requestRef.update({
-        status: "declined",
+        status: "unsubscribe",
       });
 
       res.json({ sucess: true, res: "Reserva cancelada" });
@@ -578,6 +578,42 @@ export async function deletePassengerRequest(req, res) {
       res.status(403).json({
         sucess: false,
         res: "Su reserva ya no se encuentra aceptada",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}
+
+// Conductor elimina viaje y con ellos cancela solicitudes
+export async function deleteDriverTravel(req, res) {
+  const { travelId } = req.body;
+  try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelObj = (await travelRef.get()).data();
+
+    if (travelObj.status === "accepted" || travelObj.status === "closed") {
+      const travelUpdate = await travelRef.update({
+        status: "aborted",
+      });
+
+      const requestRef = db.collection("requestTravel");
+      for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
+        const requestUpdate = await requestRef
+          .doc(travelObj.requestingPassengers[i])
+          .update({
+            status: "rejected",
+          });
+      }
+
+      res.json({ sucess: true, res: "Viaje cancelado" });
+    } else {
+      res.status(403).json({
+        sucess: false,
+        res: "Su viaje ya es imposible cancelarlo",
       });
     }
   } catch (e) {

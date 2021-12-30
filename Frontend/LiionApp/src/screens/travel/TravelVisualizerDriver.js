@@ -10,7 +10,7 @@ import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
-import { getDetailsOfTravel, deletePassengerRequest } from "../../api/api";
+import { getDetailsOfTravel, deleteDriverTravel } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
@@ -52,13 +52,12 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
   const cancelTravel = async () => {
     setLoading(true);
     console.log("cancelar viaje");
-    /*     const dataForSend = {
+    const dataForSend = {
       travelId: dataFromApi.id,
-      requestId: dataFromApi.requestId,
     };
-    const [resFlag, resmsg] = await deletePassengerRequest(dataForSend);
+    const [resFlag, resmsg] = await deleteDriverTravel(dataForSend);
     setMsgModal(resmsg.res);
-    setModalState(true); */
+    setModalState(true); 
     setLoading(false);
   };
 
@@ -150,7 +149,15 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
   };
 
   const modalHandler = () => {
-    navigation.goBack();
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: "TravelConductorTab",
+        params: {
+          reload: !route.params.reload,
+        },
+      },
+    });
     setModalState(false);
   };
 

@@ -148,6 +148,21 @@ export const deletePassengerRequest = async (payload) => {
   }
 };
 
+export const deleteDriverTravel = async (payload) => {
+  try {
+    const requiredParameters = JSON.stringify(payload);
+    const res = await client({
+      method: "delete",
+      url: "/deleteDriverTravel",
+      headers: { "Content-Type": "application/json" },
+      data: requiredParameters,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
 export const getTravelsPassenger = async (userUID) => {
   try {
     const res = await client({

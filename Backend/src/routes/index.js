@@ -13,6 +13,7 @@ import {
   getTravelsPassenger,
   getTravelsDriver,
   deletePassengerRequest,
+  deleteDriverTravel
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -41,5 +42,6 @@ router.get("/getTravelsDriver/:userUID", getTravelsDriver);
 
 //Metodos implicados en el managerTravel
 router.delete("/deletePassengerRequest", deletePassengerRequest);
+router.delete("/deleteDriverTravel", deleteDriverTravel);
 
 export default router;
