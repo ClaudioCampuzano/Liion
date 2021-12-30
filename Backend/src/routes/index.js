@@ -12,6 +12,7 @@ import {
   registerPassengerRequest,
   getTravelsPassenger,
   getTravelsDriver,
+  deletePassengerRequest,
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -37,5 +38,7 @@ router.post("/registerPassengerRequest", registerPassengerRequest);
 //Metodos implicados en el listado de viajes de pasajero y conductor
 router.get("/getTravelsPassenger/:userUID", getTravelsPassenger);
 router.get("/getTravelsDriver/:userUID", getTravelsDriver);
+
+router.delete("/deletePassengerRequest", deletePassengerRequest);
 
 export default router;

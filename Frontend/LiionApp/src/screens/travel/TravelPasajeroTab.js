@@ -11,7 +11,7 @@ import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
-const TravelPasajeroTab = () => {
+const TravelPasajeroTab = ({ navigation }) => {
   const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
@@ -36,9 +36,7 @@ const TravelPasajeroTab = () => {
       <TravelResultsCard
         item={item}
         driverOn={false}
-        /*         onPress={() =>
-          navigation.navigate("SearchStepThree", { ...item, addresses })
-        } */
+        onPress={() => {navigation.navigate("TravelVisualizer", item)}}
       />
     );
   };

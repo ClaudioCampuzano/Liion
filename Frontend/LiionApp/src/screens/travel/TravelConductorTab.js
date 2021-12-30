@@ -37,7 +37,7 @@ const TravelConductorTab = () => {
         item={{ ...item, carSeats: userData.driverData.carSeats }}
         driverOn={true}
         /*         onPress={() =>
-          navigation.navigate("SearchStepThree", { ...item, addresses })
+          navigation.navigate("TravelVisualizer", { ...item })
         } */
       />
     );

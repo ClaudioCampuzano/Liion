@@ -456,6 +456,7 @@ export async function getTravelsPassenger(req, res) {
     var requestRef = await db
       .collection("requestTravel")
       .where("passengerUID", "==", passengerUID)
+      .where("status", "=", "accepted")
       .get();
 
     if (!requestRef.empty)
@@ -474,6 +475,13 @@ export async function getTravelsPassenger(req, res) {
           driverRef.exists &&
             resultData.push({
               id: travelData.id,
+              requestId: doc.id,
+              costPerSeat: travelData.data().costPerSeat,
+              extraBaggage: travelData.data().extraBaggage,
+              approvalIns: travelData.data().approvalIns,
+              smoking: travelData.data().smoking,
+              genderPreference: travelData.data().genderPreference,
+              nSeatsAvailable: travelData.data().nSeatsAvailable,
               date: travelData.data().date,
               startTime: travelData.data().startTime,
               destinationDetails: travelData.data().destinationDetails,
@@ -526,5 +534,50 @@ export async function getTravelsDriver(req, res) {
   } catch (e) {
     console.log(e);
     res.status(500).send("Error");
+  }
+}
+
+// Pasajero elimina reserva
+export async function deletePassengerRequest(req, res) {
+  const { travelId, requestId } = req.body;
+  try {
+    const requestRef = db.collection("requestTravel").doc(requestId);
+    const requestObj = (await requestRef.get()).data();
+
+    if (requestObj.status === "accepted") {
+      const travelRef = db.collection("travels").doc(travelId);
+      const travelObj = (await travelRef.get()).data();
+
+      var bigBags = requestObj.bigBags ? -1 : 0;
+      var personalItem = requestObj.personalItem ? -1 : 0;
+      var updateStatus =
+        travelObj.status === "closed" && travelObj.nSeatsAvailable === 0
+          ? "open"
+          : travelObj.status;
+
+      const travelUpdate = await travelRef.update({
+        requestingPassengers: FieldValue.arrayRemove(requestId),
+        "extraBaggage.bigBags": FieldValue.increment(bigBags),
+        "extraBaggage.personalItem": FieldValue.increment(personalItem),
+        nSeatsAvailable: FieldValue.increment(1),
+        status: updateStatus,
+      });
+
+      const requestUpdate = await requestRef.update({
+        status: "declined",
+      });
+
+      res.json({ sucess: true, res: "Reserva cancelada" });
+    } else {
+      res.status(403).json({
+        sucess: false,
+        res: "Su reserva ya no se encuentra aceptada",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
   }
 }
