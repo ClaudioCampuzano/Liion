@@ -467,34 +467,40 @@ export async function getTravelsPassenger(req, res) {
           .get();
 
         if (travelData.exists) {
-          var driverRef = await db
-            .collection("users")
-            .doc(travelData.data().driverUID)
-            .get();
+          var currentTimeTravel = moment(
+            travelData.data().date + " " + travelData.data().startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+          if (currentTimeTravel.add(12, "hours").isSameOrAfter(moment())) {
+            var driverRef = await db
+              .collection("users")
+              .doc(travelData.data().driverUID)
+              .get();
 
-          driverRef.exists &&
-            resultData.push({
-              id: travelData.id,
-              requestId: doc.id,
-              costPerSeat: travelData.data().costPerSeat,
-              extraBaggage: travelData.data().extraBaggage,
-              approvalIns: travelData.data().approvalIns,
-              smoking: travelData.data().smoking,
-              genderPreference: travelData.data().genderPreference,
-              nSeatsAvailable: travelData.data().nSeatsAvailable,
-              date: travelData.data().date,
-              startTime: travelData.data().startTime,
-              destinationDetails: travelData.data().destinationDetails,
-              originDetails: travelData.data().originDetails,
-              durationMinutes: travelData.data().durationMinutes,
-              nameDriver:
-                driverRef.data().name + " " + driverRef.data().apellido,
-              driverPhoto: driverRef.data().photo,
-              nRating: driverRef.data().driverData.nRating,
-              sRating: driverRef.data().driverData.sRating,
-              status: travelData.data().status,
-              statusRequest: doc.data().status,
-            });
+            driverRef.exists &&
+              resultData.push({
+                id: travelData.id,
+                requestId: doc.id,
+                costPerSeat: travelData.data().costPerSeat,
+                extraBaggage: travelData.data().extraBaggage,
+                approvalIns: travelData.data().approvalIns,
+                smoking: travelData.data().smoking,
+                genderPreference: travelData.data().genderPreference,
+                nSeatsAvailable: travelData.data().nSeatsAvailable,
+                date: travelData.data().date,
+                startTime: travelData.data().startTime,
+                destinationDetails: travelData.data().destinationDetails,
+                originDetails: travelData.data().originDetails,
+                durationMinutes: travelData.data().durationMinutes,
+                nameDriver:
+                  driverRef.data().name + " " + driverRef.data().apellido,
+                driverPhoto: driverRef.data().photo,
+                nRating: driverRef.data().driverData.nRating,
+                sRating: driverRef.data().driverData.sRating,
+                status: travelData.data().status,
+                statusRequest: doc.data().status,
+              });
+          }
         }
       }
     const requiredParameters = JSON.stringify(resultData);
@@ -517,22 +523,28 @@ export async function getTravelsDriver(req, res) {
 
     if (!travelRef.empty)
       for (const doc of travelRef.docs) {
-        resultData.push({
-          id: doc.id,
-          date: doc.data().date,
-          startTime: doc.data().startTime,
-          destinationDetails: doc.data().destinationDetails,
-          originDetails: doc.data().originDetails,
-          durationMinutes: doc.data().durationMinutes,
-          status: doc.data().status,
-          nSeatsAvailable: doc.data().nSeatsAvailable,
-          nSeatsOffered: doc.data().nSeatsOffered,
-          costPerSeat: doc.data().costPerSeat,
-          extraBaggage: doc.data().extraBaggage,
-          approvalIns: doc.data().approvalIns,
-          smoking: doc.data().smoking,
-          genderPreference: doc.data().genderPreference,
-        });
+        var currentTimeTravel = moment(
+          doc.data().date + " " + doc.data().startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+        if (currentTimeTravel.add(12, "hours").isSameOrAfter(moment())) {
+          resultData.push({
+            id: doc.id,
+            date: doc.data().date,
+            startTime: doc.data().startTime,
+            destinationDetails: doc.data().destinationDetails,
+            originDetails: doc.data().originDetails,
+            durationMinutes: doc.data().durationMinutes,
+            status: doc.data().status,
+            nSeatsAvailable: doc.data().nSeatsAvailable,
+            nSeatsOffered: doc.data().nSeatsOffered,
+            costPerSeat: doc.data().costPerSeat,
+            extraBaggage: doc.data().extraBaggage,
+            approvalIns: doc.data().approvalIns,
+            smoking: doc.data().smoking,
+            genderPreference: doc.data().genderPreference,
+          });
+        }
       }
 
     const requiredParameters = JSON.stringify(resultData);
