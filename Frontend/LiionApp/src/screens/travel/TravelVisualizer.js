@@ -136,7 +136,17 @@ const TravelVisualizer = ({ navigation, route }) => {
   };
 
   const modalHandler = () => {
-    navigation.goBack();
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: "TravelPasajeroTab",
+        params: {
+          reload: !route.params.reload,
+        },
+      },
+    });
+
+    //navigation.goBack();
     setModalState(false);
   };
 

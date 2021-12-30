@@ -28,7 +28,7 @@ const TravelConductorTab = ({ navigation }) => {
 
   const modalHandler = () => {
     navigation.goBack();
-    setModalVisible(false);
+    setModalError(false);
   };
 
   const renderItem = ({ item }) => {

@@ -512,6 +512,7 @@ export async function getTravelsDriver(req, res) {
     var travelRef = await db
       .collection("travels")
       .where("driverUID", "==", driverUID)
+      .where("status", "not-in", ['finished','canceled'])
       .get();
 
     if (!travelRef.empty)

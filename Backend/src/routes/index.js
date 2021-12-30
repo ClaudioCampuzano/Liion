@@ -39,6 +39,7 @@ router.post("/registerPassengerRequest", registerPassengerRequest);
 router.get("/getTravelsPassenger/:userUID", getTravelsPassenger);
 router.get("/getTravelsDriver/:userUID", getTravelsDriver);
 
+//Metodos implicados en el managerTravel
 router.delete("/deletePassengerRequest", deletePassengerRequest);
 
 export default router;
