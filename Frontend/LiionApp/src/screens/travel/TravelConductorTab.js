@@ -11,7 +11,7 @@ import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
-const TravelConductorTab = () => {
+const TravelConductorTab = ({ navigation }) => {
   const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
@@ -36,9 +36,14 @@ const TravelConductorTab = () => {
       <TravelResultsCard
         item={{ ...item, carSeats: userData.driverData.carSeats }}
         driverOn={true}
-        /*         onPress={() =>
-          navigation.navigate("TravelVisualizer", { ...item })
-        } */
+        onPress={() => {
+          navigation.navigate("TravelVisualizerDriver", {
+            ...item,
+            ...userData.driverData,
+            nameDriver: userData.name + " " + userData.apellido,
+            driverPhoto: userData.photo,
+          });
+        }}
       />
     );
   };

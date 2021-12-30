@@ -5,6 +5,8 @@ import { Entypo } from "@expo/vector-icons";
 
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
+import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
+
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const TravelNavigator = () => {
@@ -56,6 +58,13 @@ const TravelNavigator = () => {
       <TravelStack.Screen
         name="TravelVisualizer"
         component={TravelVisualizer}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <TravelStack.Screen
+        name="TravelVisualizerDriver"
+        component={TravelVisualizerDriver}
         options={({ navigation }) => ({
           headerShown: false,
         })}

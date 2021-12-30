@@ -526,6 +526,11 @@ export async function getTravelsDriver(req, res) {
           status: doc.data().status,
           nSeatsAvailable: doc.data().nSeatsAvailable,
           nSeatsOffered: doc.data().nSeatsOffered,
+          costPerSeat: doc.data().costPerSeat,
+          extraBaggage: doc.data().extraBaggage,
+          approvalIns: doc.data().approvalIns,
+          smoking: doc.data().smoking,
+          genderPreference: doc.data().genderPreference,
         });
       }
 
