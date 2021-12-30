@@ -318,7 +318,7 @@ export const getDetailsOfTravel = async (req, res) => {
   }
 };
 
-export const UpdateSeenTravel = async (req, res) => {
+export const updateSeenTravel = async (req, res) => {
   var { travelId } = req.body;
   try {
     const travelRef = db.collection("travels").doc(travelId);
@@ -456,6 +456,7 @@ export async function getTravelsPassenger(req, res) {
     var requestRef = await db
       .collection("requestTravel")
       .where("passengerUID", "==", passengerUID)
+      .where("status", "=", "accepted")
       .get();
 
     if (!requestRef.empty)
@@ -466,27 +467,45 @@ export async function getTravelsPassenger(req, res) {
           .get();
 
         if (travelData.exists) {
-          var driverRef = await db
-            .collection("users")
-            .doc(travelData.data().driverUID)
-            .get();
+          var currentTimeTravel = moment(
+            travelData.data().date + " " + travelData.data().startTime,
+            "DD/MM/YYYY HH:mm"
+          );
+          if (
+            currentTimeTravel
+              .add(travelData.data().durationMinutes, "minutes")
+              .add(6, "hours")
+              .isSameOrAfter(moment())
+          ) {
+            var driverRef = await db
+              .collection("users")
+              .doc(travelData.data().driverUID)
+              .get();
 
-          driverRef.exists &&
-            resultData.push({
-              id: travelData.id,
-              date: travelData.data().date,
-              startTime: travelData.data().startTime,
-              destinationDetails: travelData.data().destinationDetails,
-              originDetails: travelData.data().originDetails,
-              durationMinutes: travelData.data().durationMinutes,
-              nameDriver:
-                driverRef.data().name + " " + driverRef.data().apellido,
-              driverPhoto: driverRef.data().photo,
-              nRating: driverRef.data().driverData.nRating,
-              sRating: driverRef.data().driverData.sRating,
-              status: travelData.data().status,
-              statusRequest: doc.data().status,
-            });
+            driverRef.exists &&
+              resultData.push({
+                id: travelData.id,
+                requestId: doc.id,
+                costPerSeat: travelData.data().costPerSeat,
+                extraBaggage: travelData.data().extraBaggage,
+                approvalIns: travelData.data().approvalIns,
+                smoking: travelData.data().smoking,
+                genderPreference: travelData.data().genderPreference,
+                nSeatsAvailable: travelData.data().nSeatsAvailable,
+                date: travelData.data().date,
+                startTime: travelData.data().startTime,
+                destinationDetails: travelData.data().destinationDetails,
+                originDetails: travelData.data().originDetails,
+                durationMinutes: travelData.data().durationMinutes,
+                nameDriver:
+                  driverRef.data().name + " " + driverRef.data().apellido,
+                driverPhoto: driverRef.data().photo,
+                nRating: driverRef.data().driverData.nRating,
+                sRating: driverRef.data().driverData.sRating,
+                status: travelData.data().status,
+                statusRequest: doc.data().status,
+              });
+          }
         }
       }
     const requiredParameters = JSON.stringify(resultData);
@@ -504,21 +523,38 @@ export async function getTravelsDriver(req, res) {
     var travelRef = await db
       .collection("travels")
       .where("driverUID", "==", driverUID)
+      .where("status", "not-in", ["finished", "aborted"])
       .get();
 
     if (!travelRef.empty)
       for (const doc of travelRef.docs) {
-        resultData.push({
-          id: doc.id,
-          date: doc.data().date,
-          startTime: doc.data().startTime,
-          destinationDetails: doc.data().destinationDetails,
-          originDetails: doc.data().originDetails,
-          durationMinutes: doc.data().durationMinutes,
-          status: doc.data().status,
-          nSeatsAvailable: doc.data().nSeatsAvailable,
-          nSeatsOffered: doc.data().nSeatsOffered,
-        });
+        var currentTimeTravel = moment(
+          doc.data().date + " " + doc.data().startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+        if (
+          currentTimeTravel
+            .add(doc.data().durationMinutes, "minutes")
+            .add(6, "hours")
+            .isSameOrAfter(moment())
+        ) {
+          resultData.push({
+            id: doc.id,
+            date: doc.data().date,
+            startTime: doc.data().startTime,
+            destinationDetails: doc.data().destinationDetails,
+            originDetails: doc.data().originDetails,
+            durationMinutes: doc.data().durationMinutes,
+            status: doc.data().status,
+            nSeatsAvailable: doc.data().nSeatsAvailable,
+            nSeatsOffered: doc.data().nSeatsOffered,
+            costPerSeat: doc.data().costPerSeat,
+            extraBaggage: doc.data().extraBaggage,
+            approvalIns: doc.data().approvalIns,
+            smoking: doc.data().smoking,
+            genderPreference: doc.data().genderPreference,
+          });
+        }
       }
 
     const requiredParameters = JSON.stringify(resultData);
@@ -526,5 +562,144 @@ export async function getTravelsDriver(req, res) {
   } catch (e) {
     console.log(e);
     res.status(500).send("Error");
+  }
+}
+
+// Pasajero elimina reserva
+export async function deletePassengerRequest(req, res) {
+  const { travelId, requestId } = req.body;
+  try {
+    const requestRef = db.collection("requestTravel").doc(requestId);
+    const requestObj = (await requestRef.get()).data();
+
+    if (requestObj.status === "accepted") {
+      const travelRef = db.collection("travels").doc(travelId);
+      const travelObj = (await travelRef.get()).data();
+
+      var bigBags = requestObj.bigBags ? -1 : 0;
+      var personalItem = requestObj.personalItem ? -1 : 0;
+      var updateStatus =
+        travelObj.status === "closed" && travelObj.nSeatsAvailable === 0
+          ? "open"
+          : travelObj.status;
+
+      const travelUpdate = await travelRef.update({
+        requestingPassengers: FieldValue.arrayRemove(requestId),
+        "extraBaggage.bigBags": FieldValue.increment(bigBags),
+        "extraBaggage.personalItem": FieldValue.increment(personalItem),
+        nSeatsAvailable: FieldValue.increment(1),
+        status: updateStatus,
+      });
+
+      const requestUpdate = await requestRef.update({
+        status: "unsubscribe",
+      });
+
+      res.json({ sucess: true, res: "Reserva cancelada" });
+    } else {
+      res.status(403).json({
+        sucess: false,
+        res: "Su reserva ya no se encuentra aceptada",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}
+
+// Conductor elimina viaje y con ellos cancela solicitudes
+export async function deleteDriverTravel(req, res) {
+  const { travelId } = req.body;
+  try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelObj = (await travelRef.get()).data();
+
+    if (travelObj.status === "accepted" || travelObj.status === "closed") {
+      const travelUpdate = await travelRef.update({
+        status: "aborted",
+      });
+
+      const requestRef = db.collection("requestTravel");
+      for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
+        const requestUpdate = await requestRef
+          .doc(travelObj.requestingPassengers[i])
+          .update({
+            status: "rejected",
+          });
+      }
+
+      res.json({ sucess: true, res: "Viaje cancelado" });
+    } else {
+      res.status(403).json({
+        sucess: false,
+        res: "Su viaje ya es imposible cancelarlo",
+      });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}
+
+export async function updateStateTravel(req, res) {
+  const { travelId, state } = req.body;
+  try {
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelObj = (await travelRef.get()).data();
+
+    // No se pueden iniciar viajes antes  de 15 minutos del mismo
+
+    switch (state) {
+      case "ongoing":
+        var currentTimeTravel = moment(
+          travelObj.date + " " + travelObj.startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+
+        if (
+          currentTimeTravel.isBetween(
+            moment().subtract(15, "minutes"),
+            moment().add(15, "minutes")
+          )
+        ) {
+          const travelUpdate = await travelRef.update({
+            status: state,
+          });
+          res.json({ sucess: true, res: "Viaje iniciado" });
+        } else
+          res.status(403).json({
+            sucess: false,
+            res: "Imposible iniciar viaje",
+          });
+
+        break;
+      case "finished":
+        if (travelObj.status === "ongoing") {
+          const travelUpdate = await travelRef.update({
+            status: state,
+          });
+          res.json({ sucess: true, res: "Viaje finalizado" });
+        } else
+          res.status(403).json({
+            sucess: false,
+            res: "Imposible finalizar sin haberlo iniciado",
+          });
+        break;
+      default:
+        res.status(403).json({
+          sucess: false,
+          res: "Estado no valido",
+        });
+    }
+  } catch (e) {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
   }
 }

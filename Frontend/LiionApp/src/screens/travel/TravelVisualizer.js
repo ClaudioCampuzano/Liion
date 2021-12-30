@@ -10,36 +10,42 @@ import MapViewCustom from "../../components/MapViewCustom";
 import ResultItemCard from "../../components/ResultItemCard";
 import TouchableIcon from "../../components/TouchableIcon";
 import Loading from "../../components/Loading";
-import { getDetailsOfTravel, updateSeenTravel } from "../../api/api";
+import { getDetailsOfTravel, deletePassengerRequest } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
 
-const SearchStepThree = ({ navigation, route }) => {
+const TravelVisualizer = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
-  const [modalError, setModalError] = useState(false);
-
+  const [modalState, setModalState] = useState(false);
+  const [msgModal, setMsgModal] = useState(
+    "Error al intentar recuperar datos, intente en otro momento"
+  );
   const [dataFromApi, setDataFromApi] = useState({});
 
   useEffect(() => {
     (async function () {
       const [resFlag, resMsg] = await getDetailsOfTravel(route.params.id);
-      if (resFlag) {
-        const dataForSend = {
-          travelId: route.params.id,
-        };
-        const [resFlag_put, resMsg_put] = await updateSeenTravel(dataForSend);
-        setDataFromApi({ ...route.params, ...resMsg });
-      } else setModalError(true);
+      resFlag
+        ? setDataFromApi({ ...route.params, ...resMsg })
+        : setModalState(true);
+
       setLoading(false);
     })();
   }, []);
 
-  const checkValidator = () => {
-    const addresses = route.params.addresses;
-    navigation.navigate("SearchStepFour", { ...dataFromApi, addresses });
+  const checkValidator = async () => {
+    setLoading(true);
+    const dataForSend = {
+      travelId: dataFromApi.id,
+      requestId: dataFromApi.requestId,
+    };
+    const [resFlag, resmsg] = await deletePassengerRequest(dataForSend);
+    setMsgModal(resmsg.res);
+    setModalState(true);
+    setLoading(false);
   };
 
   const smokeComponent = () => {
@@ -129,14 +135,33 @@ const SearchStepThree = ({ navigation, route }) => {
     return output;
   };
 
+  const modalHandler = () => {
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: "TravelPasajeroTab",
+        params: {
+          reload: !route.params.reload,
+        },
+      },
+    });
+
+    //navigation.goBack();
+    setModalState(false);
+  };
+
   return (
     <Layout>
       {loading ? (
         <Loading />
       ) : (
         <ScrollView showsVerticalScrollIndicator={true}>
-          <ModalPopUp visible={modalError} setModalVisible={setModalError}>
-            Error al intentar recuperar datos, intente en otro momento
+          <ModalPopUp
+            visible={modalState}
+            setModalVisible={setModalState}
+            customFunction={modalHandler}
+          >
+            {msgModal}
           </ModalPopUp>
           <View style={styles.topPanel}>
             <MapViewCustom
@@ -250,22 +275,9 @@ const SearchStepThree = ({ navigation, route }) => {
                 )}
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              paddingBottom: hp(2),
-            }}
-          >
-            <MaterialCommunityIcons name="eye" size={24} color="black" />
-            <Text style={styles.text_view}>
-              {"Visto " + dataFromApi.seen + " veces"}
-            </Text>
-          </View>
-
           <View style={styles.buttonView}>
             <ButtonLiion
-              title="Iniciar proceso de reserva"
+              title="Cancelar reserva"
               styleView={styles.button}
               onPress={() => checkValidator()}
             />
@@ -276,7 +288,7 @@ const SearchStepThree = ({ navigation, route }) => {
   );
 };
 
-export default SearchStepThree;
+export default TravelVisualizer;
 
 const styles = StyleSheet.create({
   topPanel: {
@@ -292,6 +304,7 @@ const styles = StyleSheet.create({
     width: wp("78.6%"),
     height: hp("4.8%"),
     alignSelf: "center",
+    backgroundColor: COLORS.WARN_RED,
   },
   inputLocation: {
     marginTop: hp("1%"),

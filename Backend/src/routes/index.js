@@ -8,10 +8,13 @@ import {
   updateUserRating,
   createTravel,
   getDetailsOfTravel,
-  UpdateSeenTravel,
+  updateSeenTravel,
   registerPassengerRequest,
   getTravelsPassenger,
   getTravelsDriver,
+  deletePassengerRequest,
+  deleteDriverTravel,
+  updateStateTravel
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -31,11 +34,17 @@ router.post("/getUserData", checkIsAuth, getUserData);
 //Metodos implicados en la busqueda de viajes
 router.get("/getTravels", getTravels);
 router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
-router.patch("/UpdateSeenTravel", UpdateSeenTravel);
+router.patch("/updateSeenTravel", updateSeenTravel);
 router.post("/registerPassengerRequest", registerPassengerRequest);
 
 //Metodos implicados en el listado de viajes de pasajero y conductor
 router.get("/getTravelsPassenger/:userUID", getTravelsPassenger);
 router.get("/getTravelsDriver/:userUID", getTravelsDriver);
+
+//Metodos implicados en el managerTravel
+router.delete("/deletePassengerRequest", deletePassengerRequest);
+router.delete("/deleteDriverTravel", deleteDriverTravel);
+router.patch("/updateStateTravel", updateStateTravel);
+
 
 export default router;

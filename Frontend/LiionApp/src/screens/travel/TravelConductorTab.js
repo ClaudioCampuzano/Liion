@@ -11,7 +11,9 @@ import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
-const TravelConductorTab = () => {
+const TravelConductorTab = ({ navigation, route }) => {
+  var reloadData = route.params ? route.params : false;
+
   const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
@@ -24,11 +26,11 @@ const TravelConductorTab = () => {
       resFlag ? setDataFromApi(resMsg) : setModalError(true);
       setLoading(false);
     })();
-  }, []);
+  }, [reloadData]);
 
   const modalHandler = () => {
     navigation.goBack();
-    setModalVisible(false);
+    setModalError(false);
   };
 
   const renderItem = ({ item }) => {
@@ -36,9 +38,15 @@ const TravelConductorTab = () => {
       <TravelResultsCard
         item={{ ...item, carSeats: userData.driverData.carSeats }}
         driverOn={true}
-        /*         onPress={() =>
-          navigation.navigate("SearchStepThree", { ...item, addresses })
-        } */
+        onPress={() => {
+          navigation.navigate("TravelVisualizerDriver", {
+            ...item,
+            ...userData.driverData,
+            nameDriver: userData.name + " " + userData.apellido,
+            driverPhoto: userData.photo,
+            reload: reloadData,
+          });
+        }}
       />
     );
   };

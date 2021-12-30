@@ -1,14 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View,TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
 
-import TravelTabNavigator from './TravelTabNavigator'
+import TravelTabNavigator from "./TravelTabNavigator";
+import TravelVisualizer from "../screens/travel/TravelVisualizer";
+import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
+
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
-// La idea aca es que, en el tab va a poder elegir entre conductor o pasajero para
-// y de ahi va a poder ir a los demas elemos de este stack, que reaccionan
-// en base a los viajes q hayan
 const TravelNavigator = () => {
   const TravelStack = createStackNavigator();
 
@@ -52,6 +52,21 @@ const TravelNavigator = () => {
               />
             </TouchableOpacity>
           ),
+        })}
+      />
+
+      <TravelStack.Screen
+        name="TravelVisualizer"
+        component={TravelVisualizer}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <TravelStack.Screen
+        name="TravelVisualizerDriver"
+        component={TravelVisualizerDriver}
+        options={({ navigation }) => ({
+          headerShown: false,
         })}
       />
     </TravelStack.Navigator>
