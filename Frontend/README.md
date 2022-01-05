@@ -7,7 +7,7 @@
 * Forma de ejecución
   ```
   cd Liion
-  yarn start or yarn android or expo start or expo start -c
+  yarn start or yarn android or expo start or expo start -c or expo r -c
   ```
 
   /******DATO**********

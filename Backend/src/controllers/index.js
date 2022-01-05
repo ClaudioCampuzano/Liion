@@ -167,18 +167,13 @@ export const createTravel = async (req, res) => {
   const travelsTimes = [];
   var usefullTravelData = req.body;
   delete usefullTravelData.atoken;
-  /* const usefullTravelData = (({ driverData, travelData, driverUID }) => ({
-    driverUID,
-    driverData,
-    travelData,
-  }))(req.body);*/
+
   try {
     const docRef = db.collection("travels");
     const traveldoc = await docRef
       .where("driverUID", "==", usefullTravelData.driverUID)
       .get();
     traveldoc.forEach((x) => {
-      //travelsTimes.push([x.data().travelData.date, x.data().travelData.time, x.data().travelData.duration])
       travelsTimes.push([
         moment(x.data().date + " " + x.data().startTime, "DD/MM/YYYY HH:mm"),
         x.data().durationMinutes,
@@ -617,7 +612,7 @@ export async function deleteDriverTravel(req, res) {
     const travelRef = db.collection("travels").doc(travelId);
     const travelObj = (await travelRef.get()).data();
 
-    if (travelObj.status === "accepted" || travelObj.status === "closed") {
+    if (travelObj.status === "open" || travelObj.status === "closed") {
       const travelUpdate = await travelRef.update({
         status: "aborted",
       });

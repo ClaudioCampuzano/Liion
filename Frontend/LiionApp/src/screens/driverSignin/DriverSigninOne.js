@@ -113,7 +113,7 @@ const DriverSignupOne = () => {
       sRating: 0,
       nRating: 0,
       usb: true,
-      airConditioning: false,
+      airConditioning: true,
       carSeats: 4,
       carColor: "Azul",
       typeVehicule: "SUV",
