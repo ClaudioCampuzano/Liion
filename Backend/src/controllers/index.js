@@ -1,5 +1,5 @@
-import { db, auth, FieldValue } from "../config/config";
-import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
+import { db, auth, FieldValue, storage } from "../config/config";
+import { isEmail, isLength, isDate, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 import moment from "moment";
 
@@ -14,6 +14,7 @@ export const register = async (req, res) => {
     gender,
     isDriver,
     photo,
+    photo64,
   } = req.body;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -53,7 +54,11 @@ export const register = async (req, res) => {
           nRating: 0,
           photo: photo,
         });
+        
+        const bucket = storage.bucket();
+
         res.json({ message: "Successful Registration" });
+        
       } catch (e) {
         auth
           .deleteUser(uid)

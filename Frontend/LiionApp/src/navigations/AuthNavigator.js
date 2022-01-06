@@ -7,6 +7,7 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 import AccountAccess from "../screens/login/AccountAccess";
 import RegisterStepOne from "../screens/login/RegisterStepOne";
 import RegisterStepTwo from "../screens/login/RegisterStepTwo";
+import RegisterStepThree from "../screens/login/RegisterStepThree";
 import RecoverAccount from "../screens/login/RecoverAccount";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
@@ -93,6 +94,29 @@ const AuthNavigator = () => {
       <AuthStack.Screen
         name="RegisterStepTwo"
         component={RegisterStepTwo}
+        options={({ navigation }) => ({
+          title: "Registro",
+          headerShown: true,
+          headerStyle: styles.headerContainer,
+          headerTitleAlign: "center",
+          headerTitleStyle: styles.headerText,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("RegisterStepOne")}
+            >
+              <AntDesign
+                name="left"
+                size={hp("5%")}
+                color={COLORS.WHITE}
+                style={{ marginLeft: wp("2.5%") }}
+              />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <AuthStack.Screen
+        name="RegisterStepThree"
+        component={RegisterStepThree}
         options={({ navigation }) => ({
           title: "Registro",
           headerShown: true,
