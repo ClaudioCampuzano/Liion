@@ -16,9 +16,9 @@ app.use(cors());
 //Para ver las peticiones http
 app.use(morgan("dev"));
 //con esto el servidor entiende que recibe un json y posibilita leerlo
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 //Para indicarle al servidor que solo se recibiran datos en formato json
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 //routes
 app.use(index)
 
