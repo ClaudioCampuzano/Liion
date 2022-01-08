@@ -91,11 +91,14 @@ export const getTravels = async (searchParameters) => {
   }
 };
 
-export const getDetailsOfTravel = async (travelId) => {
+export const getDetailsOfTravel = async (payload) => {
   try {
+    const requiredParameters = JSON.stringify({ travelId: payload });
+
     const res = await client({
       method: "get",
-      url: `/getDetailsOfTravel/${travelId}`,
+      url: "/getDetailsOfTravel",
+      params: requiredParameters,
     });
     return [true, res.data];
   } catch (e) {
@@ -178,11 +181,13 @@ export const deleteDriverTravel = async (payload) => {
   }
 };
 
-export const getTravelsPassenger = async (userUID) => {
+export const getTravelsPassenger = async (payload) => {
   try {
+    const requiredParameters = JSON.stringify(payload);
     const res = await client({
       method: "get",
-      url: `/getTravelsPassenger/${userUID}`,
+      url: "/getTravelsPassenger",
+      params: requiredParameters,
     });
     return [true, res.data];
   } catch (e) {
@@ -190,11 +195,13 @@ export const getTravelsPassenger = async (userUID) => {
   }
 };
 
-export const getTravelsDriver = async (userUID) => {
+export const getTravelsDriver = async (payload) => {
   try {
+    const requiredParameters = JSON.stringify(payload);
     const res = await client({
       method: "get",
-      url: `/getTravelsDriver/${userUID}`,
+      url: "/getTravelsDriver",
+      params: requiredParameters,
     });
     return [true, res.data];
   } catch (e) {

@@ -310,7 +310,8 @@ export const getTravels = async (req, res) => {
 };
 
 export const getDetailsOfTravel = async (req, res) => {
-  var travelId = req.params.travelId;
+  const { travelId } = JSON.parse(req.query["0"]);
+
   try {
     var travelRef = await db.collection("travels").doc(travelId).get();
     var driverRef = await db
@@ -469,7 +470,8 @@ export async function registerPassengerRequest(req, res) {
 }
 
 export async function getTravelsPassenger(req, res) {
-  var passengerUID = req.params.userUID;
+  const { passengerUID } = JSON.parse(req.query["0"]);
+
   const resultData = [];
   try {
     var requestRef = await db
@@ -536,7 +538,8 @@ export async function getTravelsPassenger(req, res) {
 }
 
 export async function getTravelsDriver(req, res) {
-  var driverUID = req.params.userUID;
+  const { driverUID } = JSON.parse(req.query["0"]);
+
   const resultData = [];
   try {
     var travelRef = await db

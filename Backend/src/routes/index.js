@@ -33,13 +33,13 @@ router.post("/getUserData", checkIsAuth, getUserData);
 
 //Metodos implicados en la busqueda de viajes
 router.get("/getTravels", getTravels);
-router.get("/getDetailsOfTravel/:travelId", getDetailsOfTravel);
+router.get("/getDetailsOfTravel", getDetailsOfTravel);
 router.patch("/updateSeenTravel", updateSeenTravel);
 router.post("/registerPassengerRequest", registerPassengerRequest);
 
 //Metodos implicados en el listado de viajes de pasajero y conductor
-router.get("/getTravelsPassenger/:userUID", getTravelsPassenger);
-router.get("/getTravelsDriver/:userUID", getTravelsDriver);
+router.get("/getTravelsPassenger", getTravelsPassenger);
+router.get("/getTravelsDriver", getTravelsDriver);
 
 //Metodos implicados en el managerTravel
 router.delete("/deletePassengerRequest", deletePassengerRequest);

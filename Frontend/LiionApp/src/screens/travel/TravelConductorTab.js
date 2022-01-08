@@ -22,7 +22,7 @@ const TravelConductorTab = ({ navigation, route }) => {
 
   useEffect(() => {
     (async function () {
-      const [resFlag, resMsg] = await getTravelsDriver(uid);
+      const [resFlag, resMsg] = await getTravelsDriver({driverUID: uid});
       resFlag ? setDataFromApi(resMsg) : setModalError(true);
       setLoading(false);
     })();
