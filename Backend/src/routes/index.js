@@ -17,7 +17,7 @@ import {
   updateStateTravel
 } from "../controllers/index";
 
-import { checkIsAuth } from "../middleware/guard";
+import { checkIsAuth, checkTokenValidityBody, checkTokenValidityQuery } from "../middleware/guard";
 
 const router = Router({ caseSensitive: true });
 router.use("/protected", checkIsAuth);
@@ -27,24 +27,24 @@ router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 router.post("/updateDriverRating", checkIsAuth, updateDriverRating);
 router.post("/updateUserRating", checkIsAuth, updateUserRating);
 
-router.post("/createTravel", createTravel);
+router.post("/createTravel", /* checkTokenValidityBody, */ createTravel);
 
-router.get("/getUserData", getUserData);
+router.get("/getUserData", /* checkTokenValidityQuery, */getUserData);
 
 //Metodos implicados en la busqueda de viajes
-router.get("/getTravels", getTravels);
-router.get("/getDetailsOfTravel", getDetailsOfTravel);
-router.patch("/updateSeenTravel", updateSeenTravel);
-router.post("/registerPassengerRequest", registerPassengerRequest);
+router.get("/getTravels", /* checkTokenValidityQuery, */ getTravels);
+router.get("/getDetailsOfTravel", /* checkTokenValidityQuery, */ getDetailsOfTravel);
+router.patch("/updateSeenTravel", /* checkTokenValidityBody, */ updateSeenTravel);
+router.post("/registerPassengerRequest", /* checkTokenValidityBody, */ registerPassengerRequest);
 
 //Metodos implicados en el listado de viajes de pasajero y conductor
-router.get("/getTravelsPassenger", getTravelsPassenger);
-router.get("/getTravelsDriver", getTravelsDriver);
+router.get("/getTravelsPassenger", /* checkTokenValidityQuery, */ getTravelsPassenger);
+router.get("/getTravelsDriver", /* checkTokenValidityQuery, */ getTravelsDriver);
 
 //Metodos implicados en el managerTravel
-router.delete("/deletePassengerRequest", deletePassengerRequest);
-router.delete("/deleteDriverTravel", deleteDriverTravel);
-router.patch("/updateStateTravel", updateStateTravel);
+router.delete("/deletePassengerRequest", /* checkTokenValidityBody, */ deletePassengerRequest);
+router.delete("/deleteDriverTravel", /* checkTokenValidityBody, */ deleteDriverTravel);
+router.patch("/updateStateTravel" , /* checkTokenValidityBody, */ updateStateTravel);
 
 
 export default router;

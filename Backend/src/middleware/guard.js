@@ -12,7 +12,7 @@ const checkTkn = (req) => {
 
 export const checkIsAuth = async (req, res, next) => {
   let Atkn = checkTkn(req);
-  
+
   if (Atkn) {
     try {
       const res = await auth.verifyIdToken(Atkn);
@@ -20,11 +20,34 @@ export const checkIsAuth = async (req, res, next) => {
       //para nuestro caso es como un 'filtro' que filtra las llamadas
       next(); //woo dale crack con el callback!!
     } catch (e) {
-     
       res.status(403).send("Token de Acceso Inválido o caducado");
     }
   } else {
-    
     res.status(403).send("Envie Token UID");
   }
+};
+
+export const checkTokenValidityBody = async (req, res, next) => {
+  var token = req.body.atoken ?? null;
+  if (token)
+    try {
+      const res = await auth.verifyIdToken(token);
+      next();
+    } catch (e) {
+      res.status(403).send("Token de Acceso Inválido o caducado");
+    }
+  else res.status(403).send("Envie Token UID");
+};
+
+export const checkTokenValidityQuery = async (req, res, next) => {
+  var token = JSON.parse(req.query["0"]).atoken ?? null;
+
+  if (token)
+    try {
+      const res = await auth.verifyIdToken(token);
+      next();
+    } catch (e) {
+      res.status(403).send("Token de Acceso Inválido o caducado");
+    }
+  else res.status(403).send("Envie Token UID");
 };
