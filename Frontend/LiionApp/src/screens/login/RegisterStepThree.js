@@ -104,9 +104,7 @@ const RegisterStepThree = ({ route, navigation }) => {
           birth: dateBirth,
           gender: gender,
           isDriver: false,
-          photo:
-            "https://ih1.redbubble.net/image.1073432688.1614/flat,750x,075,f-pad,750x1000,f8f8f8.u1.jpg",
-          photo64: photo,
+          photo64: photo
         });
         if (resval) {
           setModalError(false);

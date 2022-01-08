@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { COLORS, hp } from "../constants/styleThemes";
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FaceDetector from 'expo-face-detector';
 
 export default function CameraLiion(props) {
   const cameraRef = useRef();
@@ -34,7 +36,7 @@ export default function CameraLiion(props) {
 
   const onSnap = async () => {
     if (cameraRef.current) {
-      const options = { quality: 0.7, base64: true };
+      const options = { quality: 1, base64: true, skipProcessing: true };
       const data = await cameraRef.current.takePictureAsync(options);
       const source = data.base64;
 
@@ -67,6 +69,9 @@ export default function CameraLiion(props) {
         type={cameraType}
         onCameraReady={onCameraReady}
         useCamera2Api={false}
+        autoFocus={Camera.Constants.AutoFocus}
+        ratio="4:3"
+        pictureSize="640x480"
       />
       <View style={styles.container}>
         {isPreview && (
@@ -107,7 +112,7 @@ export default function CameraLiion(props) {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFillObject,    
   },
   text: {
     color: "#fff",

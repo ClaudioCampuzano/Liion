@@ -3097,6 +3097,13 @@ expo-error-recovery@~3.0.3:
   dependencies:
     expo-modules-core "~0.4.4"
 
+expo-face-detector@~11.0.3:
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/expo-face-detector/-/expo-face-detector-11.0.3.tgz#5c677991be44e87da89430896fc1c1830592d6f9"
+  integrity sha512-a4W4O6ZPwyovCdcusyrAjcU7hbXjpRSDiqKwsgT7AkC6PbCK+I0/3mC1S4K6U6sAnp1W13qYjxVFrRtyTEdfOg==
+  dependencies:
+    expo-modules-core "~0.4.4"
+
 expo-file-system@~13.0.3:
   version "13.0.3"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-13.0.3.tgz#f8b3c47e0e7ecfd767043ed4c0aba6b207367678"
@@ -3113,6 +3120,19 @@ expo-font@~10.0.3:
   dependencies:
     expo-modules-core "~0.4.4"
     fontfaceobserver "^2.1.0"
+
+expo-image-loader@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-3.0.0.tgz#5ada47a0f90f8dec1777520d36e35c65155d9ea9"
+  integrity sha512-r4D+uLCf5vm5A2JIbF1Bc9FjYKrYGSLShbFB1MUvZ4BpSXJPRsprYZ9veUBVzzhh8hr23ahTFjMzp3nC57iREw==
+
+expo-image-manipulator@~10.1.2:
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-10.1.2.tgz#1053d26f30d5c690ebe2d012b98ac3f0ae57b51a"
+  integrity sha512-biMGVL7kzCVFIUpNVVf8FHcPzKPHK8RPooe8R9mjBIPV+FimVF6mIBdtTGe9Fw7iFm+jyRJONG2lZOrdBEUk+A==
+  dependencies:
+    expo-image-loader "~3.0.0"
+    expo-modules-core "~0.4.4"
 
 expo-keep-awake@~10.0.0:
   version "10.0.0"

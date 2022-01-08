@@ -1,6 +1,8 @@
 import { db, auth, FieldValue, storage } from "../config/config";
 import { isEmail, isLength, isDate, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
+import { Buffer } from "buffer";
+
 import moment from "moment";
 
 export const register = async (req, res) => {
@@ -13,7 +15,6 @@ export const register = async (req, res) => {
     password,
     gender,
     isDriver,
-    photo,
     photo64,
   } = req.body;
 
@@ -27,8 +28,7 @@ export const register = async (req, res) => {
     isDate(birth) &&
     isLength(password, { min: 8 }) &&
     passwordRegex.test(password) &&
-    !isDriver &&
-    !isEmpty(photo)
+    !isDriver
   ) {
     try {
       const fireRes = await auth.createUser({
@@ -38,10 +38,34 @@ export const register = async (req, res) => {
         disabled: false,
       });
       const uid = fireRes.toJSON().uid;
-
       try {
-        const docRef = db.collection("users").doc(uid);
-        const firestoreRes = await docRef.set({
+        var photoUpload = photo64 ?? "https://cutt.ly/SU2EnQW";
+
+        if (photo64) {
+          const imageBuffer = Buffer.from(photo64, "base64");
+
+          const options = {
+            metadata: {
+              metadata: {
+                firebaseStorageDownloadTokens: uid,
+              },
+              public: true,
+              contentType: "image/jpeg",
+            },
+          };
+
+          var file = storage.bucket().file("profile-images/" + uid + ".jpg");
+          const resUpload = await file.save(imageBuffer, options);
+          const signedUrl = (
+            await file.getSignedUrl({
+              action: "read",
+              expires: "03-09-2491",
+            })
+          )[0];
+          photoUpload = signedUrl;
+        }
+
+        const resFirestore = await db.collection("users").doc(uid).set({
           email: email,
           name: name,
           apellido: lastname,
@@ -52,29 +76,27 @@ export const register = async (req, res) => {
           driverData: {},
           sRating: 0,
           nRating: 0,
-          photo: photo,
+          photo: photoUpload,
         });
-        
-        const bucket = storage.bucket();
 
         res.json({ message: "Successful Registration" });
-        
       } catch (e) {
         auth
           .deleteUser(uid)
           .then(() => {
-            console.log('"Failed save in Firestore auth user removed');
+            console.log(e);
+            res.status(400).json({ message: "Failed registration" });
           })
           .catch((error) => {
             console.log("Error deleting user:", error);
           });
       }
     } catch (e) {
+      console.log(e);
       res.status(500).json(e);
     }
   } else {
-    const msg = "Failed registration";
-    res.status(400).json({ message: msg });
+    res.status(400).json({ message: "Failed registration" });
   }
 };
 
@@ -123,7 +145,6 @@ export const updateDriverRating = async (req, res) => {
   let rating = req.body.rating;
   if (uid && rating) {
     try {
-      // db.FieldValue.increment(50)
       const q = await db
         .collection("users")
         .doc(uid)
@@ -148,7 +169,6 @@ export const updateUserRating = async (req, res) => {
   let rating = req.body.rating;
   if (uid && rating) {
     try {
-      // db.FieldValue.increment(50)
       const q = await db
         .collection("users")
         .doc(uid)
@@ -157,7 +177,6 @@ export const updateUserRating = async (req, res) => {
           nRating: FieldValue.increment(1),
         });
 
-      //console.log(q)
       res.send("Puntuación de pasajero exitosa");
     } catch (e) {
       console.log(e);
