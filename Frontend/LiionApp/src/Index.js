@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { NavigationContainer } from "@react-navigation/native";
-
+import messaging from '@react-native-firebase/messaging';
 import AuthNavigator from "./navigations/AuthNavigator";
 import DrawerNavigator from "./navigations/DrawerNavigator";
 import { GlobalContext } from "./context/Provider";
@@ -28,11 +28,24 @@ const Index = (props) => {
     return () => unsubscribe;
   }, []);
 
+
+  useEffect(() => {
+    const uunsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return uunsubscribe;
+  }, []);
+
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+  });
+
   // Only user change and exists load firestoreData
   useEffect(() => {
     (async function loadInfo() {
       if (user) {
-        const loadFirestore = await loadUserFirestoreData(user);
+        await loadUserFirestoreData(user);
       }
     })();
   }, [user]);

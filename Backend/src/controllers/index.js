@@ -1,4 +1,4 @@
-import { db, auth, FieldValue } from "../config/config";
+import { db, auth, FieldValue, fcm } from "../config/config";
 import { isEmail, isLength, isDate, isAlphanumeric, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 import moment from "moment";
@@ -113,6 +113,28 @@ export const updateUserDriverStatus = async (req, res) => {
     res.status(403).send("Token UID Inválido o flagDriver inválido");
   }
 };
+export const upDateFcmToken = async (req, res) => {
+  const { uid, fcmToken } = req.body;
+  //console.log(uid, fcmToken)
+  if (uid && fcmToken) {
+    try {
+      const q = await db
+        .collection("users")
+        .doc(uid)
+        .update("fcmToken", fcmToken);
+      //console.log(q)
+      res.send("Actualización de token FCM exitoso");
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido");
+    }
+  } else {
+    console.log('aqui?')
+    res.status(403).send("Token UID Inválido o error");
+  }
+};
+
+
 export const updateDriverRating = async (req, res) => {
   let uid = req.body.uid;
   let rating = req.body.rating;
@@ -702,4 +724,35 @@ export async function updateStateTravel(req, res) {
       res: "Error",
     });
   }
+}
+
+
+export const fcmTest = async (req, res) => {
+  const registrationToken = 'dJpJPKRiSb6MpTRdb4AzuL:APA91bHeWBHp91cp58uJSkQyQf-jEpuRSzxL5k0NDj7z9fbVhm40bydZUVrG3SC3T8Fn79og9cTjZrN-KYi6CgAP5CMdadOWg9WMTURy3O0V3izy7jKVq5lv0_29Dyrq5D6yx_FXR-sC';
+  const message = {
+    notification: {
+      title: '850',
+      body: '2:45'
+    },
+    android: {
+      notification: {
+        icon: 'stock_ticker_update',
+        color: '#7e55c3'
+      }
+    },
+    token: registrationToken
+  };
+  try {
+  const  resfcm = await fcm.send(message) 
+  console.log('Successfully sent message:', resfcm);
+  res.json({ sucess: true, res: resfcm });
+  }
+  catch (e) {
+    console.log('Error sending message:', e);
+    res.status(500).json({
+      sucess: false,
+      res: e,
+    });
+  }
+
 }

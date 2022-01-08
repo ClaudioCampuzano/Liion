@@ -1,7 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { retrieveUserDataFromApi } from "../api/api";
-
+import { retrieveUserDataFromApi, upDateFcmToken } from "../api/api";
+import {returnFcmToken} from "../utils/fcm";
 import authReducer from "./authReducer";
 import {
   LOGOUT_USER,
@@ -17,6 +17,7 @@ const GlobalProvider = ({ children }) => {
   const initialState = {
     uid: "",
     accesstoken: "",
+    fcmToken:"",
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
@@ -35,10 +36,9 @@ const GlobalProvider = ({ children }) => {
         };
         const uid = res.user.uid;
         const atoken = await res.user.getIdToken(true);
-
         authDispatch({
           type: LOGIN_SUCCESS,
-          payload: { profile: profile, uid: uid, atoken: atoken },
+          payload: { profile: profile, uid: uid, atoken: atoken},
         });
       } else throw res;
       return { state: true };
@@ -52,7 +52,6 @@ const GlobalProvider = ({ children }) => {
       const res = await fireLogout();
       authDispatch({ type: LOGOUT_USER });
     } catch (err) {
-      console.error(err);
     }
   };
 
@@ -66,6 +65,15 @@ const GlobalProvider = ({ children }) => {
       };
       const uid = payload.uid;
       const atoken = await payload.getIdToken(true);
+      //Ojo es let porque despues la podria reasignas, con const no se puede en este tipo de datos (objetos si puedes modificar campos, pero no es un objeto)
+      //mejor lo actualizamos siempre, por ahora      
+       const fcmToken = await returnFcmToken();
+       //console.log(fcmToken)
+        const [flagFCM, resFCM] = await upDateFcmToken({atoken:atoken,fcmToken:fcmToken, uid:uid})
+        //copmo estamos dentro del try-catch.. basta con lanzar un error hacia afuera y paramos todo
+        if(!flagFCM) throw "Error al registrar el FCM"
+      //}
+      
       if (flag) {
         authDispatch({
           type: LOAD_FIRESTORE_DATA,
@@ -73,6 +81,7 @@ const GlobalProvider = ({ children }) => {
             firestoreData: { ...res, ...profile },
             uid: uid,
             atoken: atoken,
+            fcmToken:fcmToken,
           },
         });
         return true;

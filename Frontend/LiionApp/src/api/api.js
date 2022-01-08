@@ -47,7 +47,6 @@ export const updateDriverStatus = async (flag, payload) => {
   try {
     const obj = { ...payload, ...{ flagDriver: flag } };
     const dataSend = JSON.stringify(obj);
-    //console.log(dataSend)
     const res = await client({
       method: "post",
       url: "/updateUsersDriverStatus",
@@ -56,7 +55,22 @@ export const updateDriverStatus = async (flag, payload) => {
     });
     return [true, res.data];
   } catch (e) {
-    //console.log(e.response.data)
+    return [false, e.response.data];
+  }
+};
+
+export const upDateFcmToken = async (payload) => {
+  try {
+    const dataSend = JSON.stringify(payload);
+    //console.log(dataSend)
+    const res = await client({
+      method: "post",
+      url: "/updateTokenFcm",
+      headers: { "Content-Type": "application/json" },
+      data: dataSend,
+    });
+    return [true, res.data];
+  } catch (e) {
     return [false, e.response.data];
   }
 };
@@ -72,7 +86,6 @@ export const createTravel = async (dataTravel) => {
     });
     return [true, res.data];
   } catch (e) {
-    //console.log(e.response.data)
     return [false, e.response.data];
   }
 };
@@ -219,10 +232,8 @@ export const protectedRoute = async () => {
         },
       });
     } catch (e) {
-      console.log(e);
     }
   } else {
-    console.log("jiro");
   }
 };
 
@@ -236,6 +247,5 @@ export const unProtectedRoute = async () => {
       },
     });
   } catch (e) {
-    console.log(e.response);
   }
 };

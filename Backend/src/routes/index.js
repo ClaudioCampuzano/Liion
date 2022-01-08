@@ -14,7 +14,9 @@ import {
   getTravelsDriver,
   deletePassengerRequest,
   deleteDriverTravel,
-  updateStateTravel
+  updateStateTravel,
+  upDateFcmToken,
+  fcmTest
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -25,6 +27,7 @@ router.post("/register", register);
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 router.post("/updateDriverRating", checkIsAuth, updateDriverRating);
+router.post("/updateTokenFcm", checkIsAuth, upDateFcmToken)
 router.post("/updateUserRating", checkIsAuth, updateUserRating);
 
 router.post("/createTravel", createTravel);
@@ -45,6 +48,8 @@ router.get("/getTravelsDriver/:userUID", getTravelsDriver);
 router.delete("/deletePassengerRequest", deletePassengerRequest);
 router.delete("/deleteDriverTravel", deleteDriverTravel);
 router.patch("/updateStateTravel", updateStateTravel);
+
+router.post('/testFcm', fcmTest);
 
 
 export default router;

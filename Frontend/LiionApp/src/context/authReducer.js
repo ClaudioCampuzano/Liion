@@ -15,6 +15,7 @@ const authReducer = (state, action) => {
         ...state,
         uid: payload.uid,
         accesstoken: payload.atoken,
+        fcmToken: payload.fcmToken,
         userData: { ...state.userData, ...payload.profile },
       };
     case LOGOUT_USER:
@@ -23,6 +24,7 @@ const authReducer = (state, action) => {
         uid: "",
         accesstoken: "",
         userData: {},
+        fcmToken:'',
         isLoadedData: false,
       };
     case LOAD_FIRESTORE_DATA:
@@ -30,6 +32,7 @@ const authReducer = (state, action) => {
         ...state,
         uid: payload.uid,
         accesstoken: payload.atoken,
+        fcmToken:payload.fcmToken,
         userData: { ...state.userData, ...payload.firestoreData },
         isLoadedData: true,
       };
