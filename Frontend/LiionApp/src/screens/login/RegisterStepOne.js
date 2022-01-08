@@ -9,6 +9,9 @@ import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { validate, format, clean } from "../../utils/utils";
 import InputDateTime from "../../components/InputDateTime";
 import InputPicker from "../../components/InputPicker";
+import ModalPopUp from "../../components/ModalPopUp";
+import Loading from "../../components/Loading";
+import { getStatusRun } from "../../api/api";
 
 import moment from "moment";
 import "moment/locale/es";
@@ -26,6 +29,10 @@ const RegisterStepOne = ({ navigation }) => {
   const [errorFecha, setErrorFecha] = useState(null);
   const [errorGenero, setErrorGenero] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [apiResponse, setApiResponse] = useState("");
+
   useEffect(() => {
     if (valueNombre != "") setErrorNombre(null);
     if (valueApellido != "") setErrorApellido(null);
@@ -40,7 +47,7 @@ const RegisterStepOne = ({ navigation }) => {
       setErrorFecha(null);
   }, [valueNombre, valueApellido, valueRun, valueFecha, valueGender]);
 
-  const checkValidator = () => {
+  const checkValidator = async () => {
     if (valueNombre == "") setErrorNombre("Falta tu nombre");
     else setErrorNombre(null);
     if (valueApellido == "") setErrorApellido("Falta tu apellido");
@@ -63,91 +70,115 @@ const RegisterStepOne = ({ navigation }) => {
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) &&
       valueGender != ""
     ) {
-      const dataToStep2 = {
-        name: valueNombre,
-        lastname: valueApellido,
-        run: valueRun,
-        dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
-        gender: valueGender,
-      };
-      navigation.navigate("RegisterStepTwo", dataToStep2);
+      setLoading(true);
+      const [resFlag, resMsg] = await getStatusRun({ run: valueRun });
+      if (resFlag) {
+        if (resMsg.check) {
+          setModalVisible(true);
+          setApiResponse(resMsg.res);
+        } else {
+          const dataToStep2 = {
+            name: valueNombre,
+            lastname: valueApellido,
+            run: valueRun,
+            dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
+            gender: valueGender,
+          };
+          navigation.navigate("RegisterStepTwo", dataToStep2);
+        }
+      } else {
+        setModalVisible(true);
+        setApiResponse(resMsg.res);
+      }
+      setLoading(false);
     }
   };
 
   return (
     <Layout>
-      <KeyboardAvoidingWrapper>
-        <View
-          style={{
-            height: hp("78%"),
-          }}
-        >
-          <Text style={styles.text_titulo}>Datos personales</Text>
-          <Text style={styles.text_subTitulo}>
-            Tus datos dan seguridad a la comunidad
-          </Text>
+      {loading ? (
+        <Loading />
+      ) : (
+        <KeyboardAvoidingWrapper>
+          <View
+            style={{
+              height: hp("78%"),
+            }}
+          >
+            <ModalPopUp
+              visible={modalVisible}
+              setModalVisible={setModalVisible}
+            >
+              {apiResponse}
+            </ModalPopUp>
+            <Text style={styles.text_titulo}>Datos personales</Text>
+            <Text style={styles.text_subTitulo}>
+              Tus datos dan seguridad a la comunidad
+            </Text>
 
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ flexDirection: "row", alignSelf: "center" }}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+                <InputLiion
+                  style={{ ...styles.inputNames, marginRight: wp(1) }}
+                  label="Nombre"
+                  errorText={errorNombre}
+                  value={valueNombre}
+                  secureTextEntry={false}
+                  onChangeText={(text) => setValueNombre(text)}
+                />
+                <InputLiion
+                  style={styles.inputNames}
+                  errorText={errorApellido}
+                  label="Apellido"
+                  value={valueApellido}
+                  secureTextEntry={false}
+                  onChangeText={(text) => setValueApellido(text)}
+                />
+              </View>
               <InputLiion
-                style={{ ...styles.inputNames, marginRight: wp(1) }}
-                label="Nombre"
-                errorText={errorNombre}
-                value={valueNombre}
+                style={styles.input}
+                label="Run"
+                errorText={errorRun}
+                keyboardType="default"
+                value={valueRun}
                 secureTextEntry={false}
-                onChangeText={(text) => setValueNombre(text)}
+                onChangeText={(text) => setValueRun(text)}
               />
-              <InputLiion
-                style={styles.inputNames}
-                errorText={errorApellido}
-                label="Apellido"
-                value={valueApellido}
-                secureTextEntry={false}
-                onChangeText={(text) => setValueApellido(text)}
+              <InputDateTime
+                style={styles.input}
+                errorText={errorFecha}
+                onDataChange={(value) => {
+                  setValueFecha(value);
+                }}
+                label="Fecha de nacimiento"
+                mode="date"
+                maximum="6574"
+                minimum="33238"
               />
-            </View>
-            <InputLiion
-              style={styles.input}
-              label="Run"
-              errorText={errorRun}
-              keyboardType="default"
-              value={valueRun}
-              secureTextEntry={false}
-              onChangeText={(text) => setValueRun(text)}
+              <InputPicker
+                style={styles.input}
+                errorText={errorGenero}
+                onSelect={(selectedItem, index) => {
+                  var item = selectedItem;
+                  if (selectedItem == "Ninguno de los anteriores")
+                    item = "Otro";
+                  setValueGender(item);
+                }}
+                value={valueGender}
+                data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
+                label="Genero"
+              />
+            </ScrollView>
+          </View>
+          <View style={styles.buttonView}>
+            <ButtonLiion
+              title="Siguiente"
+              styleView={styles.button}
+              onPress={() => checkValidator()}
             />
-            <InputDateTime
-              style={styles.input}
-              errorText={errorFecha}
-              onDataChange={(value) => {
-                setValueFecha(value);
-              }}
-              label="Fecha de nacimiento"
-              mode="date"
-              maximum="6574"
-              minimum="33238"
-            />
-            <InputPicker
-              style={styles.input}
-              errorText={errorGenero}
-              onSelect={(selectedItem, index) => {
-                var item = selectedItem;
-                if (selectedItem == "Ninguno de los anteriores") item = "Otro";
-                setValueGender(item);
-              }}
-              value={valueGender}
-              data={["Mujer", "Hombre", "Ninguno de los anteriores"]}
-              label="Genero"
-            />
-          </ScrollView>
-        </View>
-        <View style={styles.buttonView}>
-          <ButtonLiion
-            title="Siguiente"
-            styleView={styles.button}
-            onPress={() => checkValidator()}
-          />
-        </View>
-      </KeyboardAvoidingWrapper>
+          </View>
+        </KeyboardAvoidingWrapper>
+      )}
     </Layout>
   );
 };

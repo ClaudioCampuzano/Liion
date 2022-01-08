@@ -186,6 +186,9 @@ const RegisterStepThree = ({ route, navigation }) => {
                 secureTextEntry={true}
                 onChangeText={(text) => setValuePassConfirm(text)}
               />
+                                        <Text style={styles.text_pass}>
+              {'La contraseña debe ser mayor o igual a 8 caracteres\ny ser una combinacion de letras mayusculas,\nminusculas y numeros\n'}
+            </Text>
             </ScrollView>
           </View>
           <View style={styles.buttonView}>
@@ -216,6 +219,13 @@ const styles = StyleSheet.create({
     paddingTop: hp("6%"),
     textAlign: "center",
     paddingBottom: hp("5%"),
+  },
+  text_pass:{
+    fontFamily: "Gotham-SSm-Medium",
+    fontSize: hp("1.5%"),
+    color: COLORS.TURKEY_CLEAR,
+    paddingTop: hp("1.8%"),
+    textAlign: "center",
   },
   input: {
     marginTop: hp("1.8%"),

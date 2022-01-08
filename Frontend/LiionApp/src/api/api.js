@@ -35,7 +35,6 @@ export const retrieveUserDataFromApi = async (user) => {
       method: "get",
       url: "/getUserData",
       params: data,
-
     });
     return [true, res.data];
   } catch (e) {
@@ -83,6 +82,20 @@ export const getTravels = async (searchParameters) => {
     const res = await client({
       method: "get",
       url: "/getTravels",
+      params: requiredParameters,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const getStatusRun = async (payload) => {
+  try {
+    const requiredParameters = JSON.stringify(payload);
+    const res = await client({
+      method: "get",
+      url: "/getStatusRun",
       params: requiredParameters,
     });
     return [true, res.data];

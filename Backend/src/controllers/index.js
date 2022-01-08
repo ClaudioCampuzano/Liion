@@ -736,10 +736,26 @@ export async function updateStateTravel(req, res) {
         });
     }
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).json({
       sucess: false,
       res: "Error",
     });
   }
 }
+
+export const getStatusRun = async (req, res) => {
+  const { run } = JSON.parse(req.query["0"]);
+  console.log(run)
+  try {
+    const userObj = await db.collection("users").where("run", "==", run).get();
+    userObj.empty
+      ? res.json({ check: false })
+      : res.json({ check: true, res: "Run ya registrado" });
+  } catch {
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+};

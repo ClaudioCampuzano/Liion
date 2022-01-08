@@ -23,10 +23,10 @@ const CreateStepFive = ({ navigation, route }) => {
   const { userData, uid, accesstoken } =
     useContext(GlobalContext);
   const [modalVisible, setModalVisible] = useState(false);
-  const [waitingLogin, setWaitingLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const checkValidator = async () => {
-    setWaitingLogin(true);
+    setLoading(true);
     const titulo = "¡Creación de viaje realizada!";
     const subTitulo =
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
@@ -53,7 +53,7 @@ const CreateStepFive = ({ navigation, route }) => {
       //dataForRoutingTwo.current = dataForSend
       setModalVisible(true);
     }
-    setWaitingLogin(false);
+    setLoading(false);
   };
 
   const modalHandler = () => {
@@ -102,7 +102,7 @@ const CreateStepFive = ({ navigation, route }) => {
 
   return (
     <Layout>
-      {waitingLogin ? (
+      {loading ? (
         <Loading />
       ) : (
         <>

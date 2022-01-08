@@ -69,7 +69,6 @@ const CreateStepThree = ({ navigation, route }) => {
     };
     if (preferences.onlyWoman) dataAddTravel.genderPreference = "onlyWoman";
     else if (preferences.onlyMen) dataAddTravel.genderPreference = "onlyMen";
-
     navigation.navigate("CreateStepFour", {
       ...route.params,
       ...dataAddTravel,
