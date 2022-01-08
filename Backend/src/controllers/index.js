@@ -77,6 +77,7 @@ export const register = async (req, res) => {
           sRating: 0,
           nRating: 0,
           photo: photoUpload,
+          status: "travelOff",
         });
 
         res.json({ message: "Successful Registration" });
@@ -101,7 +102,7 @@ export const register = async (req, res) => {
 };
 
 export const getUserData = async (req, res) => {
-  let uid = req.body.uid;
+  const { uid } = JSON.parse(req.query["0"]);
 
   if (uid) {
     try {
@@ -692,6 +693,22 @@ export async function updateStateTravel(req, res) {
           const travelUpdate = await travelRef.update({
             status: state,
           });
+
+          for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
+            const passengerUID = (
+              await db
+                .collection("requestTravel")
+                .doc(travelObj.requestingPassengers[i])
+                .get()
+            ).data().passengerUID;
+            const userUpdate = await db
+              .collection("users")
+              .doc(passengerUID)
+              .update({
+                status: "travelOn",
+              });
+          }
+
           res.json({ sucess: true, res: "Viaje iniciado" });
         } else
           res.status(403).json({
@@ -719,6 +736,7 @@ export async function updateStateTravel(req, res) {
         });
     }
   } catch (e) {
+    console.log(e)
     res.status(500).json({
       sucess: false,
       res: "Error",

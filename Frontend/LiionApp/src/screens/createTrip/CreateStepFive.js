@@ -32,21 +32,7 @@ const CreateStepFive = ({ navigation, route }) => {
       "Tu creación de viaje fue generada exitosamente.\nPara chequear el estatus de tu\nviaje chequéalo en Mis viajes\n(conductor) en el home.";
     const finalTabRoute = "TravelConductorTab";
 
-    /*     const usefullUserData = (({ email, phoneNumber, photoURL }) => ({
-      email,
-      phoneNumber,
-      photoURL,
-    }))(userData);
-    const driverDatas = {
-      ...userData.driverData,
-      ...userData,
-    };
-    delete driverDatas.DriverData;
-    delete driverDatas.driverData;
-    delete driverDatas.isDriver;*/
-    //driverData: { ...driverDatas },
-
-    const dataForSend = {
+      const dataForSend = {
       atoken: accesstoken,
       driverUID: uid,
       status: "open",

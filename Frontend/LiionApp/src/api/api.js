@@ -32,10 +32,10 @@ export const retrieveUserDataFromApi = async (user) => {
     const uid = await user.uid;
     const data = JSON.stringify({ uid: uid, atoken: atoken });
     const res = await client({
-      method: "post",
+      method: "get",
       url: "/getUserData",
-      headers: { "Content-Type": "application/json" },
-      data: data,
+      params: data,
+
     });
     return [true, res.data];
   } catch (e) {

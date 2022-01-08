@@ -29,7 +29,7 @@ router.post("/updateUserRating", checkIsAuth, updateUserRating);
 
 router.post("/createTravel", createTravel);
 
-router.post("/getUserData", checkIsAuth, getUserData);
+router.get("/getUserData", getUserData);
 
 //Metodos implicados en la busqueda de viajes
 router.get("/getTravels", getTravels);

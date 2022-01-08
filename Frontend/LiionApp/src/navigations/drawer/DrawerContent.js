@@ -41,9 +41,7 @@ const DrawerContent = (props) => {
                 <Text style={styles.labelRankings}>
                   {userData.nRating == 0
                     ? 0
-                    : Math.round(
-                        userData.sRating / userData.nRating
-                      )}
+                    : Math.round(userData.sRating / userData.nRating)}
                   {"/5 - " + userData.nRating + " Calificaciones"}
                 </Text>
               </View>
@@ -65,6 +63,29 @@ const DrawerContent = (props) => {
           </View>
         </View>
         <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
+          {userData.status === "travelOn" && (
+            <DrawerItem
+              style={{ marginBottom: -hp("0.5") }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="car-arrow-left"
+                  size={hp("3.5")}
+                  color={COLORS.WARN_RED}
+                />
+              )}
+              label="Viaje en curso"
+              labelStyle={{ ...styles.labelDrawerItem, color: COLORS.WARN_RED }}
+              onPress={() =>
+                props.navigation.navigate("MyTravelNavigator", {
+                  screen: "TravelTabNavigator",
+                  params: {
+                    screen: "TravelPasajeroTab",
+                  },
+                })
+              }
+            />
+          )}
+
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (
