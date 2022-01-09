@@ -25,7 +25,12 @@
         "backgroundColor": "#FFFFFF"
       },
       "package":"dev.liion.pmm",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+            "apiKey": "AIzaSyAq09yewM1372uclnRerOqr9JUwdLKjUzA"
+        }
+    }
     },
     "web": {
       "favicon": "./assets/images/icon.png"

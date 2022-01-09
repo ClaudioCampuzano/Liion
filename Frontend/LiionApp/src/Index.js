@@ -25,7 +25,10 @@ const Index = (props) => {
       setUserStateLoaded(true);
       //metodo para actualizar token cuando cambie, no se como probar ya que el token cambia cada 1.. habria que dejarlo ese tiempo y ver que pasa
       //no me gusta esa sintaxis qla de then con callbacks pero weno se le hace a todo
-      firebaseUser.getIdToken(true).then(id => refreshTokens({ accesstoken: id })).catch(e => console.log(e))
+      firebaseUser.getIdToken(true).then(id => {
+        refreshTokens({ accesstoken: id })
+        console.log('se ha actualizado token de sesion')
+      }).catch(e => console.log(e))
     });
 
     return () => unsubscribe;
