@@ -497,7 +497,8 @@ export async function getTravelsPassenger(req, res) {
             currentTimeTravel
               .add(travelData.data().durationMinutes, "minutes")
               .add(6, "hours")
-              .isSameOrAfter(moment())
+              .isSameOrAfter(moment()) ||
+            travelData.data().status === "ongoing"
           ) {
             var driverRef = await db
               .collection("users")
@@ -690,10 +691,8 @@ export async function updateStateTravel(req, res) {
             moment().add(15, "minutes")
           )
         ) {
-          const travelUpdate = await travelRef.update({
-            status: state,
-          });
-
+          var objLocation = {};
+          objLocation[travelObj.driverUID] = {};
           for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
             const passengerUID = (
               await db
@@ -707,7 +706,13 @@ export async function updateStateTravel(req, res) {
               .update({
                 status: "travelOn",
               });
+            objLocation[passengerUID] = {};
           }
+
+          const travelUpdate = await travelRef.update({
+            status: state,
+            locations: objLocation,
+          });
 
           res.json({ sucess: true, res: "Viaje iniciado" });
         } else
@@ -746,7 +751,7 @@ export async function updateStateTravel(req, res) {
 
 export const getStatusRun = async (req, res) => {
   const { run } = JSON.parse(req.query["0"]);
-  console.log(run)
+  console.log(run);
   try {
     const userObj = await db.collection("users").where("run", "==", run).get();
     userObj.empty
@@ -759,3 +764,25 @@ export const getStatusRun = async (req, res) => {
     });
   }
 };
+
+export async function updateUserLocationInTravel(req, res) {
+  const { travelId, location, uid } = req.body;
+  try {
+    if ((isEmpty(travelId) || isEmpty(uid)) && location != null)
+      throw "Faltan parametros";
+    const updateObj = {};
+    updateObj[`locations.${uid}`] = location;
+
+    const travelRes = await db
+      .collection("travels")
+      .doc(travelId)
+      .update(updateObj);
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}

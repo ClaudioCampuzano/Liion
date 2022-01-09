@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import * as Location from "expo-location";
 
@@ -6,8 +6,12 @@ import Loading from "../../components/Loading";
 import Layout from "../../components/Layout";
 import ModalPopUp from "../../components/ModalPopUp";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
+import { updateUserLocationInTravel } from "../../api/api";
+import { GlobalContext } from "../../context/Provider";
 
 const OngoingTravelVisualizer = ({ navigation, route }) => {
+  const { uid, userData } = useContext(GlobalContext);
+  const { id } = route.params;
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -19,14 +23,29 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
         return;
       }
 
-      let locations = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.Lowest, distanceInterval: 10 },
-        (loc) => setLocation(JSON.parse(JSON.stringify(loc.coords)))
+      await Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 15 },
+        (loc) =>
+          setLocation({
+            latitude: loc.coords.latitude,
+            longitude: loc.coords.longitude,
+          })
       );
-      setLocation(locations);
     })();
   }, []);
-  
+
+  useEffect(() => {
+    if (location != null)
+      (async () => {
+        var data = {
+          travelId: id,
+          uid: uid,
+          location: location,
+        };
+        await updateUserLocationInTravel(data);
+      })();
+  }, [location]);
+
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
@@ -35,7 +54,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   }
   return (
     <View>
-      <Text>{text}</Text>
+      <Text>{text}{id}{uid}</Text>
     </View>
   );
 };
