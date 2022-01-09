@@ -4,6 +4,7 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
+  REFRESHTOKENS,
 } from "./types";
 
 const authReducer = (state, action) => {
@@ -24,7 +25,7 @@ const authReducer = (state, action) => {
         uid: "",
         accesstoken: "",
         userData: {},
-        fcmToken:'',
+        fcmToken: '',
         isLoadedData: false,
       };
     case LOAD_FIRESTORE_DATA:
@@ -32,7 +33,7 @@ const authReducer = (state, action) => {
         ...state,
         uid: payload.uid,
         accesstoken: payload.atoken,
-        fcmToken:payload.fcmToken,
+        fcmToken: payload.fcmToken,
         userData: { ...state.userData, ...payload.firestoreData },
         isLoadedData: true,
       };
@@ -40,6 +41,8 @@ const authReducer = (state, action) => {
       return state;
     case TRIGGER_RELOAD:
       return { ...state, reloadTrigger: payload };
+    case REFRESHTOKENS:
+      return { ...state, ...payload }
     default:
       return state;
   }

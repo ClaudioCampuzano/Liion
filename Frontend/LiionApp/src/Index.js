@@ -11,7 +11,7 @@ import { loadFonts } from "./constants/styleThemes";
 import Loading from "./components/Loading";
 
 const Index = (props) => {
-  const { loadUserFirestoreData, isLoadedData } = useContext(GlobalContext);
+  const { loadUserFirestoreData, isLoadedData, refreshTokens } = useContext(GlobalContext);
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
   const [user, setUser] = useState(null);
@@ -23,6 +23,9 @@ const Index = (props) => {
     const unsubscribe = onAuthStateChanged(getAuth(), (firebaseUser) => {
       setUser(firebaseUser);
       setUserStateLoaded(true);
+      //metodo para actualizar token cuando cambie, no se como probar ya que el token cambia cada 1.. habria que dejarlo ese tiempo y ver que pasa
+      //no me gusta esa sintaxis qla de then con callbacks pero weno se le hace a todo
+      firebaseUser.getIdToken(true).then(id => refreshTokens({ accesstoken: id })).catch(e => console.log(e))
     });
 
     return () => unsubscribe;

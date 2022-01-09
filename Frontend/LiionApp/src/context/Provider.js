@@ -1,7 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
 import { retrieveUserDataFromApi, upDateFcmToken } from "../api/api";
-import {returnFcmToken} from "../utils/fcm";
+import { returnFcmToken } from "../utils/fcm";
 import authReducer from "./authReducer";
 import {
   LOGOUT_USER,
@@ -9,6 +9,7 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
+  REFRESHTOKENS,
 } from "./types";
 
 export const GlobalContext = createContext({});
@@ -17,7 +18,7 @@ const GlobalProvider = ({ children }) => {
   const initialState = {
     uid: "",
     accesstoken: "",
-    fcmToken:"",
+    fcmToken: "",
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
@@ -28,7 +29,7 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await fireLogin(payload);
 
-      if (res.hasOwnProperty("user")) {    
+      if (res.hasOwnProperty("user")) {
         const profile = {
           emailVerified: res.user.emailVerified,
           lastLoginAt: res.user.metadata.lastLoginAt,
@@ -38,7 +39,7 @@ const GlobalProvider = ({ children }) => {
         const atoken = await res.user.getIdToken(true);
         authDispatch({
           type: LOGIN_SUCCESS,
-          payload: { profile: profile, uid: uid, atoken: atoken},
+          payload: { profile: profile, uid: uid, atoken: atoken },
         });
       } else throw res;
       return { state: true };
@@ -67,13 +68,13 @@ const GlobalProvider = ({ children }) => {
       const atoken = await payload.getIdToken(true);
       //Ojo es let porque despues la podria reasignas, con const no se puede en este tipo de datos (objetos si puedes modificar campos, pero no es un objeto)
       //mejor lo actualizamos siempre, por ahora      
-       const fcmToken = await returnFcmToken();
-       //console.log(fcmToken)
-        const [flagFCM, resFCM] = await upDateFcmToken({atoken:atoken,fcmToken:fcmToken, uid:uid})
-        //copmo estamos dentro del try-catch.. basta con lanzar un error hacia afuera y paramos todo
-        if(!flagFCM) throw "Error al registrar el FCM"
+      const fcmToken = await returnFcmToken();
+      //console.log(fcmToken)
+      const [flagFCM, resFCM] = await upDateFcmToken({ atoken: atoken, fcmToken: fcmToken, uid: uid })
+      //copmo estamos dentro del try-catch.. basta con lanzar un error hacia afuera y paramos todo
+      if (!flagFCM) throw "Error al registrar el FCM"
       //}
-      
+
       if (flag) {
         authDispatch({
           type: LOAD_FIRESTORE_DATA,
@@ -81,7 +82,7 @@ const GlobalProvider = ({ children }) => {
             firestoreData: { ...res, ...profile },
             uid: uid,
             atoken: atoken,
-            fcmToken:fcmToken,
+            fcmToken: fcmToken,
           },
         });
         return true;
@@ -105,6 +106,23 @@ const GlobalProvider = ({ children }) => {
     });
   };
 
+  const refreshTokens = (obj) => {
+    const { accesstoken, fcmToken } = obj
+    if (accesstoken) {
+      authDispatch({
+        type: REFRESHTOKENS,
+        payload: { accesstoken: accesstoken }
+      });
+    }
+    if (fcmToken) {
+      authDispatch({
+        type: REFRESHTOKENS,
+        payload: { fcmToken: fcmToken }
+      });
+    };
+  };
+
+
   return (
     <GlobalContext.Provider
       value={{
@@ -119,6 +137,7 @@ const GlobalProvider = ({ children }) => {
         loginUser,
         logoutUser,
         loadUserFirestoreData,
+        refreshTokens,
       }}
     >
       {children}
