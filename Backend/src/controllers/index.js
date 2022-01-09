@@ -743,9 +743,9 @@ export const fcmTest = async (req, res) => {
     token: registrationToken
   };
   try {
-  const  resfcm = await fcm.send(message) 
-  console.log('Successfully sent message:', resfcm);
-  res.json({ sucess: true, res: resfcm });
+    const resfcm = await fcm.send(message)
+    console.log('Successfully sent message:', resfcm);
+    res.json({ sucess: true, res: resfcm });
   }
   catch (e) {
     console.log('Error sending message:', e);
@@ -755,4 +755,83 @@ export const fcmTest = async (req, res) => {
     });
   }
 
+}
+
+function compareDateOfTravels(a, b) {
+  const aTime = moment(a.date + " " + a.startTime, "DD/MM/YYYY HH:mm")
+  const bTime = moment(b.date + " " + b.startTime, "DD/MM/YYYY HH:mm")
+  //console.log(aTime, bTime)
+  if (aTime.isSameOrBefore(bTime)) {
+    return -1;
+  }
+  if (aTime.isAfter(bTime)) {
+    return 1;
+  }
+  return 0;
+}
+
+
+
+export async function getupcomingTravels(req, res) {
+  var driverUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var travelRef = await db
+      .collection("travels")
+      .where("driverUID", "==", driverUID)
+      .where("status", "not-in", ["finished", "aborted"])
+      .get();
+
+    if (!travelRef.empty)
+      //travelRef.docs.forEach(x => console.log(compareDateOfTravels(x.data(),x.data())))
+      for (const doc of travelRef.docs) {
+        let currentTimeTravel = moment(
+          doc.data().date + " " + doc.data().startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+        if (
+          currentTimeTravel
+            .add(doc.data().durationMinutes, "minutes")
+            .add(6, "hours")
+            .isSameOrAfter(moment())
+          || doc.data().status !== 'ongoing'
+        ) {
+          resultData.push({
+            id: doc.id,
+            date: doc.data().date,
+            startTime: doc.data().startTime,
+            destinationDetails: doc.data().destinationDetails,
+            originDetails: doc.data().originDetails,
+            durationMinutes: doc.data().durationMinutes,
+            status: doc.data().status,
+            nSeatsAvailable: doc.data().nSeatsAvailable,
+            nSeatsOffered: doc.data().nSeatsOffered,
+            costPerSeat: doc.data().costPerSeat,
+            extraBaggage: doc.data().extraBaggage,
+            approvalIns: doc.data().approvalIns,
+            smoking: doc.data().smoking,
+            genderPreference: doc.data().genderPreference,
+          });
+        }
+      }
+    if (typeof resultData !== 'undefined' && resultData.length > 0) {
+      resultData.sort(compareDateOfTravels)
+    } else throw "Vacio"
+
+    const currentTime = moment()
+    const closeTime = moment(resultData[0].date + " " + resultData[0].startTime, "DD/MM/YYYY HH:mm")
+    const diff = moment.duration(closeTime.diff(currentTime))
+    const minuteDelta = diff.asMinutes()
+    if (Math.abs(minuteDelta) <= 20) { //viaje en 20 minutos
+      res.send(JSON.stringify(resultData[0]));
+    }
+    else {
+      //no hay viejs pronto
+      res.send(JSON.stringify({}))
+    }
+
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Error");
+  }
 }

@@ -16,6 +16,7 @@ import {
   deleteDriverTravel,
   updateStateTravel,
   upDateFcmToken,
+  getupcomingTravels,
   fcmTest
 } from "../controllers/index";
 
@@ -50,6 +51,7 @@ router.delete("/deleteDriverTravel", deleteDriverTravel);
 router.patch("/updateStateTravel", updateStateTravel);
 
 router.post('/testFcm', fcmTest);
+router.get("/getupcomingTravels/:userUID",getupcomingTravels);
 
 
 export default router;
