@@ -794,7 +794,7 @@ export async function getupcomingTravels(req, res) {
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
             .isSameOrAfter(moment())
-          || doc.data().status !== 'ongoing'
+          && doc.data().status !== 'ongoing'
         ) {
           resultData.push({
             id: doc.id,
