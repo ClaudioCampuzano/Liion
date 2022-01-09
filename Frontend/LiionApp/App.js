@@ -1,6 +1,7 @@
 import React from "react";
 import Index from "./src/Index";
 import GlobalProvider from "./src/context/Provider";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import { initializeApp } from "firebase/app";
 import { LogBox } from "react-native";
@@ -32,9 +33,13 @@ export default function App() {
   };
   const app = initializeApp(firebaseKeys);
 
+  const queryClient = new QueryClient();
+
   return (
-    <GlobalProvider>
-      <Index />
-    </GlobalProvider>
+    <QueryClientProvider client={queryClient}>
+      <GlobalProvider>
+        <Index />
+      </GlobalProvider>
+    </QueryClientProvider>
   );
 }

@@ -26,6 +26,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       setLocation(locations);
     })();
   }, []);
+  
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
