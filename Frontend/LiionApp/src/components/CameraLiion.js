@@ -3,8 +3,6 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { COLORS, hp } from "../constants/styleThemes";
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FaceDetector from 'expo-face-detector';
 
 export default function CameraLiion(props) {
   const cameraRef = useRef();
@@ -69,7 +67,7 @@ export default function CameraLiion(props) {
         type={cameraType}
         onCameraReady={onCameraReady}
         useCamera2Api={false}
-        autoFocus={Camera.Constants.AutoFocus}
+        autoFocus={Camera.Constants.AutoFocus.on}
         ratio="4:3"
         pictureSize="640x480"
       />
