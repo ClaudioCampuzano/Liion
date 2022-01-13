@@ -547,7 +547,7 @@ export async function getTravelsDriver(req, res) {
     var travelRef = await db
       .collection("travels")
       .where("driverUID", "==", driverUID)
-      .where("status", "not-in", ["finished", "aborted"])
+      .where("status", "not-in", ["aborted"])
       .get();
 
     if (!travelRef.empty)
@@ -560,7 +560,8 @@ export async function getTravelsDriver(req, res) {
           currentTimeTravel
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
-            .isSameOrAfter(moment())
+            .isSameOrAfter(moment()) ||
+          doc.data().status === "ongoing"
         ) {
           resultData.push({
             id: doc.id,
