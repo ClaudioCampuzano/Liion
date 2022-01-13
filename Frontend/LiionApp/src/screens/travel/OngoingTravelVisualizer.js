@@ -13,18 +13,27 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import * as Location from "expo-location";
-import { AntDesign } from "@expo/vector-icons";
+import {
+  AntDesign,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { Avatar } from "react-native-paper";
 
 //import { useQuery } from "react-query";
+
+import ButtonLiion from "../../components/ButtonLiion";
 
 import { GlobalContext } from "../../context/Provider";
 import MapOngoingTravel from "../../components/MapOngoingTravel";
 import Loading from "../../components/Loading";
 import Layout from "../../components/Layout";
 import ModalPopUp from "../../components/ModalPopUp";
+import ModalPopUpDecision from "../../components/ModalPopUpDecision";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import {
   updateUserLocationInTravel,
@@ -43,15 +52,26 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   const [dataFromApi, setDataFromApi] = useState({});
 
   const [errorMsg, setErrorMsg] = useState("");
-  const [modalState, setModalState] = useState(false);
+  const [modalErrorState, setModalErrorState] = useState(false);
+  const [modalDecisionState, setModalDecisionState] = useState(false);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const sheetRef = useRef();
   const cameraRef = useRef();
-  const [dataScaned, setDataScaned] = useState("");
 
   const snapPoints = ["70%"];
+
+  const lugar = {
+    type: "subida",
+    site: "Alameda 758, Santiago de chile, con todos",
+  };
+  const datos = {
+    name: "Jairo Moreno",
+    extraBaggage: { bigBags: false, personalItem: true },
+    photoUrl:
+      "https://firebasestorage.googleapis.com/v0/b/liion-carpoolapp.appspot.com/o/profile-images%2F0kodaMgFnFM0tVNkPIxAMFCsoED2.jpg?alt=media&token=0kodaMgFnFM0tVNkPIxAMFCsoED2",
+  };
 
   /*   const {
     data: dataFromApi,
@@ -66,7 +86,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Se ha denegado el permiso de acceder a la ubicación");
-        setModalState(true);
+        setModalErrorState(true);
         return;
       }
       await Location.watchPositionAsync(
@@ -85,7 +105,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Se ha denegado el permiso de acceder a la camara");
-        setModalState(true);
+        setModalErrorState(true);
         return;
       }
     })();
@@ -108,7 +128,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       const [resFlag, resMsg] = await getDetailsOfTravel(id);
       resFlag
         ? setDataFromApi({ ...route.params, ...resMsg })
-        : setModalState(true);
+        : setModalErrorState(true);
       setLoading(false);
     })();
   }, []);
@@ -124,14 +144,19 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   }, []);
 
   const modalHandler = () => {
-    navigation.back();
-    setModalState(false);
+    navigation.goBack();
+    setModalErrorState(false);
+  };
+
+  const modalStateHandler = () => {
+    console.log("REGISTRAR BAJADA");
+    setModalDecisionState(false);
   };
 
   const handleCamScaned = (result) => {
-    setDataScaned(result.data);
+    console.log("REGISTRAR SUBIDA");
+    //console.log(result.data);
     handleSnapClose();
-    console.log(result.data);
   };
 
   return (
@@ -141,12 +166,19 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       ) : (
         <>
           <ModalPopUp
-            visible={modalState}
-            setModalVisible={setModalState}
+            visible={modalErrorState}
+            setModalVisible={setModalErrorState}
             customFunction={modalHandler}
           >
             {errorMsg}
           </ModalPopUp>
+          <ModalPopUpDecision
+            visible={modalDecisionState}
+            setModalVisible={setModalDecisionState}
+            customFunction={modalStateHandler}
+          >
+            {"Registrara una bajada, ¿Desea continuar?"}
+          </ModalPopUpDecision>
           <TouchableWithoutFeedback
             onPress={() => isSheetOpen && handleSnapClose()}
           >
@@ -170,25 +202,91 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                 markers={""}
               />
               <View style={styles.floatingSheet}>
-                <View style={{ flexDirection: "row" }}>
-                  <View>
-                    <View style={{ flexDirection: "row" }}>
-                      {/* nombre y maletas */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: hp(1),
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      width: wp(55),
+                    }}
+                  >
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text style={[styles.labelText, { fontSize: hp(2.5) }]}>
+                        {datos.name}
+                      </Text>
+                      {datos.extraBaggage.personalItem && (
+                        <MaterialCommunityIcons
+                          name="bag-personal-outline"
+                          size={hp("4")}
+                          color={COLORS.TURKEY}
+                        />
+                      )}
+                      {datos.extraBaggage.bigBags && (
+                        <FontAwesome5
+                          name="suitcase-rolling"
+                          size={hp("4")}
+                          color={COLORS.TURKEY}
+                        />
+                      )}
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                      {/* monito y direccion */}
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <MaterialIcons
+                        name="directions-walk"
+                        size={24}
+                        color={COLORS.TURKEY}
+                        style={
+                          lugar.type === "bajada" && {
+                            transform: [{ rotateY: "180deg" }],
+                          }
+                        }
+                      />
+                      <Text style={styles.labelText}>
+                        {(lugar.type === "subida"
+                          ? "Subida en "
+                          : "Bajada en ") + lugar.site}
+                      </Text>
                     </View>
                   </View>
-                  {/*imagen*/}
+                  <Avatar.Image
+                    source={{
+                      uri: datos.photoUrl,
+                    }}
+                    size={hp("9")}
+                    style={{}}
+                  />
                 </View>
-                <TouchableOpacity onPress={() => handleSnapOpen(0)}>
-                  <View style={styles.containerQr}>
-                    <AntDesign name="qrcode" size={45} color={COLORS.TURKEY} />
-                    <Text style={styles.textQr}>
-                      {"Registrar subida de pasajeros"}
-                    </Text>
+
+                {lugar.type === "subida" ? (
+                  <TouchableOpacity onPress={() => handleSnapOpen(0)}>
+                    <View style={styles.containerQr}>
+                      <AntDesign
+                        name="qrcode"
+                        size={45}
+                        color={COLORS.TURKEY}
+                      />
+                      <Text style={styles.textQr}>
+                        {"Registrar subida de pasajero"}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.buttonView}>
+                    <ButtonLiion
+                      title="Registrar bajada"
+                      styleView={styles.button}
+                      onPress={() => setModalDecisionState(true)}
+                    />
                   </View>
-                </TouchableOpacity>
+                )}
               </View>
             </View>
           </TouchableWithoutFeedback>
@@ -238,7 +336,7 @@ const styles = StyleSheet.create({
   },
   floatingSheet: {
     position: "absolute",
-    height: hp(25),
+    height: hp(20),
     width: wp(90),
     bottom: hp(1),
     borderRadius: hp(5),
@@ -251,7 +349,23 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: COLORS.TURKEY,
   },
+  labelText: {
+    color: COLORS.BLACK,
+    fontSize: hp("1.5%"),
+    fontFamily: "Gotham-SSm-Medium",
+  },
   containerQr: {
     alignItems: "center",
+  },
+  buttonView: {
+    flex: 1,
+    height: hp("23%"),
+    justifyContent: "flex-end",
+    paddingBottom: hp("1.5%"),
+  },
+  button: {
+    width: wp("60%"),
+    height: hp("4.8%"),
+    alignSelf: "center",
   },
 });
