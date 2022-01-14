@@ -16,7 +16,10 @@ import {
   deleteDriverTravel,
   updateStateTravel,
   getStatusRun,
-  updateUserLocationInTravel
+  updateUserLocationInTravel,
+  getRouteCoordinates,
+getTravelItinerary,
+updateTravelItinerary
 } from "../controllers/index";
 
 import {
@@ -55,6 +58,9 @@ router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTrave
 
 //Metodo implicado travel en curso
 router.patch("/updateUserLocationInTravel",/* checkTokenValidityBody, */ updateUserLocationInTravel);
+router.patch("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
+router.get("/getTravelItinerary",/* checkTokenValidityQuery, */ getTravelItinerary);
+router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
 
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);

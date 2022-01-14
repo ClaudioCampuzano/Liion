@@ -787,3 +787,105 @@ export async function updateUserLocationInTravel(req, res) {
     });
   }
 }
+
+export async function getRouteCoordinates(req, res) {
+  try {
+    const { travelId } = req.query;
+    var travelRef = await db.collection("travels").doc(travelId).get();
+
+    const objSend = JSON.stringify({
+      routeCoordinates: travelRef.data().routeCoordinates,
+    });
+
+    res.status(200).send(objSend);
+  } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function getTravelItinerary(req, res) {
+  try {
+    const { travelId } = req.query;
+    const travelRef = db.collection("travels").doc(travelId);
+    var travelData = (await travelRef.get()).data();
+
+    if (travelData.status === "ongoing") {
+      if (travelData.itinerary === undefined) {
+        const requestDocs = await db
+          .collection("requestTravel")
+          .where("travelId", "==", travelId)
+          .where("status", "==", "accepted")
+          .get();
+        const objOrder = [];
+        const isCoordinateEqual = (object1, object2) => {
+          return (
+            object1.latitude === object2.latitude &&
+            object1.longitude === object2.longitude
+          );
+        };
+        //El itinerario tiene 3 estados, active, deactivate, finished
+        requestDocs.docs.map((doc) => {
+          objOrder.push({
+            step: travelData.routeCoordinates.findIndex((obj) =>
+              isCoordinateEqual(doc.data().dropOff, obj)
+            ),
+            type: "dropOff",
+            status: "deactivate",
+            coordinate: doc.data().dropOff,
+            requestId: doc.id,
+          });
+          objOrder.push({
+            step: travelData.routeCoordinates.findIndex((obj) =>
+              isCoordinateEqual(doc.data().pickUp, obj)
+            ),
+            type: "pickUp",
+            status: "deactivate",
+            coordinate: doc.data().pickUp,
+            requestId: doc.id,
+          });
+        });
+
+        objOrder
+          .sort((a, b) => {
+            if (a.step > b.step) return 1;
+            if (a.step < b.step) return -1;
+            return 0;
+          })
+          .map((obj, index) => {
+            obj.step = index;
+          });
+
+        objOrder[0].status = "active";
+
+        await travelRef.set({ itinerary: objOrder }, { merge: true });
+        travelData = (await travelRef.get()).data();
+      }
+
+      const objSend = JSON.stringify({ itinerary: travelData.itinerary });
+
+      res.status(200).send(objSend);
+    } else
+      res.status(403).json({
+        sucess: false,
+      });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+export async function updateTravelItinerary(req, res) {
+  try {
+    const { travelId } = req.body;
+    if (travelId === undefined) throw "Falta datos";
+
+    res.json({ sucess: true });
+  } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}

@@ -24,7 +24,7 @@ import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Avatar } from "react-native-paper";
 
-//import { useQuery } from "react-query";
+import { useQuery } from "react-query";
 
 import ButtonLiion from "../../components/ButtonLiion";
 
@@ -36,9 +36,10 @@ import ModalPopUp from "../../components/ModalPopUp";
 import ModalPopUpDecision from "../../components/ModalPopUpDecision";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import {
-  updateUserLocationInTravel,
+  getRouteCoordinates,
+  getTravelItinerary,
+  updateTravelItinerary,
   getDetailsOfTravel,
-  getDetailsOngoingTravel,
 } from "../../api/api";
 
 const OngoingTravelVisualizer = ({ navigation, route }) => {
@@ -47,23 +48,17 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   const [userLocation, setUserLocation] = useState(() => {
     return { latitude: 0, longitude: 0 };
   });
-
-  const [loading, setLoading] = useState(true);
-  const [dataFromApi, setDataFromApi] = useState({});
-
   const [errorMsg, setErrorMsg] = useState("");
   const [modalErrorState, setModalErrorState] = useState(false);
   const [modalDecisionState, setModalDecisionState] = useState(false);
-
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const sheetRef = useRef();
   const cameraRef = useRef();
-
   const snapPoints = ["70%"];
 
   const lugar = {
-    type: "subida",
+    type: "bajada",
     site: "Alameda 758, Santiago de chile, con todos",
   };
   const datos = {
@@ -72,14 +67,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
     photoUrl:
       "https://firebasestorage.googleapis.com/v0/b/liion-carpoolapp.appspot.com/o/profile-images%2F0kodaMgFnFM0tVNkPIxAMFCsoED2.jpg?alt=media&token=0kodaMgFnFM0tVNkPIxAMFCsoED2",
   };
-
-  /*   const {
-    data: dataFromApi,
-    error,
-    isLoading: loading,
-    isError,
-    isSuccess,
-  } = useQuery(["OngoingTravel"], getDetailsOngoingTravel); */
 
   useEffect(() => {
     (async () => {
@@ -123,15 +110,14 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       })(); 
   }, [userLocation]); */
 
-  useEffect(() => {
-    (async function () {
-      const [resFlag, resMsg] = await getDetailsOfTravel(id);
-      resFlag
-        ? setDataFromApi({ ...route.params, ...resMsg })
-        : setModalErrorState(true);
-      setLoading(false);
-    })();
-  }, []);
+  const { data, isLoading, isError } = useQuery(
+    ["routeCoordinate", id],
+    () => getRouteCoordinates({ travelId: id }),
+    {
+      refetchOnMount: false,
+    }
+  );
+  isError && setModalErrorState(true);
 
   const handleSnapOpen = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -161,7 +147,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
 
   return (
     <Layout>
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <>
@@ -190,12 +176,10 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
             >
               <MapOngoingTravel
                 dimensions={styles.mapDimensions}
-                coordinateList={dataFromApi.routeCoordinates}
+                coordinateList={data.routeCoordinates}
                 origin={userLocation}
                 destiny={
-                  dataFromApi.routeCoordinates[
-                    dataFromApi.routeCoordinates.length - 1
-                  ]
+                  data.routeCoordinates[data.routeCoordinates.length - 1]
                 }
                 navigation={navigation}
                 typePassenger={"driver"}
