@@ -809,16 +809,16 @@ export async function getTravelItinerary(req, res) {
   try {
     const { travelId } = req.query;
     const travelRef = db.collection("travels").doc(travelId);
-    var travelData = (await travelRef.get()).data();
 
+    var travelData = (await travelRef.get()).data();
     if (travelData.status === "ongoing") {
       if (travelData.itinerary === undefined) {
+        const objOrder = [];
         const requestDocs = await db
           .collection("requestTravel")
           .where("travelId", "==", travelId)
           .where("status", "==", "accepted")
           .get();
-        const objOrder = [];
         const isCoordinateEqual = (object1, object2) => {
           return (
             object1.latitude === object2.latitude &&
@@ -834,7 +834,8 @@ export async function getTravelItinerary(req, res) {
             type: "dropOff",
             status: "deactivate",
             coordinate: doc.data().dropOff,
-            requestId: doc.id,
+            passengerUID: doc.data().passengerUID,
+            extraBaggage: doc.data().extraBaggage,
           });
           objOrder.push({
             step: travelData.routeCoordinates.findIndex((obj) =>
@@ -843,7 +844,8 @@ export async function getTravelItinerary(req, res) {
             type: "pickUp",
             status: "deactivate",
             coordinate: doc.data().pickUp,
-            requestId: doc.id,
+            passengerUID: doc.data().passengerUID,
+            extraBaggage: doc.data().extraBaggage,
           });
         });
 
@@ -863,9 +865,23 @@ export async function getTravelItinerary(req, res) {
         travelData = (await travelRef.get()).data();
       }
 
-      const objSend = JSON.stringify({ itinerary: travelData.itinerary });
+      const itinerary = travelData.itinerary.find(
+        (obj) => obj.status === "active"
+      );
+      if (itinerary) {
+        const userData = (
+          await db.collection("users").doc(itinerary.passengerUID).get()
+        ).data();
 
-      res.status(200).send(objSend);
+        const objSend = JSON.stringify({
+          itinerary: {
+            ...itinerary,
+            photo: userData.photo,
+            fullName: userData.name + " " + userData.apellido,
+          },
+        });
+        res.status(200).send(objSend);
+      } else res.status(200).json({ status: "finished" });
     } else
       res.status(403).json({
         sucess: false,

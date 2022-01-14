@@ -18,8 +18,8 @@ import {
   getStatusRun,
   updateUserLocationInTravel,
   getRouteCoordinates,
-getTravelItinerary,
-updateTravelItinerary
+  getTravelItinerary,
+  updateTravelItinerary
 } from "../controllers/index";
 
 import {
