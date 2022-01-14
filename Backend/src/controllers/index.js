@@ -794,7 +794,7 @@ export async function getupcomingTravels(req, res) {
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
             .isSameOrAfter(moment())
-          && doc.data().status !== 'ongoing'
+          //          && doc.data().status !== 'ongoing' //enrelidad si queremos los ongoing
         ) {
           resultData.push({
             id: doc.id,
@@ -814,24 +814,42 @@ export async function getupcomingTravels(req, res) {
           });
         }
       }
+    //const onGoing = []
     if (typeof resultData !== 'undefined' && resultData.length > 0) {
+      //resultData.forEach(x => {
+      //  if (x.status === 'ongoing') onGoing.push(x)
+      //})
+      //resultData.filter(x => x.status !== 'ongoing')
+      //onGoing.sort(compareDateOfTravels)
       resultData.sort(compareDateOfTravels)
-    } else throw "Vacio"
+    } else throw "Vacio" //no registra viaje alguno
 
     const currentTime = moment()
     const closeTime = moment(resultData[0].date + " " + resultData[0].startTime, "DD/MM/YYYY HH:mm")
     const diff = moment.duration(closeTime.diff(currentTime))
     const minuteDelta = diff.asMinutes()
+    console.log(currentTime, closeTime, minuteDelta)
     if (Math.abs(minuteDelta) <= 20) { //viaje en 20 minutos
-      res.send(JSON.stringify(resultData[0]));
+      //nunca deberian solaparse viajes, y se asume que no va suceder
+      //viajes de prueba: qFVOwm2EuliVAU3YrEit y ZNEvihK4ZAF3USh6BCOd
+      const theTravel = resultData[0]
+      const travelId = theTravel.id
+      if (theTravel.status === "open") {
+        theTravel.status = 'closed'
+        const q = await db
+          .collection("travels")
+          .doc(travelId)
+          .update("status", 'closed');
+      }
+      res.send(JSON.stringify({ sucess: true, res: theTravel }));
     }
     else {
       //no hay viejs pronto
-      res.send(JSON.stringify({}))
+      res.send(JSON.stringify({ sucess: false, res: [] }))
     }
 
   } catch (e) {
     console.log(e);
-    res.status(500).send("Error");
+    res.status(500).send({ sucess: false, res: "Ops hubo un error" });
   }
 }
