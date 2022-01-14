@@ -23,7 +23,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Avatar } from "react-native-paper";
-
+import { reverseGeocodeAsync } from "expo-location";
 import { useQuery } from "react-query";
 
 import ButtonLiion from "../../components/ButtonLiion";
@@ -52,6 +52,8 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   const [modalErrorState, setModalErrorState] = useState(false);
   const [modalDecisionState, setModalDecisionState] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const [nameDirection, setNameDirection] = useState("");
 
   const sheetRef = useRef();
   const cameraRef = useRef();
@@ -110,14 +112,32 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       })(); 
   }, [userLocation]); */
 
-  const { data, isLoading, isError } = useQuery(
+  const {
+    data: dataRoute,
+    isLoading: isLoadingRoute,
+    isError: isErrorRoute,
+  } = useQuery(
     ["routeCoordinate", id],
     () => getRouteCoordinates({ travelId: id }),
     {
       refetchOnMount: false,
     }
   );
-  isError && setModalErrorState(true);
+
+  const {
+    data: dataItinerary,
+    isLoading: isLoadingItinerary,
+    isError: isErrorItinerary,
+  } = useQuery(
+    ["travelItinerary", id],
+    () => getTravelItinerary({ travelId: id }),
+    {
+      refetchOnMount: false,
+      refetchInterval: 6000,
+    }
+  );
+
+  //isError && setModalErrorState(true);
 
   const handleSnapOpen = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -141,13 +161,28 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
 
   const handleCamScaned = (result) => {
     console.log("REGISTRAR SUBIDA");
-    //console.log(result.data);
     handleSnapClose();
   };
 
+  const getReverseGeocode = async (ObjCoord) => {
+    var name =
+      address[0].street + " " + address[0].name + ", " + address[0].city;
+    console.log(name);
+    return String(name);
+  };
+
+  useEffect(() => {
+    (async () => {
+      var address = await reverseGeocodeAsync(dataItinerary.coordinate);
+      setNameDirection(
+        address[0].street + " " + address[0].name + ", " + address[0].city
+      );
+    })();
+  }, [dataItinerary.coordinate]);
+
   return (
     <Layout>
-      {isLoading ? (
+      {isLoadingRoute && isLoadingItinerary ? (
         <Loading />
       ) : (
         <>
@@ -176,10 +211,12 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
             >
               <MapOngoingTravel
                 dimensions={styles.mapDimensions}
-                coordinateList={data.routeCoordinates}
+                coordinateList={dataRoute.routeCoordinates}
                 origin={userLocation}
                 destiny={
-                  data.routeCoordinates[data.routeCoordinates.length - 1]
+                  dataRoute.routeCoordinates[
+                    dataRoute.routeCoordinates.length - 1
+                  ]
                 }
                 navigation={navigation}
                 typePassenger={"driver"}
@@ -203,16 +240,16 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
                       <Text style={[styles.labelText, { fontSize: hp(2.5) }]}>
-                        {datos.name}
+                        {dataItinerary.fullName}
                       </Text>
-                      {datos.extraBaggage.personalItem && (
+                      {dataItinerary.extraBaggage.personalItem && (
                         <MaterialCommunityIcons
                           name="bag-personal-outline"
                           size={hp("4")}
                           color={COLORS.TURKEY}
                         />
                       )}
-                      {datos.extraBaggage.bigBags && (
+                      {dataItinerary.extraBaggage.bigBags && (
                         <FontAwesome5
                           name="suitcase-rolling"
                           size={hp("4")}
@@ -228,15 +265,15 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                         size={24}
                         color={COLORS.TURKEY}
                         style={
-                          lugar.type === "bajada" && {
+                          dataItinerary.type === "dropOff" && {
                             transform: [{ rotateY: "180deg" }],
                           }
                         }
                       />
                       <Text style={styles.labelText}>
-                        {(lugar.type === "subida"
+                        {(dataItinerary.type === "pickUp"
                           ? "Subida en "
-                          : "Bajada en ") + lugar.site}
+                          : "Bajada en ") + nameDirection}
                       </Text>
                     </View>
                   </View>
@@ -249,7 +286,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                   />
                 </View>
 
-                {lugar.type === "subida" ? (
+                {dataItinerary.type === "pickUp" ? (
                   <TouchableOpacity onPress={() => handleSnapOpen(0)}>
                     <View style={styles.containerQr}>
                       <AntDesign

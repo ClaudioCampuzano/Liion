@@ -254,7 +254,7 @@ export const getTravelItinerary = async (payload) => {
 export const updateTravelItinerary = async (payload) => {
   const { data } = await client({
     method: "patch",
-    url: "/getTravelItinerary",
+    url: "/updateTravelItinerary",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify(payload),
   });

@@ -874,11 +874,9 @@ export async function getTravelItinerary(req, res) {
         ).data();
 
         const objSend = JSON.stringify({
-          itinerary: {
-            ...itinerary,
-            photo: userData.photo,
-            fullName: userData.name + " " + userData.apellido,
-          },
+          ...itinerary,
+          photo: userData.photo,
+          fullName: userData.name + " " + userData.apellido,
         });
         res.status(200).send(objSend);
       } else res.status(200).json({ status: "finished" });
