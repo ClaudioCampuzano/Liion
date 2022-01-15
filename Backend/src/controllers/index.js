@@ -828,7 +828,7 @@ export async function getupcomingTravels(req, res) {
     const closeTime = moment(resultData[0].date + " " + resultData[0].startTime, "DD/MM/YYYY HH:mm")
     const diff = moment.duration(closeTime.diff(currentTime))
     const minuteDelta = diff.asMinutes()
-    console.log(currentTime, closeTime, minuteDelta)
+    //console.log(currentTime, closeTime, minuteDelta)
     if (Math.abs(minuteDelta) <= 20) { //viaje en 20 minutos
       //nunca deberian solaparse viajes, y se asume que no va suceder
       //viajes de prueba: qFVOwm2EuliVAU3YrEit y ZNEvihK4ZAF3USh6BCOd
