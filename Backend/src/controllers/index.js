@@ -957,6 +957,8 @@ export async function getPassengerTravelItinerary(req, res) {
         ({ passengerUID, extraBaggage, step, ...restParams }) => restParams
       );
 
+      itineraryMarkers[0].status = "active";
+
       const objSend = JSON.stringify({
         ...itineraryFilter[0],
         markerList: itineraryMarkers,
