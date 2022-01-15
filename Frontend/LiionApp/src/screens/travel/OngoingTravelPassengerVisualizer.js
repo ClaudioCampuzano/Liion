@@ -109,6 +109,7 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
               destiny={dataRoute.routeCoordinates[10]}
               navigation={navigation}
               typePassenger={"passenger"}
+              //El pasajero solo necesita saber dos ubicaciones, las suyas
               markers={[
                 {
                   status: "active",
