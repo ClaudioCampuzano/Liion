@@ -677,8 +677,6 @@ export async function updateStateTravel(req, res) {
     const travelRef = db.collection("travels").doc(travelId);
     const travelObj = (await travelRef.get()).data();
 
-    // No se pueden iniciar viajes antes  de 15 minutos del mismo
-
     switch (state) {
       case "ongoing":
         var currentTimeTravel = moment(
@@ -688,38 +686,83 @@ export async function updateStateTravel(req, res) {
 
         if (
           currentTimeTravel.isBetween(
-            moment().subtract(15, "minutes"),
-            moment().add(15, "minutes")
+            moment().subtract(20, "minutes"),
+            moment().add(20, "minutes")
           )
         ) {
           var objLocation = {};
           objLocation[travelObj.driverUID] = {};
-          for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
-            const passengerUID = (
-              await db
-                .collection("requestTravel")
-                .doc(travelObj.requestingPassengers[i])
-                .get()
-            ).data().passengerUID;
-            const userUpdate = await db
-              .collection("users")
-              .doc(passengerUID)
-              .update({
-                status: "travelOn",
-              });
-            objLocation[passengerUID] = {};
-          }
+          await Promise.all(
+            travelObj.requestingPassengers.map(async (doc) => {
+              var passengerUID = (
+                await db.collection("requestTravel").doc(doc).get()
+              ).data().passengerUID;
+              objLocation[passengerUID] = {};
+            })
+          );
 
-          const travelUpdate = await travelRef.update({
+          //Generacion de itinerario
+
+          const objOrder = [];
+          const requestDocs = await db
+            .collection("requestTravel")
+            .where("travelId", "==", travelId)
+            .where("status", "==", "accepted")
+            .get();
+          const isCoordinateEqual = (object1, object2) => {
+            return (
+              object1.latitude === object2.latitude &&
+              object1.longitude === object2.longitude
+            );
+          };
+
+          //El itinerario tiene 3 estados, active, deactivate, finished
+          requestDocs.docs.map((doc) => {
+            objOrder.push({
+              step: travelObj.routeCoordinates.findIndex((obj) =>
+                isCoordinateEqual(doc.data().dropOff, obj)
+              ),
+              type: "dropOff",
+              status: "deactivate",
+              coordinate: doc.data().dropOff,
+              passengerUID: doc.data().passengerUID,
+              extraBaggage: doc.data().extraBaggage,
+            });
+            objOrder.push({
+              step: travelObj.routeCoordinates.findIndex((obj) =>
+                isCoordinateEqual(doc.data().pickUp, obj)
+              ),
+              type: "pickUp",
+              status: "deactivate",
+              coordinate: doc.data().pickUp,
+              passengerUID: doc.data().passengerUID,
+              extraBaggage: doc.data().extraBaggage,
+            });
+          });
+
+          objOrder
+            .sort((a, b) => {
+              if (a.step > b.step) return 1;
+              if (a.step < b.step) return -1;
+              return 0;
+            })
+            .map((obj, index) => {
+              obj.step = index;
+            });
+
+          objOrder[0].status = "active";
+
+          await travelRef.update({
             status: state,
             locations: objLocation,
+            itinerary: objOrder,
           });
 
           res.json({ sucess: true, res: "Viaje iniciado" });
         } else
           res.status(403).json({
             sucess: false,
-            res: "Imposible iniciar viaje",
+            res: "Imposible iniciar aun el viaje",
           });
 
         break;
@@ -808,63 +851,10 @@ export async function getRouteCoordinates(req, res) {
 export async function getTravelItinerary(req, res) {
   try {
     const { travelId } = req.query;
-    const travelRef = db.collection("travels").doc(travelId);
-
-    var travelData = (await travelRef.get()).data();
+    const travelData = (
+      await db.collection("travels").doc(travelId).get()
+    ).data();
     if (travelData.status === "ongoing") {
-      if (travelData.itinerary === undefined) {
-        const objOrder = [];
-        const requestDocs = await db
-          .collection("requestTravel")
-          .where("travelId", "==", travelId)
-          .where("status", "==", "accepted")
-          .get();
-        const isCoordinateEqual = (object1, object2) => {
-          return (
-            object1.latitude === object2.latitude &&
-            object1.longitude === object2.longitude
-          );
-        };
-        //El itinerario tiene 3 estados, active, deactivate, finished
-        requestDocs.docs.map((doc) => {
-          objOrder.push({
-            step: travelData.routeCoordinates.findIndex((obj) =>
-              isCoordinateEqual(doc.data().dropOff, obj)
-            ),
-            type: "dropOff",
-            status: "deactivate",
-            coordinate: doc.data().dropOff,
-            passengerUID: doc.data().passengerUID,
-            extraBaggage: doc.data().extraBaggage,
-          });
-          objOrder.push({
-            step: travelData.routeCoordinates.findIndex((obj) =>
-              isCoordinateEqual(doc.data().pickUp, obj)
-            ),
-            type: "pickUp",
-            status: "deactivate",
-            coordinate: doc.data().pickUp,
-            passengerUID: doc.data().passengerUID,
-            extraBaggage: doc.data().extraBaggage,
-          });
-        });
-
-        objOrder
-          .sort((a, b) => {
-            if (a.step > b.step) return 1;
-            if (a.step < b.step) return -1;
-            return 0;
-          })
-          .map((obj, index) => {
-            obj.step = index;
-          });
-
-        objOrder[0].status = "active";
-
-        await travelRef.set({ itinerary: objOrder }, { merge: true });
-        travelData = (await travelRef.get()).data();
-      }
-
       const itinerary = travelData.itinerary.find(
         (obj) => obj.status === "active"
       );
@@ -905,6 +895,7 @@ export async function getTravelItinerary(req, res) {
     });
   }
 }
+
 export async function updateTravelItinerary(req, res) {
   try {
     const { travelId, step, type, data } = req.body;
@@ -929,10 +920,10 @@ export async function updateTravelItinerary(req, res) {
         travelRef.update({
           itinerary: itinerary,
         });
-        res.status(200).send(JSON.stringify({ status: "ok" }));
+        res.status(200).send(JSON.stringify({ status: true }));
         return;
       }
-      res.status(200).send(JSON.stringify({ status: "bad" }));
+      res.status(200).send(JSON.stringify({ status: false }));
     } else {
       res.status(403).json({
         sucess: false,
@@ -940,6 +931,41 @@ export async function updateTravelItinerary(req, res) {
       return;
     }
   } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function getPassengerTravelItinerary(req, res) {
+  try {
+    const { travelId, uid: passengerUID } = req.query;
+
+    const travelData = (
+      await db.collection("travels").doc(travelId).get()
+    ).data();
+    const objOrder = [];
+
+    var itineraryFilter = travelData.itinerary.filter((doc) => {
+      if (doc.status !== "finished" && doc.passengerUID === passengerUID) {
+        return true;
+      }
+      return false;
+    });
+    if (itineraryFilter.length > 0) {
+      var itineraryMarkers = itineraryFilter.map(
+        ({ passengerUID, extraBaggage, step, ...restParams }) => restParams
+      );
+
+      const objSend = JSON.stringify({
+        ...itineraryFilter[0],
+        markerList: itineraryMarkers,
+      });
+
+      res.status(200).send(objSend);
+    } else res.status(200).json({ status: "finished" });
+  } catch (e) {
+    console.log(e);
     res.status(400).json({
       sucess: false,
     });

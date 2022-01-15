@@ -90,7 +90,11 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
     isLoading: isLoadingUpdateItinerary,
     isSuccess: isSucessUpdateItinerary,
   } = useMutation(updateTravelItinerary, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      if (!data.status) {
+        setModalErrorState(true);
+        setErrorMsg("Codigo QR no valido");
+      }
       queryClient.invalidateQueries("travelItinerary");
     },
   });
@@ -176,7 +180,9 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   }, []);
 
   const modalHandler = () => {
-    navigation.goBack();
+    if (errorMsg !== "Codigo QR no valido") {
+      navigation.goBack();
+    }
     setModalErrorState(false);
   };
 

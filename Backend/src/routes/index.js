@@ -19,7 +19,8 @@ import {
   updateUserLocationInTravel,
   getRouteCoordinates,
   getTravelItinerary,
-  updateTravelItinerary
+  updateTravelItinerary,
+  getPassengerTravelItinerary
 } from "../controllers/index";
 
 import {
@@ -60,6 +61,7 @@ router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTrave
 router.patch("/updateUserLocationInTravel",/* checkTokenValidityBody, */ updateUserLocationInTravel);
 router.put("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
 router.get("/getTravelItinerary",/* checkTokenValidityQuery, */ getTravelItinerary);
+router.get("/getPassengerTravelItinerary",/* checkTokenValidityQuery, */ getPassengerTravelItinerary);
 router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
 
 

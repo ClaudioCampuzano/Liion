@@ -13,7 +13,9 @@ const Feedback = ({ navigation, route }) => {
     });
   }, [navigation]);
 
-  const checkValidator = () => {};
+  const checkValidator = () => {
+    navigation.navigate('SearchStepOne')
+  };
   return (
     <Layout>
       <View style={{ height: hp("70%") }}>

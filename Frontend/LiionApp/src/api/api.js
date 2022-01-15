@@ -240,6 +240,15 @@ export const getTravelItinerary = async (payload) => {
   return data;
 };
 
+export const getPassengerTravelItinerary = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getPassengerTravelItinerary",
+    params: payload,
+  });
+  return data;
+};
+
 export const updateTravelItinerary = async (payload) => {
   const { data } = await client({
     method: "put",

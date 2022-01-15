@@ -10,6 +10,12 @@ import * as Location from "expo-location";
 
 import { reverseGeocodeAsync } from "expo-location";
 import { useQuery, useMutation, useQueryClient } from "react-query";
+import {
+  AntDesign,
+  MaterialIcons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { GlobalContext } from "../../context/Provider";
@@ -17,7 +23,11 @@ import MapOngoingTravel from "../../components/MapOngoingTravel";
 import Loading from "../../components/Loading";
 import Layout from "../../components/Layout";
 import ModalPopUp from "../../components/ModalPopUp";
-import { getRouteCoordinates, updateUserLocationInTravel } from "../../api/api";
+import {
+  getRouteCoordinates,
+  updateUserLocationInTravel,
+  getPassengerTravelItinerary,
+} from "../../api/api";
 
 const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
   const { id } = route.params;
@@ -28,6 +38,7 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
   });
   const [errorMsg, setErrorMsg] = useState("");
   const [modalErrorState, setModalErrorState] = useState(false);
+  const [nameDirection, setNameDirection] = useState("");
 
   const {
     data: dataRoute,
@@ -39,6 +50,16 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
     {
       refetchOnMount: false,
     }
+  );
+
+  const {
+    data: dataItinerary,
+    isSuccess: isSucessItinerary,
+    isError: isErrorItinerary,
+  } = useQuery(
+    ["travelItineraryP", id],
+    () => getPassengerTravelItinerary({ travelId: id, uid: uid }),
+    { refetchOnMount: true }
   );
 
   const { mutate: mutateUpdateLocation, isError: isErrorUpdateLocation } =
@@ -78,6 +99,25 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
     isErrorRoute && setModalErrorState(true);
   }, [isErrorRoute]);
 
+  useEffect(() => {
+    if (isSucessItinerary) {
+      if (typeof dataItinerary === "object") {
+        dataItinerary.status !== "finished"
+          ? (async () => {
+              var address = await reverseGeocodeAsync(dataItinerary.coordinate);
+              setNameDirection(
+                address[0].street +
+                  " " +
+                  address[0].name +
+                  ", " +
+                  address[0].city
+              );
+            })()
+          : navigation.navigate("Feedback");
+      }
+    }
+  }, [dataItinerary]);
+
   const modalHandler = () => {
     navigation.goBack();
     setModalErrorState(false);
@@ -85,7 +125,7 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
 
   return (
     <Layout>
-      {!isSucessRoute ? (
+      {!isSucessRoute || !isSucessItinerary ? (
         <Loading />
       ) : (
         <>
@@ -109,16 +149,32 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
               destiny={dataRoute.routeCoordinates[10]}
               navigation={navigation}
               typePassenger={"passenger"}
-              //El pasajero solo necesita saber dos ubicaciones, las suyas
-              markers={[
-                {
-                  status: "active",
-                  coordinate: { latitude: -33.57784, longitude: -70.66883 },
-                  type: "pickUp",
-                },
-              ]}
+              markers={dataItinerary.markerList}
             />
-            <View style={styles.floatingSheet}></View>
+            <View style={styles.floatingSheet}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <MaterialIcons
+                  name="directions-walk"
+                  size={24}
+                  color={COLORS.TURKEY}
+                  style={
+                    dataItinerary.type === "dropOff" && {
+                      transform: [{ rotateY: "180deg" }],
+                    }
+                  }
+                />
+                <Text style={styles.labelText}>
+                  {(dataItinerary.type === "pickUp"
+                    ? "Subida en "
+                    : "Bajada en ") + nameDirection}
+                </Text>
+              </View>
+            </View>
           </View>
         </>
       )}
@@ -140,5 +196,10 @@ const styles = StyleSheet.create({
     borderRadius: hp(5),
     elevation: 5,
     backgroundColor: COLORS.WHITE,
+  },
+  labelText: {
+    color: COLORS.BLACK,
+    fontSize: hp("1.5%"),
+    fontFamily: "Gotham-SSm-Medium",
   },
 });
