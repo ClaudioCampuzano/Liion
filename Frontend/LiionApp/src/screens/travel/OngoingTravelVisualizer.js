@@ -24,9 +24,10 @@ import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Avatar } from "react-native-paper";
 import { reverseGeocodeAsync } from "expo-location";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import ButtonLiion from "../../components/ButtonLiion";
+import LottieView from "lottie-react-native";
 
 import { GlobalContext } from "../../context/Provider";
 import MapOngoingTravel from "../../components/MapOngoingTravel";
@@ -55,20 +56,44 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
 
   const [nameDirection, setNameDirection] = useState("");
 
+  const queryClient = useQueryClient();
+
   const sheetRef = useRef();
   const cameraRef = useRef();
   const snapPoints = ["70%"];
 
-  const lugar = {
-    type: "bajada",
-    site: "Alameda 758, Santiago de chile, con todos",
-  };
-  const datos = {
-    name: "Jairo Moreno",
-    extraBaggage: { bigBags: false, personalItem: true },
-    photoUrl:
-      "https://firebasestorage.googleapis.com/v0/b/liion-carpoolapp.appspot.com/o/profile-images%2F0kodaMgFnFM0tVNkPIxAMFCsoED2.jpg?alt=media&token=0kodaMgFnFM0tVNkPIxAMFCsoED2",
-  };
+  const {
+    data: dataRoute,
+    isSuccess: isSucessRoute,
+    isError: isErrorRoute,
+  } = useQuery(
+    ["routeCoordinate", id],
+    () => getRouteCoordinates({ travelId: id }),
+    {
+      refetchOnMount: false,
+    }
+  );
+
+  const {
+    data: dataItinerary,
+    isSuccess: isSucessItinerary,
+    isError: isErrorItinerary,
+  } = useQuery(
+    ["travelItinerary", id],
+    () => getTravelItinerary({ travelId: id }),
+    { refetchOnMount: true }
+  );
+
+  const {
+    mutate,
+    isError: isErrorUpdateItinerary,
+    isLoading: isIsLoadingUpdateItinerary,
+    isSuccess: isSucessUpdateItinerary,
+  } = useMutation(updateTravelItinerary, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("travelItinerary");
+    },
+  });
 
   useEffect(() => {
     (async () => {
@@ -100,6 +125,24 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
     })();
   }, []);
 
+  useEffect(() => {
+    isSucessItinerary &&
+      (async () => {
+        var address = await reverseGeocodeAsync(dataItinerary.coordinate);
+        setNameDirection(
+          address[0].street + " " + address[0].name + ", " + address[0].city
+        );
+      })();
+  }, [dataItinerary]);
+
+  useEffect(() => {
+    isErrorRoute && setErrorMsg("Error al obtener la ruta");
+    isErrorItinerary && setErrorMsg("Error al obtener el itinerario");
+    isErrorUpdateItinerary && setErrorMsg("Error al actualizar el itinerario");
+    (isErrorRoute || isErrorItinerary || isErrorUpdateItinerary) &&
+      setModalErrorState(true);
+  }, [isErrorRoute, isErrorItinerary, isErrorUpdateItinerary]);
+
   /*   useEffect(() => {
     if (userLocation != null) console.log(userLocation);
            (async () => {
@@ -111,33 +154,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
         await updateUserLocationInTravel(data);
       })(); 
   }, [userLocation]); */
-
-  const {
-    data: dataRoute,
-    isLoading: isLoadingRoute,
-    isError: isErrorRoute,
-  } = useQuery(
-    ["routeCoordinate", id],
-    () => getRouteCoordinates({ travelId: id }),
-    {
-      refetchOnMount: false,
-    }
-  );
-
-  const {
-    data: dataItinerary,
-    isLoading: isLoadingItinerary,
-    isError: isErrorItinerary,
-  } = useQuery(
-    ["travelItinerary", id],
-    () => getTravelItinerary({ travelId: id }),
-    {
-      refetchOnMount: false,
-      refetchInterval: 6000,
-    }
-  );
-
-  //isError && setModalErrorState(true);
 
   const handleSnapOpen = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -155,34 +171,28 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   };
 
   const modalStateHandler = () => {
-    console.log("REGISTRAR BAJADA");
+    mutate({
+      travelId: id,
+      step: dataItinerary.step,
+      type: "dropOff",
+    });
+
     setModalDecisionState(false);
   };
 
-  const handleCamScaned = (result) => {
-    console.log("REGISTRAR SUBIDA");
+  const handleCamScaned = async (result) => {
+    mutate({
+      travelId: id,
+      step: dataItinerary.step,
+      type: "pickUp",
+      data: result.data,
+    });
     handleSnapClose();
   };
 
-  const getReverseGeocode = async (ObjCoord) => {
-    var name =
-      address[0].street + " " + address[0].name + ", " + address[0].city;
-    console.log(name);
-    return String(name);
-  };
-
-  useEffect(() => {
-    (async () => {
-      var address = await reverseGeocodeAsync(dataItinerary.coordinate);
-      setNameDirection(
-        address[0].street + " " + address[0].name + ", " + address[0].city
-      );
-    })();
-  }, [dataItinerary.coordinate]);
-
   return (
     <Layout>
-      {isLoadingRoute && isLoadingItinerary ? (
+      {!isSucessRoute || !isSucessItinerary ? (
         <Loading />
       ) : (
         <>
@@ -200,6 +210,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
           >
             {"Registrara una bajada, ¿Desea continuar?"}
           </ModalPopUpDecision>
+
           <TouchableWithoutFeedback
             onPress={() => isSheetOpen && handleSnapClose()}
           >
@@ -213,100 +224,121 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                 dimensions={styles.mapDimensions}
                 coordinateList={dataRoute.routeCoordinates}
                 origin={userLocation}
-                destiny={
-                  dataRoute.routeCoordinates[
-                    dataRoute.routeCoordinates.length - 1
-                  ]
-                }
+                destiny={dataItinerary.coordinate}
                 navigation={navigation}
                 typePassenger={"driver"}
-                markers={""}
+                markers={dataItinerary.markerList}
               />
               <View style={styles.floatingSheet}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    marginTop: hp(1),
-                    justifyContent: "space-evenly",
-                  }}
-                >
+                {isIsLoadingUpdateItinerary ? (
                   <View
                     style={{
+                      alignItems: "center",
                       justifyContent: "center",
-                      width: wp(55),
+                      height: hp(20),
+                      width: wp(90),
                     }}
                   >
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={[styles.labelText, { fontSize: hp(2.5) }]}>
-                        {dataItinerary.fullName}
-                      </Text>
-                      {dataItinerary.extraBaggage.personalItem && (
-                        <MaterialCommunityIcons
-                          name="bag-personal-outline"
-                          size={hp("4")}
-                          color={COLORS.TURKEY}
-                        />
-                      )}
-                      {dataItinerary.extraBaggage.bigBags && (
-                        <FontAwesome5
-                          name="suitcase-rolling"
-                          size={hp("4")}
-                          color={COLORS.TURKEY}
-                        />
-                      )}
-                    </View>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <MaterialIcons
-                        name="directions-walk"
-                        size={24}
-                        color={COLORS.TURKEY}
-                        style={
-                          dataItinerary.type === "dropOff" && {
-                            transform: [{ rotateY: "180deg" }],
-                          }
-                        }
-                      />
-                      <Text style={styles.labelText}>
-                        {(dataItinerary.type === "pickUp"
-                          ? "Subida en "
-                          : "Bajada en ") + nameDirection}
-                      </Text>
-                    </View>
-                  </View>
-                  <Avatar.Image
-                    source={{
-                      uri: datos.photoUrl,
-                    }}
-                    size={hp("9")}
-                    style={{}}
-                  />
-                </View>
-
-                {dataItinerary.type === "pickUp" ? (
-                  <TouchableOpacity onPress={() => handleSnapOpen(0)}>
-                    <View style={styles.containerQr}>
-                      <AntDesign
-                        name="qrcode"
-                        size={45}
-                        color={COLORS.TURKEY}
-                      />
-                      <Text style={styles.textQr}>
-                        {"Registrar subida de pasajero"}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.buttonView}>
-                    <ButtonLiion
-                      title="Registrar bajada"
-                      styleView={styles.button}
-                      onPress={() => setModalDecisionState(true)}
+                    <LottieView
+                      source={require("../../../assets/76600-loader.json")}
+                      style={{
+                        width: 100,
+                        height: 100,
+                        justifyContent: "center",
+                      }}
+                      autoPlay
                     />
                   </View>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        marginTop: hp(1),
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      <View
+                        style={{
+                          justifyContent: "center",
+                          width: wp(55),
+                        }}
+                      >
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <Text
+                            style={[styles.labelText, { fontSize: hp(2.5) }]}
+                          >
+                            {dataItinerary.fullName}
+                          </Text>
+                          {dataItinerary.extraBaggage.personalItem && (
+                            <MaterialCommunityIcons
+                              name="bag-personal-outline"
+                              size={hp("4")}
+                              color={COLORS.TURKEY}
+                            />
+                          )}
+                          {dataItinerary.extraBaggage.bigBags && (
+                            <FontAwesome5
+                              name="suitcase-rolling"
+                              size={hp("4")}
+                              color={COLORS.TURKEY}
+                            />
+                          )}
+                        </View>
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <MaterialIcons
+                            name="directions-walk"
+                            size={24}
+                            color={COLORS.TURKEY}
+                            style={
+                              dataItinerary.type === "dropOff" && {
+                                transform: [{ rotateY: "180deg" }],
+                              }
+                            }
+                          />
+                          <Text style={styles.labelText}>
+                            {(dataItinerary.type === "pickUp"
+                              ? "Subida en "
+                              : "Bajada en ") + nameDirection}
+                          </Text>
+                        </View>
+                      </View>
+                      <Avatar.Image
+                        source={{
+                          uri: dataItinerary.photo,
+                        }}
+                        size={hp("9")}
+                        style={{}}
+                      />
+                    </View>
+
+                    {dataItinerary.type === "pickUp" ? (
+                      <TouchableOpacity onPress={() => handleSnapOpen(0)}>
+                        <View style={styles.containerQr}>
+                          <AntDesign
+                            name="qrcode"
+                            size={45}
+                            color={COLORS.TURKEY}
+                          />
+                          <Text style={styles.textQr}>
+                            {"Registrar subida de pasajero"}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.buttonView}>
+                        <ButtonLiion
+                          title="Registrar bajada"
+                          styleView={styles.button}
+                          onPress={() => setModalDecisionState(true)}
+                        />
+                      </View>
+                    )}
+                  </>
                 )}
               </View>
             </View>

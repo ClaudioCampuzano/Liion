@@ -868,16 +868,30 @@ export async function getTravelItinerary(req, res) {
       const itinerary = travelData.itinerary.find(
         (obj) => obj.status === "active"
       );
+
       if (itinerary) {
         const userData = (
           await db.collection("users").doc(itinerary.passengerUID).get()
         ).data();
 
+        var itineraryMarkers = travelData.itinerary
+          .filter((doc) => {
+            if (doc.status !== "finished") {
+              return true;
+            }
+            return false;
+          })
+          .map(
+            ({ passengerUID, extraBaggage, step, ...restParams }) => restParams
+          );
+
         const objSend = JSON.stringify({
           ...itinerary,
           photo: userData.photo,
           fullName: userData.name + " " + userData.apellido,
+          markerList: itineraryMarkers,
         });
+        //console.log(objSend);
         res.status(200).send(objSend);
       } else res.status(200).json({ status: "finished" });
     } else
@@ -893,10 +907,38 @@ export async function getTravelItinerary(req, res) {
 }
 export async function updateTravelItinerary(req, res) {
   try {
-    const { travelId } = req.body;
-    if (travelId === undefined) throw "Falta datos";
+    const { travelId, step, type, data } = req.body;
 
-    res.json({ sucess: true });
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelData = (await travelRef.get()).data();
+    var itinerary = travelData.itinerary;
+
+    if (type === "pickUp" || type === "dropOff") {
+      var interruptor = true;
+      if (type === "pickUp") {
+        var dataArray = data.split("~-!-~");
+        interruptor =
+          dataArray.length === 2 &&
+          travelId === dataArray[0] &&
+          itinerary[step].passengerUID === dataArray[1];
+      }
+      if (interruptor) {
+        itinerary[step].status = "finished";
+        if (itinerary.length !== step + 1)
+          itinerary[step + 1].status = "active";
+        travelRef.update({
+          itinerary: itinerary,
+        });
+        res.status(200).send(JSON.stringify({ status: "ok" }));
+        return;
+      }
+      res.status(200).send(JSON.stringify({ status: "bad" }));
+    } else {
+      res.status(403).json({
+        sucess: false,
+      });
+      return;
+    }
   } catch (e) {
     res.status(400).json({
       sucess: false,

@@ -58,7 +58,7 @@ router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTrave
 
 //Metodo implicado travel en curso
 router.patch("/updateUserLocationInTravel",/* checkTokenValidityBody, */ updateUserLocationInTravel);
-router.patch("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
+router.put("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
 router.get("/getTravelItinerary",/* checkTokenValidityQuery, */ getTravelItinerary);
 router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
 

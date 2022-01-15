@@ -98,30 +98,41 @@ const MapOngoingTravel = (props) => {
             image={require("../../assets/images/passenger.png")}
           />
         )}
-        {/* {markers.map((marker, index) => (    
-            <Marker
+        {markers.map((marker, index) => {
+          if (marker.type == "pickUp")
+            if (marker.status == "active")
+              return (
+                <Marker
+                  key={index}
+                  coordinate={marker.coordinate}
+                  image={require("../../assets/images/upToCar.png")}
+                />
+              );
+            else
+              return (
+                <Marker
+                  key={index}
+                  coordinate={marker.coordinate}
+                  image={require("../../assets/images/upToCarOff.png")}
+                />
+              );
+          else if (marker.status == "active")
+            return (
+              <Marker
                 key={index}
-                coordinate={marker.coord}
-                image={require("../../assets/images/"+
-                        marker.type==='up' ? "upToCar.png": "getOutToCar.png")}
-            />))} */}
-
-        <Marker
-          key={2}
-          coordinate={{
-            latitude: destiny.latitude,
-            longitude: destiny.longitude,
-          }}
-          image={require("../../assets/images/upToCar.png")}
-        />
-        <Marker
-          key={3}
-          coordinate={{
-            latitude: coordinateList[0].latitude,
-            longitude: coordinateList[0].longitude,
-          }}
-          image={require("../../assets/images/getOutToCar.png")}
-        />
+                coordinate={marker.coordinate}
+                image={require("../../assets/images/getOutToCar.png")}
+              />
+            );
+          else
+            return (
+              <Marker
+                key={index}
+                coordinate={marker.coordinate}
+                image={require("../../assets/images/getOutToCarOff.png")}
+              />
+            );
+        })}
       </MapView>
       <TouchableOpacity
         style={styles.touchableStyleBack}
