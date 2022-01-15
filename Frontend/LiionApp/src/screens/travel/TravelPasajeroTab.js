@@ -42,7 +42,7 @@ const TravelPasajeroTab = ({ navigation, route }) => {
         driverOn={false}
         onPress={() => {
           if (item.status === "ongoing") {
-            navigation.navigate("OngoingTravelVisualizer", { ...item });
+            navigation.navigate("OngoingTravelPassengerVisualizer", { ...item });
           } else {
             navigation.navigate("TravelVisualizer", {
               ...item,

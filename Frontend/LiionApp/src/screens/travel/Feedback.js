@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Layout from "../../components/Layout";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ButtonLiion from "../../components/ButtonLiion";
 
-const Feedback = () => {
+const Feedback = ({ navigation, route }) => {
+  useEffect(() => {
+    navigation.addListener("beforeRemove", (e) => {
+      const action = e.data.action;
+      e.preventDefault();
+      e.data.action.type == "POP_TO_TOP" && navigation.dispatch(e.data.action);
+    });
+  }, [navigation]);
+
+  const checkValidator = () => {};
   return (
     <Layout>
       <View style={{ height: hp("70%") }}>

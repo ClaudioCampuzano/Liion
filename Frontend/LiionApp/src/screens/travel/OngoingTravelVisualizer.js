@@ -106,8 +106,8 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
         setModalErrorState(true);
         return;
       }
-      await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5 },
+      const subscription = await Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
         (loc) => {
           if (userLocation != null) {
             var coordObj = {
@@ -123,21 +123,9 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
           }
         }
       );
+      return () => subscription.remove();
     })();
   }, []);
-
-  /*   useEffect(() => {
-    if (userLocation != null) console.log(userLocation);
-           (async () => {
-        var data = {
-          travelId: id,
-          uid: uid,
-          location: location,
-        };
-        
-        await updateUserLocationInTravel(data);
-      })(); 
-  }, [userLocation]); */
 
   useEffect(() => {
     (async () => {
