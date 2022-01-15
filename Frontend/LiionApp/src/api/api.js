@@ -134,17 +134,6 @@ export const updateSeenTravel = async (travelId) => {
   }
 };
 
-export const updateUserLocationInTravel = async (pyload) => {
-  const requiredParameters = JSON.stringify(pyload);
-  const { data } = await client({
-    method: "patch",
-    url: "/updateUserLocationInTravel",
-    headers: { "Content-Type": "application/json" },
-    data: requiredParameters,
-  });
-  return data;
-};
-
 export const updateStateTravel = async (data) => {
   try {
     const requiredParameters = JSON.stringify(data);
@@ -257,6 +246,16 @@ export const updateTravelItinerary = async (payload) => {
     url: "/updateTravelItinerary",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify(payload),
+  });
+  return data;
+};
+
+export const updateUserLocationInTravel = async (pyload) => {
+  const { data } = await client({
+    method: "patch",
+    url: "/updateUserLocationInTravel",
+    headers: { "Content-Type": "application/json" },
+    data: JSON.stringify(pyload),
   });
   return data;
 };

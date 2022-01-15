@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
 import {
   StyleSheet,
   Text,
@@ -22,7 +28,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import ButtonLiion from "../../components/ButtonLiion";
 import LottieView from "lottie-react-native";
-
+import { GlobalContext } from "../../context/Provider";
 import MapOngoingTravel from "../../components/MapOngoingTravel";
 import Loading from "../../components/Loading";
 import Layout from "../../components/Layout";
@@ -33,10 +39,13 @@ import {
   getRouteCoordinates,
   getTravelItinerary,
   updateTravelItinerary,
+  updateUserLocationInTravel,
 } from "../../api/api";
 
 const OngoingTravelVisualizer = ({ navigation, route }) => {
   const { id } = route.params;
+  const { uid } = useContext(GlobalContext);
+
   const [userLocation, setUserLocation] = useState(() => {
     return { latitude: 0, longitude: 0 };
   });
@@ -68,7 +77,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   const {
     data: dataItinerary,
     isSuccess: isSucessItinerary,
-    isLoading,
     isError: isErrorItinerary,
   } = useQuery(
     ["travelItinerary", id],
@@ -79,13 +87,16 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   const {
     mutate,
     isError: isErrorUpdateItinerary,
-    isLoading: isIsLoadingUpdateItinerary,
+    isLoading: isLoadingUpdateItinerary,
     isSuccess: isSucessUpdateItinerary,
   } = useMutation(updateTravelItinerary, {
     onSuccess: () => {
       queryClient.invalidateQueries("travelItinerary");
     },
   });
+
+  const { mutate: mutateUpdateLocation, isError: isErrorUpdateLocation } =
+    useMutation(updateUserLocationInTravel);
 
   useEffect(() => {
     (async () => {
@@ -96,15 +107,37 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
         return;
       }
       await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 15 },
-        (loc) =>
-          setUserLocation({
-            latitude: loc.coords.latitude,
-            longitude: loc.coords.longitude,
-          })
+        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 5 },
+        (loc) => {
+          if (userLocation != null) {
+            var coordObj = {
+              latitude: loc.coords.latitude,
+              longitude: loc.coords.longitude,
+            };
+            setUserLocation(coordObj);
+            mutateUpdateLocation({
+              travelId: id,
+              uid: uid,
+              location: coordObj,
+            });
+          }
+        }
       );
     })();
   }, []);
+
+  /*   useEffect(() => {
+    if (userLocation != null) console.log(userLocation);
+           (async () => {
+        var data = {
+          travelId: id,
+          uid: uid,
+          location: location,
+        };
+        
+        await updateUserLocationInTravel(data);
+      })(); 
+  }, [userLocation]); */
 
   useEffect(() => {
     (async () => {
@@ -116,14 +149,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       }
     })();
   }, []);
-
-  /*   useEffect(() => {
-    if (
-      typeof dataItinerary === "object" &&
-      dataItinerary.status === "finished"
-    )
-      navigation.navigate('Feedback')
-  }, [isLoading]); */
 
   useEffect(() => {
     if (isSucessItinerary) {
@@ -151,18 +176,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
     (isErrorRoute || isErrorItinerary || isErrorUpdateItinerary) &&
       setModalErrorState(true);
   }, [isErrorRoute, isErrorItinerary, isErrorUpdateItinerary]);
-
-  /*   useEffect(() => {
-    if (userLocation != null) console.log(userLocation);
-           (async () => {
-        var data = {
-          travelId: id,
-          uid: uid,
-          location: location,
-        };
-        await updateUserLocationInTravel(data);
-      })(); 
-  }, [userLocation]); */
 
   const handleSnapOpen = useCallback((index) => {
     sheetRef.current?.snapToIndex(index);
@@ -241,7 +254,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
                     markers={dataItinerary.markerList}
                   />
                   <View style={styles.floatingSheet}>
-                    {isIsLoadingUpdateItinerary ? (
+                    {isLoadingUpdateItinerary ? (
                       <View
                         style={{
                           alignItems: "center",
