@@ -1,19 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Image, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, Feather } from "@expo/vector-icons";
-
 import CreateStepOne from "../screens/createTrip/CreateStepOne";
 import CreateStepTwo from "../screens/createTrip/CreateStepTwo";
 import CreateStepThree from "../screens/createTrip/CreateStepThree";
 import CreateStepFour from "../screens/createTrip/CreateStepFour";
 import CreateStepFive from "../screens/createTrip/CreateStepFive";
 import SucessScreen from "../screens/SucessScreen";
-
+import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
 import { COLORS, hp, wp } from "../constants/styleThemes";
-
+import { GlobalContext } from "../context/Provider";
 const CreateNavigator = () => {
+
   const CreateStack = createStackNavigator();
+  //testing para estados, eliminar en la version final.. recordar en stack de crear viaje boton chat
+  const { hasUpcommingTravel, updateUpcommingTravel } = useContext(GlobalContext);
+  const testParaCambiarEstadoViaje = () => {
+    updateUpcommingTravel(!hasUpcommingTravel)
+  }
   return (
     <CreateStack.Navigator initialRouteName="CreateStepOne">
       <CreateStack.Screen
@@ -36,7 +41,7 @@ const CreateNavigator = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => console.log("chat")}>
+            <TouchableOpacity onPress={() => testParaCambiarEstadoViaje()}>
               <Entypo
                 name="chat"
                 size={hp("5%")}
@@ -45,16 +50,7 @@ const CreateNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()} />
         })}
       />
       <CreateStack.Screen

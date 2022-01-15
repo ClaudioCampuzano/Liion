@@ -5,13 +5,13 @@ import messaging from '@react-native-firebase/messaging';
 import AuthNavigator from "./navigations/AuthNavigator";
 import DrawerNavigator from "./navigations/DrawerNavigator";
 import { GlobalContext } from "./context/Provider";
-
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { loadFonts } from "./constants/styleThemes";
-
+import { getupcomingTravels } from "./api/api";
 import Loading from "./components/Loading";
 
 const Index = (props) => {
-  const { loadUserFirestoreData, isLoadedData, refreshTokens } = useContext(GlobalContext);
+  const { loadUserFirestoreData, isLoadedData, refreshTokens, updateUpcommingTravel } = useContext(GlobalContext);
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
   const [user, setUser] = useState(null);
@@ -27,7 +27,6 @@ const Index = (props) => {
       //no me gusta esa sintaxis qla de then con callbacks pero weno se le hace a todo
       firebaseUser.getIdToken(true).then(id => {
         refreshTokens({ accesstoken: id })
-        console.log('se ha actualizado token de sesion')
       }).catch(e => console.log(e))
     });
 
@@ -52,6 +51,20 @@ const Index = (props) => {
     (async function loadInfo() {
       if (user) {
         await loadUserFirestoreData(user);
+        //se intento con query, pero daba warning de unhandled posible rejection (no tiene sentido pero se quito, mientras tanto. implementar despues)
+        //quitar este chorizo de logica de aca mas adelante
+        const [status, data] = await getupcomingTravels(user.uid)
+        if (status === true) {
+          const { res, sucess } = data
+          if (sucess === true || sucess === "true") {
+            if (res.status === 'closed' || res.status === 'open') {
+              updateUpcommingTravel(true)
+            } else {
+              updateUpcommingTravel(false)
+            }
+          }
+        }
+        else { console.log(data) }
       }
     })();
   }, [user]);

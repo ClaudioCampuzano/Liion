@@ -1,9 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Index from "./src/Index";
 import GlobalProvider from "./src/context/Provider";
 import { initializeApp } from "firebase/app";
-import {requestPermission} from './src/utils/fcm'
+import { requestPermission } from './src/utils/fcm'
 import { LogBox } from "react-native";
+import { QueryClient, QueryClientProvider } from "react-query";
 import {
   apiKey,
   authDomain,
@@ -38,11 +39,13 @@ export default function App() {
 
   useEffect(() => {
     requestPermission();
-   },[]);
-
+  }, []);
+  const queryClient = new QueryClient();
   return (
-    <GlobalProvider>
-      <Index />
-    </GlobalProvider>
+    <QueryClientProvider client={queryClient}>
+      <GlobalProvider>
+        <Index />
+      </GlobalProvider>
+    </QueryClientProvider>
   );
 }

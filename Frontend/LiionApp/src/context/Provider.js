@@ -10,6 +10,7 @@ import {
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
   REFRESHTOKENS,
+  UPDATEUPCOMMINGTRAVEL,
 } from "./types";
 
 export const GlobalContext = createContext({});
@@ -19,6 +20,7 @@ const GlobalProvider = ({ children }) => {
     uid: "",
     accesstoken: "",
     fcmToken: "",
+    hasUpcommingTravel:false,
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
@@ -106,6 +108,13 @@ const GlobalProvider = ({ children }) => {
     });
   };
 
+  const updateUpcommingTravel = (payload) => {
+    authDispatch({
+      type:UPDATEUPCOMMINGTRAVEL,
+      payload:payload
+    })
+  }
+
   const refreshTokens = (obj) => {
     const { accesstoken, fcmToken } = obj
     if (accesstoken) {
@@ -132,12 +141,14 @@ const GlobalProvider = ({ children }) => {
         accesstoken: state.accesstoken,
         isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
+        hasUpcommingTravel: state.hasUpcommingTravel,
         updateReloadTrigger,
         getState,
         loginUser,
         logoutUser,
         loadUserFirestoreData,
         refreshTokens,
+        updateUpcommingTravel,
       }}
     >
       {children}

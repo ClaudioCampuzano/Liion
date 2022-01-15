@@ -5,6 +5,7 @@ import {
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
   REFRESHTOKENS,
+  UPDATEUPCOMMINGTRAVEL,
 } from "./types";
 
 const authReducer = (state, action) => {
@@ -43,6 +44,8 @@ const authReducer = (state, action) => {
       return { ...state, reloadTrigger: payload };
     case REFRESHTOKENS:
       return { ...state, ...payload }
+    case UPDATEUPCOMMINGTRAVEL:
+      return { ...state, hasUpcommingTravel: payload }
     default:
       return state;
   }

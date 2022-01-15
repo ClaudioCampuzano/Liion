@@ -2,11 +2,10 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
-
+import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
 import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
-
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const TravelNavigator = () => {
@@ -42,16 +41,8 @@ const TravelNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+          
+          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()}/>
         })}
       />
 

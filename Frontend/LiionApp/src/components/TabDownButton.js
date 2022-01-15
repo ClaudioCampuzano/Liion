@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 
 import { Ionicons, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -9,7 +9,7 @@ import { GlobalContext } from "../context/Provider";
 
 const TabDownButton = (props) => {
   const { type, style, sizeIcon, ...restOfProps } = props;
-  const { userData } = useContext(GlobalContext);
+  const { userData, hasUpcommingTravel } = useContext(GlobalContext);
   const navigation = useNavigation();
 
   var colorSearch = COLORS.LIGHT_LEAD;
@@ -18,6 +18,12 @@ const TabDownButton = (props) => {
   var stateSearch = false;
   var stateMyTravels = false;
   var stateCreate = false;
+
+ 
+
+
+
+
 
   if (type === "create") {
     stateCreate = true;
@@ -54,7 +60,26 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
+
+      {hasUpcommingTravel ? (
       <TouchableWithoutFeedback
+        disabled={stateMyTravels}
+        onPress={() => navigation.navigate("MyTravelNavigator")}
+      >
+        <View style={{ ...styles.viewGeneral, ...style }}>
+          <MaterialCommunityIcons
+            name="routes"
+            size={hp(sizeIcon)}
+            style={{ alignSelf: "center" }}
+            color={COLORS.UPTRAVEL_WARN}
+          />
+          <Text style={{ ...styles.label, color: COLORS.UPTRAVEL_WARN }}>
+            {"Mis Viajes"}
+          </Text>
+        </View>
+      </TouchableWithoutFeedback>
+      ):
+      (<TouchableWithoutFeedback
         disabled={stateMyTravels}
         onPress={() => navigation.navigate("MyTravelNavigator")}
       >
@@ -70,6 +95,8 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
+      )}
+      
       {userData.isDriver && 
         <TouchableWithoutFeedback
           disabled={stateCreate}

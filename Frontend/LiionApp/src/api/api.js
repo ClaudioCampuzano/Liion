@@ -249,3 +249,16 @@ export const unProtectedRoute = async () => {
   } catch (e) {
   }
 };
+
+export const getupcomingTravels = async (UID) => {
+  try {
+  const { data } = await client({
+    method: "get",
+    url: "/getupcomingTravels/"+UID,
+  });
+  return [true, data]
+}
+catch(e){
+  return [false, e]
+}
+};

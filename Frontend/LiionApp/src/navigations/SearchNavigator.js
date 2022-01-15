@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
-
+import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
 import SearchStepThree from "../screens/searchTrip/SearchStepThree";
@@ -13,6 +13,7 @@ import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const SearchNavigator = () => {
   const SearchStack = createStackNavigator();
+  
 
   return (
     <SearchStack.Navigator initialRouteName="SearchStepOne">
@@ -44,16 +45,8 @@ const SearchNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+
+          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()}/>
         })}
       />
       <SearchStack.Screen
