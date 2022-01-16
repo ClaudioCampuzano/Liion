@@ -22,7 +22,9 @@ const TravelPasajeroTab = ({ navigation, route }) => {
 
   useEffect(() => {
     (async function () {
-      const [resFlag, resMsg] = await getTravelsPassenger({passengerUID: uid});
+      const [resFlag, resMsg] = await getTravelsPassenger({
+        passengerUID: uid,
+      });
       resFlag ? setDataFromApi(resMsg) : setModalError(true);
       setLoading(false);
     })();
@@ -39,10 +41,14 @@ const TravelPasajeroTab = ({ navigation, route }) => {
         item={item}
         driverOn={false}
         onPress={() => {
-          navigation.navigate("TravelVisualizer", {
-            ...item,
-            reload: reloadData,
-          });
+          if (item.status === "ongoing") {
+            navigation.navigate("OngoingTravelPassengerVisualizer", { ...item });
+          } else {
+            navigation.navigate("TravelVisualizer", {
+              ...item,
+              reload: reloadData,
+            });
+          }
         }}
       />
     );

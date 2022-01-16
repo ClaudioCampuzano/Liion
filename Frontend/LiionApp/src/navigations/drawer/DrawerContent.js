@@ -63,7 +63,7 @@ const DrawerContent = (props) => {
           </View>
         </View>
         <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
-          {userData.status === "travelOn" && (
+{/*           {userData.status === "travelOn" && (
             <DrawerItem
               style={{ marginBottom: -hp("0.5") }}
               icon={() => (
@@ -84,7 +84,7 @@ const DrawerContent = (props) => {
                 })
               }
             />
-          )}
+          )} */}
 
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}

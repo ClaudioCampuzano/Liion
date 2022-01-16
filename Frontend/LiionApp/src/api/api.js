@@ -4,7 +4,6 @@ import { BACKEND_URL } from "@env";
 
 const client = axios.create({
   baseURL: "http://" + BACKEND_URL + ":3000",
-  timeout: 2000,
 });
 
 export const registerBackend = async (payload) => {
@@ -113,6 +112,7 @@ export const getDetailsOfTravel = async (payload) => {
       url: "/getDetailsOfTravel",
       params: requiredParameters,
     });
+
     return [true, res.data];
   } catch (e) {
     return [false, e.response.data];
@@ -222,40 +222,49 @@ export const getTravelsDriver = async (payload) => {
   }
 };
 
-export const protectedRoute = async () => {
-  //esto se debe agregar al flux de crack (mutaciones, acciones, state etcetc y luego pedir desde ahi, aunsuqe
-  //no es estrictamente nescesario ya que ese encuentra en el bojeto user que ya se guarda en el asyncstorage
-  const user = firebase.auth().currentUser;
-  if (user) {
-    const tkn = await user.getIdToken(true);
-
-    try {
-      //prueba cambiando tkn por algun string y veras
-      const res = await client({
-        method: "post",
-        url: "/protected",
-        headers: {
-          token: tkn,
-        },
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  } else {
-    console.log("jiro");
-  }
+export const getRouteCoordinates = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getRouteCoordinates",
+    params: payload,
+  });
+  return data;
 };
 
-export const unProtectedRoute = async () => {
-  try {
-    const res = await client({
-      method: "post",
-      url: "/unprotected",
-      headers: {
-        token: "fakeToken",
-      },
-    });
-  } catch (e) {
-    console.log(e.response);
-  }
+export const getTravelItinerary = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getTravelItinerary",
+    params: payload,
+  });
+  return data;
+};
+
+export const getPassengerTravelItinerary = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getPassengerTravelItinerary",
+    params: payload,
+  });
+  return data;
+};
+
+export const updateTravelItinerary = async (payload) => {
+  const { data } = await client({
+    method: "put",
+    url: "/updateTravelItinerary",
+    headers: { "Content-Type": "application/json" },
+    data: JSON.stringify(payload),
+  });
+  return data;
+};
+
+export const updateUserLocationInTravel = async (pyload) => {
+  const { data } = await client({
+    method: "patch",
+    url: "/updateUserLocationInTravel",
+    headers: { "Content-Type": "application/json" },
+    data: JSON.stringify(pyload),
+  });
+  return data;
 };

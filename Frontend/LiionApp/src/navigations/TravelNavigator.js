@@ -6,6 +6,9 @@ import { Entypo } from "@expo/vector-icons";
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
 import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
+import OngoingTravelVisualizer from "../screens/travel/OngoingTravelVisualizer";
+import OngoingTravelPassengerVisualizer from "../screens/travel/OngoingTravelPassengerVisualizer";
+import Feedback from "../screens/travel/Feedback";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
@@ -65,6 +68,28 @@ const TravelNavigator = () => {
       <TravelStack.Screen
         name="TravelVisualizerDriver"
         component={TravelVisualizerDriver}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+
+      <TravelStack.Screen
+        name="OngoingTravelVisualizer"
+        component={OngoingTravelVisualizer}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <TravelStack.Screen
+        name="OngoingTravelPassengerVisualizer"
+        component={OngoingTravelPassengerVisualizer}
+        options={({ navigation }) => ({
+          headerShown: false,
+        })}
+      />
+      <TravelStack.Screen
+        name="Feedback"
+        component={Feedback}
         options={({ navigation }) => ({
           headerShown: false,
         })}

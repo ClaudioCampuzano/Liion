@@ -1,6 +1,7 @@
 import React from "react";
 import Index from "./src/Index";
 import GlobalProvider from "./src/context/Provider";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import { initializeApp } from "firebase/app";
 import { LogBox } from "react-native";
@@ -16,7 +17,7 @@ import {
 } from "@env";
 
 LogBox.ignoreLogs([
-  "AsyncStorage has been extracted from react-native core and will be removed in a future release. It can now be installed and imported from '@react-native-async-storage/async-storage' instead of 'react-native'. See https://github.com/react-native-async-storage/async-storage",
+  "AsyncStorage", "Setting a timer"
 ]);
 
 export default function App() {
@@ -32,9 +33,13 @@ export default function App() {
   };
   const app = initializeApp(firebaseKeys);
 
+  const queryClient = new QueryClient();
+
   return (
-    <GlobalProvider>
-      <Index />
-    </GlobalProvider>
+    <QueryClientProvider client={queryClient}>
+      <GlobalProvider>
+        <Index />
+      </GlobalProvider>
+    </QueryClientProvider>
   );
 }

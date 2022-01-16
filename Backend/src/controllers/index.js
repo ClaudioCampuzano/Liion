@@ -497,7 +497,8 @@ export async function getTravelsPassenger(req, res) {
             currentTimeTravel
               .add(travelData.data().durationMinutes, "minutes")
               .add(6, "hours")
-              .isSameOrAfter(moment())
+              .isSameOrAfter(moment()) ||
+            travelData.data().status === "ongoing"
           ) {
             var driverRef = await db
               .collection("users")
@@ -522,6 +523,9 @@ export async function getTravelsPassenger(req, res) {
                 nameDriver:
                   driverRef.data().name + " " + driverRef.data().apellido,
                 driverPhoto: driverRef.data().photo,
+                carModel: driverRef.data().driverData.car,
+                carPhoto: driverRef.data().driverData.carPhoto,
+                plate: driverRef.data().driverData.plate,
                 nRating: driverRef.data().driverData.nRating,
                 sRating: driverRef.data().driverData.sRating,
                 status: travelData.data().status,
@@ -530,6 +534,7 @@ export async function getTravelsPassenger(req, res) {
           }
         }
       }
+
     const requiredParameters = JSON.stringify(resultData);
     res.send(requiredParameters);
   } catch (e) {
@@ -546,7 +551,7 @@ export async function getTravelsDriver(req, res) {
     var travelRef = await db
       .collection("travels")
       .where("driverUID", "==", driverUID)
-      .where("status", "not-in", ["finished", "aborted"])
+      .where("status", "not-in", ["aborted"])
       .get();
 
     if (!travelRef.empty)
@@ -559,7 +564,8 @@ export async function getTravelsDriver(req, res) {
           currentTimeTravel
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
-            .isSameOrAfter(moment())
+            .isSameOrAfter(moment()) ||
+          doc.data().status === "ongoing"
         ) {
           resultData.push({
             id: doc.id,
@@ -675,8 +681,6 @@ export async function updateStateTravel(req, res) {
     const travelRef = db.collection("travels").doc(travelId);
     const travelObj = (await travelRef.get()).data();
 
-    // No se pueden iniciar viajes antes  de 15 minutos del mismo
-
     switch (state) {
       case "ongoing":
         var currentTimeTravel = moment(
@@ -686,34 +690,83 @@ export async function updateStateTravel(req, res) {
 
         if (
           currentTimeTravel.isBetween(
-            moment().subtract(15, "minutes"),
-            moment().add(15, "minutes")
+            moment().subtract(20, "minutes"),
+            moment().add(20, "minutes")
           )
         ) {
-          const travelUpdate = await travelRef.update({
-            status: state,
+          var objLocation = {};
+          objLocation[travelObj.driverUID] = {};
+          await Promise.all(
+            travelObj.requestingPassengers.map(async (doc) => {
+              var passengerUID = (
+                await db.collection("requestTravel").doc(doc).get()
+              ).data().passengerUID;
+              objLocation[passengerUID] = {};
+            })
+          );
+
+          //Generacion de itinerario
+
+          const objOrder = [];
+          const requestDocs = await db
+            .collection("requestTravel")
+            .where("travelId", "==", travelId)
+            .where("status", "==", "accepted")
+            .get();
+          const isCoordinateEqual = (object1, object2) => {
+            return (
+              object1.latitude === object2.latitude &&
+              object1.longitude === object2.longitude
+            );
+          };
+
+          //El itinerario tiene 3 estados, active, deactivate, finished
+          requestDocs.docs.map((doc) => {
+            objOrder.push({
+              step: travelObj.routeCoordinates.findIndex((obj) =>
+                isCoordinateEqual(doc.data().dropOff, obj)
+              ),
+              type: "dropOff",
+              status: "deactivate",
+              coordinate: doc.data().dropOff,
+              passengerUID: doc.data().passengerUID,
+              extraBaggage: doc.data().extraBaggage,
+            });
+            objOrder.push({
+              step: travelObj.routeCoordinates.findIndex((obj) =>
+                isCoordinateEqual(doc.data().pickUp, obj)
+              ),
+              type: "pickUp",
+              status: "deactivate",
+              coordinate: doc.data().pickUp,
+              passengerUID: doc.data().passengerUID,
+              extraBaggage: doc.data().extraBaggage,
+            });
           });
 
-          for (var i = 0; i < travelObj.requestingPassengers.length; i++) {
-            const passengerUID = (
-              await db
-                .collection("requestTravel")
-                .doc(travelObj.requestingPassengers[i])
-                .get()
-            ).data().passengerUID;
-            const userUpdate = await db
-              .collection("users")
-              .doc(passengerUID)
-              .update({
-                status: "travelOn",
-              });
-          }
+          objOrder
+            .sort((a, b) => {
+              if (a.step > b.step) return 1;
+              if (a.step < b.step) return -1;
+              return 0;
+            })
+            .map((obj, index) => {
+              obj.step = index;
+            });
+
+          objOrder[0].status = "active";
+
+          await travelRef.update({
+            status: state,
+            locations: objLocation,
+            itinerary: objOrder,
+          });
 
           res.json({ sucess: true, res: "Viaje iniciado" });
         } else
           res.status(403).json({
             sucess: false,
-            res: "Imposible iniciar viaje",
+            res: "Imposible iniciar aun el viaje",
           });
 
         break;
@@ -746,7 +799,7 @@ export async function updateStateTravel(req, res) {
 
 export const getStatusRun = async (req, res) => {
   const { run } = JSON.parse(req.query["0"]);
-  console.log(run)
+  console.log(run);
   try {
     const userObj = await db.collection("users").where("run", "==", run).get();
     userObj.empty
@@ -759,3 +812,168 @@ export const getStatusRun = async (req, res) => {
     });
   }
 };
+
+export async function updateUserLocationInTravel(req, res) {
+  const { travelId, location, uid } = req.body;
+  try {
+    if ((isEmpty(travelId) || isEmpty(uid)) && location != null)
+      throw "Faltan parametros";
+    const updateObj = {};
+    updateObj[`locations.${uid}`] = location;
+
+    const travelRes = await db
+      .collection("travels")
+      .doc(travelId)
+      .update(updateObj);
+    res.json({ sucess: true });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({
+      sucess: false,
+      res: "Error",
+    });
+  }
+}
+
+export async function getRouteCoordinates(req, res) {
+  try {
+    const { travelId } = req.query;
+    var travelRef = await db.collection("travels").doc(travelId).get();
+
+    const objSend = JSON.stringify({
+      routeCoordinates: travelRef.data().routeCoordinates,
+    });
+
+    res.status(200).send(objSend);
+  } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function getTravelItinerary(req, res) {
+  try {
+    const { travelId } = req.query;
+    const travelData = (
+      await db.collection("travels").doc(travelId).get()
+    ).data();
+    if (travelData.status === "ongoing") {
+      const itinerary = travelData.itinerary.find(
+        (obj) => obj.status === "active"
+      );
+
+      if (itinerary) {
+        const userData = (
+          await db.collection("users").doc(itinerary.passengerUID).get()
+        ).data();
+
+        var itineraryMarkers = travelData.itinerary
+          .filter((doc) => {
+            if (doc.status !== "finished") {
+              return true;
+            }
+            return false;
+          })
+          .map(
+            ({ passengerUID, extraBaggage, step, ...restParams }) => restParams
+          );
+
+        const objSend = JSON.stringify({
+          ...itinerary,
+          photo: userData.photo,
+          fullName: userData.name + " " + userData.apellido,
+          markerList: itineraryMarkers,
+        });
+        //console.log(objSend);
+        res.status(200).send(objSend);
+      } else res.status(200).json({ status: "finished" });
+    } else
+      res.status(403).json({
+        sucess: false,
+      });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function updateTravelItinerary(req, res) {
+  try {
+    const { travelId, step, type, data } = req.body;
+
+    const travelRef = db.collection("travels").doc(travelId);
+    const travelData = (await travelRef.get()).data();
+    var itinerary = travelData.itinerary;
+
+    if (type === "pickUp" || type === "dropOff") {
+      var interruptor = true;
+      if (type === "pickUp") {
+        var dataArray = data.split("~-!-~");
+        interruptor =
+          dataArray.length === 2 &&
+          travelId === dataArray[0] &&
+          itinerary[step].passengerUID === dataArray[1];
+      }
+      if (interruptor) {
+        itinerary[step].status = "finished";
+        if (itinerary.length !== step + 1)
+          itinerary[step + 1].status = "active";
+        travelRef.update({
+          itinerary: itinerary,
+        });
+        res.status(200).send(JSON.stringify({ status: true }));
+        return;
+      }
+      res.status(200).send(JSON.stringify({ status: false }));
+    } else {
+      res.status(403).json({
+        sucess: false,
+      });
+      return;
+    }
+  } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function getPassengerTravelItinerary(req, res) {
+  try {
+    const { travelId, uid: passengerUID } = req.query;
+
+    const travelData = (
+      await db.collection("travels").doc(travelId).get()
+    ).data();
+    const objOrder = [];
+
+    var itineraryFilter = travelData.itinerary.filter((doc) => {
+      if (doc.status !== "finished" && doc.passengerUID === passengerUID) {
+        return true;
+      }
+      return false;
+    });
+    if (itineraryFilter.length > 0) {
+      var itineraryMarkers = itineraryFilter.map(
+        ({ passengerUID, extraBaggage, step, ...restParams }) => restParams
+      );
+
+      itineraryMarkers[0].status = "active";
+
+      const objSend = JSON.stringify({
+        ...itineraryFilter[0],
+        markerList: itineraryMarkers,
+      });
+
+      res.status(200).send(objSend);
+    } else res.status(200).json({ status: "finished" });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}

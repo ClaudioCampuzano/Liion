@@ -294,7 +294,7 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
               title="Iniciar viaje"
               styleView={{
                 ...styles.button,
-                backgroundColor: COLORS.CHECK_GREEN,
+                backgroundColor: COLORS.TURKEY,
               }}
               onPress={() => startTravel()}
             />
