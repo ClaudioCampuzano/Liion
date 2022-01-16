@@ -895,10 +895,17 @@ export const notifToPassengers = async (req, res) => {
             userIdWithFcm.forEach(x => fcmTokenArr.push(x.fcmToken))
             let travelers = []
             userIdWithFcm.forEach(x => travelers.push(x.name + ' ', x.apellido))
+            const msg = {
+              msg: 'Preparate a viajar con: ' + JSON.stringify(travelers),
+              for: "passengers"
+            }
             const message = {
               notification: {
                 title: 'Tu viaje Esta por empezar',
-                body: 'Preparate a viajar con: ' + JSON.stringify(travelers)
+                body: 'Preparate a viajar con: ' + JSON.stringify(travelers),
+              },
+              data:{
+                userFor:'passengers'
               },
               android: {
                 notification: {
@@ -948,4 +955,3 @@ export const notifToPassengers = async (req, res) => {
   }
 }
 
-  
