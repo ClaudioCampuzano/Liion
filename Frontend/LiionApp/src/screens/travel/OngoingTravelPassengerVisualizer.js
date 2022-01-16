@@ -5,7 +5,13 @@ import React, {
   useCallback,
   useContext,
 } from "react";
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Image,
+} from "react-native";
 import * as Location from "expo-location";
 
 import { reverseGeocodeAsync } from "expo-location";
@@ -14,6 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import QRCode from "react-native-qrcode-svg";
 import { getDistance } from "geolib";
+import { Avatar } from "react-native-paper";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { GlobalContext } from "../../context/Provider";
@@ -29,7 +36,8 @@ import {
 import ButtonLiion from "../../components/ButtonLiion";
 
 const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
-  const { id } = route.params;
+  const { id, nameDriver, driverPhoto, carModel, carPhoto, plate } =
+    route.params;
   const { uid } = useContext(GlobalContext);
 
   const [userLocation, setUserLocation] = useState(() => {
@@ -186,11 +194,47 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
                   <View style={styles.floatingSheet}>
                     <View
                       style={{
-                        flexDirection: "row",
-                        marginTop: hp(1),
+                        margin: hp(1.5),
                         justifyContent: "space-evenly",
                       }}
                     >
+                      <View style={{ flexDirection: "row" }}>
+                        <View style={{ width: wp("45%") }}>
+                          <Avatar.Image
+                            source={{
+                              uri: driverPhoto,
+                            }}
+                            size={hp("7")}
+                            style={{ position: "absolute", zIndex: 1 }}
+                          />
+
+                          <Image
+                            source={{ uri: carPhoto }}
+                            style={styles.Image}
+                          />
+                        </View>
+                        <View style={{ width: wp("40%") }}>
+                          <Text
+                            style={{
+                              fontSize: hp("1.9%"),
+                              color: COLORS.BLACK,
+                              fontFamily: "Gotham-SSm-Bold",
+                            }}
+                          >
+                            {nameDriver}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: hp("1.4%"),
+                              color: COLORS.BLACK,
+                              fontFamily: "Gotham-SSm-Medium",
+                            }}
+                          >
+                            {carModel + " - " + plate}
+                          </Text>
+                        </View>
+                      </View>
+
                       <View
                         style={{
                           flexDirection: "row",
@@ -298,5 +342,9 @@ const styles = StyleSheet.create({
     fontSize: hp("2.4%"),
     textAlign: "center",
     color: COLORS.TURKEY,
+  },
+  Image: {
+    width: wp("45%"),
+    height: hp("8%"),
   },
 });

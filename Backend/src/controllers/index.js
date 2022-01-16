@@ -523,6 +523,9 @@ export async function getTravelsPassenger(req, res) {
                 nameDriver:
                   driverRef.data().name + " " + driverRef.data().apellido,
                 driverPhoto: driverRef.data().photo,
+                carModel: driverRef.data().driverData.car,
+                carPhoto: driverRef.data().driverData.carPhoto,
+                plate: driverRef.data().driverData.plate,
                 nRating: driverRef.data().driverData.nRating,
                 sRating: driverRef.data().driverData.sRating,
                 status: travelData.data().status,
@@ -531,6 +534,7 @@ export async function getTravelsPassenger(req, res) {
           }
         }
       }
+
     const requiredParameters = JSON.stringify(resultData);
     res.send(requiredParameters);
   } catch (e) {
