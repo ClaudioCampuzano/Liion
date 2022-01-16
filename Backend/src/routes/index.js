@@ -17,7 +17,8 @@ import {
   updateStateTravel,
   upDateFcmToken,
   getupcomingTravels,
-  fcmTest
+  fcmTest,
+  notifToPassengers
 } from "../controllers/index";
 
 import { checkIsAuth } from "../middleware/guard";
@@ -51,6 +52,7 @@ router.delete("/deleteDriverTravel", deleteDriverTravel);
 router.patch("/updateStateTravel", updateStateTravel);
 
 router.post('/testFcm', fcmTest);
+router.post('/notifToPassengers',notifToPassengers)
 router.get("/getupcomingTravels/:userUID",getupcomingTravels);
 
 

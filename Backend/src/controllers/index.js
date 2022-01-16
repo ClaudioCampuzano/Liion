@@ -728,7 +728,8 @@ export async function updateStateTravel(req, res) {
 
 
 export const fcmTest = async (req, res) => {
-  const registrationToken = 'dJpJPKRiSb6MpTRdb4AzuL:APA91bHeWBHp91cp58uJSkQyQf-jEpuRSzxL5k0NDj7z9fbVhm40bydZUVrG3SC3T8Fn79og9cTjZrN-KYi6CgAP5CMdadOWg9WMTURy3O0V3izy7jKVq5lv0_29Dyrq5D6yx_FXR-sC';
+  const registrationToken = 'cAhx71yfSoOKcC8vDOflqe:APA91bEqTcloASHbxQ_Bl5OwPzg8T_oAc8rKLjKE5_Y3MlmJjlrblGzPAXv_mu46xf2zuHdljC-XM7GTWIDKuoE_lKLnR5e6BkN-SOp2plW-IhsUcGPPW0kDwJdX-h1_IKBD7KZ4MfYU';
+  //const registrationToken = 'dJpJPKRiSb6MpTRdb4AzuL:APA91bHeWBHp91cp58uJSkQyQf-jEpuRSzxL5k0NDj7z9fbVhm40bydZUVrG3SC3T8Fn79og9cTjZrN-KYi6CgAP5CMdadOWg9WMTURy3O0V3izy7jKVq5lv0_29Dyrq5D6yx_FXR-sC';
   const message = {
     notification: {
       title: '850',
@@ -853,3 +854,98 @@ export async function getupcomingTravels(req, res) {
     res.status(500).send({ sucess: false, res: "Ops hubo un error" });
   }
 }
+
+export const notifToPassengers = async (req, res) => {
+  const { travelId } = req.body;
+  if (!travelId) {
+    res.status(400).send({ sucess: false, res: "Envie un id de viaje" });
+  }
+  else {
+    try {
+      const docRef = await db.collection("travels").doc(travelId).get();
+      const docExist = docRef.exists;
+      if (!docExist) {
+        res.status(400).send({ sucess: false, res: "No se encuetra viaje" });
+      }
+      const { requestingPassengers } = docRef.data()
+      if (typeof requestingPassengers !== 'undefined' && requestingPassengers.length > 0) {
+        const userIds = []
+        await Promise.all(
+          requestingPassengers.map(async (passenger) => {
+            let trimmed = passenger.trim()
+            const travelRequestRef = await db.collection("requestTravel").doc(trimmed).get()
+            const { passengerUID } = travelRequestRef.data()
+            userIds.push(passengerUID)
+          })
+        )
+        if (typeof userIds !== 'undefined' && userIds.length > 0) {
+          const userIdWithFcm = []
+          await Promise.all(
+            userIds.map(async (user) => {
+              let trimmed2 = user.trim()
+              const usersRefs = await db.collection("users").doc(trimmed2).get()
+              const { fcmToken, name, apellido } = usersRefs.data()
+              userIdWithFcm.push({ uid: trimmed2, fcmToken: fcmToken, name: name, apellido: apellido })
+            })
+          )
+
+          if (typeof userIdWithFcm !== 'undefined' && userIdWithFcm.length > 0) {
+            //hasta aca.. ok
+            const fcmTokenArr = []
+            userIdWithFcm.forEach(x => fcmTokenArr.push(x.fcmToken))
+            let travelers = []
+            userIdWithFcm.forEach(x => travelers.push(x.name + ' ', x.apellido))
+            const message = {
+              notification: {
+                title: 'Tu viaje Esta por empezar',
+                body: 'Preparate a viajar con: ' + JSON.stringify(travelers)
+              },
+              android: {
+                notification: {
+                  icon: 'stock_ticker_update',
+                  color: '#009999'
+                }
+              },
+              tokens: fcmTokenArr
+            };
+            try {
+              const resfcm = await fcm.sendMulticast(message)
+              if (resfcm.failureCount > 0) {
+                const failedTokens = [];
+                resfcm.responses.forEach((resp, idx) => {
+                  if (!resp.success) {
+                    failedTokens.push(fcmTokenArr[idx]);
+                  }
+                });
+                console.log('List of tokens that caused failures: ' + failedTokens);
+              }
+              res.json({ sucess: true, res: resfcm });
+            }
+            catch (e) {
+              console.log('Error sending message:', e);
+              res.status(500).json({
+                sucess: false,
+                res: e,
+              });
+            }
+          }
+          else {
+            res.status(400).send({ sucess: false, res: "No se encuetran id de viajeros" })
+          }
+        }
+        else {
+          res.status(400).send({ sucess: false, res: "No se encuetran id de viajeros" });
+        }
+      }
+      else {
+        res.status(400).send({ sucess: false, res: "No se encuetran pasajeros para enviar su notificacion" });
+      }
+    }
+    catch (e) {
+      console.log(e)
+      res.status(400).send({ sucess: false, res: "Oops ha ocurrido un error" });
+    }
+  }
+}
+
+  
