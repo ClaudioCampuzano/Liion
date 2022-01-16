@@ -17,13 +17,22 @@ const Index = (props) => {
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
   const [user, setUser] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const fontsLoaded = loadFonts();
 
   const navigation = useNavigation();
-  const gotoTravelHandler = () => {
-    setModalVisible(false);
-    navigation.navigate("MyTravelNavigator");
+  const gotoTravelHandler1 = () => {
+    setModalVisible1(false);
+    //solo lo puedo mandar al navegador, pero nose como indicar a screen pasajero o conductor
+    //nose porque no funciona con TravelPasajeroTab alomejor crack con la sabiduria crackiana diosiana sabe redirijir a nested screen en nested  navigators
+    navigation.navigate("TravelConductorTab");
+  }
+
+  const gotoTravelHandler2 = () => {
+    setModalVisible2(false);
+    console.log(navigation)
+    navigation.navigate('TempScreen');
   }
 
   // Check user state
@@ -44,14 +53,25 @@ const Index = (props) => {
 
   useEffect(() => {
     const uunsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      const { data } = remoteMessage
+      //remoteMessage.contentAvailable
+      //console.log('A new FCM message arrived!', remoteMessage);
+      const { userFor } = data
+      if (userFor === 'passengers') {setModalVisible2(true)
+      updateTravelStatus('ongoing')}
     });
 
     return uunsubscribe;
   }, []);
 
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
+    //console.log('Message handled in the background!', remoteMessage);
+    const { data } = remoteMessage
+    const { userFor } = data
+    if (userFor === 'passengers') {
+      navigation.navigate('TempScreen');
+      updateTravelStatus('ongoing')
+    }
   });
 
   // Only user change and exists load firestoreData
@@ -67,7 +87,7 @@ const Index = (props) => {
           if (sucess === true || sucess === "true") {
             if (res.status === 'closed' || res.status === 'open') {
               updateTravelStatus('soon')
-              setModalVisible(true)
+              setModalVisible1(true)
               //navigation.navigate("MyTravelNavigator");
             }
             else if (res.status === 'ongoing') {
@@ -97,17 +117,34 @@ const Index = (props) => {
           <><ModalPopUpDouble
             firstButtonText="Vamos"
             secondButtonText="Cancelar"
-            visible={modalVisible}
-            setModalVisible={setModalVisible}
+            visible={modalVisible1}
+            setModalVisible={setModalVisible1}
             firstFunction={() => {
-              gotoTravelHandler();
+              gotoTravelHandler1();
             }}
             secondFunction={() => {
-              console.log('close modal');
-              setModalVisible(false);
+              //console.log('close modal');
+              setModalVisible1(false);
             }}>
-            Parece tienes un viaje por partir
-          </ModalPopUpDouble><DrawerNavigator /></> : <AuthNavigator />}
+            Parece tienes un como conductor viaje por partir
+          </ModalPopUpDouble>
+
+            <ModalPopUpDouble
+              firstButtonText="Vamos"
+              secondButtonText="Cancelar"
+              visible={modalVisible2}
+              setModalVisible={setModalVisible2}
+              firstFunction={() => {
+                gotoTravelHandler2();
+              }}
+              secondFunction={() => {
+                //console.log('close modal');
+                setModalVisible2(false);
+              }}>
+              Parece tienes un como pasajero viaje por partir
+            </ModalPopUpDouble>
+
+            <DrawerNavigator /></> : <AuthNavigator />}
       </> : <Loading />
       }
 

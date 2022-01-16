@@ -48,16 +48,14 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       state: "ongoing",
     };
     //cambiar estado viaje a ongoing
-    //const [resFlag, resmsg] = await updateStateTravel(dataForSend);
-    //setMsgModal(resmsg.res);
-    //setModalState(true);
-    //setLoading(false);
-    //suponemos que es exitoso , lo cambia
-
-    if(true){ //resFlag){
-      
+    const [resFlag, resmsg] = await updateStateTravel(dataForSend);
+    setMsgModal(resmsg.res);
+    setModalState(true);
+    setLoading(false);
+    //lo nuvevo
+    if(resFlag){      
       const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)
-      console.log(resNotif,dataNotif)
+      //console.log(resNotif,dataNotif)
       setLoading(false);
     }
 
@@ -162,6 +160,7 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
   };
 
   const modalHandler = () => {
+    //esta navegacion genera un warning de update on unmnount.. si tengo tiempo la veo despues..
     navigation.navigate("MyTravelNavigator", {
       screen: "TravelTabNavigator",
       params: {

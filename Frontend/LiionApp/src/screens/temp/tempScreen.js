@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 const tempScreen = () => {
   return (

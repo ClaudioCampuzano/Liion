@@ -13,7 +13,7 @@ import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = ({ navigation, route }) => {
   var reloadData = route.params ? route.params : false;
-
+ 
   const { uid, userData } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
