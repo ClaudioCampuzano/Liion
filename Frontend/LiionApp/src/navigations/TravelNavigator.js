@@ -9,6 +9,7 @@ import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
 import OngoingTravelVisualizer from "../screens/travel/OngoingTravelVisualizer";
 import OngoingTravelPassengerVisualizer from "../screens/travel/OngoingTravelPassengerVisualizer";
 import Feedback from "../screens/travel/Feedback";
+import DrawerIconCustom from "../components/DrawerIconCustom";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
@@ -45,16 +46,7 @@ const TravelNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <DrawerIconCustom alert={true} />,
         })}
       />
 

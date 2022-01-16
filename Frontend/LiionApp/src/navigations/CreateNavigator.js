@@ -9,6 +9,7 @@ import CreateStepThree from "../screens/createTrip/CreateStepThree";
 import CreateStepFour from "../screens/createTrip/CreateStepFour";
 import CreateStepFive from "../screens/createTrip/CreateStepFive";
 import SucessScreen from "../screens/SucessScreen";
+import DrawerIconCustom from "../components/DrawerIconCustom";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
@@ -45,16 +46,7 @@ const CreateNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <DrawerIconCustom alert={false} />,
         })}
       />
       <CreateStack.Screen
