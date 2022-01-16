@@ -10,14 +10,10 @@ import * as Location from "expo-location";
 
 import { reverseGeocodeAsync } from "expo-location";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import {
-  AntDesign,
-  MaterialIcons,
-  MaterialCommunityIcons,
-  FontAwesome5,
-} from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import QRCode from "react-native-qrcode-svg";
+import { getDistance } from "geolib";
 
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import { GlobalContext } from "../../context/Provider";
@@ -47,6 +43,8 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
   const sheetRef = useRef();
   const snapPoints = ["55%"];
 
+  const queryClient = useQueryClient();
+
   const {
     data: dataRoute,
     isSuccess: isSucessRoute,
@@ -66,7 +64,7 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
   } = useQuery(
     ["travelItineraryP", id],
     () => getPassengerTravelItinerary({ travelId: id, uid: uid }),
-    { refetchOnMount: true }
+    { refetchOnMount: true, refetchInterval: 60000 }
   );
 
   const { mutate: mutateUpdateLocation, isError: isErrorUpdateLocation } =
@@ -105,6 +103,18 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
     isErrorRoute && setErrorMsg("Error al obtener la ruta");
     isErrorRoute && setModalErrorState(true);
   }, [isErrorRoute]);
+
+  useEffect(() => {
+    !isSheetOpen && queryClient.invalidateQueries("travelItineraryP");
+  }, [isSheetOpen]);
+
+  useEffect(() => {
+    isSucessItinerary &&
+      dataItinerary.status !== "finished" &&
+      dataItinerary.type === "dropOff" &&
+      getDistance(userLocation, dataItinerary.coordinate) < 5 &&
+      queryClient.invalidateQueries("travelItineraryP");
+  }, [userLocation]);
 
   useEffect(() => {
     if (isSucessItinerary) {
@@ -146,98 +156,106 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
         <Loading />
       ) : (
         <>
-          <ModalPopUp
-            visible={modalErrorState}
-            setModalVisible={setModalErrorState}
-            customFunction={modalHandler}
-          >
-            {errorMsg}
-          </ModalPopUp>
-          <TouchableWithoutFeedback
-            onPress={() => isSheetOpen && handleSnapClose()}
-          >
-            <View
-              style={{
-                alignItems: "center",
-                backgroundColor: COLORS.WHITE,
-              }}
-            >
-              <MapOngoingTravel
-                dimensions={styles.mapDimensions}
-                coordinateList={dataRoute.routeCoordinates}
-                origin={userLocation}
-                destiny={dataRoute.routeCoordinates[10]}
-                navigation={navigation}
-                typePassenger={"passenger"}
-                markers={dataItinerary.markerList}
-              />
-              <View style={styles.floatingSheet}>
+          {dataItinerary.status !== "finished" && (
+            <>
+              <ModalPopUp
+                visible={modalErrorState}
+                setModalVisible={setModalErrorState}
+                customFunction={modalHandler}
+              >
+                {errorMsg}
+              </ModalPopUp>
+              <TouchableWithoutFeedback
+                onPress={() => isSheetOpen && handleSnapClose()}
+              >
                 <View
                   style={{
-                    flexDirection: "row",
-                    marginTop: hp(1),
-                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    backgroundColor: COLORS.WHITE,
                   }}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <MaterialIcons
-                      name="directions-walk"
-                      size={24}
-                      color={COLORS.TURKEY}
-                      style={
-                        dataItinerary.type === "dropOff" && {
-                          transform: [{ rotateY: "180deg" }],
-                        }
-                      }
-                    />
-                    <Text style={styles.labelText}>
-                      {(dataItinerary.type === "pickUp"
-                        ? "Subida en "
-                        : "Bajada en ") + nameDirection}
-                    </Text>
+                  <MapOngoingTravel
+                    dimensions={styles.mapDimensions}
+                    coordinateList={dataRoute.routeCoordinates}
+                    origin={userLocation}
+                    destiny={dataRoute.routeCoordinates[10]}
+                    navigation={navigation}
+                    typePassenger={"passenger"}
+                    markers={dataItinerary.markerList}
+                  />
+                  <View style={styles.floatingSheet}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        marginTop: hp(1),
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <MaterialIcons
+                          name="directions-walk"
+                          size={24}
+                          color={COLORS.TURKEY}
+                          style={
+                            dataItinerary.type === "dropOff" && {
+                              transform: [{ rotateY: "180deg" }],
+                            }
+                          }
+                        />
+                        <Text style={styles.labelText}>
+                          {(dataItinerary.type === "pickUp"
+                            ? "Subida en "
+                            : "Bajada en ") + nameDirection}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {dataItinerary.type !== "pickUp" ? (
+                      <View style={styles.buttonView}>
+                        <ButtonLiion
+                          title="¿Problemas?"
+                          styleView={styles.button}
+                          onPress={() => console.log("¿Problemas?")}
+                        />
+                      </View>
+                    ) : (
+                      <View style={styles.buttonView}>
+                        <ButtonLiion
+                          title="Ver Codigo QR"
+                          styleView={styles.button}
+                          onPress={() => handleSnapOpen(0)}
+                        />
+                      </View>
+                    )}
                   </View>
                 </View>
+              </TouchableWithoutFeedback>
 
-                {dataItinerary.type !== "pickUp" ? (
-                  <View style={styles.buttonView}>
-                    <ButtonLiion
-                      title="¿Problemas?"
-                      styleView={styles.button}
-                      onPress={() => console.log("¿Problemas?")}
-                    />
-                  </View>
-                ) : (
-                  <View style={styles.buttonView}>
-                    <ButtonLiion
-                      title="Ver Codigo QR"
-                      styleView={styles.button}
-                      onPress={() => handleSnapOpen(0)}
-                    />
-                  </View>
-                )}
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-
-          <BottomSheet
-            ref={sheetRef}
-            snapPoints={snapPoints}
-            enablePanDownToClose={true}
-            onClose={() => setIsSheetOpen(false)}
-            index={-1}
-          >
-            <BottomSheetView style={{ alignItems: "center" }}>
-              <Text style={[styles.textQr,{marginBottom:hp(5)}]}>
-                {"Muestra el codigo QR\nal conductor"}
-              </Text>
-              <QRCode value={id + "~-!-~" + uid} color={COLORS.TURKEY} size={300} />
-            </BottomSheetView>
-          </BottomSheet>
+              <BottomSheet
+                ref={sheetRef}
+                snapPoints={snapPoints}
+                enablePanDownToClose={true}
+                onClose={() => setIsSheetOpen(false)}
+                index={-1}
+              >
+                <BottomSheetView style={{ alignItems: "center" }}>
+                  <Text style={[styles.textQr, { marginBottom: hp(5) }]}>
+                    {"Muestra el codigo QR\nal conductor"}
+                  </Text>
+                  <QRCode
+                    value={id + "~-!-~" + uid}
+                    color={COLORS.TURKEY}
+                    size={300}
+                  />
+                </BottomSheetView>
+              </BottomSheet>
+            </>
+          )}
         </>
       )}
     </Layout>
