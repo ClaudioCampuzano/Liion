@@ -14,6 +14,7 @@ import {
   getDetailsOfTravel,
   deleteDriverTravel,
   updateStateTravel,
+  notifToPassengers,
 } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
@@ -22,8 +23,6 @@ import "moment/locale/es";
 moment.locale("es");
 
 const TravelVisualizerDriver = ({ navigation, route }) => {
-  console.log(route)
-  console.log(navigation)
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [msgModal, setMsgModal] = useState(
@@ -48,15 +47,17 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       travelId: route.params.id,
       state: "ongoing",
     };
+    //cambiar estado viaje a ongoing
     //const [resFlag, resmsg] = await updateStateTravel(dataForSend);
-
     //setMsgModal(resmsg.res);
     //setModalState(true);
     //setLoading(false);
     //suponemos que es exitoso , lo cambia
+
     if(true){ //resFlag){
-      console.log('enviar notif')
       
+      const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)
+      console.log(resNotif,dataNotif)
       setLoading(false);
     }
 

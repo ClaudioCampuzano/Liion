@@ -269,12 +269,15 @@ export const notifToPassengers = async (travelId)  =>{
       method:'post',
       url:'/notifToPassengers',
       headers: { "Content-Type": "application/json" },
-      travelId: JSON.stringify(travelId),
+      data: {
+      travelId: travelId,
+      }
     })
     return [true, data]
   }
   catch(e)
   {
-      return [false, e]
+      
+      return [false, e.response.data]
   }
 }
