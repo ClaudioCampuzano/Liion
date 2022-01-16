@@ -14,7 +14,7 @@ import TravelResultsCard from "../../components/TravelResultsCard";
 const TravelPasajeroTab = ({ navigation, route }) => {
   var reloadData = route.params ? route.params : false;
 
-  const { uid, userData } = useContext(GlobalContext);
+  const { uid } = useContext(GlobalContext);
 
   const [loading, setLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
@@ -42,7 +42,9 @@ const TravelPasajeroTab = ({ navigation, route }) => {
         driverOn={false}
         onPress={() => {
           if (item.status === "ongoing") {
-            navigation.navigate("OngoingTravelPassengerVisualizer", { ...item });
+            navigation.navigate("OngoingTravelPassengerVisualizer", {
+              ...item,
+            });
           } else {
             navigation.navigate("TravelVisualizer", {
               ...item,

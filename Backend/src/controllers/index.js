@@ -798,13 +798,12 @@ export async function updateStateTravel(req, res) {
 }
 
 export const getStatusRun = async (req, res) => {
-  const { run } = JSON.parse(req.query["0"]);
-  console.log(run);
+  const { run } = req.query;
   try {
     const userObj = await db.collection("users").where("run", "==", run).get();
     userObj.empty
-      ? res.json({ check: false })
-      : res.json({ check: true, res: "Run ya registrado" });
+      ? res.status(200).json({ check: false })
+      : res.status(200).json({ check: true, res: "Run ya registrado" });
   } catch {
     res.status(500).json({
       sucess: false,
@@ -885,7 +884,6 @@ export async function getTravelItinerary(req, res) {
           fullName: userData.name + " " + userData.apellido,
           markerList: itineraryMarkers,
         });
-        //console.log(objSend);
         res.status(200).send(objSend);
       } else res.status(200).json({ status: "finished" });
     } else
@@ -948,7 +946,6 @@ export async function getPassengerTravelItinerary(req, res) {
     const travelData = (
       await db.collection("travels").doc(travelId).get()
     ).data();
-    const objOrder = [];
 
     var itineraryFilter = travelData.itinerary.filter((doc) => {
       if (doc.status !== "finished" && doc.passengerUID === passengerUID) {

@@ -11,6 +11,8 @@ import InputDateTime from "../../components/InputDateTime";
 import InputPicker from "../../components/InputPicker";
 import ModalPopUp from "../../components/ModalPopUp";
 import Loading from "../../components/Loading";
+
+import { useMutation } from "react-query";
 import { getStatusRun } from "../../api/api";
 
 import moment from "moment";
@@ -32,6 +34,25 @@ const RegisterStepOne = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
+
+  const { mutate: mutateGetStatusRun, isLoading: isLoadingGetStatusRun } =
+    useMutation(getStatusRun, {
+      onSuccess: (data) => {
+        if (data.check) {
+          setModalVisible(true);
+          setApiResponse(data.res);
+        } else {
+          const dataToStep2 = {
+            name: valueNombre,
+            lastname: valueApellido,
+            run: valueRun,
+            dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
+            gender: valueGender,
+          };
+          navigation.navigate("RegisterStepTwo", dataToStep2);
+        }
+      },
+    });
 
   useEffect(() => {
     if (valueNombre != "") setErrorNombre(null);
@@ -70,33 +91,13 @@ const RegisterStepOne = ({ navigation }) => {
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) &&
       valueGender != ""
     ) {
-      setLoading(true);
-      const [resFlag, resMsg] = await getStatusRun({ run: valueRun });
-      if (resFlag) {
-        if (resMsg.check) {
-          setModalVisible(true);
-          setApiResponse(resMsg.res);
-        } else {
-          const dataToStep2 = {
-            name: valueNombre,
-            lastname: valueApellido,
-            run: valueRun,
-            dateBirth: valueFecha.utc().format("YYYY-MM-DD"),
-            gender: valueGender,
-          };
-          navigation.navigate("RegisterStepTwo", dataToStep2);
-        }
-      } else {
-        setModalVisible(true);
-        setApiResponse(resMsg.res);
-      }
-      setLoading(false);
+      mutateGetStatusRun({ run: valueRun });
     }
   };
 
   return (
     <Layout>
-      {loading ? (
+      {isLoadingGetStatusRun ? (
         <Loading />
       ) : (
         <KeyboardAvoidingWrapper>

@@ -90,17 +90,12 @@ export const getTravels = async (searchParameters) => {
 };
 
 export const getStatusRun = async (payload) => {
-  try {
-    const requiredParameters = JSON.stringify(payload);
-    const res = await client({
-      method: "get",
-      url: "/getStatusRun",
-      params: requiredParameters,
-    });
-    return [true, res.data];
-  } catch (e) {
-    return [false, e.response.data];
-  }
+  const { data } = await client({
+    method: "get",
+    url: "/getStatusRun",
+    params: payload,
+  });
+  return data;
 };
 
 export const getDetailsOfTravel = async (payload) => {
