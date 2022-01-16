@@ -5,7 +5,7 @@ import {
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
   REFRESHTOKENS,
-  UPDATEUPCOMMINGTRAVEL,
+  UPDATETRAVELSTATUS,
 } from "./types";
 
 const authReducer = (state, action) => {
@@ -27,6 +27,7 @@ const authReducer = (state, action) => {
         accesstoken: "",
         userData: {},
         fcmToken: '',
+        travelStatus:'',
         isLoadedData: false,
       };
     case LOAD_FIRESTORE_DATA:
@@ -44,8 +45,8 @@ const authReducer = (state, action) => {
       return { ...state, reloadTrigger: payload };
     case REFRESHTOKENS:
       return { ...state, ...payload }
-    case UPDATEUPCOMMINGTRAVEL:
-      return { ...state, hasUpcommingTravel: payload }
+    case UPDATETRAVELSTATUS:
+      return { ...state, travelStatus: payload }
     default:
       return state;
   }

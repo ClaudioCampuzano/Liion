@@ -262,3 +262,19 @@ catch(e){
   return [false, e]
 }
 };
+
+export const notifToPassengers = async (travelId)  =>{
+  try {
+    const { data } = await client({
+      method:'post',
+      url:'/notifToPassengers',
+      headers: { "Content-Type": "application/json" },
+      travelId: JSON.stringify(travelId),
+    })
+    return [true, data]
+  }
+  catch(e)
+  {
+      return [false, e]
+  }
+}

@@ -22,6 +22,8 @@ import "moment/locale/es";
 moment.locale("es");
 
 const TravelVisualizerDriver = ({ navigation, route }) => {
+  console.log(route)
+  console.log(navigation)
   const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
   const [msgModal, setMsgModal] = useState(

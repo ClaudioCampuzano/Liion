@@ -65,6 +65,18 @@ const DrawerContent = (props) => {
           </View>
         </View>
         <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
+        <DrawerItem
+            style={{ marginBottom: -hp("0.5") }}
+            icon={() => (
+              <Feather name="clock" size={hp("3.5")} color={COLORS.TURKEY} />
+            )}
+            label="Temp Screen"
+            labelStyle={styles.labelDrawerItem}
+            onPress={() => {
+              props.navigation.navigate("TempScreen");
+            }}
+          />
+
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (

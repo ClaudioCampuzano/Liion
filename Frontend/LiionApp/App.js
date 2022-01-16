@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { requestPermission } from './src/utils/fcm'
 import { LogBox } from "react-native";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { NavigationContainer } from "@react-navigation/native";
 import {
   apiKey,
   authDomain,
@@ -44,7 +45,9 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalProvider>
+      <NavigationContainer>
         <Index />
+        </NavigationContainer>
       </GlobalProvider>
     </QueryClientProvider>
   );

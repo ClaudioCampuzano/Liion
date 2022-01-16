@@ -9,7 +9,7 @@ import { GlobalContext } from "../context/Provider";
 
 const TabDownButton = (props) => {
   const { type, style, sizeIcon, ...restOfProps } = props;
-  const { userData, hasUpcommingTravel } = useContext(GlobalContext);
+  const { userData, travelStatus } = useContext(GlobalContext);
   const navigation = useNavigation();
 
   var colorSearch = COLORS.LIGHT_LEAD;
@@ -61,7 +61,7 @@ const TabDownButton = (props) => {
         </View>
       </TouchableWithoutFeedback>
 
-      {hasUpcommingTravel ? (
+      {travelStatus === 'soon' ? (
       <TouchableWithoutFeedback
         disabled={stateMyTravels}
         onPress={() => navigation.navigate("MyTravelNavigator")}

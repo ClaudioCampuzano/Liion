@@ -15,9 +15,10 @@ const CreateNavigator = () => {
 
   const CreateStack = createStackNavigator();
   //testing para estados, eliminar en la version final.. recordar en stack de crear viaje boton chat
-  const { hasUpcommingTravel, updateUpcommingTravel } = useContext(GlobalContext);
+  const { travelStatus, updateTravelStatus } = useContext(GlobalContext);
   const testParaCambiarEstadoViaje = () => {
-    updateUpcommingTravel(!hasUpcommingTravel)
+    if (travelStatus === '') updateTravelStatus('soon')
+    else if (travelStatus === 'soon') updateTravelStatus('')
   }
   return (
     <CreateStack.Navigator initialRouteName="CreateStepOne">

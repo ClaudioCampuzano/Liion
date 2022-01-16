@@ -10,17 +10,18 @@ import {
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
   REFRESHTOKENS,
-  UPDATEUPCOMMINGTRAVEL,
+  UPDATETRAVELSTATUS,
 } from "./types";
 
 export const GlobalContext = createContext({});
 
 const GlobalProvider = ({ children }) => {
+  //travelStatus tendra tres valores '','soon','ongoing'
   const initialState = {
     uid: "",
     accesstoken: "",
     fcmToken: "",
-    hasUpcommingTravel:false,
+    travelStatus:'',
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
@@ -108,9 +109,9 @@ const GlobalProvider = ({ children }) => {
     });
   };
 
-  const updateUpcommingTravel = (payload) => {
+  const updateTravelStatus = (payload) => {
     authDispatch({
-      type:UPDATEUPCOMMINGTRAVEL,
+      type:  UPDATETRAVELSTATUS,
       payload:payload
     })
   }
@@ -141,14 +142,14 @@ const GlobalProvider = ({ children }) => {
         accesstoken: state.accesstoken,
         isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
-        hasUpcommingTravel: state.hasUpcommingTravel,
+        travelStatus: state.travelStatus,
         updateReloadTrigger,
         getState,
         loginUser,
         logoutUser,
         loadUserFirestoreData,
         refreshTokens,
-        updateUpcommingTravel,
+        updateTravelStatus,
       }}
     >
       {children}
