@@ -31,7 +31,6 @@ const Index = (props) => {
 
   const gotoTravelHandler2 = () => {
     setModalVisible2(false);
-    console.log(navigation)
     navigation.navigate('TempScreen');
   }
 
@@ -51,26 +50,35 @@ const Index = (props) => {
   }, []);
 
 
+  //primer plano
   useEffect(() => {
     const uunsubscribe = messaging().onMessage(async remoteMessage => {
       const { data } = remoteMessage
-      //remoteMessage.contentAvailable
-      //console.log('A new FCM message arrived!', remoteMessage);
+      //console.log(remoteMessage);
       const { userFor } = data
-      if (userFor === 'passengers') {setModalVisible2(true)
-      updateTravelStatus('ongoing')}
+      if (userFor === 'passengers') {
+        setModalVisible2(true)
+        //asi deberia ser
+        //updateTravelStatus('ongoing')
+        //pero se deja el anterior para notar que hay un cambio solamente, a que no cambie stylos para el ongoing
+        updateTravelStatus('soon')
+      }
     });
 
     return uunsubscribe;
   }, []);
 
+  //segundo  plano
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    //console.log('Message handled in the background!', remoteMessage);
+    //console.log(remoteMessage);
     const { data } = remoteMessage
     const { userFor } = data
     if (userFor === 'passengers') {
       navigation.navigate('TempScreen');
-      updateTravelStatus('ongoing')
+      //asi deberia ser
+      //updateTravelStatus('ongoing')
+      //pero se deja el anterior para notar que hay un cambio solamente, a que no cambie stylos para el ongoing
+      updateTravelStatus('soon')
     }
   });
 
@@ -123,7 +131,6 @@ const Index = (props) => {
               gotoTravelHandler1();
             }}
             secondFunction={() => {
-              //console.log('close modal');
               setModalVisible1(false);
             }}>
             Parece tienes un como conductor viaje por partir
@@ -138,7 +145,6 @@ const Index = (props) => {
                 gotoTravelHandler2();
               }}
               secondFunction={() => {
-                //console.log('close modal');
                 setModalVisible2(false);
               }}>
               Parece tienes un como pasajero viaje por partir
