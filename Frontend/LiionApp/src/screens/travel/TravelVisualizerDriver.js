@@ -46,11 +46,18 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       travelId: route.params.id,
       state: "ongoing",
     };
-    const [resFlag, resmsg] = await updateStateTravel(dataForSend);
+    //const [resFlag, resmsg] = await updateStateTravel(dataForSend);
 
-    setMsgModal(resmsg.res);
-    setModalState(true);
-    setLoading(false);
+    //setMsgModal(resmsg.res);
+    //setModalState(true);
+    //setLoading(false);
+    //suponemos que es exitoso , lo cambia
+    if(true){ //resFlag){
+      console.log('enviar notif')
+      
+      setLoading(false);
+    }
+
   };
 
   const cancelTravel = async () => {
