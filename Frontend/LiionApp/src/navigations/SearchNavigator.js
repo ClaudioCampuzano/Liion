@@ -8,7 +8,7 @@ import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
 import SearchStepThree from "../screens/searchTrip/SearchStepThree";
 import SearchStepFour from "../screens/searchTrip/SearchStepFour";
 import SucessScreen from "../screens/SucessScreen";
-
+import DrawerIconCustom from "../components/DrawerIconCustom";
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const SearchNavigator = () => {
@@ -44,16 +44,7 @@ const SearchNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <Entypo
-                name="menu"
-                size={hp("5%")}
-                color={COLORS.WHITE}
-                style={{ marginLeft: wp("3%") }}
-              />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => <DrawerIconCustom alert={true}/>,
         })}
       />
       <SearchStack.Screen
@@ -65,9 +56,7 @@ const SearchNavigator = () => {
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerText,
           headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons
                 name="md-chevron-back"
                 size={hp("5%")}
