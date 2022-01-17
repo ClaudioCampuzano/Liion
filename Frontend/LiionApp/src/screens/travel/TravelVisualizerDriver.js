@@ -51,14 +51,15 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
     const [resFlag, resmsg] = await updateStateTravel(dataForSend);
     setMsgModal(resmsg.res);
     setModalState(true);
-    setLoading(false);
     //lo nuvevo
+    
     if(resFlag){      
-      const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)
-      //console.log(resNotif,dataNotif)
-      setLoading(false);
-    }
-
+      const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)      
+      if(resNotif) {console.log('ok')}
+      else console.log('nook')
+    } 
+    setLoading(false);
+    
   };
 
   const cancelTravel = async () => {
