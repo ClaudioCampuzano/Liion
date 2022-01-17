@@ -76,17 +76,12 @@ export const createTravel = async (dataTravel) => {
 };
 
 export const getTravels = async (searchParameters) => {
-  try {
-    const requiredParameters = JSON.stringify(searchParameters);
-    const res = await client({
-      method: "get",
-      url: "/getTravels",
-      params: requiredParameters,
-    });
-    return [true, res.data];
-  } catch (e) {
-    return [false, e.response.data];
-  }
+  const { data } = await client({
+    method: "get",
+    url: "/getTravels",
+    params: searchParameters,
+  });
+  return data;
 };
 
 export const getStatusRun = async (payload) => {

@@ -236,8 +236,8 @@ export const createTravel = async (req, res) => {
 };
 
 export const getTravels = async (req, res) => {
+  const searchParams = req.query;
   const resultDataHard = [];
-  const searchParams = JSON.parse(req.query["0"]);
   try {
     var fieldGender = ["allGender"];
     if (searchParams.genderApplicant === "Hombre") fieldGender.push("onlyMen");

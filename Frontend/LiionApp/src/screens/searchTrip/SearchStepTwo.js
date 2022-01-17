@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
-
+import { useQuery } from "react-query";
 import moment from "moment";
 import "moment/locale/es";
 moment.locale("es");
@@ -18,9 +18,9 @@ import { getTravels } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
 const SearchStepTwo = ({ navigation, route }) => {
-  const { userData, uid, accesstoken } = useContext(GlobalContext);
+  const { userData, uid } = useContext(GlobalContext);
   const { addresses, date, time } = route.params;
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalError, setModalError] = useState(false);
@@ -37,11 +37,30 @@ const SearchStepTwo = ({ navigation, route }) => {
     seeAll: true,
   });
 
-  const [dataFromApi, setDataFromApi] = useState([]);
-  useEffect(() => {
-    (async function () {
-      var dataRequest = {
-        //atoken: accesstoken,
+  const searchCity = (myArray) => {
+    for (var i = 0; i < myArray.length; i++) {
+      if (myArray[i].type === "locality") return myArray[i].long_name;
+    }
+  };
+
+  const {
+    data: dataFromApi,
+    isSuccess,
+    isFetching,
+    isLoading: loading,
+    isError,
+  } = useQuery(
+    [
+      "Travels",
+      uid,
+      searchCity(addresses.destination.address_components),
+      searchCity(addresses.origin.address_components),
+      date,
+      time,
+      userData.gender,
+    ],
+    () =>
+      getTravels({
         uid: uid,
         localityDestination: searchCity(
           addresses.destination.address_components
@@ -50,16 +69,15 @@ const SearchStepTwo = ({ navigation, route }) => {
         date: date,
         time: time,
         genderApplicant: userData.gender,
-      };
-
-      const [resFlag, resMsg] = await getTravels(dataRequest);
-      resFlag ? setDataFromApi(resMsg) : setModalError(true);
-      setLoading(false);
-    })();
-  }, []);
+      }),
+    {
+      refetchOnMount: false,
+      onError: () => setModalError(true),
+    }
+  );
 
   useEffect(() => {
-    if (dataFromApi.length > 0) {
+    if (isSuccess && dataFromApi.length > 0) {
       let listReady = sortFilterResult(
         dataFromApi,
         resultOrder,
@@ -120,12 +138,6 @@ const SearchStepTwo = ({ navigation, route }) => {
         return a.extraBaggage.bigBags > 0;
       });
     return order;
-  };
-
-  const searchCity = (myArray) => {
-    for (var i = 0; i < myArray.length; i++) {
-      if (myArray[i].type === "locality") return myArray[i].long_name;
-    }
   };
 
   const renderItem = ({ item }) => {
