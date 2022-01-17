@@ -40,7 +40,7 @@ export const checkTokenValidityBody = async (req, res, next) => {
 };
 
 export const checkTokenValidityQuery = async (req, res, next) => {
-  var token = JSON.parse(req.query["0"]).atoken ?? null;
+  var token = req.query.atoken ?? null;
 
   if (token)
     try {

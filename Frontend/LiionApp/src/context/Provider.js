@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { retrieveUserDataFromApi } from "../api/api";
+import { getUserData } from "../api/api";
 
 import authReducer from "./authReducer";
 import {
@@ -27,7 +27,7 @@ const GlobalProvider = ({ children }) => {
     try {
       const res = await fireLogin(payload);
 
-      if (res.hasOwnProperty("user")) {    
+      if (res.hasOwnProperty("user")) {
         const profile = {
           emailVerified: res.user.emailVerified,
           lastLoginAt: res.user.metadata.lastLoginAt,
@@ -58,7 +58,7 @@ const GlobalProvider = ({ children }) => {
 
   const loadUserFirestoreData = async (payload) => {
     try {
-      const [flag, res] = await retrieveUserDataFromApi(payload);
+      const [flag, res] = await getUserData(payload);
       const profile = {
         emailVerified: payload.emailVerified,
         lastLoginAt: payload.metadata.lastLoginAt,

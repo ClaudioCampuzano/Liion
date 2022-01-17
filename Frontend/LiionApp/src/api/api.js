@@ -25,11 +25,9 @@ export const registerBackend = async (payload) => {
   }
 };
 
-export const retrieveUserDataFromApi = async (user) => {
+export const getUserData = async (user) => {
   try {
-    const atoken = await user.getIdToken(true);
-    const uid = await user.uid;
-    const data = JSON.stringify({ uid: uid, atoken: atoken });
+    const data = { uid: await user.uid, atoken: await user.getIdToken(true) };
     const res = await client({
       method: "get",
       url: "/getUserData",
@@ -95,7 +93,7 @@ export const getStatusRun = async (payload) => {
 
 export const getDetailsOfTravel = async (payload) => {
   try {
-    const requiredParameters = JSON.stringify({ travelId: payload });
+    const requiredParameters = { travelId: payload };
 
     const res = await client({
       method: "get",

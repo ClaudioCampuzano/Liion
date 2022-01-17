@@ -102,7 +102,7 @@ export const register = async (req, res) => {
 };
 
 export const getUserData = async (req, res) => {
-  const { uid } = JSON.parse(req.query["0"]);
+  const { uid } = req.query;
 
   if (uid) {
     try {
@@ -311,7 +311,7 @@ export const getTravels = async (req, res) => {
 };
 
 export const getDetailsOfTravel = async (req, res) => {
-  const { travelId } = JSON.parse(req.query["0"]);
+  const { travelId } = req.query;
 
   try {
     var travelRef = await db.collection("travels").doc(travelId).get();

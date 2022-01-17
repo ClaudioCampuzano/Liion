@@ -71,7 +71,6 @@ const SearchStepTwo = ({ navigation, route }) => {
         genderApplicant: userData.gender,
       }),
     {
-      refetchOnMount: false,
       onError: () => setModalError(true),
     }
   );
