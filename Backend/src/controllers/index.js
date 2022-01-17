@@ -471,7 +471,7 @@ export async function registerPassengerRequest(req, res) {
 }
 
 export async function getTravelsPassenger(req, res) {
-  const { passengerUID } = JSON.parse(req.query["0"]);
+  const { passengerUID } = req.query;
 
   const resultData = [];
   try {
@@ -544,7 +544,7 @@ export async function getTravelsPassenger(req, res) {
 }
 
 export async function getTravelsDriver(req, res) {
-  const { driverUID } = JSON.parse(req.query["0"]);
+  const { driverUID } = req.query;
 
   const resultData = [];
   try {

@@ -190,31 +190,21 @@ export const deleteDriverTravel = async (payload) => {
 };
 
 export const getTravelsPassenger = async (payload) => {
-  try {
-    const requiredParameters = JSON.stringify(payload);
-    const res = await client({
-      method: "get",
-      url: "/getTravelsPassenger",
-      params: requiredParameters,
-    });
-    return [true, res.data];
-  } catch (e) {
-    return [false, e.response.data];
-  }
+  const { data } = await client({
+    method: "get",
+    url: "/getTravelsPassenger",
+    params: payload,
+  });
+  return data;
 };
 
 export const getTravelsDriver = async (payload) => {
-  try {
-    const requiredParameters = JSON.stringify(payload);
-    const res = await client({
-      method: "get",
-      url: "/getTravelsDriver",
-      params: requiredParameters,
-    });
-    return [true, res.data];
-  } catch (e) {
-    return [false, e.response.data];
-  }
+  const { data } = await client({
+    method: "get",
+    url: "/getTravelsDriver",
+    params: payload,
+  });
+  return data;
 };
 
 export const getRouteCoordinates = async (payload) => {

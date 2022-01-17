@@ -34,7 +34,7 @@ const RegisterStepOne = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
 
-  const { isLoading: isLoadingGetStatusRun, refetch } = useQuery(
+  const { isFetching: isLoadingGetStatusRun, refetch } = useQuery(
     ["getStatusRun", valueRun],
     () => getStatusRun({ run: valueRun }),
     {

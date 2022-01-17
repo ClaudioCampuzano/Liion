@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, Text, View, FlatList } from "react-native";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
 import Layout from "../../components/Layout";
 import TabDownButton from "../../components/TabDownButton";
@@ -12,22 +13,30 @@ import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = ({ navigation, route }) => {
-  var reloadData = route.params ? route.params : false;
+  var reloadData = route.params ?? false;
 
   const { uid } = useContext(GlobalContext);
 
-  const [loading, setLoading] = useState(true);
   const [modalError, setModalError] = useState(false);
-  const [dataFromApi, setDataFromApi] = useState([]);
+  const queryClient = useQueryClient();
+
+  const {
+    data: dataFromApi,
+    isLoading,
+    isSuccess,
+  } = useQuery(
+    ["TravelsPassenger", uid],
+    () => getTravelsPassenger({ passengerUID: uid }),
+    {
+      onError: () => {
+        setModalError(true);
+      },
+      staleTime: 10000,
+    }
+  );
 
   useEffect(() => {
-    (async function () {
-      const [resFlag, resMsg] = await getTravelsPassenger({
-        passengerUID: uid,
-      });
-      resFlag ? setDataFromApi(resMsg) : setModalError(true);
-      setLoading(false);
-    })();
+    reloadData && queryClient.invalidateQueries("TravelsPassenger");
   }, [reloadData]);
 
   const modalHandler = () => {
@@ -58,7 +67,7 @@ const TravelPasajeroTab = ({ navigation, route }) => {
 
   return (
     <Layout>
-      {loading ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <>
@@ -69,28 +78,29 @@ const TravelPasajeroTab = ({ navigation, route }) => {
           >
             Error al intentar recuperar datos, intente en otro momento
           </ModalPopUp>
-
-          <View
-            style={[
-              styles.middleView,
-              dataFromApi.length === 0 && { justifyContent: "center" },
-            ]}
-          >
-            {dataFromApi.length > 0 ? (
-              <FlatList
-                data={dataFromApi}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-              />
-            ) : (
-              <TouchableIcon
-                value={true}
-                type={"sadFace"}
-                style={{}}
-                sizeIcon={7}
-              />
-            )}
-          </View>
+          {isSuccess && (
+            <View
+              style={[
+                styles.middleView,
+                dataFromApi.length === 0 && { justifyContent: "center" },
+              ]}
+            >
+              {dataFromApi.length > 0 ? (
+                <FlatList
+                  data={dataFromApi}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                />
+              ) : (
+                <TouchableIcon
+                  value={true}
+                  type={"sadFace"}
+                  style={{}}
+                  sizeIcon={7}
+                />
+              )}
+            </View>
+          )}
 
           <View style={styles.buttonView}>
             <TabDownButton

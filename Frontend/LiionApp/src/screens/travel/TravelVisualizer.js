@@ -141,7 +141,7 @@ const TravelVisualizer = ({ navigation, route }) => {
       params: {
         screen: "TravelPasajeroTab",
         params: {
-          reload: !route.params.reload,
+          reload: true,
         },
       },
     });

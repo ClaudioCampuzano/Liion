@@ -157,7 +157,7 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       params: {
         screen: "TravelConductorTab",
         params: {
-          reload: !route.params.reload,
+          reload: true,
         },
       },
     });
