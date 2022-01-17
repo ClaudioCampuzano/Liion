@@ -12,7 +12,7 @@ import InputPicker from "../../components/InputPicker";
 import ModalPopUp from "../../components/ModalPopUp";
 import Loading from "../../components/Loading";
 
-import { useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { getStatusRun } from "../../api/api";
 
 import moment from "moment";
@@ -31,12 +31,14 @@ const RegisterStepOne = ({ navigation }) => {
   const [errorFecha, setErrorFecha] = useState(null);
   const [errorGenero, setErrorGenero] = useState(null);
 
-  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
 
-  const { mutate: mutateGetStatusRun, isLoading: isLoadingGetStatusRun } =
-    useMutation(getStatusRun, {
+  const { isLoading: isLoadingGetStatusRun, refetch } = useQuery(
+    ["getStatusRun", valueRun],
+    () => getStatusRun({ run: valueRun }),
+    {
+      enabled: false,
       onSuccess: (data) => {
         if (data.check) {
           setModalVisible(true);
@@ -52,7 +54,8 @@ const RegisterStepOne = ({ navigation }) => {
           navigation.navigate("RegisterStepTwo", dataToStep2);
         }
       },
-    });
+    }
+  );
 
   useEffect(() => {
     if (valueNombre != "") setErrorNombre(null);
@@ -91,7 +94,7 @@ const RegisterStepOne = ({ navigation }) => {
       !(valueFecha.format("YYYY-MM-DD") === moment().format("YYYY-MM-DD")) &&
       valueGender != ""
     ) {
-      mutateGetStatusRun({ run: valueRun });
+      refetch();
     }
   };
 
