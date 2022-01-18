@@ -73,24 +73,6 @@ export const createTravel = async (dataTravel) => {
   }
 };
 
-export const getTravels = async (searchParameters) => {
-  const { data } = await client({
-    method: "get",
-    url: "/getTravels",
-    params: searchParameters,
-  });
-  return data;
-};
-
-export const getStatusRun = async (payload) => {
-  const { data } = await client({
-    method: "get",
-    url: "/getStatusRun",
-    params: payload,
-  });
-  return data;
-};
-
 export const getDetailsOfTravel = async (payload) => {
   try {
     const requiredParameters = { travelId: payload };
@@ -243,6 +225,24 @@ export const updateUserLocationInTravel = async (pyload) => {
     url: "/updateUserLocationInTravel",
     headers: { "Content-Type": "application/json" },
     data: JSON.stringify(pyload),
+  });
+  return data;
+};
+
+export const getTravels = async (searchParameters) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getTravels",
+    params: searchParameters,
+  });
+  return data;
+};
+
+export const getStatusRun = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getStatusRun",
+    params: payload,
   });
   return data;
 };

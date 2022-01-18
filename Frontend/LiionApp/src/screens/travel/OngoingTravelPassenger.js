@@ -35,7 +35,7 @@ import {
 } from "../../api/api";
 import ButtonLiion from "../../components/ButtonLiion";
 
-const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
+const OngoingTravelPassenger = ({ navigation, route }) => {
   const { id, nameDriver, driverPhoto, carModel, carPhoto, plate } =
     route.params;
   const { uid } = useContext(GlobalContext);
@@ -89,17 +89,19 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
       const subscription = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
         (loc) => {
-          if (userLocation != null) {
-            var coordObj = {
-              latitude: loc.coords.latitude,
-              longitude: loc.coords.longitude,
-            };
-            setUserLocation(coordObj);
-            mutateUpdateLocation({
-              travelId: id,
-              uid: uid,
-              location: coordObj,
-            });
+          if (userLocation != null && isSucessItinerary) {
+            if (dataItinerary.status === "ongoing") {
+              var coordObj = {
+                latitude: loc.coords.latitude,
+                longitude: loc.coords.longitude,
+              };
+              setUserLocation(coordObj);
+              mutateUpdateLocation({
+                travelId: id,
+                uid: uid,
+                location: coordObj,
+              });
+            }
           }
         }
       );
@@ -306,7 +308,7 @@ const OngoingTravelPassengerVisualizer = ({ navigation, route }) => {
   );
 };
 
-export default OngoingTravelPassengerVisualizer;
+export default OngoingTravelPassenger;
 const styles = StyleSheet.create({
   mapDimensions: {
     height: hp("100%"),

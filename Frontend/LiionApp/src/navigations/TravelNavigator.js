@@ -6,8 +6,8 @@ import { Entypo } from "@expo/vector-icons";
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
 import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
-import OngoingTravelVisualizer from "../screens/travel/OngoingTravelVisualizer";
-import OngoingTravelPassengerVisualizer from "../screens/travel/OngoingTravelPassengerVisualizer";
+import OngoingTravelDriver from "../screens/travel/OngoingTravelDriver";
+import OngoingTravelPassenger from "../screens/travel/OngoingTravelPassenger";
 import Feedback from "../screens/travel/Feedback";
 import DrawerIconCustom from "../components/DrawerIconCustom";
 
@@ -66,15 +66,15 @@ const TravelNavigator = () => {
       />
 
       <TravelStack.Screen
-        name="OngoingTravelVisualizer"
-        component={OngoingTravelVisualizer}
+        name="OngoingTravelDriver"
+        component={OngoingTravelDriver}
         options={({ navigation }) => ({
           headerShown: false,
         })}
       />
       <TravelStack.Screen
-        name="OngoingTravelPassengerVisualizer"
-        component={OngoingTravelPassengerVisualizer}
+        name="OngoingTravelPassenger"
+        component={OngoingTravelPassenger}
         options={({ navigation }) => ({
           headerShown: false,
         })}

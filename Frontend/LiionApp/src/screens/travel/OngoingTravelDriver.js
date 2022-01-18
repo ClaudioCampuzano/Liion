@@ -42,7 +42,7 @@ import {
   updateUserLocationInTravel,
 } from "../../api/api";
 
-const OngoingTravelVisualizer = ({ navigation, route }) => {
+const OngoingTravelDriver = ({ navigation, route }) => {
   const { id } = route.params;
   const { uid } = useContext(GlobalContext);
 
@@ -81,7 +81,23 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   } = useQuery(
     ["travelItinerary", id],
     () => getTravelItinerary({ travelId: id }),
-    { refetchOnMount: true }
+    {
+      refetchOnMount: true,
+      onSuccess: (data) => {
+        data.status !== "finished"
+          ? (async () => {
+              var address = await reverseGeocodeAsync(data.coordinate);
+              setNameDirection(
+                address[0].street +
+                  " " +
+                  address[0].name +
+                  ", " +
+                  address[0].city
+              );
+            })()
+          : navigation.navigate("Feedback");
+      },
+    }
   );
 
   const {
@@ -113,17 +129,20 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       const subscription = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
         (loc) => {
-          if (userLocation != null) {
-            var coordObj = {
-              latitude: loc.coords.latitude,
-              longitude: loc.coords.longitude,
-            };
-            setUserLocation(coordObj);
-            mutateUpdateLocation({
-              travelId: id,
-              uid: uid,
-              location: coordObj,
-            });
+          if (userLocation != null && isSucessItinerary) {
+            if (dataItinerary.status === "ongoing") {
+              var coordObj = {
+                latitude: loc.coords.latitude,
+                longitude: loc.coords.longitude,
+              };
+              setUserLocation(coordObj);
+
+              mutateUpdateLocation({
+                travelId: id,
+                uid: uid,
+                location: coordObj,
+              });
+            }
           }
         }
       );
@@ -141,25 +160,6 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    if (isSucessItinerary) {
-      if (typeof dataItinerary === "object") {
-        dataItinerary.status !== "finished"
-          ? (async () => {
-              var address = await reverseGeocodeAsync(dataItinerary.coordinate);
-              setNameDirection(
-                address[0].street +
-                  " " +
-                  address[0].name +
-                  ", " +
-                  address[0].city
-              );
-            })()
-          : navigation.navigate("Feedback");
-      }
-    }
-  }, [dataItinerary]);
 
   useEffect(() => {
     isErrorRoute && setErrorMsg("Error al obtener la ruta");
@@ -404,7 +404,7 @@ const OngoingTravelVisualizer = ({ navigation, route }) => {
   );
 };
 
-export default OngoingTravelVisualizer;
+export default OngoingTravelDriver;
 
 const styles = StyleSheet.create({
   camContainer: {

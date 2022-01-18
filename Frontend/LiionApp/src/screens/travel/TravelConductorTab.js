@@ -50,7 +50,7 @@ const TravelConductorTab = ({ navigation, route }) => {
         driverOn={true}
         onPress={() => {
           if (item.status === "ongoing") {
-            navigation.navigate("OngoingTravelVisualizer", { ...item });
+            navigation.navigate("OngoingTravelDriver", { ...item });
           } else {
             navigation.navigate("TravelVisualizerDriver", {
               ...item,
