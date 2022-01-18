@@ -9,7 +9,12 @@ const FeedbackCatcher = () => {
     <View style={{ flexDirection: "row" }}>
       {[1, 2, 3, 4, 5].map((data, index) => (
         <TouchableOpacity onPress={() => console.log("apretada")}>
-          <MaterialCommunityIcons name="star" size={45} color={COLORS.TURKEY} />
+          <MaterialCommunityIcons
+            name="star"
+            size={45}
+            key={index}
+            color={COLORS.TURKEY}
+          />
         </TouchableOpacity>
       ))}
     </View>
