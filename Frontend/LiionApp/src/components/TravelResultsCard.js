@@ -56,10 +56,9 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
       colorBar = COLORS.GRAY;
       textBar = "Finalizado";
       break;
-    case "feedback":
-      colorBar = COLORS.PURPLE;
-      textBar = "En espera de feedback";
-      break;
+    default:
+      colorBar = COLORS.WHITE;
+      textBar = "default";
   }
 
   const passengerPictureState = (item) => {

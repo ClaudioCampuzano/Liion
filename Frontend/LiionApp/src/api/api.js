@@ -246,3 +246,23 @@ export const getStatusRun = async (payload) => {
   });
   return data;
 };
+
+export const getTravelPartners = async (payload) => {
+  const { data } = await client({
+    method: "get",
+    url: "/getTravelPartners",
+    params: payload,
+  });
+  return data;
+};
+
+
+export const updateUserRanting = async (payload) => {
+  const { data } = await client({
+    method: "patch",
+    url: "/updateUserRanting",
+    headers: { "Content-Type": "application/json" },
+    data: JSON.stringify(payload),
+  });
+  return data;
+};

@@ -20,7 +20,9 @@ import {
   getRouteCoordinates,
   getTravelItinerary,
   updateTravelItinerary,
-  getPassengerTravelItinerary
+  getPassengerTravelItinerary,
+  getTravelPartners,
+  updateUserRanting
 } from "../controllers/index";
 
 import {
@@ -57,13 +59,16 @@ router.delete("/deletePassengerRequest",/* checkTokenValidityBody, */ deletePass
 router.delete("/deleteDriverTravel",/* checkTokenValidityBody, */ deleteDriverTravel);
 router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
 
-//Metodo implicado travel en curso
+//Metodos implicado travel en curso
 router.patch("/updateUserLocationInTravel",/* checkTokenValidityBody, */ updateUserLocationInTravel);
 router.put("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
 router.get("/getTravelItinerary",/* checkTokenValidityQuery, */ getTravelItinerary);
 router.get("/getPassengerTravelItinerary",/* checkTokenValidityQuery, */ getPassengerTravelItinerary);
 router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
 
+//Metodos implicado en el feedback
+router.get("/getTravelPartners",/* checkTokenValidityQuery, */ getTravelPartners);
+router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanting);
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 router.post("/updateDriverRating", checkIsAuth, updateDriverRating);

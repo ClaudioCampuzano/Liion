@@ -488,7 +488,6 @@ export async function getTravelsPassenger(req, res) {
           .get();
 
         if (travelData.exists) {
-
           var currentTimeTravel = moment(
             travelData.data().date + " " + travelData.data().startTime,
             "DD/MM/YYYY HH:mm"
@@ -498,8 +497,7 @@ export async function getTravelsPassenger(req, res) {
               .add(travelData.data().durationMinutes, "minutes")
               .add(6, "hours")
               .isSameOrAfter(moment()) ||
-            travelData.data().status === "ongoing" ||
-            travelData.data().status === "feedback"
+            travelData.data().status === "ongoing"
           ) {
             var driverRef = await db
               .collection("users")
@@ -566,8 +564,7 @@ export async function getTravelsDriver(req, res) {
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
             .isSameOrAfter(moment()) ||
-          doc.data().status === "ongoing" ||
-          doc.data().status === "feedback"
+          doc.data().status === "ongoing"
         ) {
           resultData.push({
             id: doc.id,
@@ -859,7 +856,7 @@ export async function getTravelItinerary(req, res) {
     const travelData = (
       await db.collection("travels").doc(travelId).get()
     ).data();
-    if (travelData.status === "ongoing" || travelData.status === "feedback") {
+    if (travelData.status === "ongoing" || travelData.status === "finished") {
       const itinerary = travelData.itinerary.find(
         (obj) => obj.status === "active"
       );
@@ -922,7 +919,7 @@ export async function updateTravelItinerary(req, res) {
         itinerary[step].status = "finished";
         if (itinerary.length !== step + 1)
           itinerary[step + 1].status = "active";
-        else travelStatus = "feedback";
+        else travelStatus = "finished";
 
         travelRef.update({
           itinerary: itinerary,
@@ -977,6 +974,80 @@ export async function getPassengerTravelItinerary(req, res) {
     console.log(e);
     res.status(400).json({
       sucess: false,
+    });
+  }
+}
+
+export async function getTravelPartners(req, res) {
+  try {
+    const { travelId, userUid } = req.query;
+    var obj = [];
+
+    const travelObj = (
+      await db.collection("travels").doc(travelId).get()
+    ).data();
+
+    if (travelObj.driverUID !== userUid) {
+      var userDataDriver = (
+        await db.collection("users").doc(travelObj.driverUID).get()
+      ).data();
+
+      obj.push({
+        uid: travelObj.driverUID,
+        nameUser: userDataDriver.name + " " + userDataDriver.apellido,
+        type: "driver",
+        userPhoto: userDataDriver.photo,
+      });
+    }
+
+    await Promise.all(
+      travelObj.requestingPassengers.map(async (doc) => {
+        var requestData = (
+          await db.collection("requestTravel").doc(doc).get()
+        ).data();
+        if (requestData.passengerUID !== userUid) {
+          var userData = (
+            await db.collection("users").doc(requestData.passengerUID).get()
+          ).data();
+          obj.push({
+            uid: requestData.passengerUID,
+            nameUser: userData.name + " " + userData.apellido,
+            type: "passenger",
+            userPhoto: userData.photo,
+          });
+        }
+      })
+    );
+    const objSend = JSON.stringify(obj);
+    res.status(200).send(objSend);
+  } catch (e) {
+    res.status(400).json({
+      sucess: false,
+    });
+  }
+}
+
+export async function updateUserRanting(req, res) {
+  try {
+    const { userList } = req.body;
+    const keys = Object.keys(userList);
+    if (keys.length > 0) {
+      await Promise.all(
+        keys.map(async (data, index) => {
+          await db
+            .collection("users")
+            .doc(data)
+            .update({
+              "driverData.sRating": FieldValue.increment(userList[data]),
+              "driverData.nRating": FieldValue.increment(1),
+            });
+        })
+      );
+    }
+    res.json({ status: true });
+  } catch (e) {
+    res.status(400).json({
+      status: false,
     });
   }
 }
