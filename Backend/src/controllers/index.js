@@ -999,7 +999,7 @@ export async function getPassengerTravelItinerary(req, res) {
 }
 
 export const fcmTest = async (req, res) => {
-  const registrationToken = 'cAhx71yfSoOKcC8vDOflqe:APA91bEqTcloASHbxQ_Bl5OwPzg8T_oAc8rKLjKE5_Y3MlmJjlrblGzPAXv_mu46xf2zuHdljC-XM7GTWIDKuoE_lKLnR5e6BkN-SOp2plW-IhsUcGPPW0kDwJdX-h1_IKBD7KZ4MfYU';
+  const registrationToken = 'd9HFMSlKSriLwRFkkLetAa:APA91bHcLUr3_5G4MQmdb9DjHk2qCCs-4us5VfojFDNZd8gx2gHy0kZAcqzIb4YTHWPmOgbKc0knCsEJ7gPO2mbO6GHCHH6YKQOfSsY2zbZlkDEIXfx33odCu3qQZTZGRcb3WASqw6dN';
   //const registrationToken = 'dJpJPKRiSb6MpTRdb4AzuL:APA91bHeWBHp91cp58uJSkQyQf-jEpuRSzxL5k0NDj7z9fbVhm40bydZUVrG3SC3T8Fn79og9cTjZrN-KYi6CgAP5CMdadOWg9WMTURy3O0V3izy7jKVq5lv0_29Dyrq5D6yx_FXR-sC';
   const message = {
     notification: {
