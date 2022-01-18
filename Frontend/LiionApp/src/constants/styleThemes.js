@@ -13,12 +13,13 @@ const COLORS = {
   BORDER_COLOR: "#D9D9D9",
   BLACK: "#333333",
   LIGHT_LEAD: "#CCCCCC",
-  REAL_BLACK:"#000000",
-  WARN_RED:"#d90707",
-  CHECK_GREEN:"#0FF506",
-  WARN_YELLOW:"#f5dd0a",
-  GRAY:"#BFBFBF",
-  TURKEY_CLEARER:"#84FFF3",
+  REAL_BLACK: "#000000",
+  WARN_RED: "#d90707",
+  CHECK_GREEN: "#0FF506",
+  WARN_YELLOW: "#f5dd0a",
+  GRAY: "#BFBFBF",
+  TURKEY_CLEARER: "#84FFF3",
+  PURPLE: "#9e0284",
 };
 
 const loadFonts = () => {
@@ -27,7 +28,7 @@ const loadFonts = () => {
     "Gotham-SSm-Book": require("../../assets/fonts/GothamSSm-Book.ttf"),
     "Gotham-SSm-Medium": require("../../assets/fonts/GothamSSm-Medium.ttf"),
   });
-  return fontsLoaded
-}
+  return fontsLoaded;
+};
 
 export { COLORS, hp, wp, loadFonts };

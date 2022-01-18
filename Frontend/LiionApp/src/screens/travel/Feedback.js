@@ -1,10 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Layout from "../../components/Layout";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ButtonLiion from "../../components/ButtonLiion";
+import { GlobalContext } from "../../context/Provider";
 
 const Feedback = ({ navigation, route }) => {
+  const { uid } = useContext(GlobalContext);
+  const { travelId } = route.params;
+
+  console.log(uid, travelId);
+
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
       const action = e.data.action;
@@ -14,7 +20,7 @@ const Feedback = ({ navigation, route }) => {
   }, [navigation]);
 
   const checkValidator = () => {
-    navigation.navigate('SearchStepOne')
+    navigation.navigate("SearchStack");
   };
   return (
     <Layout>

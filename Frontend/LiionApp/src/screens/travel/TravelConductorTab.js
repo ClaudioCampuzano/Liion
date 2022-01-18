@@ -30,7 +30,6 @@ const TravelConductorTab = ({ navigation, route }) => {
       onError: () => {
         setModalError(true);
       },
-      staleTime: 10000,
     }
   );
 
@@ -49,16 +48,23 @@ const TravelConductorTab = ({ navigation, route }) => {
         item={{ ...item, carSeats: userData.driverData.carSeats }}
         driverOn={true}
         onPress={() => {
-          if (item.status === "ongoing") {
-            navigation.navigate("OngoingTravelDriver", { ...item });
-          } else {
-            navigation.navigate("TravelVisualizerDriver", {
-              ...item,
-              ...userData.driverData,
-              nameDriver: userData.name + " " + userData.apellido,
-              driverPhoto: userData.photo,
-              reload: reloadData,
-            });
+          switch (item.status) {
+            case "ongoing":
+              navigation.navigate("OngoingTravelDriver", { ...item });
+              break;
+            case "feedback":
+              navigation.navigate("Feedback", { travelId: item.id });
+              break;
+            case "open":
+            case "closed":
+              navigation.navigate("TravelVisualizerDriver", {
+                ...item,
+                ...userData.driverData,
+                nameDriver: userData.name + " " + userData.apellido,
+                driverPhoto: userData.photo,
+                reload: reloadData,
+              });
+              break;
           }
         }}
       />

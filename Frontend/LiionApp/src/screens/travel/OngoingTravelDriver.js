@@ -95,7 +95,7 @@ const OngoingTravelDriver = ({ navigation, route }) => {
                   address[0].city
               );
             })()
-          : navigation.navigate("Feedback");
+          : navigation.navigate("Feedback", { travelId: id });
       },
     }
   );
@@ -129,20 +129,20 @@ const OngoingTravelDriver = ({ navigation, route }) => {
       const subscription = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
         (loc) => {
-          if (userLocation != null && isSucessItinerary) {
-            if (dataItinerary.status === "ongoing") {
-              var coordObj = {
-                latitude: loc.coords.latitude,
-                longitude: loc.coords.longitude,
-              };
-              setUserLocation(coordObj);
-
-              mutateUpdateLocation({
-                travelId: id,
-                uid: uid,
-                location: coordObj,
-              });
-            }
+          if (userLocation != null) {
+            var coordObj = {
+              latitude: loc.coords.latitude,
+              longitude: loc.coords.longitude,
+            };
+            setUserLocation(coordObj);
+            if (isSucessItinerary)
+              if (dataItinerary.status === "active") {
+                mutateUpdateLocation({
+                  travelId: id,
+                  uid: uid,
+                  location: coordObj,
+                });
+              }
           }
         }
       );

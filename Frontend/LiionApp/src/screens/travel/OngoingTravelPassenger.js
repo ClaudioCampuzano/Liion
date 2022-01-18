@@ -72,7 +72,24 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
   } = useQuery(
     ["travelItineraryP", id],
     () => getPassengerTravelItinerary({ travelId: id, uid: uid }),
-    { refetchOnMount: true, refetchInterval: 60000 }
+    {
+      refetchOnMount: true,
+      refetchInterval: 60000,
+      onSuccess: (data) => {
+        data.status !== "finished"
+          ? (async () => {
+              var address = await reverseGeocodeAsync(data.coordinate);
+              setNameDirection(
+                address[0].street +
+                  " " +
+                  address[0].name +
+                  ", " +
+                  address[0].city
+              );
+            })()
+          : navigation.navigate("Feedback", { travelId: id });
+      },
+    }
   );
 
   const { mutate: mutateUpdateLocation, isError: isErrorUpdateLocation } =
@@ -89,19 +106,20 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
       const subscription = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
         (loc) => {
-          if (userLocation != null && isSucessItinerary) {
-            if (dataItinerary.status === "ongoing") {
-              var coordObj = {
-                latitude: loc.coords.latitude,
-                longitude: loc.coords.longitude,
-              };
-              setUserLocation(coordObj);
-              mutateUpdateLocation({
-                travelId: id,
-                uid: uid,
-                location: coordObj,
-              });
-            }
+          if (userLocation != null) {
+            var coordObj = {
+              latitude: loc.coords.latitude,
+              longitude: loc.coords.longitude,
+            };
+            setUserLocation(coordObj);
+            if (isSucessItinerary)
+              if (dataItinerary.status === "active") {
+                mutateUpdateLocation({
+                  travelId: id,
+                  uid: uid,
+                  location: coordObj,
+                });
+              }
           }
         }
       );
@@ -125,25 +143,6 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
       getDistance(userLocation, dataItinerary.coordinate) < 5 &&
       queryClient.invalidateQueries("travelItineraryP");
   }, [userLocation]);
-
-  useEffect(() => {
-    if (isSucessItinerary) {
-      if (typeof dataItinerary === "object") {
-        dataItinerary.status !== "finished"
-          ? (async () => {
-              var address = await reverseGeocodeAsync(dataItinerary.coordinate);
-              setNameDirection(
-                address[0].street +
-                  " " +
-                  address[0].name +
-                  ", " +
-                  address[0].city
-              );
-            })()
-          : navigation.navigate("Feedback");
-      }
-    }
-  }, [dataItinerary]);
 
   const modalHandler = () => {
     navigation.goBack();

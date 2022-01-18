@@ -47,12 +47,19 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         textBar = "default";
     }
   }
-  if (item.status === "ongoing") {
-    colorBar = COLORS.WARN_RED;
-    textBar = "En curso";
-  } else if (item.status === "finished") {
-    colorBar = COLORS.GRAY;
-    textBar = "Finalizado";
+  switch (item.status) {
+    case "ongoing":
+      colorBar = COLORS.WARN_RED;
+      textBar = "En curso";
+      break;
+    case "finished":
+      colorBar = COLORS.GRAY;
+      textBar = "Finalizado";
+      break;
+    case "feedback":
+      colorBar = COLORS.PURPLE;
+      textBar = "En espera de feedback";
+      break;
   }
 
   const passengerPictureState = (item) => {

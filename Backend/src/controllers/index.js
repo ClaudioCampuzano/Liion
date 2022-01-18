@@ -478,9 +478,8 @@ export async function getTravelsPassenger(req, res) {
     var requestRef = await db
       .collection("requestTravel")
       .where("passengerUID", "==", passengerUID)
-      .where("status", "=", "accepted")
+      .where("status", "==", "accepted")
       .get();
-
     if (!requestRef.empty)
       for (const doc of requestRef.docs) {
         var travelData = await db
@@ -489,6 +488,7 @@ export async function getTravelsPassenger(req, res) {
           .get();
 
         if (travelData.exists) {
+
           var currentTimeTravel = moment(
             travelData.data().date + " " + travelData.data().startTime,
             "DD/MM/YYYY HH:mm"
@@ -498,7 +498,8 @@ export async function getTravelsPassenger(req, res) {
               .add(travelData.data().durationMinutes, "minutes")
               .add(6, "hours")
               .isSameOrAfter(moment()) ||
-            travelData.data().status === "ongoing"
+            travelData.data().status === "ongoing" ||
+            travelData.data().status === "feedback"
           ) {
             var driverRef = await db
               .collection("users")
@@ -534,6 +535,7 @@ export async function getTravelsPassenger(req, res) {
           }
         }
       }
+    console.log(resultData)
 
     const requiredParameters = JSON.stringify(resultData);
     res.send(requiredParameters);
@@ -565,7 +567,8 @@ export async function getTravelsDriver(req, res) {
             .add(doc.data().durationMinutes, "minutes")
             .add(6, "hours")
             .isSameOrAfter(moment()) ||
-          doc.data().status === "ongoing"
+          doc.data().status === "ongoing" ||
+          doc.data().status === "feedback"
         ) {
           resultData.push({
             id: doc.id,
@@ -857,7 +860,7 @@ export async function getTravelItinerary(req, res) {
     const travelData = (
       await db.collection("travels").doc(travelId).get()
     ).data();
-    if (travelData.status === "ongoing") {
+    if (travelData.status === "ongoing" || travelData.status === "feedback") {
       const itinerary = travelData.itinerary.find(
         (obj) => obj.status === "active"
       );
@@ -908,6 +911,7 @@ export async function updateTravelItinerary(req, res) {
 
     if (type === "pickUp" || type === "dropOff") {
       var interruptor = true;
+      var travelStatus = travelData.status;
       if (type === "pickUp") {
         var dataArray = data.split("~-!-~");
         interruptor =
@@ -919,8 +923,11 @@ export async function updateTravelItinerary(req, res) {
         itinerary[step].status = "finished";
         if (itinerary.length !== step + 1)
           itinerary[step + 1].status = "active";
+        else travelStatus = "feedback";
+
         travelRef.update({
           itinerary: itinerary,
+          status: travelStatus,
         });
         res.status(200).send(JSON.stringify({ status: true }));
         return;

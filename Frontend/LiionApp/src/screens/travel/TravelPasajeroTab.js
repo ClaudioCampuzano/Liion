@@ -50,15 +50,22 @@ const TravelPasajeroTab = ({ navigation, route }) => {
         item={item}
         driverOn={false}
         onPress={() => {
-          if (item.status === "ongoing") {
-            navigation.navigate("OngoingTravelPassenger", {
-              ...item,
-            });
-          } else {
-            navigation.navigate("TravelVisualizer", {
-              ...item,
-              reload: reloadData,
-            });
+          switch (item.status) {
+            case "ongoing":
+              navigation.navigate("OngoingTravelPassenger", {
+                ...item,
+              });
+              break;
+            case "feedback":
+              navigation.navigate("Feedback", { travelId: item.id });
+              break;
+            case "open":
+            case "closed":
+              navigation.navigate("TravelVisualizer", {
+                ...item,
+                reload: reloadData,
+              });
+              break;
           }
         }}
       />
