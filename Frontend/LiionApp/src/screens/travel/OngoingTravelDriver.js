@@ -43,7 +43,14 @@ import {
 } from "../../api/api";
 
 const OngoingTravelDriver = ({ navigation, route }) => {
-  const { id } = route.params;
+  const {
+    id,
+    startTime,
+    originDetails,
+    destinationDetails,
+    date,
+    durationMinutes,
+  } = route.params;
   const { uid } = useContext(GlobalContext);
 
   const [userLocation, setUserLocation] = useState(() => {
@@ -95,7 +102,14 @@ const OngoingTravelDriver = ({ navigation, route }) => {
                   address[0].city
               );
             })()
-          : navigation.navigate("Feedback", { travelId: id });
+          : navigation.navigate("Feedback", {
+              travelId: id,
+              startTime: startTime,
+              originDetails: originDetails,
+              destinationDetails: destinationDetails,
+              date: date,
+              durationMinutes: durationMinutes,
+            });
       },
     }
   );

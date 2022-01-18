@@ -36,8 +36,19 @@ import {
 import ButtonLiion from "../../components/ButtonLiion";
 
 const OngoingTravelPassenger = ({ navigation, route }) => {
-  const { id, nameDriver, driverPhoto, carModel, carPhoto, plate } =
-    route.params;
+  const {
+    id,
+    nameDriver,
+    driverPhoto,
+    carModel,
+    carPhoto,
+    plate,
+    startTime,
+    originDetails,
+    destinationDetails,
+    date,
+    durationMinutes,
+  } = route.params;
   const { uid } = useContext(GlobalContext);
 
   const [userLocation, setUserLocation] = useState(() => {
@@ -74,7 +85,7 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
     () => getPassengerTravelItinerary({ travelId: id, uid: uid }),
     {
       refetchOnMount: true,
-      refetchInterval: 60000,
+      refetchInterval: 30000,
       onSuccess: (data) => {
         data.status !== "finished"
           ? (async () => {
@@ -87,7 +98,14 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
                   address[0].city
               );
             })()
-          : navigation.navigate("Feedback", { travelId: id });
+          : navigation.navigate("Feedback", {
+              travelId: id,
+              startTime: startTime,
+              originDetails: originDetails,
+              destinationDetails: destinationDetails,
+              date: date,
+              durationMinutes: durationMinutes,
+            });
       },
     }
   );

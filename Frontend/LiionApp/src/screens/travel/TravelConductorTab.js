@@ -53,7 +53,14 @@ const TravelConductorTab = ({ navigation, route }) => {
               navigation.navigate("OngoingTravelDriver", { ...item });
               break;
             case "feedback":
-              navigation.navigate("Feedback", { travelId: item.id });
+              navigation.navigate("Feedback", {
+                travelId: item.id,
+                startTime: item.startTime,
+                originDetails: item.originDetails,
+                destinationDetails: item.destinationDetails,
+                date: item.date,
+                durationMinutes: item.durationMinutes,
+              });
               break;
             case "open":
             case "closed":

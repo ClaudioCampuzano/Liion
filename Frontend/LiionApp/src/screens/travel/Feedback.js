@@ -1,15 +1,27 @@
 import React, { useEffect, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
 import Layout from "../../components/Layout";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import ButtonLiion from "../../components/ButtonLiion";
 import { GlobalContext } from "../../context/Provider";
+import ShowTravel from "../../components/ShowTravel";
+import FeedbackCatcher from "../../components/FeedbackCatcher";
+
+import moment from "moment";
+import "moment/locale/es";
+moment.locale("es");
 
 const Feedback = ({ navigation, route }) => {
   const { uid } = useContext(GlobalContext);
-  const { travelId } = route.params;
-
-  console.log(uid, travelId);
+  const {
+    travelId,
+    startTime,
+    originDetails,
+    destinationDetails,
+    date,
+    durationMinutes,
+  } = route.params;
 
   useEffect(() => {
     navigation.addListener("beforeRemove", (e) => {
@@ -29,6 +41,19 @@ const Feedback = ({ navigation, route }) => {
         <Text style={styles.text_subTitulo}>
           {"Por favor, puntúa a tus\ncompañeros de viaje"}
         </Text>
+        <View style={styles.viewBorder}>
+          <ShowTravel
+            style={styles.inputLocation}
+            timeStart={startTime}
+            timeEnd={moment(startTime, "hh:mm")
+              .add(durationMinutes, "minutes")
+              .format("LT")}
+            labelO={originDetails.formatted_address}
+            labelD={destinationDetails.formatted_address}
+            dirTextSize={wp("3%")}
+          />
+        </View>
+        <FeedbackCatcher />
       </View>
       <View style={styles.buttonView}>
         <ButtonLiion
@@ -69,5 +94,19 @@ const styles = StyleSheet.create({
     width: wp("78.6%"),
     height: hp("4.8%"),
     alignSelf: "center",
+  },
+  viewBorder: {
+    borderColor: COLORS.LIGHT_LEAD,
+    borderWidth: 1,
+    borderRadius: wp(3),
+    width: wp("80%"),
+    height: hp("14%"),
+    alignItems: "center",
+  },
+  inputLocation: {
+    width: wp("78.6%"),
+    height: hp("12%"),
+
+    justifyContent: "center",
   },
 });

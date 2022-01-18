@@ -535,7 +535,6 @@ export async function getTravelsPassenger(req, res) {
           }
         }
       }
-    console.log(resultData)
 
     const requiredParameters = JSON.stringify(resultData);
     res.send(requiredParameters);
