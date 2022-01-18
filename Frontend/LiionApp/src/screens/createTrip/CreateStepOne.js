@@ -82,7 +82,8 @@ const CreateStepOne = ({ navigation }) => {
             mode="date"
             label="Fecha de viaje"
             maximum="-180"
-            minimum="-2"
+            //le coloque 0 para probar lo de los viajes.. cambiar despues a -2 como antes
+            minimum="0"
           />
           <InputDateTime
             style={styles.inputDateTimeRight}
@@ -93,6 +94,7 @@ const CreateStepOne = ({ navigation }) => {
             mode="time"
             label="Hora de partida"
             maximum="-180"
+            //le coloque 0 para probar lo de los viajes.. cambiar despues a -1 como antes
             minimum="-1"
           />
         </View>

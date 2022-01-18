@@ -36,6 +36,7 @@ export const fireLogin = async (payload) => {
     );
     return res;
   } catch (e) {
+    console.log(e)
     return e;
   }
 };

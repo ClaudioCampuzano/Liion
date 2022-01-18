@@ -14,8 +14,8 @@ import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = ({ navigation, route }) => {
   var reloadData = route.params ?? false;
-
-  const { uid } = useContext(GlobalContext);
+ 
+  const { uid, userData } = useContext(GlobalContext);
 
   const [modalError, setModalError] = useState(false);
   const queryClient = useQueryClient();
