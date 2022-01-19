@@ -4,8 +4,6 @@ import {
   getUserData,
   getTravels,
   updateUserDriverStatus,
-  updateDriverRating,
-  updateUserRating,
   createTravel,
   getDetailsOfTravel,
   updateSeenTravel,
@@ -71,7 +69,6 @@ router.get("/getTravelPartners",/* checkTokenValidityQuery, */ getTravelPartners
 router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanting);
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
-router.post("/updateDriverRating", checkIsAuth, updateDriverRating);
-router.post("/updateUserRating", checkIsAuth, updateUserRating);
+
 
 export default router;

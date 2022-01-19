@@ -141,52 +141,6 @@ export const updateUserDriverStatus = async (req, res) => {
     res.status(403).send("Token UID Inválido o flagDriver inválido");
   }
 };
-export const updateDriverRating = async (req, res) => {
-  let uid = req.body.uid;
-  let rating = req.body.rating;
-  if (uid && rating) {
-    try {
-      const q = await db
-        .collection("users")
-        .doc(uid)
-        .update({
-          "driverData.sRating": FieldValue.increment(rating),
-          "driverData.nRating": FieldValue.increment(1),
-        });
-
-      //console.log(q)
-      res.send("Puntuación de conductor exitosa");
-    } catch (e) {
-      console.log(e);
-      res.status(403).send("Token UID Inválido");
-    }
-  } else {
-    res.status(403).send("Token UID Inválido o Llamada inválida");
-  }
-};
-
-export const updateUserRating = async (req, res) => {
-  let uid = req.body.uid;
-  let rating = req.body.rating;
-  if (uid && rating) {
-    try {
-      const q = await db
-        .collection("users")
-        .doc(uid)
-        .update({
-          sRating: FieldValue.increment(rating),
-          nRating: FieldValue.increment(1),
-        });
-
-      res.send("Puntuación de pasajero exitosa");
-    } catch (e) {
-      console.log(e);
-      res.status(403).send("Token UID Inválido");
-    }
-  } else {
-    res.status(403).send("Token UID Inválido o Llamada inválida");
-  }
-};
 
 export const createTravel = async (req, res) => {
   const travelsTimes = [];
@@ -1029,18 +983,30 @@ export async function getTravelPartners(req, res) {
 
 export async function updateUserRanting(req, res) {
   try {
-    const { userList } = req.body;
+    const { userList, travelId } = req.body;
+    const driverUID = (
+      await db.collection("travels").doc(travelId).get()
+    ).data().driverUID;
     const keys = Object.keys(userList);
     if (keys.length > 0) {
       await Promise.all(
         keys.map(async (data, index) => {
-          await db
-            .collection("users")
-            .doc(data)
-            .update({
-              "driverData.sRating": FieldValue.increment(userList[data]),
-              "driverData.nRating": FieldValue.increment(1),
-            });
+          if (driverUID === data)
+            await db
+              .collection("users")
+              .doc(data)
+              .update({
+                "driverData.sRating": FieldValue.increment(userList[data]),
+                "driverData.nRating": FieldValue.increment(1),
+              });
+          else
+            await db
+              .collection("users")
+              .doc(data)
+              .update({
+                sRating: FieldValue.increment(userList[data]),
+                nRating: FieldValue.increment(1),
+              });
         })
       );
     }

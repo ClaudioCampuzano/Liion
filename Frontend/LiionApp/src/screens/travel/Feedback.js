@@ -55,13 +55,13 @@ const Feedback = ({ navigation, route }) => {
   const checkValidator = () => {
     if (Object.keys(userRatings).length != data.length) setModalError(true);
     else {
-      Object.keys(userRatings).length > 0 && mutate({ userList: userRatings });
+      Object.keys(userRatings).length > 0 && mutate({ userList: userRatings, travelId: travelId});
       //navigation.navigate("SearchStack");
     }
   };
 
   const modalHandler = () => {
-    Object.keys(userRatings).length > 0 && mutate({ userList: userRatings });
+    Object.keys(userRatings).length > 0 && mutate({ userList: userRatings, travelId: travelId});
     //navigation.navigate("SearchStack");
     setModalError(false);
   };
