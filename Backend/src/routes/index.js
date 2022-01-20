@@ -19,6 +19,10 @@ import {
   getTravelItinerary,
   updateTravelItinerary,
   getPassengerTravelItinerary,
+  upDateFcmToken,
+  getupcomingTravels,
+  fcmTest,
+  notifToPassengers
   getTravelPartners,
   updateUserRanting
 } from "../controllers/index";
@@ -29,30 +33,22 @@ import {
   checkTokenValidityQuery,
 } from "../middleware/guard";
 
+
 const router = Router({ caseSensitive: true });
+
+//descomente para solucionar los comflicos mas facil.. comentar denuevo
+//agregar checkeo de token alos metodos que faltan
 router.use("/protected", checkIsAuth);
 router.post("/register", register);
-
-
-
 router.post("/createTravel", /* checkTokenValidityBody, */ createTravel);
-
 router.get("/getUserData", /* checkTokenValidityQuery, */ getUserData);
-
-//Checkea si el run ya esta registrado
 router.get("/getStatusRun", getStatusRun);
-
-//Metodos implicados en la busqueda de viajes
 router.get("/getTravels", /* checkTokenValidityQuery, */ getTravels);
 router.get("/getDetailsOfTravel",/* checkTokenValidityQuery, */ getDetailsOfTravel);
 router.patch("/updateSeenTravel",/* checkTokenValidityBody, */ updateSeenTravel);
 router.post("/registerPassengerRequest",/* checkTokenValidityBody, */ registerPassengerRequest);
-
-//Metodos implicados en el listado de viajes de pasajero y conductor
 router.get("/getTravelsPassenger",/* checkTokenValidityQuery, */ getTravelsPassenger);
 router.get("/getTravelsDriver",/* checkTokenValidityQuery, */ getTravelsDriver);
-
-//Metodos implicados en el managerTravel
 router.delete("/deletePassengerRequest",/* checkTokenValidityBody, */ deletePassengerRequest);
 router.delete("/deleteDriverTravel",/* checkTokenValidityBody, */ deleteDriverTravel);
 router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
@@ -69,6 +65,10 @@ router.get("/getTravelPartners",/* checkTokenValidityQuery, */ getTravelPartners
 router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanting);
 
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
+router.get("/getupcomingTravels/:userUID",getupcomingTravels);
+router.post('/notifToPassengers',notifToPassengers)
+router.post('/testFcm', fcmTest);
+router.post("/updateTokenFcm", checkIsAuth, upDateFcmToken)
 
 
 export default router;

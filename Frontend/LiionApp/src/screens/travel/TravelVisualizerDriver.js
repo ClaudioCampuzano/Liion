@@ -14,6 +14,7 @@ import {
   getDetailsOfTravel,
   deleteDriverTravel,
   updateStateTravel,
+  notifToPassengers,
 } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
@@ -46,11 +47,19 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       travelId: route.params.id,
       state: "ongoing",
     };
+    //cambiar estado viaje a ongoing
     const [resFlag, resmsg] = await updateStateTravel(dataForSend);
-
     setMsgModal(resmsg.res);
     setModalState(true);
+    //lo nuvevo
+    
+    if(resFlag){      
+      const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)      
+      if(resNotif) {console.log('ok')}
+      else console.log('nook')
+    } 
     setLoading(false);
+    
   };
 
   const cancelTravel = async () => {
@@ -152,6 +161,7 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
   };
 
   const modalHandler = () => {
+    //esta navegacion genera un warning de update on unmnount.. si tengo tiempo la veo despues..
     navigation.navigate("MyTravelNavigator", {
       screen: "TravelTabNavigator",
       params: {

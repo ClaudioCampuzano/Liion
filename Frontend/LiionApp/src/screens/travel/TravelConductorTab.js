@@ -11,7 +11,6 @@ import Loading from "../../components/Loading";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
-
 const TravelConductorTab = ({ navigation, route }) => {
   var reloadData = route.params ?? false;
 
