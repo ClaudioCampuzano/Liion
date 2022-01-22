@@ -88,7 +88,9 @@ const Index = (props) => {
       if (user && expoPushToken) {
         await loadUserFirestoreData(user, expoPushToken);
 
-        const [status, data] = await getUpcomingTravels(user.uid);
+        const [status, data] = await getUpcomingTravels({
+          driverUID: user.uid,
+        });
         if (status === true) {
           const { res, sucess } = data;
           if (sucess === true || sucess === "true") {

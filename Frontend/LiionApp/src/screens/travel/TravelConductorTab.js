@@ -39,7 +39,7 @@ const TravelConductorTab = ({ navigation, route }) => {
       queryClient.invalidateQueries("TravelsDriver");
 
       (async function loadInfo() {
-        const [status, data] = await getUpcomingTravels(uid);
+        const [status, data] = await getUpcomingTravels({ driverUID: uid });
         if (status === true) {
           const { res, sucess } = data;
           if (sucess === true || sucess === "true") {

@@ -279,11 +279,13 @@ export const updateExpoToken = async (payload) => {
   }
 };
 
-export const getUpcomingTravels = async (UID) => {
+export const getUpcomingTravels = async (payload) => {
   try {
     const { data } = await client({
       method: "get",
-      url: "/getUpcomingTravels/" + UID,
+      url: "/getUpcomingTravels",
+      params: payload,
+
     });
     return [true, data];
   } catch (e) {

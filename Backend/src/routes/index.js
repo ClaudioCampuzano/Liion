@@ -68,7 +68,7 @@ router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanti
 router.get("/getDetailsOfTravel",/* checkTokenValidityQuery, */ getDetailsOfTravel);
 router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
 router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
-router.get("/getupcomingTravels/:userUID",getUpcomingTravels);
+router.get("/getUpcomingTravels",/* checkTokenValidityQuery, */getUpcomingTravels);
 
 /*Metodos para el registro de conductores*/
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);

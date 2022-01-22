@@ -1055,7 +1055,7 @@ function compareDateOfTravels(a, b) {
 }
 
 export async function getUpcomingTravels(req, res) {
-  var driverUID = req.params.userUID;
+  const { driverUID } = req.query;
   const resultData = [];
   try {
     var travelRef = await db
