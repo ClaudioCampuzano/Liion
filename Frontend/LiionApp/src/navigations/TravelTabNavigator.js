@@ -5,7 +5,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import TravelConductorTab from "../screens/travel/TravelConductorTab";
 import TravelPasajeroTab from "../screens/travel/TravelPasajeroTab";
 
-import { COLORS, hp, wp } from "../constants/styleThemes";
+import { COLORS, hp } from "../constants/styleThemes";
 import { GlobalContext } from "../context/Provider";
 
 const TravelTabNavigator = () => {
