@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
-import LeftIconUpcomingTravel from "../components/LeftIconUpcomingTravel";
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
 import SearchStepThree from "../screens/searchTrip/SearchStepThree";

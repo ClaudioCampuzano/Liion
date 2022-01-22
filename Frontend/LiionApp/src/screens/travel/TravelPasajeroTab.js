@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { StyleSheet, View, FlatList } from "react-native";
+import { useQuery, useQueryClient } from "react-query";
 
 import Layout from "../../components/Layout";
 import TabDownButton from "../../components/TabDownButton";
@@ -14,7 +14,7 @@ import TravelResultsCard from "../../components/TravelResultsCard";
 
 const TravelPasajeroTab = ({ navigation, route }) => {
   var reloadData = route.params ?? false;
- 
+
   const { uid, userData } = useContext(GlobalContext);
 
   const [modalError, setModalError] = useState(false);

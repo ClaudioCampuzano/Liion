@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
 
@@ -22,8 +22,8 @@ const DriverSigninNavigator = () => {
           headerStyle: styles.headerContainer,
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerText,
-          headerTitle: '',
-          headerRight: '',
+          headerTitle: "",
+          headerRight: "",
           headerLeft: () => (
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
               <Entypo
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     backgroundColor: COLORS.WHITE,
     height: hp("7%"),
-    elevation: 0
+    elevation: 0,
   },
   headerText: {
     color: COLORS.TURKEY,

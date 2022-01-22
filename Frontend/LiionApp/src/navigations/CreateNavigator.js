@@ -9,7 +9,6 @@ import CreateStepFour from "../screens/createTrip/CreateStepFour";
 import CreateStepFive from "../screens/createTrip/CreateStepFive";
 import SucessScreen from "../screens/SucessScreen";
 import DrawerIconCustom from "../components/DrawerIconCustom";
-import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
 import { COLORS, hp, wp } from "../constants/styleThemes";
 import { GlobalContext } from "../context/Provider";
 const CreateNavigator = () => {

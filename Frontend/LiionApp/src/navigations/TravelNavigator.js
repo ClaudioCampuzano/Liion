@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
-import LeftIconUpcomingTravel from "../components/LeftIconUpcomingTravel";
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
 import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";

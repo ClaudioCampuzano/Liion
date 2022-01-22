@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { retrieveUserDataFromApi, upDateFcmToken, getUserData } from "../api/api";
+import { upDateFcmToken, getUserData } from "../api/api";
 import { returnFcmToken } from "../utils/fcm";
 import authReducer from "./authReducer";
 import {

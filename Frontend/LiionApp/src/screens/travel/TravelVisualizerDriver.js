@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-paper";
 
 import Layout from "../../components/Layout";

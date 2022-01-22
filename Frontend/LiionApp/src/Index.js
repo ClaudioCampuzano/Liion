@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
