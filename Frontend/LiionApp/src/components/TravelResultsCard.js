@@ -25,7 +25,7 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         textBar = "Cerrado";
         break;
       default:
-        colorBar = COLORS.WHITE;
+        colorBar = COLORS.REAL_BLACK;
         textBar = "default";
     }
   else {
@@ -43,7 +43,7 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
         textBar = "Reserva pendiente";
         break;
       default:
-        colorBar = COLORS.WHITE;
+        colorBar = COLORS.REAL_BLACK;
         textBar = "default";
     }
   }
@@ -56,9 +56,6 @@ const TravelResultsCard = ({ item, onPress, style, driverOn }) => {
       colorBar = COLORS.GRAY;
       textBar = "Finalizado";
       break;
-    default:
-      colorBar = COLORS.WHITE;
-      textBar = "default";
   }
 
   const passengerPictureState = (item) => {

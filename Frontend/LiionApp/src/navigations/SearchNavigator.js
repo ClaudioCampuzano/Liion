@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
-import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
+import LeftIconUpcomingTravel from "../components/LeftIconUpcomingTravel";
 import SearchStepOne from "../screens/searchTrip/SearchStepOne";
 import SearchStepTwo from "../screens/searchTrip/SearchStepTwo";
 import SearchStepThree from "../screens/searchTrip/SearchStepThree";
@@ -10,10 +10,12 @@ import SearchStepFour from "../screens/searchTrip/SearchStepFour";
 import SucessScreen from "../screens/SucessScreen";
 import DrawerIconCustom from "../components/DrawerIconCustom";
 import { COLORS, hp, wp } from "../constants/styleThemes";
+import { GlobalContext } from "../context/Provider";
 
 const SearchNavigator = () => {
+  const { travelStatus } = useContext(GlobalContext);
+
   const SearchStack = createStackNavigator();
-  
 
   return (
     <SearchStack.Navigator initialRouteName="SearchStepOne">
@@ -45,8 +47,7 @@ const SearchNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          //headerLeft: () => <DrawerIconCustom alert={true}/>,
-          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()}/>
+          headerLeft: () => <DrawerIconCustom alert={travelStatus} />,
         })}
       />
       <SearchStack.Screen

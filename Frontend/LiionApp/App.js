@@ -3,7 +3,7 @@ import Index from "./src/Index";
 import GlobalProvider from "./src/context/Provider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { initializeApp } from "firebase/app";
-import { requestPermission } from './src/utils/fcm'
+import { requestPermission } from "./src/utils/fcm";
 import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -17,13 +17,7 @@ import {
   measurementId,
 } from "@env";
 
-LogBox.ignoreLogs([
-  "AsyncStorage", "Setting a timer"
-]);
-
-
-
-
+LogBox.ignoreLogs(["AsyncStorage", "Setting a timer"]);
 
 export default function App() {
   const firebaseKeys = {
@@ -41,12 +35,13 @@ export default function App() {
   useEffect(() => {
     requestPermission();
   }, []);
+
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalProvider>
-      <NavigationContainer>
-        <Index />
+        <NavigationContainer>
+          <Index />
         </NavigationContainer>
       </GlobalProvider>
     </QueryClientProvider>

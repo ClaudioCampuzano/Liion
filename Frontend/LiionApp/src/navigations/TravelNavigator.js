@@ -1,8 +1,8 @@
-import React, {useContext} from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
-import LeftIconUpcomingTravel from '../components/LeftIconUpcomingTravel'
+import LeftIconUpcomingTravel from "../components/LeftIconUpcomingTravel";
 import TravelTabNavigator from "./TravelTabNavigator";
 import TravelVisualizer from "../screens/travel/TravelVisualizer";
 import TravelVisualizerDriver from "../screens/travel/TravelVisualizerDriver";
@@ -10,19 +10,14 @@ import OngoingTravelDriver from "../screens/travel/OngoingTravelDriver";
 import OngoingTravelPassenger from "../screens/travel/OngoingTravelPassenger";
 import Feedback from "../screens/travel/Feedback";
 import DrawerIconCustom from "../components/DrawerIconCustom";
+import { GlobalContext } from "../context/Provider";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
-import { GlobalContext } from "../context/Provider";
+
 const TravelNavigator = () => {
   const { travelStatus, updateTravelStatus } = useContext(GlobalContext);
   const TravelStack = createStackNavigator();
- const testongoing  = () => {
-    if (travelStatus === 'ongoing'){
-      updateTravelStatus('')}
-    else if (travelStatus === ''){
-      updateTravelStatus('ongoing')
-    }
- }
+
   return (
     <TravelStack.Navigator>
       <TravelStack.Screen
@@ -44,7 +39,7 @@ const TravelNavigator = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => testongoing()}>
+            <TouchableOpacity onPress={() => {}}>
               <Entypo
                 name="chat"
                 size={hp("5%")}
@@ -54,7 +49,7 @@ const TravelNavigator = () => {
             </TouchableOpacity>
           ),
           //headerLeft: () => <DrawerIconCustom alert={true} />,
-          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()}/>
+          headerLeft: () => <DrawerIconCustom alert={travelStatus} />,
         })}
       />
 

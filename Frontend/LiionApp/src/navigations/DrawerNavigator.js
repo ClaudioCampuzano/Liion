@@ -19,7 +19,7 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ drawerStyle: styles.drawerStyle, unmountOnBlur: true }}
-      initialRouteName="CreateNavigator"
+      initialRouteName="SearchStack"
 
     >
       <Drawer.Screen

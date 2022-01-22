@@ -47,19 +47,14 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       travelId: route.params.id,
       state: "ongoing",
     };
-    //cambiar estado viaje a ongoing
+
     const [resFlag, resmsg] = await updateStateTravel(dataForSend);
+
+    resFlag && (await notifToPassengers(dataForSend.travelId));
+
     setMsgModal(resmsg.res);
     setModalState(true);
-    //lo nuvevo
-    
-    if(resFlag){      
-      const [resNotif, dataNotif] = await notifToPassengers(dataForSend.travelId)      
-      if(resNotif) {console.log('ok')}
-      else console.log('nook')
-    } 
     setLoading(false);
-    
   };
 
   const cancelTravel = async () => {
@@ -218,7 +213,6 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
               <Text
                 style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
               >
-                {" "}
                 {dataFromApi.typeVehicule}
               </Text>
               <Text style={styles.vehicleModelColor}>

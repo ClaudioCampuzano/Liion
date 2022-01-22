@@ -15,12 +15,9 @@ import { GlobalContext } from "../context/Provider";
 const CreateNavigator = () => {
 
   const CreateStack = createStackNavigator();
-  //testing para estados, eliminar en la version final.. recordar en stack de crear viaje boton chat
-  const { travelStatus, updateTravelStatus } = useContext(GlobalContext);
-  const testParaCambiarEstadoViaje = () => {
-    if (travelStatus === '') updateTravelStatus('soon')
-    else if (travelStatus === 'soon') updateTravelStatus('')
-  }
+
+  const { travelStatus } = useContext(GlobalContext);
+
   return (
     <CreateStack.Navigator initialRouteName="CreateStepOne">
       <CreateStack.Screen
@@ -43,7 +40,7 @@ const CreateNavigator = () => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => testParaCambiarEstadoViaje()}>
+            <TouchableOpacity onPress={() => {}}>
               <Entypo
                 name="chat"
                 size={hp("5%")}
@@ -52,8 +49,7 @@ const CreateNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          //headerLeft: () => <DrawerIconCustom alert={false} />,
-          headerLeft: () => <LeftIconUpcomingTravel onPress={() => navigation.toggleDrawer()} />
+          headerLeft: () => <DrawerIconCustom alert={travelStatus} />,
         })}
       />
       <CreateStack.Screen

@@ -19,12 +19,6 @@ const TabDownButton = (props) => {
   var stateMyTravels = false;
   var stateCreate = false;
 
- 
-
-
-
-
-
   if (type === "create") {
     stateCreate = true;
     colorCreate = COLORS.TURKEY;
@@ -32,7 +26,8 @@ const TabDownButton = (props) => {
     colorSearch = COLORS.TURKEY;
     stateSearch = true;
   } else {
-    colorMyTravels = COLORS.TURKEY;
+    colorMyTravels =
+      travelStatus === "soon" ? COLORS.UPTRAVEL_WARN : COLORS.TURKEY;
     stateMyTravels = true;
   }
 
@@ -60,26 +55,7 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-
-      {travelStatus === 'soon' ? (
       <TouchableWithoutFeedback
-        disabled={stateMyTravels}
-        onPress={() => navigation.navigate("MyTravelNavigator")}
-      >
-        <View style={{ ...styles.viewGeneral, ...style }}>
-          <MaterialCommunityIcons
-            name="routes"
-            size={hp(sizeIcon)}
-            style={{ alignSelf: "center" }}
-            color={COLORS.UPTRAVEL_WARN}
-          />
-          <Text style={{ ...styles.label, color: COLORS.UPTRAVEL_WARN }}>
-            {"Mis Viajes"}
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
-      ):
-      (<TouchableWithoutFeedback
         disabled={stateMyTravels}
         onPress={() => navigation.navigate("MyTravelNavigator")}
       >
@@ -95,9 +71,7 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-      )}
-      
-      {userData.isDriver && 
+      {userData.isDriver && (
         <TouchableWithoutFeedback
           disabled={stateCreate}
           onPress={() => navigation.navigate("CreateNavigator")}
@@ -114,7 +88,7 @@ const TabDownButton = (props) => {
             </Text>
           </View>
         </TouchableWithoutFeedback>
-      }
+      )}
     </View>
   );
 };

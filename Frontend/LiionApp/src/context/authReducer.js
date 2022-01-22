@@ -26,9 +26,9 @@ const authReducer = (state, action) => {
         uid: "",
         accesstoken: "",
         userData: {},
-        fcmToken: '',
-        travelStatus:'',
         isLoadedData: false,
+        travelStatus:'',
+        fcmToken: '',
       };
     case LOAD_FIRESTORE_DATA:
       return {

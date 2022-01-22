@@ -1,5 +1,4 @@
 import axios from "axios";
-import firebase from "firebase/compat/app";
 import { BACKEND_URL } from "@env";
 
 const client = axios.create({
@@ -46,22 +45,6 @@ export const updateDriverStatus = async (flag, payload) => {
     const res = await client({
       method: "post",
       url: "/updateUsersDriverStatus",
-      headers: { "Content-Type": "application/json" },
-      data: dataSend,
-    });
-    return [true, res.data];
-  } catch (e) {
-    return [false, e.response.data];
-  }
-};
-
-export const upDateFcmToken = async (payload) => {
-  try {
-    const dataSend = JSON.stringify(payload);
-    //console.log(dataSend)
-    const res = await client({
-      method: "post",
-      url: "/updateTokenFcm",
       headers: { "Content-Type": "application/json" },
       data: dataSend,
     });
@@ -258,7 +241,7 @@ export const getStatusRun = async (payload) => {
     params: payload,
   });
   return data;
-}
+};
 
 export const getTravelPartners = async (payload) => {
   const { data } = await client({
@@ -268,7 +251,6 @@ export const getTravelPartners = async (payload) => {
   });
   return data;
 };
-
 
 export const updateUserRanting = async (payload) => {
   const { data } = await client({
@@ -280,34 +262,46 @@ export const updateUserRanting = async (payload) => {
   return data;
 };
 
-export const getupcomingTravels = async (UID) => {
+export const upDateFcmToken = async (payload) => {
   try {
-  const { data } = await client({
-    method: "get",
-    url: "/getUpcomingTravels/"+UID,
-  });
-  return [true, data]
-}
-catch(e){
-  return [false, e]
-}
+    const dataSend = JSON.stringify(payload);
+    //console.log(dataSend)
+    const res = await client({
+      method: "post",
+      url: "/updateTokenFcm",
+      headers: { "Content-Type": "application/json" },
+      data: dataSend,
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
 };
 
-export const notifToPassengers = async (travelId)  =>{
+export const getUpcomingTravels = async (UID) => {
   try {
     const { data } = await client({
-      method:'post',
-      url:'/notifToPassengers',
+      method: "get",
+      url: "/getUpcomingTravels/" + UID,
+    });
+    return [true, data];
+  } catch (e) {
+    return [false, e];
+  }
+};
+
+export const notifToPassengers = async (travelId) => {
+  try {
+    const { data } = await client({
+      method: "post",
+      url: "/notifToPassengers",
       headers: { "Content-Type": "application/json" },
       data: {
-      travelId: travelId,
-      }
-    })
-    return [true, data]
+        travelId: travelId,
+      },
+    });
+    return [true, data];
+  } catch (e) {
+    return [false, e.response.data];
   }
-  catch(e)
-  {
-      
-      return [false, e.response.data]
-  }
-}
+};
