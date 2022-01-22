@@ -21,7 +21,7 @@ import {
   getPassengerTravelItinerary,
   getTravelPartners,
   updateUserRanting,
-  upDateFcmToken,
+  updateFcmToken,
   getUpcomingTravels,
   notifToPassengers,
   fcmTest,
@@ -68,14 +68,14 @@ router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanti
 router.get("/getDetailsOfTravel",/* checkTokenValidityQuery, */ getDetailsOfTravel);
 router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
 router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
-router.get("/getupcomingTravels/:userUID",getUpcomingTravels);
+router.get("/getUpcomingTravels",/* checkTokenValidityQuery, */getUpcomingTravels);
 
 /*Metodos para el registro de conductores*/
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 
 /*Metodos implicados en las notificaciones*/
 router.post('/notifToPassengers',notifToPassengers)
-router.post("/updateTokenFcm", checkIsAuth, upDateFcmToken)
+router.patch("/updateTokenFcm", checkIsAuth, updateFcmToken)
 router.post('/testFcm', fcmTest);
 
 export default router;

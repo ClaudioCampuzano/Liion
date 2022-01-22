@@ -104,7 +104,9 @@ const Index = (props) => {
         await loadUserFirestoreData(user);
         //se intento con query, pero daba warning de unhandled posible rejection (no tiene sentido pero se quito, mientras tanto. implementar despues)
         //quitar este chorizo de logica de aca mas adelante
-        const [status, data] = await getUpcomingTravels(user.uid);
+        const [status, data] = await getUpcomingTravels({
+          driverUID: user.uid,
+        });
         if (status === true) {
           const { res, sucess } = data;
           if (sucess === true || sucess === "true") {

@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { upDateFcmToken, getUserData } from "../api/api";
+import { updateFcmToken, getUserData } from "../api/api";
 import { returnFcmToken } from "../utils/fcm";
 import authReducer from "./authReducer";
 import {
@@ -73,7 +73,7 @@ const GlobalProvider = ({ children }) => {
       //mejor lo actualizamos siempre, por ahora      
       const fcmToken = await returnFcmToken();
       //console.log(fcmToken)
-      const [flagFCM, resFCM] = await upDateFcmToken({ atoken: atoken, fcmToken: fcmToken, uid: uid })
+      const [flagFCM, resFCM] = await updateFcmToken({ atoken: atoken, fcmToken: fcmToken, uid: uid })
       //copmo estamos dentro del try-catch.. basta con lanzar un error hacia afuera y paramos todo
       if (!flagFCM) throw "Error al registrar el FCM"
       //}

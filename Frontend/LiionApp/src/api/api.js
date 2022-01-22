@@ -262,12 +262,12 @@ export const updateUserRanting = async (payload) => {
   return data;
 };
 
-export const upDateFcmToken = async (payload) => {
+export const updateFcmToken = async (payload) => {
   try {
     const dataSend = JSON.stringify(payload);
     //console.log(dataSend)
     const res = await client({
-      method: "post",
+      method: "patch",
       url: "/updateTokenFcm",
       headers: { "Content-Type": "application/json" },
       data: dataSend,
@@ -278,11 +278,12 @@ export const upDateFcmToken = async (payload) => {
   }
 };
 
-export const getUpcomingTravels = async (UID) => {
+export const getUpcomingTravels = async (payload) => {
   try {
     const { data } = await client({
       method: "get",
-      url: "/getUpcomingTravels/" + UID,
+      url: "/getUpcomingTravels",
+      params: payload,
     });
     return [true, data];
   } catch (e) {

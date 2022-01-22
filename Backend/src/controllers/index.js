@@ -1018,7 +1018,7 @@ export async function updateUserRanting(req, res) {
   }
 }
 
-export const upDateFcmToken = async (req, res) => {
+export const updateFcmToken = async (req, res) => {
   const { uid, fcmToken } = req.body;
   //console.log(uid, fcmToken)
   if (uid && fcmToken) {
@@ -1053,7 +1053,7 @@ function compareDateOfTravels(a, b) {
 }
 
 export async function getUpcomingTravels(req, res) {
-  var driverUID = req.params.userUID;
+  const { driverUID } = req.query;
   const resultData = [];
   try {
     var travelRef = await db
