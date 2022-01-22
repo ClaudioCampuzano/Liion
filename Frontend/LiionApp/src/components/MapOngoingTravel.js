@@ -2,13 +2,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
-import MapViewDirections from "react-native-maps-directions";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import * as Location from "expo-location";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
-
-import { apiKey } from "@env";
 
 const MapOngoingTravel = (props) => {
   const {

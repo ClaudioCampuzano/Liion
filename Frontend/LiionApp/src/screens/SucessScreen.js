@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 //import { StackActions } from "@react-navigation/native";
 

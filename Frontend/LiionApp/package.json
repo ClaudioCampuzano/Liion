@@ -26,6 +26,7 @@
     "expo-face-detector": "~11.0.3",
     "expo-image-manipulator": "~10.1.2",
     "expo-location": "~13.0.4",
+    "expo-notifications": "~0.13.3",
     "expo-status-bar": "~1.1.0",
     "firebase": "^9.2.0",
     "geolib": "^3.3.3",

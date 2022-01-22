@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
-import { getUserData } from "../api/api";
+import { getUserData, updateExpoToken } from "../api/api";
 
 import authReducer from "./authReducer";
 import {
@@ -9,6 +9,10 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
+  SETEXPOPUSHTOKEN,
+  SETNOTIFICATION,
+  REFRESHTOKENS,
+  UPDATETRAVELSTATUS,
 } from "./types";
 
 export const GlobalContext = createContext({});
@@ -20,6 +24,9 @@ const GlobalProvider = ({ children }) => {
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
+    expoPushToken: "",
+    travelStatus: "",
+    notification: false,
   };
   const [state, authDispatch] = useReducer(authReducer, initialState);
 
@@ -56,17 +63,27 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const loadUserFirestoreData = async (payload) => {
+  const loadUserFirestoreData = async (payload, expoPushToken) => {
     try {
       const [flag, res] = await getUserData(payload);
+
       const profile = {
         emailVerified: payload.emailVerified,
         lastLoginAt: payload.metadata.lastLoginAt,
         createdAt: payload.metadata.createdAt,
       };
+
       const uid = payload.uid;
       const atoken = await payload.getIdToken(true);
+
       if (flag) {
+        const tokenUpdate = {
+          atoken: atoken,
+          expoToken: expoPushToken,
+          uid: uid,
+        };
+        await updateExpoToken(tokenUpdate);
+
         authDispatch({
           type: LOAD_FIRESTORE_DATA,
           payload: {
@@ -96,6 +113,42 @@ const GlobalProvider = ({ children }) => {
     });
   };
 
+  const updateTravelStatus = (payload) => {
+    authDispatch({
+      type: UPDATETRAVELSTATUS,
+      payload: payload,
+    });
+  };
+
+  const refreshTokens = (obj) => {
+    const { accesstoken, expoPushToken } = obj;
+    if (accesstoken) {
+      authDispatch({
+        type: REFRESHTOKENS,
+        payload: { accesstoken: accesstoken },
+      });
+    }
+    if (expoPushToken) {
+      authDispatch({
+        type: REFRESHTOKENS,
+        payload: { expoPushToken: expoPushToken },
+      });
+    }
+  };
+
+  const setExpoPushTokenF = async (tkn) => {
+    authDispatch({
+      type: SETEXPOPUSHTOKEN,
+      payload: tkn,
+    });
+  };
+  const setNotificationF = (notif) => {
+    authDispatch({
+      type: SETNOTIFICATION,
+      payload: notif,
+    });
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -105,11 +158,18 @@ const GlobalProvider = ({ children }) => {
         accesstoken: state.accesstoken,
         isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
+        expoPushToken: state.expoPushToken,
+        notification: state.notification,
+        travelStatus: state.travelStatus,
         updateReloadTrigger,
         getState,
         loginUser,
         logoutUser,
         loadUserFirestoreData,
+        setExpoPushTokenF,
+        setNotificationF,
+        refreshTokens,
+        updateTravelStatus,
       }}
     >
       {children}

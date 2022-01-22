@@ -15,7 +15,7 @@ import { GlobalContext } from "../../context/Provider";
 import { EmailVerification } from "../../firebase/Auth";
 
 const DrawerContent = (props) => {
-  const { logoutUser, userData } = useContext(GlobalContext);
+  const { logoutUser, userData, travelStatus } = useContext(GlobalContext);
 
   return (
     <View style={{ flex: 1 }}>
@@ -63,29 +63,17 @@ const DrawerContent = (props) => {
           </View>
         </View>
         <Drawer.Section style={{ paddingTop: hp("15"), elevation: 0 }}>
-{/*           {userData.status === "travelOn" && (
-            <DrawerItem
-              style={{ marginBottom: -hp("0.5") }}
-              icon={() => (
-                <MaterialCommunityIcons
-                  name="car-arrow-left"
-                  size={hp("3.5")}
-                  color={COLORS.WARN_RED}
-                />
-              )}
-              label="Viaje en curso"
-              labelStyle={{ ...styles.labelDrawerItem, color: COLORS.WARN_RED }}
-              onPress={() =>
-                props.navigation.navigate("MyTravelNavigator", {
-                  screen: "TravelTabNavigator",
-                  params: {
-                    screen: "TravelPasajeroTab",
-                  },
-                })
-              }
-            />
-          )} */}
-
+          <DrawerItem
+            style={{ marginBottom: -hp("0.5") }}
+            icon={() => (
+              <Feather name="clock" size={hp("3.5")} color={COLORS.TURKEY} />
+            )}
+            label="Temp Screen"
+            labelStyle={styles.labelDrawerItem}
+            onPress={() => {
+              props.navigation.navigate("TempScreen");
+            }}
+          />
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (
@@ -131,21 +119,39 @@ const DrawerContent = (props) => {
             />
           )}
 
-          <DrawerItem
-            style={{ marginBottom: -hp("0.5") }}
-            icon={() => (
-              <MaterialCommunityIcons
-                name="routes"
-                size={hp("3.5")}
-                color={COLORS.TURKEY}
-              />
-            )}
-            label="Mis viajes"
-            labelStyle={styles.labelDrawerItem}
-            onPress={() => {
-              props.navigation.navigate("MyTravelNavigator");
-            }}
-          />
+          {travelStatus === "soon" ? (
+            <DrawerItem
+              style={{ marginBottom: -hp("0.5") }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="routes"
+                  size={hp("3.5")}
+                  color={COLORS.UPTRAVEL_WARN}
+                />
+              )}
+              label="Mis viajes"
+              labelStyle={styles.labelDrawerItem}
+              onPress={() => {
+                props.navigation.navigate("MyTravelNavigator");
+              }}
+            />
+          ) : (
+            <DrawerItem
+              style={{ marginBottom: -hp("0.5") }}
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="routes"
+                  size={hp("3.5")}
+                  color={COLORS.TURKEY}
+                />
+              )}
+              label="Mis viajes"
+              labelStyle={styles.labelDrawerItem}
+              onPress={() => {
+                props.navigation.navigate("MyTravelNavigator");
+              }}
+            />
+          )}
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (

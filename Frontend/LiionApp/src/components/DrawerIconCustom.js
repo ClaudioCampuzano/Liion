@@ -18,11 +18,11 @@ const DrawerIconCustom = (props) => {
           style={{ marginLeft: wp("3%") }}
         />
 
-        {alert && (
+        {alert === "soon" && (
           <View
             style={{
               position: "absolute",
-              backgroundColor: COLORS.WARN_RED,
+              backgroundColor: COLORS.UPTRAVEL_WARN,
               borderRadius: hp(5),
               elevation: 5,
               height: hp(2.5),

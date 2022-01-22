@@ -5,8 +5,6 @@ import Layout from "../../components/Layout";
 import ButtonLiion from "../../components/ButtonLiion";
 import { COLORS, hp, wp } from "../../constants/styleThemes";
 import {
-  Ionicons,
-  MaterialIcons,
   Feather,
   MaterialCommunityIcons,
   FontAwesome5,

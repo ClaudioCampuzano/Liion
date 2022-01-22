@@ -2,6 +2,7 @@ import React from "react";
 import Index from "./src/Index";
 import GlobalProvider from "./src/context/Provider";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { initializeApp } from "firebase/app";
 import { LogBox } from "react-native";
@@ -16,9 +17,7 @@ import {
   measurementId,
 } from "@env";
 
-LogBox.ignoreLogs([
-  "AsyncStorage", "Setting a timer"
-]);
+LogBox.ignoreLogs(["AsyncStorage", "Setting a timer"]);
 
 export default function App() {
   const firebaseKeys = {
@@ -38,7 +37,9 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <GlobalProvider>
-        <Index />
+        <NavigationContainer>
+          <Index />
+        </NavigationContainer>
       </GlobalProvider>
     </QueryClientProvider>
   );

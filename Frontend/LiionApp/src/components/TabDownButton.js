@@ -9,7 +9,7 @@ import { GlobalContext } from "../context/Provider";
 
 const TabDownButton = (props) => {
   const { type, style, sizeIcon, ...restOfProps } = props;
-  const { userData } = useContext(GlobalContext);
+  const { userData, travelStatus } = useContext(GlobalContext);
   const navigation = useNavigation();
 
   var colorSearch = COLORS.LIGHT_LEAD;
@@ -26,7 +26,8 @@ const TabDownButton = (props) => {
     colorSearch = COLORS.TURKEY;
     stateSearch = true;
   } else {
-    colorMyTravels = COLORS.TURKEY;
+    colorMyTravels =
+      travelStatus === "soon" ? COLORS.UPTRAVEL_WARN : COLORS.TURKEY;
     stateMyTravels = true;
   }
 
@@ -70,7 +71,7 @@ const TabDownButton = (props) => {
           </Text>
         </View>
       </TouchableWithoutFeedback>
-      {userData.isDriver && 
+      {userData.isDriver && (
         <TouchableWithoutFeedback
           disabled={stateCreate}
           onPress={() => navigation.navigate("CreateNavigator")}
@@ -87,7 +88,7 @@ const TabDownButton = (props) => {
             </Text>
           </View>
         </TouchableWithoutFeedback>
-      }
+      )}
     </View>
   );
 };

@@ -1,5 +1,4 @@
 import axios from "axios";
-import firebase from "firebase/compat/app";
 import { BACKEND_URL } from "@env";
 
 const client = axios.create({
@@ -256,7 +255,6 @@ export const getTravelPartners = async (payload) => {
   return data;
 };
 
-
 export const updateUserRanting = async (payload) => {
   const { data } = await client({
     method: "patch",
@@ -265,4 +263,46 @@ export const updateUserRanting = async (payload) => {
     data: JSON.stringify(payload),
   });
   return data;
+};
+
+export const updateExpoToken = async (payload) => {
+  try {
+    const res = await client({
+      method: "patch",
+      url: "/updateExpoToken",
+      headers: { "Content-Type": "application/json" },
+      data: JSON.stringify(payload),
+    });
+    return [true, res.data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
+};
+
+export const getUpcomingTravels = async (UID) => {
+  try {
+    const { data } = await client({
+      method: "get",
+      url: "/getUpcomingTravels/" + UID,
+    });
+    return [true, data];
+  } catch (e) {
+    return [false, e];
+  }
+};
+
+export const notifToPassengers = async (travelId) => {
+  try {
+    const { data } = await client({
+      method: "post",
+      url: "/notifToPassengers",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        travelId: travelId,
+      },
+    });
+    return [true, data];
+  } catch (e) {
+    return [false, e.response.data];
+  }
 };

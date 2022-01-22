@@ -20,7 +20,10 @@ import {
   updateTravelItinerary,
   getPassengerTravelItinerary,
   getTravelPartners,
-  updateUserRanting
+  updateUserRanting,
+  updateExpoToken,
+  getUpcomingTravels,
+  notifToPassengers
 } from "../controllers/index";
 
 import {
@@ -30,45 +33,48 @@ import {
 } from "../middleware/guard";
 
 const router = Router({ caseSensitive: true });
-router.use("/protected", checkIsAuth);
+
+
+/* Metodos implicados en el login */
 router.post("/register", register);
-
-
-
-router.post("/createTravel", /* checkTokenValidityBody, */ createTravel);
-
+router.get("/getStatusRun", getStatusRun);
 router.get("/getUserData", /* checkTokenValidityQuery, */ getUserData);
 
-//Checkea si el run ya esta registrado
-router.get("/getStatusRun", getStatusRun);
-
-//Metodos implicados en la busqueda de viajes
+/*Metodos implicados en la busqueda de viajes */
 router.get("/getTravels", /* checkTokenValidityQuery, */ getTravels);
-router.get("/getDetailsOfTravel",/* checkTokenValidityQuery, */ getDetailsOfTravel);
 router.patch("/updateSeenTravel",/* checkTokenValidityBody, */ updateSeenTravel);
 router.post("/registerPassengerRequest",/* checkTokenValidityBody, */ registerPassengerRequest);
 
-//Metodos implicados en el listado de viajes de pasajero y conductor
+/*Metodos implicados en la creacion de viajes */
+router.post("/createTravel", /* checkTokenValidityBody, */ createTravel);
+
+/*Metodos implicados en el display de viajes para los roles pasajero/conductor*/
 router.get("/getTravelsPassenger",/* checkTokenValidityQuery, */ getTravelsPassenger);
 router.get("/getTravelsDriver",/* checkTokenValidityQuery, */ getTravelsDriver);
-
-//Metodos implicados en el managerTravel
 router.delete("/deletePassengerRequest",/* checkTokenValidityBody, */ deletePassengerRequest);
 router.delete("/deleteDriverTravel",/* checkTokenValidityBody, */ deleteDriverTravel);
-router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
 
-//Metodos implicado travel en curso
+//Metodos implicado en el viaje en curso
 router.patch("/updateUserLocationInTravel",/* checkTokenValidityBody, */ updateUserLocationInTravel);
-router.put("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
 router.get("/getTravelItinerary",/* checkTokenValidityQuery, */ getTravelItinerary);
+router.put("/updateTravelItinerary",/* checkTokenValidityBody, */ updateTravelItinerary);
 router.get("/getPassengerTravelItinerary",/* checkTokenValidityQuery, */ getPassengerTravelItinerary);
-router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
 
-//Metodos implicado en el feedback
+//Metodos implicados en el feedback
 router.get("/getTravelPartners",/* checkTokenValidityQuery, */ getTravelPartners);
 router.patch("/updateUserRanting",/* checkTokenValidityQuery, */ updateUserRanting);
 
+/*Metodos transversales de todas las etapas*/
+router.get("/getDetailsOfTravel",/* checkTokenValidityQuery, */ getDetailsOfTravel);
+router.patch("/updateStateTravel",/* checkTokenValidityBody, */ updateStateTravel);
+router.get("/getRouteCoordinates",/* checkTokenValidityQuery, */ getRouteCoordinates);
+router.get("/getupcomingTravels/:userUID",getUpcomingTravels);
+
+/*Metodos para el registro de conductores*/
 router.post("/updateUsersDriverStatus", checkIsAuth, updateUserDriverStatus);
 
+/*Metodos implicados en las notificaciones*/
+router.post('/notifToPassengers',notifToPassengers)
+router.patch("/updateExpoToken", checkIsAuth, updateExpoToken)
 
 export default router;

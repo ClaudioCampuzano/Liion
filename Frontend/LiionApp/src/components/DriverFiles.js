@@ -1,12 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import {
-  Ionicons,
-  MaterialIcons,
-  Feather,
-  MaterialCommunityIcons,
-  FontAwesome5,
-} from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import { COLORS, hp } from "../constants/styleThemes";
 
@@ -37,7 +31,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: 'center'
+    alignItems: "center",
   },
   text: {
     fontSize: hp("2%"),
@@ -49,8 +43,7 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: hp("1.5%"),
   },
-  textIcon: {
-  },
+  textIcon: {},
 });
 
 export default DriverFiles;

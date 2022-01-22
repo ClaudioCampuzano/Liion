@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { StyleSheet, View, FlatList } from "react-native";
+import { useQuery, useQueryClient } from "react-query";
 
 import Layout from "../../components/Layout";
 import TabDownButton from "../../components/TabDownButton";
@@ -11,11 +11,12 @@ import Loading from "../../components/Loading";
 import { GlobalContext } from "../../context/Provider";
 import TouchableIcon from "../../components/TouchableIcon";
 import TravelResultsCard from "../../components/TravelResultsCard";
+import { getUpcomingTravels } from "../../api/api";
 
 const TravelConductorTab = ({ navigation, route }) => {
   var reloadData = route.params ?? false;
 
-  const { uid, userData } = useContext(GlobalContext);
+  const { uid, userData, updateTravelStatus } = useContext(GlobalContext);
   const [modalError, setModalError] = useState(false);
   const queryClient = useQueryClient();
 
@@ -34,7 +35,25 @@ const TravelConductorTab = ({ navigation, route }) => {
   );
 
   useEffect(() => {
-    reloadData && queryClient.invalidateQueries("TravelsDriver");
+    if (reloadData) {
+      queryClient.invalidateQueries("TravelsDriver");
+
+      (async function loadInfo() {
+        const [status, data] = await getUpcomingTravels(uid);
+        if (status === true) {
+          const { res, sucess } = data;
+          if (sucess === true || sucess === "true") {
+            if (res.status === "closed" || res.status === "open") {
+              updateTravelStatus("soon");
+            } else if (res.status === "ongoing") {
+              updateTravelStatus("ongoing");
+            } else {
+              updateTravelStatus("");
+            }
+          }
+        }
+      })();
+    }
   }, [reloadData]);
 
   const modalHandler = () => {

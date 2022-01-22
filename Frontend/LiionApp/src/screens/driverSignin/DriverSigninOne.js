@@ -1,23 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  useColorScheme,
-  ColorPropType,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { getAuth } from "@firebase/auth";
-
-import {
-  Ionicons,
-  MaterialIcons,
-  Feather,
-  MaterialCommunityIcons,
-  FontAwesome5,
-} from "@expo/vector-icons";
 
 import { GlobalContext } from "../../context/Provider";
 import Layout from "../../components/Layout";
@@ -122,7 +105,7 @@ const DriverSignupOne = () => {
     let [status, res] = await updateDriverStatus(flag, {
       uid: uid,
       atoken: accesstoken,
-      driverData: driverData
+      driverData: driverData,
     });
     setLocalTrigger(!reloadTrigger);
   };

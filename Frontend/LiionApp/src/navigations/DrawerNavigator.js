@@ -6,6 +6,7 @@ import SearchNavigator from "./SearchNavigator";
 import CreateNavigator from "./CreateNavigator";
 import MyTravelNavigator from "./TravelNavigator";
 import DriverSigninNavigator from "./DriverSigninNavigator";
+import tempScreen from "../screens/temp/tempScreen";
 
 import DrawerContent from "./drawer/DrawerContent";
 import { COLORS, hp, wp } from "../constants/styleThemes";
@@ -18,8 +19,12 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ drawerStyle: styles.drawerStyle, unmountOnBlur: true }}
       initialRouteName="SearchStack"
-      
     >
+      <Drawer.Screen
+        name="TempScreen"
+        component={tempScreen}
+        options={{ headerShown: false }}
+      />
       <Drawer.Screen
         name="SearchStack"
         component={SearchNavigator}

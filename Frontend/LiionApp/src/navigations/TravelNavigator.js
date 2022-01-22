@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useContext } from "react";
+import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo } from "@expo/vector-icons";
 
@@ -10,10 +10,13 @@ import OngoingTravelDriver from "../screens/travel/OngoingTravelDriver";
 import OngoingTravelPassenger from "../screens/travel/OngoingTravelPassenger";
 import Feedback from "../screens/travel/Feedback";
 import DrawerIconCustom from "../components/DrawerIconCustom";
+import { GlobalContext } from "../context/Provider";
 
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
 const TravelNavigator = () => {
+  const { travelStatus } = useContext(GlobalContext);
+
   const TravelStack = createStackNavigator();
 
   return (
@@ -46,7 +49,7 @@ const TravelNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => <DrawerIconCustom alert={true} />,
+          headerLeft: () => <DrawerIconCustom alert={travelStatus} />,
         })}
       />
 

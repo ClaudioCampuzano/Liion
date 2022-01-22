@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity, Image } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Entypo, Ionicons, Feather } from "@expo/vector-icons";
@@ -10,8 +10,11 @@ import SearchStepFour from "../screens/searchTrip/SearchStepFour";
 import SucessScreen from "../screens/SucessScreen";
 import DrawerIconCustom from "../components/DrawerIconCustom";
 import { COLORS, hp, wp } from "../constants/styleThemes";
+import { GlobalContext } from "../context/Provider";
 
 const SearchNavigator = () => {
+  const { travelStatus } = useContext(GlobalContext);
+
   const SearchStack = createStackNavigator();
 
   return (
@@ -44,7 +47,7 @@ const SearchNavigator = () => {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => <DrawerIconCustom alert={true}/>,
+          headerLeft: () => <DrawerIconCustom alert={travelStatus} />,
         })}
       />
       <SearchStack.Screen

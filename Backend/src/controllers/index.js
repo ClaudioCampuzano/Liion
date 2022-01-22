@@ -2,8 +2,10 @@ import { db, auth, FieldValue, storage } from "../config/config";
 import { isEmail, isLength, isDate, isEmpty } from "validator";
 import { validateRun } from "../middleware/validations";
 import { Buffer } from "buffer";
-
+import { Expo } from "expo-server-sdk";
 import moment from "moment";
+
+const expo = new Expo();
 
 export const register = async (req, res) => {
   const {
@@ -1017,3 +1019,233 @@ export async function updateUserRanting(req, res) {
     });
   }
 }
+
+export const updateExpoToken = async (req, res) => {
+  const { uid, expoToken } = req.body;
+  //console.log(uid, fcmToken)
+  if (uid && expoToken) {
+    try {
+      const q = await db
+        .collection("users")
+        .doc(uid)
+        .update("expoToken", expoToken);
+      //console.log(q)
+      res.send("Actualización de token FCM exitoso");
+    } catch (e) {
+      console.log(e);
+      res.status(403).send("Token UID Inválido");
+    }
+  } else {
+    console.log("aqui?");
+    res.status(403).send("Token UID Inválido o error");
+  }
+};
+
+function compareDateOfTravels(a, b) {
+  const aTime = moment(a.date + " " + a.startTime, "DD/MM/YYYY HH:mm");
+  const bTime = moment(b.date + " " + b.startTime, "DD/MM/YYYY HH:mm");
+  //console.log(aTime, bTime)
+  if (aTime.isSameOrBefore(bTime)) {
+    return -1;
+  }
+  if (aTime.isAfter(bTime)) {
+    return 1;
+  }
+  return 0;
+}
+
+export async function getUpcomingTravels(req, res) {
+  var driverUID = req.params.userUID;
+  const resultData = [];
+  try {
+    var travelRef = await db
+      .collection("travels")
+      .where("driverUID", "==", driverUID)
+      .where("status", "not-in", ["finished", "aborted"])
+      .get();
+
+    if (!travelRef.empty)
+      //travelRef.docs.forEach(x => console.log(compareDateOfTravels(x.data(),x.data())))
+      for (const doc of travelRef.docs) {
+        let currentTimeTravel = moment(
+          doc.data().date + " " + doc.data().startTime,
+          "DD/MM/YYYY HH:mm"
+        );
+        if (
+          currentTimeTravel
+            .add(doc.data().durationMinutes, "minutes")
+            .add(6, "hours")
+            .isSameOrAfter(moment())
+          //          && doc.data().status !== 'ongoing' //enrelidad si queremos los ongoing
+        ) {
+          resultData.push({
+            id: doc.id,
+            date: doc.data().date,
+            startTime: doc.data().startTime,
+            destinationDetails: doc.data().destinationDetails,
+            originDetails: doc.data().originDetails,
+            durationMinutes: doc.data().durationMinutes,
+            status: doc.data().status,
+            nSeatsAvailable: doc.data().nSeatsAvailable,
+            nSeatsOffered: doc.data().nSeatsOffered,
+            costPerSeat: doc.data().costPerSeat,
+            extraBaggage: doc.data().extraBaggage,
+            approvalIns: doc.data().approvalIns,
+            smoking: doc.data().smoking,
+            genderPreference: doc.data().genderPreference,
+          });
+        }
+      }
+    //const onGoing = []
+    if (typeof resultData !== "undefined" && resultData.length > 0) {
+      //resultData.forEach(x => {
+      //  if (x.status === 'ongoing') onGoing.push(x)
+      //})
+      //resultData.filter(x => x.status !== 'ongoing')
+      //onGoing.sort(compareDateOfTravels)
+      resultData.sort(compareDateOfTravels);
+    } else {
+      res.send(JSON.stringify({ sucess: true, res: [{ status: "nada" }] }));
+      return;
+    }
+
+    const currentTime = moment();
+    const closeTime = moment(
+      resultData[0].date + " " + resultData[0].startTime,
+      "DD/MM/YYYY HH:mm"
+    );
+    const diff = moment.duration(closeTime.diff(currentTime));
+    const minuteDelta = diff.asMinutes();
+    //console.log(currentTime, closeTime, minuteDelta);
+    if (Math.abs(minuteDelta) <= 20) {
+      //viaje en 20 minutos
+      //nunca deberian solaparse viajes, y se asume que no va suceder
+      //viajes de prueba: qFVOwm2EuliVAU3YrEit y ZNEvihK4ZAF3USh6BCOd
+      const theTravel = resultData[0];
+      const travelId = theTravel.id;
+      if (theTravel.status === "open") {
+        theTravel.status = "closed";
+        const q = await db
+          .collection("travels")
+          .doc(travelId)
+          .update("status", "closed");
+      }
+      res.send(JSON.stringify({ sucess: true, res: theTravel }));
+    } else {
+      //no hay viejs pronto
+      res.send(JSON.stringify({ sucess: false, res: [] }));
+    }
+  } catch (e) {
+    res.status(500).send({ sucess: false, res: "Ops hubo un error" });
+  }
+}
+
+export const notifToPassengers = async (req, res) => {
+  const { travelId } = req.body;
+  if (!travelId) {
+    res.status(400).send({ sucess: false, res: "Envie un id de viaje" });
+  } else {
+    try {
+      const docRef = await db.collection("travels").doc(travelId).get();
+      const docExist = docRef.exists;
+      if (!docExist) {
+        res.status(400).send({ sucess: false, res: "No se encuetra viaje" });
+      }
+      const { requestingPassengers, driverUID } = docRef.data();
+      if (
+        typeof requestingPassengers !== "undefined" &&
+        requestingPassengers.length > 0
+      ) {
+        const userIds = [];
+        await Promise.all(
+          requestingPassengers.map(async (passenger) => {
+            let trimmed = passenger.trim();
+            const travelRequestRef = await db
+              .collection("requestTravel")
+              .doc(trimmed)
+              .get();
+            const { passengerUID } = travelRequestRef.data();
+            userIds.push(passengerUID);
+          })
+        );
+        if (typeof userIds !== "undefined" && userIds.length > 0) {
+          const userIdWithFcm = [];
+          await Promise.all(
+            userIds.map(async (user) => {
+              let trimmed2 = user.trim();
+              const usersRefs = await db
+                .collection("users")
+                .doc(trimmed2)
+                .get();
+              const { expoToken, name, apellido } = usersRefs.data();
+              userIdWithFcm.push({
+                uid: trimmed2,
+                expoToken: expoToken,
+                name: name,
+                apellido: apellido,
+              });
+            })
+          );
+
+          if (
+            typeof userIdWithFcm !== "undefined" &&
+            userIdWithFcm.length > 0
+          ) {
+            //hasta aca.. ok
+            const fcmTokenArr = [];
+            userIdWithFcm.forEach((x) => {
+              fcmTokenArr.push(x.expoToken);
+            });
+
+            const driverRefs = await db
+              .collection("users")
+              .doc(driverUID)
+              .get();
+
+            const messages = {
+              title: "Tu viaje empezo",
+              body:
+                "Tu conductor " +
+                driverRefs.data().name +
+                " " +
+                driverRefs.data().apellido +
+                " pronto ira a buscarte",
+              data: {
+                userFor: "passengers",
+              },
+              to: fcmTokenArr,
+              sound: "default",
+            };
+            try {
+              await expo.sendPushNotificationsAsync([messages]);
+
+              res.json({ sucess: true, res: "ok" });
+            } catch (e) {
+              console.log("Error sending message:", e);
+              res.status(500).json({
+                sucess: false,
+                res: e,
+              });
+            }
+          } else {
+            res
+              .status(400)
+              .send({ sucess: false, res: "No se encuetran id de viajeros" });
+          }
+        } else {
+          res
+            .status(400)
+            .send({ sucess: false, res: "No se encuetran id de viajeros" });
+        }
+      } else {
+        res.status(400).send({
+          sucess: false,
+          res: "No se encuetran pasajeros para enviar su notificacion",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(400).send({ sucess: false, res: "Oops ha ocurrido un error" });
+    }
+  }
+};

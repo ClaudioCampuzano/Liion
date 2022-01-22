@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Avatar } from "react-native-paper";
 
 import Layout from "../../components/Layout";
@@ -14,6 +13,7 @@ import {
   getDetailsOfTravel,
   deleteDriverTravel,
   updateStateTravel,
+  notifToPassengers,
 } from "../../api/api";
 import ModalPopUp from "../../components/ModalPopUp";
 
@@ -28,6 +28,7 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
     "Error al intentar recuperar datos, intente en otro momento"
   );
   const [dataFromApi, setDataFromApi] = useState({});
+
 
   useEffect(() => {
     (async function () {
@@ -47,6 +48,8 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
       state: "ongoing",
     };
     const [resFlag, resmsg] = await updateStateTravel(dataForSend);
+
+    resFlag && (await notifToPassengers(dataForSend.travelId));
 
     setMsgModal(resmsg.res);
     setModalState(true);
@@ -208,7 +211,6 @@ const TravelVisualizerDriver = ({ navigation, route }) => {
               <Text
                 style={{ fontFamily: "Gotham-SSm-Medium", fontSize: wp("4%") }}
               >
-                {" "}
                 {dataFromApi.typeVehicule}
               </Text>
               <Text style={styles.vehicleModelColor}>

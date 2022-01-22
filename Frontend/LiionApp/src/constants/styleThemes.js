@@ -20,6 +20,7 @@ const COLORS = {
   GRAY: "#BFBFBF",
   TURKEY_CLEARER: "#84FFF3",
   PURPLE: "#9e0284",
+  UPTRAVEL_WARN: "#E35F0E",
 };
 
 const loadFonts = () => {
