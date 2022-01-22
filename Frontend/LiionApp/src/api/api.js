@@ -259,27 +259,6 @@ export const getStatusRun = async (payload) => {
   });
   return data;
 }
-export const protectedRoute = async () => {
-  //esto se debe agregar al flux de crack (mutaciones, acciones, state etcetc y luego pedir desde ahi, aunsuqe
-  //no es estrictamente nescesario ya que ese encuentra en el bojeto user que ya se guarda en el asyncstorage
-  const user = firebase.auth().currentUser;
-  if (user) {
-    const tkn = await user.getIdToken(true);
-
-    try {
-      //prueba cambiando tkn por algun string y veras
-      const res = await client({
-        method: "post",
-        url: "/protected",
-        headers: {
-          token: tkn,
-        },
-      });
-    } catch (e) {
-    }
-  } else {
-  }
-};
 
 export const getTravelPartners = async (payload) => {
   const { data } = await client({
@@ -305,7 +284,7 @@ export const getupcomingTravels = async (UID) => {
   try {
   const { data } = await client({
     method: "get",
-    url: "/getupcomingTravels/"+UID,
+    url: "/getUpcomingTravels/"+UID,
   });
   return [true, data]
 }
