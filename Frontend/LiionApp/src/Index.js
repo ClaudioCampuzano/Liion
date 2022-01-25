@@ -20,8 +20,6 @@ const Index = (props) => {
   } = useContext(GlobalContext);
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
-  const [getUpcomingTravelsLoaded, setGetUpcomingTravelsLoaded] =
-    useState(false);
 
   const [user, setUser] = useState(null);
   const [modalVisible1, setModalVisible1] = useState(false);
@@ -42,7 +40,12 @@ const Index = (props) => {
 
   const gotoTravelHandler2 = () => {
     setModalVisible2(false);
-    navigation.navigate("TempScreen");
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: "TravelPasajeroTab",
+      },
+    });
   };
 
   // Check user state
@@ -122,7 +125,6 @@ const Index = (props) => {
             }
           }
         }
-        setGetUpcomingTravelsLoaded(true);
       }
     })();
     return;
@@ -133,10 +135,7 @@ const Index = (props) => {
   //y con esto la logica de todo el resto de la aplicacion si cometia algun error con el doble boton
   return (
     <>
-      {fontsLoaded &&
-      userStateLoaded &&
-      getUpcomingTravelsLoaded &&
-      (!user || isLoadedData) ? (
+      {fontsLoaded && userStateLoaded && (!user || isLoadedData) ? (
         <>
           {isLoadedData ? (
             <>
