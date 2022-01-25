@@ -11,7 +11,7 @@ import { loadFonts } from "./constants/styleThemes";
 import Loading from "./components/Loading";
 import ModalPopUpDouble from "./components/ModalPopUpDouble";
 
-import { getUpcomingTravels } from "./api/api";
+import { getUpcomingTravels, updateExpoToken } from "./api/api";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -25,9 +25,7 @@ const Index = (props) => {
   const {
     loadUserFirestoreData,
     isLoadedData,
-    expoPushToken,
     notification,
-    setExpoPushTokenF,
     setNotificationF,
     refreshTokens,
     updateTravelStatus,
@@ -37,8 +35,6 @@ const Index = (props) => {
   const responseListener = useRef();
 
   const [userStateLoaded, setUserStateLoaded] = useState(false);
-  const [getUpcomingTravelsLoaded, setGetUpcomingTravelsLoaded] =
-    useState(false);
 
   const [user, setUser] = useState(null);
   const [modalVisible1, setModalVisible1] = useState(false);
@@ -59,8 +55,12 @@ const Index = (props) => {
 
   const gotoTravelHandler2 = () => {
     setModalVisible2(false);
-    console.log(navigation);
-    navigation.navigate("TempScreen");
+    navigation.navigate("MyTravelNavigator", {
+      screen: "TravelTabNavigator",
+      params: {
+        screen: "TravelPasajeroTab",
+      },
+    });
   };
 
   // Check user state
@@ -85,12 +85,13 @@ const Index = (props) => {
   // Only user change and exists load firestoreData
   useEffect(() => {
     (async function loadInfo() {
-      if (user && expoPushToken) {
-        await loadUserFirestoreData(user, expoPushToken);
+      if (user) {
+        await loadUserFirestoreData(user);
 
         const [status, data] = await getUpcomingTravels({
           driverUID: user.uid,
         });
+
         if (status === true) {
           const { res, sucess } = data;
           if (sucess === true || sucess === "true") {
@@ -106,16 +107,12 @@ const Index = (props) => {
             }
           }
         }
-        setGetUpcomingTravelsLoaded(true);
       }
     })();
     return;
-  }, [user, expoPushToken]);
+  }, [user]);
 
   useEffect(() => {
-    registerForPushNotificationsAsync(Notifications).then((token) => {
-      setExpoPushTokenF(token);
-    });
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotificationF(notification);
@@ -150,22 +147,13 @@ const Index = (props) => {
         setModalVisible2(true);
         updateTravelStatus("soon");
       }
-
-      //Hay que cachar como ver cuando esta en background
-      /*       if (userFor === "passengers") {
-        navigation.navigate("TempScreen");
-        updateTravelStatus('soon')
-      } */
     }
   }, [notification]);
 
   // If fonts, userState are loaded, and if user exists, firestoreData load
   return (
     <>
-      {fontsLoaded &&
-      userStateLoaded &&
-      getUpcomingTravelsLoaded &&
-      (!user || isLoadedData) ? (
+      {fontsLoaded && userStateLoaded && (!user || isLoadedData) ? (
         <>
           {isLoadedData ? (
             <>
@@ -178,11 +166,10 @@ const Index = (props) => {
                   gotoTravelHandler1();
                 }}
                 secondFunction={() => {
-                  //console.log('close modal');
                   setModalVisible1(false);
                 }}
               >
-                Parece tienes un como conductor viaje por partir
+                Tienes un viaje como conductor viaje por partir
               </ModalPopUpDouble>
 
               <ModalPopUpDouble
@@ -198,7 +185,7 @@ const Index = (props) => {
                   setModalVisible2(false);
                 }}
               >
-                Parece tienes un como pasajero viaje por partir
+                Tienes un viaje como pasajero en curso
               </ModalPopUpDouble>
 
               <DrawerNavigator />

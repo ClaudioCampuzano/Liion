@@ -1,6 +1,8 @@
 import React, { createContext, useReducer } from "react";
 import { fireLogin, fireLogout } from "../firebase/Auth";
 import { getUserData, updateExpoToken } from "../api/api";
+import registerForPushNotificationsAsync from "../notifications/notifications";
+import * as Notifications from "expo-notifications";
 
 import authReducer from "./authReducer";
 import {
@@ -9,7 +11,6 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
-  SETEXPOPUSHTOKEN,
   SETNOTIFICATION,
   REFRESHTOKENS,
   UPDATETRAVELSTATUS,
@@ -24,7 +25,6 @@ const GlobalProvider = ({ children }) => {
     userData: {},
     isLoadedData: false,
     reloadTrigger: false,
-    expoPushToken: "",
     travelStatus: "",
     notification: false,
   };
@@ -63,7 +63,7 @@ const GlobalProvider = ({ children }) => {
     }
   };
 
-  const loadUserFirestoreData = async (payload, expoPushToken) => {
+  const loadUserFirestoreData = async (payload) => {
     try {
       const [flag, res] = await getUserData(payload);
 
@@ -77,9 +77,13 @@ const GlobalProvider = ({ children }) => {
       const atoken = await payload.getIdToken(true);
 
       if (flag) {
+        const expoToken = await registerForPushNotificationsAsync(
+          Notifications
+        );
+
         const tokenUpdate = {
           atoken: atoken,
-          expoToken: expoPushToken,
+          expoToken: expoToken,
           uid: uid,
         };
         await updateExpoToken(tokenUpdate);
@@ -97,6 +101,7 @@ const GlobalProvider = ({ children }) => {
         return false;
       }
     } catch (err) {
+      console.log(err);
       return false;
     }
   };
@@ -121,26 +126,13 @@ const GlobalProvider = ({ children }) => {
   };
 
   const refreshTokens = (obj) => {
-    const { accesstoken, expoPushToken } = obj;
+    const { accesstoken } = obj;
     if (accesstoken) {
       authDispatch({
         type: REFRESHTOKENS,
         payload: { accesstoken: accesstoken },
       });
     }
-    if (expoPushToken) {
-      authDispatch({
-        type: REFRESHTOKENS,
-        payload: { expoPushToken: expoPushToken },
-      });
-    }
-  };
-
-  const setExpoPushTokenF = async (tkn) => {
-    authDispatch({
-      type: SETEXPOPUSHTOKEN,
-      payload: tkn,
-    });
   };
   const setNotificationF = (notif) => {
     authDispatch({
@@ -158,7 +150,6 @@ const GlobalProvider = ({ children }) => {
         accesstoken: state.accesstoken,
         isLoadedData: state.isLoadedData,
         reloadTrigger: state.reloadTrigger,
-        expoPushToken: state.expoPushToken,
         notification: state.notification,
         travelStatus: state.travelStatus,
         updateReloadTrigger,
@@ -166,7 +157,6 @@ const GlobalProvider = ({ children }) => {
         loginUser,
         logoutUser,
         loadUserFirestoreData,
-        setExpoPushTokenF,
         setNotificationF,
         refreshTokens,
         updateTravelStatus,

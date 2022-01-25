@@ -21,11 +21,6 @@ const DrawerNavigator = () => {
       initialRouteName="SearchStack"
     >
       <Drawer.Screen
-        name="TempScreen"
-        component={tempScreen}
-        options={{ headerShown: false }}
-      />
-      <Drawer.Screen
         name="SearchStack"
         component={SearchNavigator}
         options={{ headerShown: false }}

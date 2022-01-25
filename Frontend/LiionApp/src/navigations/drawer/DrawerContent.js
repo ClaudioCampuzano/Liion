@@ -66,17 +66,6 @@ const DrawerContent = (props) => {
           <DrawerItem
             style={{ marginBottom: -hp("0.5") }}
             icon={() => (
-              <Feather name="clock" size={hp("3.5")} color={COLORS.TURKEY} />
-            )}
-            label="Temp Screen"
-            labelStyle={styles.labelDrawerItem}
-            onPress={() => {
-              props.navigation.navigate("TempScreen");
-            }}
-          />
-          <DrawerItem
-            style={{ marginBottom: -hp("0.5") }}
-            icon={() => (
               <Feather name="search" size={hp("3.5")} color={COLORS.TURKEY} />
             )}
             label="Buscar viaje"

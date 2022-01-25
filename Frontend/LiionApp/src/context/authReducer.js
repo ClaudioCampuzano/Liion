@@ -4,7 +4,6 @@ import {
   LOAD_FIRESTORE_DATA,
   GET_WHOLE_STATE,
   TRIGGER_RELOAD,
-  SETEXPOPUSHTOKEN,
   SETNOTIFICATION,
   REFRESHTOKENS,
   UPDATETRAVELSTATUS,
@@ -29,7 +28,6 @@ const authReducer = (state, action) => {
         userData: {},
         isLoadedData: false,
         travelStatus: "",
-        expoPushToken: "",
         notification: false,
       };
     case LOAD_FIRESTORE_DATA:
@@ -44,8 +42,6 @@ const authReducer = (state, action) => {
       return state;
     case TRIGGER_RELOAD:
       return { ...state, reloadTrigger: payload };
-    case SETEXPOPUSHTOKEN:
-      return { ...state, expoPushToken: payload };
     case SETNOTIFICATION:
       return { ...state, notification: payload };
     case REFRESHTOKENS:

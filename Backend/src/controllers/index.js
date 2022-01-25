@@ -638,90 +638,96 @@ export async function updateStateTravel(req, res) {
 
     switch (state) {
       case "ongoing":
-        var currentTimeTravel = moment(
-          travelObj.date + " " + travelObj.startTime,
-          "DD/MM/YYYY HH:mm"
-        );
-
-        if (
-          currentTimeTravel.isBetween(
-            moment().subtract(20, "minutes"),
-            moment().add(20, "minutes")
-          )
-        ) {
-          var objLocation = {};
-          objLocation[travelObj.driverUID] = {};
-          await Promise.all(
-            travelObj.requestingPassengers.map(async (doc) => {
-              var passengerUID = (
-                await db.collection("requestTravel").doc(doc).get()
-              ).data().passengerUID;
-              objLocation[passengerUID] = {};
-            })
+        if (travelObj.requestingPassengers.length != 0) {
+          var currentTimeTravel = moment(
+            travelObj.date + " " + travelObj.startTime,
+            "DD/MM/YYYY HH:mm"
           );
 
-          //Generacion de itinerario
-
-          const objOrder = [];
-          const requestDocs = await db
-            .collection("requestTravel")
-            .where("travelId", "==", travelId)
-            .where("status", "==", "accepted")
-            .get();
-          const isCoordinateEqual = (object1, object2) => {
-            return (
-              object1.latitude === object2.latitude &&
-              object1.longitude === object2.longitude
+          if (
+            currentTimeTravel.isBetween(
+              moment().subtract(20, "minutes"),
+              moment().add(20, "minutes")
+            )
+          ) {
+            var objLocation = {};
+            objLocation[travelObj.driverUID] = {};
+            await Promise.all(
+              travelObj.requestingPassengers.map(async (doc) => {
+                var passengerUID = (
+                  await db.collection("requestTravel").doc(doc).get()
+                ).data().passengerUID;
+                objLocation[passengerUID] = {};
+              })
             );
-          };
 
-          //El itinerario tiene 3 estados, active, deactivate, finished
-          requestDocs.docs.map((doc) => {
-            objOrder.push({
-              step: travelObj.routeCoordinates.findIndex((obj) =>
-                isCoordinateEqual(doc.data().dropOff, obj)
-              ),
-              type: "dropOff",
-              status: "deactivate",
-              coordinate: doc.data().dropOff,
-              passengerUID: doc.data().passengerUID,
-              extraBaggage: doc.data().extraBaggage,
+            //Generacion de itinerario
+
+            const objOrder = [];
+            const requestDocs = await db
+              .collection("requestTravel")
+              .where("travelId", "==", travelId)
+              .where("status", "==", "accepted")
+              .get();
+            const isCoordinateEqual = (object1, object2) => {
+              return (
+                object1.latitude === object2.latitude &&
+                object1.longitude === object2.longitude
+              );
+            };
+
+            //El itinerario tiene 3 estados, active, deactivate, finished
+            requestDocs.docs.map((doc) => {
+              objOrder.push({
+                step: travelObj.routeCoordinates.findIndex((obj) =>
+                  isCoordinateEqual(doc.data().dropOff, obj)
+                ),
+                type: "dropOff",
+                status: "deactivate",
+                coordinate: doc.data().dropOff,
+                passengerUID: doc.data().passengerUID,
+                extraBaggage: doc.data().extraBaggage,
+              });
+              objOrder.push({
+                step: travelObj.routeCoordinates.findIndex((obj) =>
+                  isCoordinateEqual(doc.data().pickUp, obj)
+                ),
+                type: "pickUp",
+                status: "deactivate",
+                coordinate: doc.data().pickUp,
+                passengerUID: doc.data().passengerUID,
+                extraBaggage: doc.data().extraBaggage,
+              });
             });
-            objOrder.push({
-              step: travelObj.routeCoordinates.findIndex((obj) =>
-                isCoordinateEqual(doc.data().pickUp, obj)
-              ),
-              type: "pickUp",
-              status: "deactivate",
-              coordinate: doc.data().pickUp,
-              passengerUID: doc.data().passengerUID,
-              extraBaggage: doc.data().extraBaggage,
-            });
-          });
 
-          objOrder
-            .sort((a, b) => {
-              if (a.step > b.step) return 1;
-              if (a.step < b.step) return -1;
-              return 0;
-            })
-            .map((obj, index) => {
-              obj.step = index;
+            objOrder
+              .sort((a, b) => {
+                if (a.step > b.step) return 1;
+                if (a.step < b.step) return -1;
+                return 0;
+              })
+              .map((obj, index) => {
+                obj.step = index;
+              });
+
+            objOrder[0].status = "active";
+
+            await travelRef.update({
+              status: state,
+              locations: objLocation,
+              itinerary: objOrder,
             });
 
-          objOrder[0].status = "active";
-
-          await travelRef.update({
-            status: state,
-            locations: objLocation,
-            itinerary: objOrder,
-          });
-
-          res.json({ sucess: true, res: "Viaje iniciado" });
+            res.json({ sucess: true, res: "Viaje iniciado" });
+          } else
+            res.status(403).json({
+              sucess: false,
+              res: "Imposible iniciar aun el viaje",
+            });
         } else
           res.status(403).json({
             sucess: false,
-            res: "Imposible iniciar aun el viaje",
+            res: "Imposible iniciar sin pasajeros",
           });
 
         break;
@@ -1065,7 +1071,6 @@ export async function getUpcomingTravels(req, res) {
       .get();
 
     if (!travelRef.empty)
-      //travelRef.docs.forEach(x => console.log(compareDateOfTravels(x.data(),x.data())))
       for (const doc of travelRef.docs) {
         let currentTimeTravel = moment(
           doc.data().date + " " + doc.data().startTime,
@@ -1096,13 +1101,7 @@ export async function getUpcomingTravels(req, res) {
           });
         }
       }
-    //const onGoing = []
     if (typeof resultData !== "undefined" && resultData.length > 0) {
-      //resultData.forEach(x => {
-      //  if (x.status === 'ongoing') onGoing.push(x)
-      //})
-      //resultData.filter(x => x.status !== 'ongoing')
-      //onGoing.sort(compareDateOfTravels)
       resultData.sort(compareDateOfTravels);
     } else {
       res.send(JSON.stringify({ sucess: true, res: [{ status: "nada" }] }));
