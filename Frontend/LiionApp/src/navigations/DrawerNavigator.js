@@ -6,7 +6,6 @@ import SearchNavigator from "./SearchNavigator";
 import CreateNavigator from "./CreateNavigator";
 import MyTravelNavigator from "./TravelNavigator";
 import DriverSigninNavigator from "./DriverSigninNavigator";
-import tempScreen from "../screens/temp/tempScreen";
 
 import DrawerContent from "./drawer/DrawerContent";
 import { COLORS, hp, wp } from "../constants/styleThemes";

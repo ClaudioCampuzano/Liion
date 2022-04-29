@@ -151,7 +151,7 @@ const RegisterStepThree = ({ route, navigation }) => {
                 Registro exitoso, ahora puedes ingresar tus credenciales
               </ModalPopUp>
             )}
-            <Text style={styles.text_titulo}>Correo electronico </Text>
+            <Text style={styles.text_titulo}>Correo electrónico </Text>
             <Text style={styles.text_subTitulo}>
               Aquí te enviaremos los recibos e informaciónes sobre tus viajes
             </Text>
@@ -187,7 +187,7 @@ const RegisterStepThree = ({ route, navigation }) => {
                 onChangeText={(text) => setValuePassConfirm(text)}
               />
                                         <Text style={styles.text_pass}>
-              {'La contraseña debe ser mayor o igual a 8 caracteres\ny ser una combinacion de letras mayusculas,\nminusculas y numeros\n'}
+              {'La contraseña debe ser mayor o igual a 8 caracteres\ny ser una combinación de letras mayúsculas,\nminúsculas y números\n'}
             </Text>
             </ScrollView>
           </View>

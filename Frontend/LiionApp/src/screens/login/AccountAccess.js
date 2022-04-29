@@ -18,11 +18,11 @@ import Loading from "../../components/Loading";
 const AccountAccess = ({ route, navigation }) => {
   const [valueEmail, setValueEmail] = useState(() => {
     return typeof route.params === "undefined"
-      ? "claudio@conductor.com"
+      ? ""
       : route.params.email;
   });
   const [focusEmailInput, setfocusEmailInput] = useState(false);
-  const [valuePass, setValuePass] = useState("Jiroto99");
+  const [valuePass, setValuePass] = useState("");
 
   const [errorEmail, setErrorEmail] = useState(null);
   const [errorPass, setErrorPass] = useState(null);
