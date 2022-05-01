@@ -19,7 +19,7 @@ const TouchableIcon = (props) => {
       nameIcon = "gender-female";
       break;
     case "allGender":
-      labelShow = "Para todo\ngenero";
+      labelShow = "Para todo\ngénero";
       nameIcon = "gender-male-female";
       break;
     case "smoking":
@@ -31,7 +31,7 @@ const TouchableIcon = (props) => {
       nameIcon = "smoking-off";
       break;
     case "approval":
-      labelShow = "Aprobación\nautomatica";
+      labelShow = "Aprobación\nautomática";
       nameIcon = "lightning-bolt";
       break;
     case "usb":

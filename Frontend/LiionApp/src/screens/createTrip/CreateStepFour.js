@@ -81,7 +81,7 @@ const CreateStepFour = ({ navigation, route }) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={styles.badDesc}>Dimensiones maximas </Text>
+            <Text style={styles.badDesc}>Dimensiones máximas </Text>
             <Text style={styles.badDesc}>55x35x25 cm</Text>
             <Text style={styles.count}>{bagNumber[0]}</Text>
           </View>

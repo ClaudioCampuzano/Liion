@@ -10,7 +10,7 @@ import DriverSigninNavigator from "./DriverSigninNavigator";
 import DrawerContent from "./drawer/DrawerContent";
 import { COLORS, hp, wp } from "../constants/styleThemes";
 
-import tempScreen from "../screens/temp/tempScreen";
+
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();

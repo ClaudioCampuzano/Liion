@@ -38,11 +38,11 @@ const RegisterStepTwo = ({ route, navigation }) => {
           setModalVisible={setModalError}
           customFunction={modalHandler}
         >
-          {"No a seleccionado fotografia\n¿Desea continuar?"}
+          {"No a seleccionado fotografía\n¿Desea continuar?"}
         </ModalPopUpDecision>
-        <Text style={styles.text_titulo}>Fotografia personal</Text>
+        <Text style={styles.text_titulo}>Fotografía personal</Text>
         <Text style={styles.text_subTitulo}>
-          {"Con esto ayudaremos a que los\ndemas usuarios confien en tí"}
+          {"Con esto ayudaremos a que los\ndemas usuarios confíen en tí"}
         </Text>
         <View>
           <CameraLiion

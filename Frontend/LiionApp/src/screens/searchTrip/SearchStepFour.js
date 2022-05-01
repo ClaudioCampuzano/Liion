@@ -63,7 +63,7 @@ const SearchStepFour = ({ navigation, route }) => {
       };
       var destination = {
         latitude: dataTravel.addresses.destination.location.lat,
-        longitude: dataTravel.addresses.origin.location.lng,
+        longitude: dataTravel.addresses.destination.location.lng,
       };
       var originSort = orderByDistance(
         origin,
@@ -257,7 +257,7 @@ const SearchStepFour = ({ navigation, route }) => {
                   changeValuesHandler("valuePay", selectedItem)
                 }
                 value={orderValues.valuePay}
-                data={["Credito", "Debito"]}
+                data={["Crédito", "Débito"]}
                 label="Medio de pago"
               />
             </View>

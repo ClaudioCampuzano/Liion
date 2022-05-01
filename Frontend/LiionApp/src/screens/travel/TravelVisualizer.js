@@ -250,7 +250,7 @@ const TravelVisualizer = ({ navigation, route }) => {
                   />
                 )}
             </View>
-            <Text style={styles.text_titule}>Equipaje extra permitido:</Text>
+            <Text style={styles.text_titule}>Equipaje extra reservado:</Text>
             <Text style={styles.text_subTitule}>
               {"(Todos tienen derecho a un equipaje\n de mano)"}
             </Text>
