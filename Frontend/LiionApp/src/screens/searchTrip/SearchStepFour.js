@@ -259,7 +259,7 @@ const SearchStepFour = ({ navigation, route }) => {
                   changeValuesHandler("valuePay", selectedItem)
                 }
                 value={orderValues.valuePay}
-                data={["Credito", "Débito"]}
+                data={["Crédito", "Débito"]}
                 label="Medio de pago"
               />
             </View>
