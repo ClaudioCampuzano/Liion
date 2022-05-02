@@ -1,8 +1,12 @@
 import axios from "axios";
-import { BACKEND_URL } from "@env";
+//import { BACKEND_URL } from "@env";
+
+var BACKEND_URL_heroku='https://liion-backend.herokuapp.com/'
+var BACKEND_URL='http://44.193.43.78:3000/'
 
 const client = axios.create({
-  baseURL: "http://" + BACKEND_URL + ":3000",
+  //baseURL: "http://" + BACKEND_URL + ":3000",
+   baseURL:BACKEND_URL,
 });
 
 export const registerBackend = async (payload) => {
@@ -18,7 +22,7 @@ export const registerBackend = async (payload) => {
   } catch (e) {
     try {
       return [false, e.response.data.message];
-    } catch (eS) {
+    } catch (e) {
       return [false, e];
     }
   }

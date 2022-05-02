@@ -20,6 +20,8 @@ import {
 LogBox.ignoreLogs(["AsyncStorage", "Setting a timer"]);
 
 export default function App() {
+  //dato al instalar estas variables deben estar escritas, ya que la compilacion no toma .env
+  // se colocan en local, pero no se pushean al git
   const firebaseKeys = {
     apiKey: apiKey,
     authDomain: authDomain,
