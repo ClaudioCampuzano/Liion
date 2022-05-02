@@ -2,7 +2,7 @@ import axios from "axios";
 import { BACKEND_URL } from "@env";
 
 const client = axios.create({
-  baseURL: "http://" + BACKEND_URL + ":3000",
+  baseURL: BACKEND_URL,
 });
 
 export const registerBackend = async (payload) => {
