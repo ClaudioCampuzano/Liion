@@ -6,7 +6,7 @@ var BACKEND_URL='http://44.193.43.78:3000/'
 
 const client = axios.create({
   //baseURL: "http://" + BACKEND_URL + ":3000",
-   baseURL:BACKEND_URL,
+   baseURL:BACKEND_URL_heroku,
 });
 
 export const registerBackend = async (payload) => {
