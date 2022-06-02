@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "* Forma de ejecución\r   ```\r   npm start jiro\r   ```",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "dev": "nodemon src --exec babel-node",
+    "start": "node dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/runtime": "^7.17.8",
+    "add": "^2.0.6",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "expo-server-sdk": "^3.6.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "firebase": "^8.9.1",
+    "firebase-admin": "^9.11.0",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.6.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "nodemon": "^2.0.12"
+  }
+}
