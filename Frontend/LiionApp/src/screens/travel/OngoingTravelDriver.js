@@ -153,16 +153,13 @@ const OngoingTravelDriver = ({ navigation, route }) => {
               longitude: loc.coords.longitude,
             };
             setUserLocation(coordObj);
-            //rif (isSucessItinerary)
-            //  if (dataItinerary.status === "active") {
-                console.log('aca')
+                console.log(' ')
                 mutateUpdateLocation({
                   travelId: id,
                   uid: uid,
                   location: coordObj,
                 });
               }
-          //r}
         }
       );
       return () => subscription.remove();

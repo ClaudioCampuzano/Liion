@@ -43,7 +43,6 @@ export const updateDriverStatus = async (flag, payload) => {
   try {
     const obj = { ...payload, ...{ flagDriver: flag } };
     const dataSend = JSON.stringify(obj);
-    //console.log(dataSend)
     const res = await client({
       method: "post",
       url: "/updateUsersDriverStatus",
@@ -52,7 +51,6 @@ export const updateDriverStatus = async (flag, payload) => {
     });
     return [true, res.data];
   } catch (e) {
-    //console.log(e.response.data)
     return [false, e.response.data];
   }
 };
@@ -68,7 +66,6 @@ export const createTravel = async (dataTravel) => {
     });
     return [true, res.data];
   } catch (e) {
-    //console.log(e.response.data)
     return [false, e.response.data];
   }
 };
@@ -220,6 +217,7 @@ export const updateTravelItinerary = async (payload) => {
 };
 
 export const updateUserLocationInTravel = async (pyload) => {
+  console.log('')
   const { data } = await client({
     method: "patch",
     url: "/updateUserLocationInTravel",

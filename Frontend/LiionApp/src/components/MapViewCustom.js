@@ -136,6 +136,7 @@ const MapViewCustom = (props) => {
                 strokeWidth={5}
                 strokeColor={COLORS.TURKEY_CLEAR}
                 language={"es"}
+                mode = {'TRANSIT'}
                 onReady={(result) => {
                   changeRuteInfoHandler(result);
                 }}

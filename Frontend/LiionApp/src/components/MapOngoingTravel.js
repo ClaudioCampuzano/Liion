@@ -15,6 +15,8 @@ const MapOngoingTravel = (props) => {
     navigation,
     typePassenger,
     markers,
+    driverPosition,
+    type,
     ...restOfProps
   } = props;
   const mapRef = useRef();
@@ -31,30 +33,71 @@ const MapOngoingTravel = (props) => {
   const centeredRegion = () => {
     var centerRegion = { ...region };
 
+    /* legacy
     centerRegion.longitude = (origin.longitude + destiny.longitude) / 2;
     centerRegion.latitude = (origin.latitude + destiny.latitude) / 2;
-
     centerRegion.longitudeDelta =
       1.2 * Math.abs(Math.abs(origin.longitude) - Math.abs(destiny.longitude));
     centerRegion.latitudeDelta =
       1.2 * Math.abs(Math.abs(origin.latitude) - Math.abs(destiny.latitude));
+      */
+    var auxPosition = coordinateList[0]
+    if (Object.keys(driverPosition).length == 2) {
+      var auxPosition = driverPosition
+    }
+    if (type == 'pickUp') {
+      centerRegion.longitude = (auxPosition.longitude + origin.longitude) / 2;
+      centerRegion.latitude = (auxPosition.latitude + origin.latitude) / 2;
+      centerRegion.longitudeDelta =
+        1.2 * Math.abs(Math.abs(auxPosition.longitude) - Math.abs(origin.longitude));
+      centerRegion.latitudeDelta =
+        1.2 * Math.abs(Math.abs(auxPosition.latitude) - Math.abs(origin.latitude));
+    }
+      else if (type == 'dropOff') {
+        centerRegion.longitude = (origin.longitude + coordinateList[coordinateList.length - 1].longitude) / 2;
+        centerRegion.latitude = (origin.latitude + coordinateList[coordinateList.length - 1].latitude) / 2;
+        centerRegion.longitudeDelta =
+          1.2 * Math.abs(Math.abs(origin.longitude) - Math.abs(coordinateList[coordinateList.length - 1].longitude));
+        centerRegion.latitudeDelta =
+          1.2 * Math.abs(Math.abs(origin.latitude) - Math.abs(coordinateList[coordinateList.length - 1].latitude));
+      }
 
     return centerRegion;
   };
 
   useEffect(() => {
     var centerRegion = { ...region };
-
+    /* legacy
     centerRegion.longitude = (origin.longitude + destiny.longitude) / 2;
     centerRegion.latitude = (origin.latitude + destiny.latitude) / 2;
-
     centerRegion.longitudeDelta =
       1.2 * Math.abs(Math.abs(origin.longitude) - Math.abs(destiny.longitude));
     centerRegion.latitudeDelta =
       1.2 * Math.abs(Math.abs(origin.latitude) - Math.abs(destiny.latitude));
+    */
+      var auxPosition = coordinateList[0]
+      if (Object.keys(driverPosition).length == 2) {
+        var auxPosition = driverPosition
+      }
+      if (type == 'pickUp') {
+        centerRegion.longitude = (auxPosition.longitude + origin.longitude) / 2;
+        centerRegion.latitude = (auxPosition.latitude + origin.latitude) / 2;
+        centerRegion.longitudeDelta =
+          1.2 * Math.abs(Math.abs(auxPosition.longitude) - Math.abs(origin.longitude));
+        centerRegion.latitudeDelta =
+          1.2 * Math.abs(Math.abs(auxPosition.latitude) - Math.abs(origin.latitude));
+      }
+      else if (type == 'dropOff') {
+        centerRegion.longitude = (origin.longitude + coordinateList[coordinateList.length - 1].longitude) / 2;
+        centerRegion.latitude = (origin.latitude + coordinateList[coordinateList.length - 1].latitude) / 2;
+        centerRegion.longitudeDelta =
+          1.2 * Math.abs(Math.abs(origin.longitude) - Math.abs(coordinateList[coordinateList.length - 1].longitude));
+        centerRegion.latitudeDelta =
+          1.2 * Math.abs(Math.abs(origin.latitude) - Math.abs(coordinateList[coordinateList.length - 1].latitude));
+      }
 
     setRegion(centerRegion);
-  }, [origin, destiny]);
+  }, [origin, destiny, driverPosition]);
 
   return (
     <>
@@ -85,6 +128,7 @@ const MapOngoingTravel = (props) => {
             image={require("../../assets/images/car.png")}
           />
         ) : (
+          /* legacy
           <Marker
             key={1}
             coordinate={{
@@ -93,6 +137,34 @@ const MapOngoingTravel = (props) => {
             }}
             image={require("../../assets/images/passenger.png")}
           />
+          */
+          <>
+          <Marker
+            key={1}
+            coordinate={{
+              latitude: origin.latitude,
+              longitude: origin.longitude,
+            }}
+            image={require("../../assets/images/passenger.png")}
+          />
+          {Object.keys(driverPosition).length == 2 ?
+            <Marker
+              key={2}
+              coordinate={{
+                latitude: driverPosition.latitude,
+                longitude: driverPosition.longitude,
+              }}
+              image={require("../../assets/images/car.png")}
+            /> : <Marker
+              key={2}
+              coordinate={{
+                latitude: coordinateList[0].latitude,
+                longitude: coordinateList[0].longitude,
+              }}
+              image={require("../../assets/images/car.png")}
+            />}
+        </>
+
         )}
         {markers.map((marker, index) => {
           if (marker.type == "pickUp")
