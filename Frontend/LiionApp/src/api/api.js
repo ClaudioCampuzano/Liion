@@ -1,5 +1,9 @@
 import axios from "axios";
-import { BACKEND_URL, BACKEND_URL_heroku } from "@env";
+import { BACKEND_URL, BACKEND_URL_heroku, BACKEND_URL_LOCAL } from "@env";
+
+//nota escribir en el .env las urls de esta manera 'http://0.0.0.0:3000/'
+//con comillas por alguna razon funcionan todos bien los url asi
+//para produccion de verdad no es lo mas seguro, deberian pedirse por un backend autenticado
 
 const client = axios.create({
   baseURL: BACKEND_URL_heroku,
