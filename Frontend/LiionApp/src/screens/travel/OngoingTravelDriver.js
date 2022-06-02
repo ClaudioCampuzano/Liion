@@ -41,6 +41,8 @@ import {
   updateTravelItinerary,
   updateUserLocationInTravel,
 } from "../../api/api";
+import db from '@firebase/firestore'
+
 
 const OngoingTravelDriver = ({ navigation, route }) => {
   const {
@@ -52,6 +54,8 @@ const OngoingTravelDriver = ({ navigation, route }) => {
     durationMinutes,
   } = route.params;
   const { uid } = useContext(GlobalContext);
+
+
 
   const [userLocation, setUserLocation] = useState(() => {
     return { latitude: 0, longitude: 0 };
@@ -141,7 +145,7 @@ const OngoingTravelDriver = ({ navigation, route }) => {
         return;
       }
       const subscription = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
+        { accuracy: Location.Accuracy.BestForNavigation, timeInterval: 5000 },
         (loc) => {
           if (userLocation != null) {
             var coordObj = {
@@ -149,15 +153,16 @@ const OngoingTravelDriver = ({ navigation, route }) => {
               longitude: loc.coords.longitude,
             };
             setUserLocation(coordObj);
-            if (isSucessItinerary)
-              if (dataItinerary.status === "active") {
+            //rif (isSucessItinerary)
+            //  if (dataItinerary.status === "active") {
+                console.log('aca')
                 mutateUpdateLocation({
                   travelId: id,
                   uid: uid,
                   location: coordObj,
                 });
               }
-          }
+          //r}
         }
       );
       return () => subscription.remove();

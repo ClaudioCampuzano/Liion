@@ -1,8 +1,9 @@
 import axios from "axios";
-import { BACKEND_URL } from "@env";
+import { BACKEND_URL, BACKEND_URL_heroku } from "@env";
 
 const client = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: BACKEND_URL_heroku,
+  timeout: 15000,
 });
 
 export const registerBackend = async (payload) => {
