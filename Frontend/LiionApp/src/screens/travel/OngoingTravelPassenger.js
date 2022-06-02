@@ -85,27 +85,27 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
     () => getPassengerTravelItinerary({ travelId: id, uid: uid }),
     {
       refetchOnMount: true,
-      refetchInterval: 30000,
+      refetchInterval: 15000,
       onSuccess: (data) => {
         data.status !== "finished"
           ? (async () => {
-              var address = await reverseGeocodeAsync(data.coordinate);
-              setNameDirection(
-                address[0].street +
-                  " " +
-                  address[0].name +
-                  ", " +
-                  address[0].city
-              );
-            })()
+            var address = await reverseGeocodeAsync(data.coordinate);
+            setNameDirection(
+              address[0].street +
+              " " +
+              address[0].name +
+              ", " +
+              address[0].city
+            );
+          })()
           : navigation.navigate("Feedback", {
-              travelId: id,
-              startTime: startTime,
-              originDetails: originDetails,
-              destinationDetails: destinationDetails,
-              date: date,
-              durationMinutes: durationMinutes,
-            });
+            travelId: id,
+            startTime: startTime,
+            originDetails: originDetails,
+            destinationDetails: destinationDetails,
+            date: date,
+            durationMinutes: durationMinutes,
+          });
       },
     }
   );
@@ -122,7 +122,7 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
         return;
       }
       const subscription = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.BestForNavigation, distanceInterval: 20 },
+        { accuracy: Location.Accuracy.BestForNavigation, timeInterval: 5000 },
         (loc) => {
           if (userLocation != null) {
             var coordObj = {
@@ -130,14 +130,11 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
               longitude: loc.coords.longitude,
             };
             setUserLocation(coordObj);
-            if (isSucessItinerary)
-              if (dataItinerary.status === "active") {
-                mutateUpdateLocation({
-                  travelId: id,
-                  uid: uid,
-                  location: coordObj,
-                });
-              }
+            mutateUpdateLocation({
+              travelId: id,
+              uid: uid,
+              location: coordObj,
+            });
           }
         }
       );
@@ -202,13 +199,15 @@ const OngoingTravelPassenger = ({ navigation, route }) => {
                   }}
                 >
                   <MapOngoingTravel
+                    type= {dataItinerary.type}
                     dimensions={styles.mapDimensions}
                     coordinateList={dataRoute.routeCoordinates}
                     origin={userLocation}
-                    destiny={dataRoute.routeCoordinates[10]}
+                    destiny={dataRoute.routeCoordinates[dataRoute.routeCoordinates.length -1]}
                     navigation={navigation}
                     typePassenger={"passenger"}
                     markers={dataItinerary.markerList}
+                    driverPosition={dataItinerary.driverPosition}
                   />
                   <View style={styles.floatingSheet}>
                     <View
