@@ -20,6 +20,10 @@ const InputLiion = (props) => {
     onBlur,
     onFocus,
     secureTextEntry,
+    autoCapitalize,
+    autoComplete,
+    autoCorrect,
+    keyboardType,
     ...restOfProps
   } = props;
 
@@ -43,6 +47,10 @@ const InputLiion = (props) => {
     color = COLORS.WARN_RED;
     colorText = COLORS.WARN_RED;
   }
+  let keyboardTypeVal = keyboardType ? keyboardType: 'default'
+  let autoCorrectVal = autoCorrect ? autoCorrect: false
+  let autoCompleteVal = autoComplete ? autoComplete : 'off'
+  let autoCapitalizeVal = autoCapitalize ? autoCapitalize : 'none'
 
   return (
     <View style={style}>
@@ -57,6 +65,10 @@ const InputLiion = (props) => {
         {...restOfProps}
         value={value}
         secureTextEntry={secureTextEntry}
+        autoCapitalize={autoCapitalizeVal}
+        autoComplete={autoCompleteVal}
+        autoCorrect={autoCorrectVal}
+        keyboardType={keyboardTypeVal}
         onBlur={(event) => {
           setIsFocused(false);
           onBlur?.(event);

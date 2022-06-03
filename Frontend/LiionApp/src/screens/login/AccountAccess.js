@@ -103,6 +103,10 @@ const AccountAccess = ({ route, navigation }) => {
               value={valueEmail}
               errorText={errorEmail}
               secureTextEntry={false}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoComplete='email'
+              autoCorrect={false}
               onBlur={() => setfocusEmailInput(false)}
               onFocus={() => setfocusEmailInput(true)}
               onChangeText={(text) => setValueEmail(text)}
